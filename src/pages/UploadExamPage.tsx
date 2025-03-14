@@ -29,8 +29,6 @@ const UploadExamPage = () => {
     }
 
     setLoading(true);
-    let uploadSuccess = true;
-
     for (const file of files) {
       const base64Content = await fileToBase64(file);
       const { error } = await supabase.from('uploaded_documents').insert([
@@ -43,7 +41,6 @@ const UploadExamPage = () => {
       ]);
 
       if (error) {
-        uploadSuccess = false;
         break;
       }
     }
