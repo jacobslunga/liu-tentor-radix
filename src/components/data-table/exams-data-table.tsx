@@ -107,11 +107,12 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                 table.getRowModel().rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    onClick={() =>
+                    onClick={() => {
                       navigate(
                         `/search/${row.original.kurskod}/${row.original.id}`
-                      )
-                    }
+                      );
+                      window.location.reload();
+                    }}
                     className='group cursor-pointer hover:bg-muted/50 transition-all'
                   >
                     {row.getVisibleCells().map((cell) => (
