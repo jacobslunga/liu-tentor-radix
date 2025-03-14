@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 import { CornerUpRight, X, Clock } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Input } from '@/components/ui/input';
 
 interface RecentActivity {
   courseCode: string;
@@ -203,12 +202,13 @@ const MainInput: React.FC = () => {
   return (
     <div className='relative w-full'>
       <div className='relative'>
-        <Input
+        <input
           placeholder={getTranslation('searchCoursePlaceholder')}
           value={courseCode}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className='w-full'
+          className='w-full border shadow-sm dark:shadow-md border-foreground/20 hover:border-foreground/40 bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 p-4 text-sm text-foreground/80 outline-none focus:border-primary'
+          autoFocus
         />
         {courseCode && (
           <button
@@ -225,7 +225,7 @@ const MainInput: React.FC = () => {
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className='absolute w-full mt-1 bg-background border rounded-md shadow-lg z-[100] max-h-60 overflow-y-auto'
+            className='absolute w-full mt-3 bg-background border rounded-md shadow-lg z-[100] max-h-60 overflow-y-auto'
           >
             {recentSearches.length > 0 && (
               <>
@@ -241,7 +241,7 @@ const MainInput: React.FC = () => {
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
                     <Clock className='w-4 h-4 mr-2 text-muted-foreground' />
-                    <span className='flex-1'>{suggestion}</span>
+                    <span className='flex-1 text-sm'>{suggestion}</span>
                     <CornerUpRight className='w-4 h-4 text-muted-foreground' />
                   </div>
                 ))}
@@ -263,7 +263,7 @@ const MainInput: React.FC = () => {
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <span className='flex-1'>{suggestion}</span>
+                    <span className='flex-1 text-sm'>{suggestion}</span>
                     <CornerUpRight className='w-4 h-4 text-muted-foreground' />
                   </div>
                 ))}

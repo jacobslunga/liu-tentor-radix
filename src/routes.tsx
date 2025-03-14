@@ -22,72 +22,33 @@ const routes: RouteObject[] = [
     path: '/',
     element: <MainLayout />,
     children: [
+      { index: true, element: <HomePage /> },
+      { path: 'upload-info', element: <UploadInfoPage /> },
+      { path: 'kontakt', element: <ContactPage /> },
+      { path: 'feedback', element: <FeedbackPage /> },
+      { path: 'privacy-policy', element: <PrivacyPolicyPage /> },
+      { path: 'upload-exams', element: <UploadExamPage /> },
+      { path: '*', element: <NotFoundPage /> },
       {
-        path: '/',
-        element: <HomePage />,
-      },
-      {
-        path: '/upload-info',
-        element: <UploadInfoPage />,
-      },
-      {
-        path: '/kontakt',
-        element: <ContactPage />,
-      },
-      {
-        path: '/feedback',
-        element: <FeedbackPage />,
-      },
-      {
-        path: '/privacy-policy',
-        element: <PrivacyPolicyPage />,
-      },
-      {
-        path: '/upload-exams',
-        element: <UploadExamPage />,
-      },
-      {
-        path: '*',
-        element: <NotFoundPage />,
+        path: 'admin',
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <Dashboard /> },
+          { path: 'dashboard/add-exams', element: <AddExamsPage /> },
+          { path: 'dashboard/review', element: <UploadedExamsPage /> },
+          { path: 'dashboard/remove-exams', element: <RemoveExamsPage /> },
+        ],
       },
       {
         path: '/admin/login',
         element: <LoginPage />,
       },
       {
-        path: '/admin',
-        element: <AdminLayout />,
-        children: [
-          {
-            path: '/admin/dashboard',
-            element: <Dashboard />,
-          },
-          {
-            path: '/admin/dashboard/add-exams',
-            element: <AddExamsPage />,
-          },
-          {
-            path: '/admin/dashboard/review',
-            element: <UploadedExamsPage />,
-          },
-          {
-            path: '/admin/dashboard/remove-exams',
-            element: <RemoveExamsPage />,
-          },
-        ],
-      },
-      {
-        path: '/search',
+        path: 'search',
         element: <SearchLayout />,
         children: [
-          {
-            path: '/search/:courseCode',
-            element: <SearchPage />,
-          },
-          {
-            path: '/search/:courseCode/:tenta_id',
-            element: <TentaPage />,
-          },
+          { path: ':courseCode', element: <SearchPage /> },
+          { path: ':courseCode/:tenta_id', element: <TentaPage /> },
         ],
       },
     ],

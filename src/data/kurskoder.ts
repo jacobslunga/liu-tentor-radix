@@ -238,4 +238,5 @@ export const kurskodArray: string[] = [
   'TSKS24',
   'NKEC16',
   '702G22',
+  '732G51',
 ];

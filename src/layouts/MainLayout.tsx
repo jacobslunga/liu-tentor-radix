@@ -23,7 +23,6 @@ const MainLayout: React.FC = () => {
     document.body.style.overflow = isExam ? 'hidden' : 'auto';
   }, [isExam]);
 
-  // ✅ QUICK FIX: Reset cookies once
   useEffect(() => {
     const hasReset = Cookies.get('resetDone');
 
@@ -31,7 +30,6 @@ const MainLayout: React.FC = () => {
       console.log('Resetting all cookies...');
       Object.keys(Cookies.get()).forEach((cookie) => Cookies.remove(cookie));
 
-      // ✅ Mark reset as done so we don't clear again
       Cookies.set('resetDone', 'true', { expires: 365, sameSite: 'Lax' });
     }
   }, []);

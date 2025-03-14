@@ -111,7 +111,6 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                       navigate(
                         `/search/${row.original.kurskod}/${row.original.id}`
                       );
-                      window.location.reload();
                     }}
                     className='group cursor-pointer hover:bg-muted/50 transition-all'
                   >
