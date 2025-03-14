@@ -27,7 +27,7 @@ const MainInput: React.FC = () => {
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
 
-  const COOKIE_VERSION = '1.1'; // Ensure all components use the same version
+  const COOKIE_VERSION = '1.1';
 
   const loadRecentSearches = () => {
     const cookieConsent = Cookies.get('cookieConsent');
@@ -35,29 +35,59 @@ const MainInput: React.FC = () => {
 
     const storedVersion = Cookies.get('cookieVersion');
 
-    if (storedVersion !== COOKIE_VERSION) {
-      console.log('Clearing outdated cookies...');
+    const searches = Cookies.get('popularSearches');
+
+    let isInvalidFormat = false;
+
+    if (searches) {
+      try {
+        const decodedSearches = decodeURIComponent(searches);
+        const parsedSearches = JSON.parse(decodedSearches);
+
+        if (
+          !Array.isArray(parsedSearches) ||
+          parsedSearches.some(
+            (item) =>
+              typeof item !== 'object' ||
+              !('courseCode' in item) ||
+              !('timestamp' in item)
+          )
+        ) {
+          isInvalidFormat = true;
+        }
+      } catch (error) {
+        console.error('Error parsing popular searches cookie:', error);
+        isInvalidFormat = true;
+      }
+    }
+
+    if (storedVersion !== COOKIE_VERSION || isInvalidFormat) {
+      console.log('Invalid or old cookies detected. Clearing...');
       Cookies.remove('popularSearches');
       Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
+      return;
     }
 
-    const searches = Cookies.get('popularSearches');
-    if (!searches) return;
-
-    try {
-      const parsedSearches = JSON.parse(decodeURIComponent(searches));
-      const uniqueCourses = Array.from(
-        new Set(
-          parsedSearches.map((item: { courseCode: string }) =>
-            item.courseCode.toUpperCase()
+    if (searches) {
+      try {
+        const parsedSearches = JSON.parse(decodeURIComponent(searches));
+        const uniqueCourses = Array.from(
+          new Set(
+            parsedSearches.map((item: { courseCode: string }) =>
+              item.courseCode.toUpperCase()
+            )
           )
-        )
-      ).slice(0, 4);
-      setRecentSearches(uniqueCourses as string[]);
-    } catch (error) {
-      console.error('Failed to parse recent searches:', error);
+        ).slice(0, 4);
+        setRecentSearches(uniqueCourses as string[]);
+      } catch (error) {
+        console.error('Error processing popular searches:', error);
+      }
     }
   };
+
+  useEffect(() => {
+    loadRecentSearches();
+  }, []);
 
   useEffect(() => {
     loadRecentSearches();
