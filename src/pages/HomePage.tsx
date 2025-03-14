@@ -16,7 +16,7 @@ export default function HomePage() {
   return (
     <div className='flex flex-col items-center justify-center w-screen min-h-screen p-4 bg-background relative'>
       <Helmet>
-        <title>LiU Tentor | {getTranslation('homeTitle')}</title>
+        <title>LiU Tentor</title>
       </Helmet>
 
       {/* Large Centered Logo */}

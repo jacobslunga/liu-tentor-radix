@@ -274,10 +274,6 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
     fetchSuggestions();
   }, [courseCode, fetchMatchingKurskoder, recentSearches]);
 
-  useEffect(() => {
-    loadRecentSearches();
-  }, [loadRecentSearches]);
-
   const handleClickOutside = (event: MouseEvent) => {
     if (
       suggestionsRef.current &&
