@@ -21,14 +21,10 @@ const UploadExamPage = () => {
   const { language } = useLanguage();
   const [files, setFiles] = useState<File[]>([]);
   const [kurskod, setKurskod] = useState('');
-  const [showSuccess, setShowSuccess] = useState(false);
-  const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleUpload = async () => {
     if (files.length === 0 || !kurskod) {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
       return;
     }
 
@@ -53,15 +49,6 @@ const UploadExamPage = () => {
     }
 
     setLoading(false);
-    if (uploadSuccess) {
-      setShowSuccess(true);
-      setFiles([]);
-      setKurskod('');
-      setTimeout(() => setShowSuccess(false), 3000);
-    } else {
-      setShowError(true);
-      setTimeout(() => setShowError(false), 3000);
-    }
   };
 
   const fileToBase64 = (file: File): Promise<string> => {
