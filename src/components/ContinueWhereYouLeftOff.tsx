@@ -19,33 +19,32 @@ const ContinueWhereYouLeftOff: React.FC = () => {
     []
   );
 
-  const COOKIE_VERSION = '1.1'; // Increment this when changing the cookie format
+  const COOKIE_NAME = 'recentActivities_v2'; // Standardized cookie name
+  const COOKIE_VERSION = '1.2'; // Increment version if structure changes
 
   useEffect(() => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent !== 'true') return;
 
     const storedVersion = Cookies.get('cookieVersion');
-
     if (storedVersion !== COOKIE_VERSION) {
-      console.log('Old cookie format detected. Clearing cookies...');
+      console.log('Old cookie format detected. Clearing outdated cookies...');
       Cookies.remove('popularSearches');
       Cookies.remove('recentActivities');
-
+      Cookies.remove(COOKIE_NAME);
       Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
     }
 
     const fetchRecentActivities = () => {
-      const activities = Cookies.get('popularSearches');
+      const activities = Cookies.get(COOKIE_NAME);
       if (activities) {
         try {
-          const decodedActivities = decodeURIComponent(activities);
           const parsedActivities = JSON.parse(
-            decodedActivities
+            decodeURIComponent(activities)
           ) as RecentActivity[];
           const sortedActivities = parsedActivities
             .sort((a, b) => b.timestamp - a.timestamp)
-            .slice(0, 4);
+            .slice(0, 3);
           setRecentActivities(sortedActivities);
         } catch (error) {
           console.error('Error parsing recent activities:', error);
@@ -97,7 +96,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
               className='flex items-center justify-between p-2 rounded-md hover:bg-background/80 transition-colors group'
             >
               <div className='flex flex-col'>
-                <span className='text-sm font-medium'>
+                <span className='text-xs font-medium'>
                   {activity.courseCode}
                 </span>
               </div>

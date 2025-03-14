@@ -2,7 +2,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { kurskodArray } from '@/data/kurskoder';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
-import { CornerUpRight, X, Clock } from 'lucide-react';
+import { CornerUpRight, X, Clock, Search } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -122,7 +122,7 @@ const MainInput: React.FC = () => {
 
     searchesArray.sort((a, b) => b.timestamp - a.timestamp);
     Cookies.set(
-      'popularSearches',
+      'recentActivities_v2',
       encodeURIComponent(JSON.stringify(searchesArray)),
       {
         expires: 365,
@@ -199,20 +199,29 @@ const MainInput: React.FC = () => {
     navigate(`/search/${searchCode}`);
   };
 
+  const [focus, setFocus] = useState(false);
+
   return (
     <div className='relative w-full'>
-      <div className='relative'>
+      <div
+        className={`w-full relative border shadow-sm dark:shadow-md border-foreground/20 ${
+          focus ? 'border-primary' : 'hover:border-foreground/40'
+        } bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 p-4 text-sm text-foreground/80 outline-none`}
+      >
+        <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground' />
         <input
           placeholder={getTranslation('searchCoursePlaceholder')}
           value={courseCode}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className='w-full border shadow-sm dark:shadow-md border-foreground/20 hover:border-foreground/40 bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 p-4 text-sm text-foreground/80 outline-none focus:border-primary'
+          className='w-full pl-10 pr-10 border-none bg-transparent text-sm text-foreground/80 outline-none'
           autoFocus
+          onFocus={() => setFocus(true)}
+          onBlur={() => setFocus(false)}
         />
         {courseCode && (
           <button
-            className='absolute right-2 top-1/2 -translate-y-1/2'
+            className='absolute right-3 top-1/2 -translate-y-1/2'
             onClick={() => setCourseCode('')}
             aria-label='Clear search'
           >

@@ -59,22 +59,21 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
     return translations[language][key];
   };
 
-  const COOKIE_VERSION = '1.1';
+  const COOKIE_NAME = 'recentActivities_v2'; // Standardized cookie name
+  const COOKIE_VERSION = '1.2'; // Increment version if structure changes
 
   const loadRecentSearches = () => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent !== 'true') return;
 
     const storedVersion = Cookies.get('cookieVersion');
-
-    const searches = Cookies.get('popularSearches');
+    const searches = Cookies.get(COOKIE_NAME);
 
     let isInvalidFormat = false;
 
     if (searches) {
       try {
-        const decodedSearches = decodeURIComponent(searches);
-        const parsedSearches = JSON.parse(decodedSearches);
+        const parsedSearches = JSON.parse(decodeURIComponent(searches));
 
         if (
           !Array.isArray(parsedSearches) ||
@@ -88,28 +87,33 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
           isInvalidFormat = true;
         }
       } catch (error) {
-        console.error('Error parsing popular searches cookie:', error);
+        console.error('Error parsing search cookie:', error);
         isInvalidFormat = true;
       }
     }
 
     if (storedVersion !== COOKIE_VERSION || isInvalidFormat) {
-      console.log('Invalid or old cookies detected. Clearing...');
+      console.log('Invalid or outdated cookies detected. Clearing...');
       Cookies.remove('popularSearches');
+      Cookies.remove('recentActivities');
+      Cookies.remove(COOKIE_NAME);
       Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
       return;
     }
 
     if (searches) {
       try {
-        const parsedSearches: { courseCode: string; timestamp: number }[] =
-          JSON.parse(decodeURIComponent(searches));
+        const parsedSearches = JSON.parse(decodeURIComponent(searches));
         const uniqueCourses = Array.from(
-          new Set(parsedSearches.map((item) => item.courseCode.toUpperCase()))
+          new Set(
+            parsedSearches.map((item: { courseCode: string }) =>
+              item.courseCode.toUpperCase()
+            )
+          )
         ).slice(0, 4);
-        setRecentSearches(uniqueCourses);
+        setRecentSearches(uniqueCourses as string[]);
       } catch (error) {
-        console.error('Error processing popular searches:', error);
+        console.error('Error processing recent searches:', error);
       }
     }
   };
@@ -121,7 +125,7 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
   const updateSearchCount = (course: string) => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent === 'true') {
-      const searches = Cookies.get('popularSearches');
+      const searches = Cookies.get('recentActivities_v2');
       let searchesArray = searches
         ? JSON.parse(decodeURIComponent(searches))
         : [];
@@ -141,7 +145,7 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
 
       // Encode the JSON string before storing it in the cookie
       const encodedSearches = encodeURIComponent(JSON.stringify(searchesArray));
-      Cookies.set('popularSearches', encodedSearches, {
+      Cookies.set('recentActivities_v2', encodedSearches, {
         expires: 365,
         domain:
           window.location.hostname === 'liutentor.se'

@@ -3,7 +3,7 @@ import { kurskodArray } from '@/data/kurskoder';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
 import { Book, Clock } from 'lucide-react';
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   CommandDialog,
@@ -42,9 +42,10 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
     return translations[language][key];
   };
 
-  const COOKIE_VERSION = '1.1'; // Increment when cookie format changes
+  const COOKIE_NAME = 'recentActivities_v2'; // Standardized cookie name
+  const COOKIE_VERSION = '1.2'; // Increment version if structure changes
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (open) {
       const cookieConsent = Cookies.get('cookieConsent');
       if (cookieConsent !== 'true') return;
@@ -54,20 +55,23 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
       if (storedVersion !== COOKIE_VERSION) {
         console.log('Old cookies detected. Clearing outdated cookies...');
         Cookies.remove('popularSearches');
+        Cookies.remove('recentActivities');
+        Cookies.remove(COOKIE_NAME);
         Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
       }
 
-      const searches = Cookies.get('popularSearches');
+      const searches = Cookies.get(COOKIE_NAME);
       if (searches) {
         try {
-          const decodedSearches = decodeURIComponent(searches);
-          const parsedSearches = JSON.parse(
-            decodedSearches
-          ) as RecentActivity[];
+          const parsedSearches = JSON.parse(decodeURIComponent(searches));
           const uniqueCourses = Array.from(
-            new Set(parsedSearches.map((item) => item.courseCode.toUpperCase()))
+            new Set(
+              parsedSearches.map((item: { courseCode: string }) =>
+                item.courseCode.toUpperCase()
+              )
+            )
           ).slice(0, 4);
-          setRecentSearches(uniqueCourses);
+          setRecentSearches(uniqueCourses as string[]);
         } catch (error) {
           console.error('Failed to parse recent searches:', error);
         }
@@ -91,7 +95,7 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
   const updateSearchCount = (course: string) => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent === 'true') {
-      const searches = Cookies.get('popularSearches');
+      const searches = Cookies.get('recentActivities_v2');
       let searchesArray: RecentActivity[] = [];
 
       try {
@@ -121,7 +125,7 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
 
       // Encode the JSON string before storing it in the cookie
       const encodedSearches = encodeURIComponent(JSON.stringify(searchesArray));
-      Cookies.set('popularSearches', encodedSearches, {
+      Cookies.set('recentActivities_v2', encodedSearches, {
         expires: 365,
         domain:
           window.location.hostname === 'liutentor.se'
