@@ -27,29 +27,41 @@ const MainInput: React.FC = () => {
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
 
-  useEffect(() => {
-    loadRecentSearches();
-  }, []);
+  const COOKIE_VERSION = '1.1'; // Ensure all components use the same version
 
   const loadRecentSearches = () => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent !== 'true') return;
 
+    const storedVersion = Cookies.get('cookieVersion');
+
+    if (storedVersion !== COOKIE_VERSION) {
+      console.log('Clearing outdated cookies...');
+      Cookies.remove('popularSearches');
+      Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
+    }
+
     const searches = Cookies.get('popularSearches');
     if (!searches) return;
 
     try {
-      const parsedSearches = JSON.parse(
-        decodeURIComponent(searches)
-      ) as RecentActivity[];
+      const parsedSearches = JSON.parse(decodeURIComponent(searches));
       const uniqueCourses = Array.from(
-        new Set(parsedSearches.map((item) => item.courseCode.toUpperCase()))
+        new Set(
+          parsedSearches.map((item: { courseCode: string }) =>
+            item.courseCode.toUpperCase()
+          )
+        )
       ).slice(0, 4);
-      setRecentSearches(uniqueCourses);
+      setRecentSearches(uniqueCourses as string[]);
     } catch (error) {
       console.error('Failed to parse recent searches:', error);
     }
   };
+
+  useEffect(() => {
+    loadRecentSearches();
+  }, []);
 
   const updateSearchCount = (course: string) => {
     const cookieConsent = Cookies.get('cookieConsent');

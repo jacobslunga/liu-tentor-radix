@@ -19,11 +19,23 @@ const ContinueWhereYouLeftOff: React.FC = () => {
     []
   );
 
-  useEffect(() => {
-    const fetchRecentActivities = () => {
-      const cookieConsent = Cookies.get('cookieConsent');
-      if (cookieConsent !== 'true') return;
+  const COOKIE_VERSION = '1.1'; // Increment this when changing the cookie format
 
+  useEffect(() => {
+    const cookieConsent = Cookies.get('cookieConsent');
+    if (cookieConsent !== 'true') return;
+
+    const storedVersion = Cookies.get('cookieVersion');
+
+    if (storedVersion !== COOKIE_VERSION) {
+      console.log('Old cookie format detected. Clearing cookies...');
+      Cookies.remove('popularSearches');
+      Cookies.remove('recentActivities');
+
+      Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
+    }
+
+    const fetchRecentActivities = () => {
       const activities = Cookies.get('popularSearches');
       if (activities) {
         try {
@@ -32,10 +44,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
             decodedActivities
           ) as RecentActivity[];
           const sortedActivities = parsedActivities
-            .sort(
-              (a: RecentActivity, b: RecentActivity) =>
-                b.timestamp - a.timestamp
-            )
+            .sort((a, b) => b.timestamp - a.timestamp)
             .slice(0, 4);
           setRecentActivities(sortedActivities);
         } catch (error) {
@@ -45,9 +54,6 @@ const ContinueWhereYouLeftOff: React.FC = () => {
     };
 
     fetchRecentActivities();
-
-    const interval = setInterval(fetchRecentActivities, 5000);
-    return () => clearInterval(interval);
   }, []);
 
   const getTranslation = (

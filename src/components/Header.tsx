@@ -59,26 +59,33 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
     return translations[language][key];
   };
 
+  const COOKIE_VERSION = '1.1';
+
   const loadRecentSearches = useCallback(() => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent !== 'true') return;
+
+    const storedVersion = Cookies.get('cookieVersion');
+
+    if (storedVersion !== COOKIE_VERSION) {
+      console.log('Resetting outdated cookies...');
+      Cookies.remove('popularSearches');
+      Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
+    }
 
     const searches = Cookies.get('popularSearches');
     if (!searches) return;
 
     try {
-      const decodedSearches = decodeURIComponent(searches);
-      const parsedSearches = JSON.parse(decodedSearches) as SearchItem[];
-
-      const validCourses = parsedSearches
-        .filter((item) => item && typeof item.course === 'string')
-        .map((item) => item.course.toUpperCase());
-
-      const uniqueCourses = Array.from(new Set(validCourses)).slice(0, 4);
+      const parsedSearches: SearchItem[] = JSON.parse(
+        decodeURIComponent(searches)
+      );
+      const uniqueCourses = Array.from(
+        new Set(parsedSearches.map((item) => item.course.toUpperCase()))
+      ).slice(0, 4);
       setRecentSearches(uniqueCourses);
     } catch (error) {
       console.error('Failed to parse recent searches:', error);
-      setRecentSearches([]);
     }
   }, []);
 
