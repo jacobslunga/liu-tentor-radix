@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LiU Tentor</title>
+    <meta
+      name="description"
+      content="Äntligen kan du hitta alla dina tentor från Linköpings Universitet på ett ställe!"
+    />
+    <!-- Google tag (gtag.js) -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-NKHYVYRG92"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      // Konfiguration för grundläggande spårning
+      gtag('config', 'G-NKHYVYRG92');
+
+      // Aktivera demografiska rapporter och annonsfunktioner
+      gtag('config', 'G-NKHYVYRG92', {
+        send_page_view: true,
+        allow_ad_personalization_signals: true,
+      });
+
+      // Aktivera annonsfunktioner för att samla in demografisk data
+      gtag('set', 'allow_ad_personalization_signals', true);
+    </script>
+    <script
+      async
+      src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4306335171749620"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

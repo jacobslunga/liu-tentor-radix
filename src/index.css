@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+@font-face {
+  font-family: 'Logo';
+  src: url('/fonts/DMSerifText-Regular.ttf');
+  font-weight: 700;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+@layer base {
+  :root {
+    --background: 240 5% 97%; /* Seasalt */
+    --foreground: 0 0% 10%; /* Nästan svart */
+    --card: 0 0% 100%; /* Vitt */
+    --card-foreground: 0 0% 10%; /* Nästan svart */
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 155 60% 40%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 90%; /* Silver */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 90%; /* Silver */
+    --muted-foreground: 0 0% 35%;
+    --accent: 0 0% 90%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 85%;
+    --ring: 0 0% 10%;
+    --chart-1: 0 0% 10%;
+    --chart-2: 0 0% 20%;
+    --chart-3: 0 0% 30%;
+    --chart-4: 0 0% 40%;
+    --chart-5: 0 0% 50%;
+    --radius: 0.7rem;
+  }
+
+  .dark {
+    --background: 220 5% 12%; /* Davy's gray */
+    --foreground: 0 0% 95%; /* Ljusare text för bättre kontrast */
+
+    --card: 220 5% 14%; /* Lite mörkare än bakgrunden */
+    --card-foreground: var(--foreground);
+
+    --popover: var(--card);
+    --popover-foreground: var(--foreground);
+
+    --primary: 120 40% 75%;
+    --primary-foreground: 0 0% 10%; /* Vit för bra kontrast */
+
+    --secondary: 220 5% 18%; /* En nyans ljusare än background */
+    --secondary-foreground: var(--foreground);
+
+    --muted: 220 5% 20%; /* Mjukare och bättre för UI-element */
+    --muted-foreground: 0 0% 55%; /* Ljusare grå för subtila texter */
+
+    --accent: 220 10% 25%; /* Mer definierad accent */
+    --accent-foreground: var(--foreground);
+
+    --destructive: 0 55% 35%; /* Dämpad röd för mindre aggressiv look */
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 220 5% 16%; /* Lätt kontrast för att separera element */
+    --input: var(--secondary);
+    --ring: 220 5% 22%; /* Mjuk men märkbar ring-effekt */
+
+    /* Diagramfärger (Balanserade kring huvudtemat) */
+    --chart-1: 220 5% 95%;
+    --chart-2: 220 5% 85%;
+    --chart-3: 220 5% 75%;
+    --chart-4: 220 5% 65%;
+    --chart-5: 220 5% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
