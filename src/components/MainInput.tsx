@@ -27,6 +27,7 @@ const MainInput: React.FC = () => {
     translations[language][key];
 
   const COOKIE_VERSION = '1.1';
+  const COOKIE_NAME = 'recentActivities_v3';
 
   const loadRecentSearches = () => {
     const cookieConsent = Cookies.get('cookieConsent');
@@ -96,19 +97,19 @@ const MainInput: React.FC = () => {
     const cookieConsent = Cookies.get('cookieConsent');
     if (cookieConsent !== 'true') return;
 
-    const searches = Cookies.get('popularSearches');
-
+    const searches = Cookies.get(COOKIE_NAME);
     let searchesArray: RecentActivity[] = [];
 
     try {
       searchesArray = searches ? JSON.parse(decodeURIComponent(searches)) : [];
     } catch (error) {
-      console.error('Failed to parse popular searches:', error);
+      console.error('Failed to parse recent activities cookie', error);
     }
 
     const existingIndex = searchesArray.findIndex(
       (item) => item.courseCode === course
     );
+
     if (existingIndex !== -1) {
       searchesArray[existingIndex].timestamp = Date.now();
     } else {
@@ -121,20 +122,16 @@ const MainInput: React.FC = () => {
     }
 
     searchesArray.sort((a, b) => b.timestamp - a.timestamp);
-    Cookies.set(
-      'recentActivities_v2',
-      encodeURIComponent(JSON.stringify(searchesArray)),
-      {
-        expires: 365,
-        domain:
-          window.location.hostname === 'liutentor.se'
-            ? '.liutentor.se'
-            : undefined,
-        sameSite: 'Lax',
-      }
-    );
 
-    loadRecentSearches();
+    // Store in the correct cookie (only encode once)
+    Cookies.set(COOKIE_NAME, JSON.stringify(searchesArray), {
+      expires: 365,
+      domain:
+        window.location.hostname === 'liutentor.se'
+          ? '.liutentor.se'
+          : undefined,
+      sameSite: 'Lax',
+    });
   };
 
   useEffect(() => {

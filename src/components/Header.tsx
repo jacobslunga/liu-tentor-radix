@@ -19,11 +19,6 @@ interface HeaderProps {
   inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
-interface SearchItem {
-  course: string;
-  timestamp: number;
-}
-
 const Header: FC<HeaderProps> = ({ inputRef }) => {
   const [courseCode, setCourseCode] = useState<string>('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -59,7 +54,7 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
     return translations[language][key];
   };
 
-  const COOKIE_NAME = 'recentActivities_v2'; // Standardized cookie name
+  const COOKIE_NAME = 'recentActivities_v3'; // Standardized cookie name
   const COOKIE_VERSION = '1.2'; // Increment version if structure changes
 
   const loadRecentSearches = () => {
@@ -124,36 +119,50 @@ const Header: FC<HeaderProps> = ({ inputRef }) => {
 
   const updateSearchCount = (course: string) => {
     const cookieConsent = Cookies.get('cookieConsent');
-    if (cookieConsent === 'true') {
-      const searches = Cookies.get('recentActivities_v2');
-      let searchesArray = searches
-        ? JSON.parse(decodeURIComponent(searches))
-        : [];
-      const existingCourseIndex = searchesArray.findIndex(
-        (item: SearchItem) => item.course === course
-      );
+    if (cookieConsent !== 'true') return;
 
-      if (existingCourseIndex !== -1) {
-        searchesArray[existingCourseIndex].timestamp = Date.now();
-      } else {
-        searchesArray.push({ course, timestamp: Date.now() });
-      }
+    const searches = Cookies.get(COOKIE_NAME);
+    interface RecentActivity {
+      courseCode: string;
+      courseName: string;
+      path: string;
+      timestamp: number;
+    }
 
-      searchesArray.sort(
-        (a: SearchItem, b: SearchItem) => b.timestamp - a.timestamp
-      );
+    let searchesArray: RecentActivity[] = [];
 
-      // Encode the JSON string before storing it in the cookie
-      const encodedSearches = encodeURIComponent(JSON.stringify(searchesArray));
-      Cookies.set('recentActivities_v2', encodedSearches, {
-        expires: 365,
-        domain:
-          window.location.hostname === 'liutentor.se'
-            ? '.liutentor.se'
-            : undefined,
-        sameSite: 'Lax',
+    try {
+      searchesArray = searches ? JSON.parse(decodeURIComponent(searches)) : [];
+    } catch (error) {
+      console.error('Failed to parse recent activities cookie', error);
+    }
+
+    const existingIndex = searchesArray.findIndex(
+      (item) => item.courseCode === course
+    );
+
+    if (existingIndex !== -1) {
+      searchesArray[existingIndex].timestamp = Date.now();
+    } else {
+      searchesArray.push({
+        courseCode: course,
+        courseName: course,
+        path: `/search/${course}`,
+        timestamp: Date.now(),
       });
     }
+
+    searchesArray.sort((a, b) => b.timestamp - a.timestamp);
+
+    // Store in the correct cookie (only encode once)
+    Cookies.set(COOKIE_NAME, JSON.stringify(searchesArray), {
+      expires: 365,
+      domain:
+        window.location.hostname === 'liutentor.se'
+          ? '.liutentor.se'
+          : undefined,
+      sameSite: 'Lax',
+    });
   };
 
   const fetchMatchingKurskoder = useCallback(

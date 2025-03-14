@@ -19,7 +19,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
     []
   );
 
-  const COOKIE_NAME = 'recentActivities_v2'; // Standardized cookie name
+  const COOKIE_NAME = 'recentActivities_v3'; // Standardized cookie name
   const COOKIE_VERSION = '1.2'; // Increment version if structure changes
 
   useEffect(() => {
