@@ -43,14 +43,12 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
   };
 
   React.useEffect(() => {
-    // Load recent searches when dialog opens
     if (open) {
       const cookieConsent = Cookies.get('cookieConsent');
       if (cookieConsent === 'true') {
         const searches = Cookies.get('popularSearches');
         if (searches) {
           try {
-            // Decode the URL-encoded cookie value
             const decodedSearches = decodeURIComponent(searches);
             const parsedSearches = JSON.parse(
               decodedSearches
