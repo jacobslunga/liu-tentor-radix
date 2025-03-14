@@ -68,7 +68,7 @@ body {
     --muted: 220 5% 20%; /* Mjukare och bättre för UI-element */
     --muted-foreground: 0 0% 55%; /* Ljusare grå för subtila texter */
 
-    --accent: 220 10% 25%; /* Mer definierad accent */
+    --accent: 220 10% 18%; /* Mer definierad accent */
     --accent-foreground: var(--foreground);
 
     --destructive: 0 55% 35%; /* Dämpad röd för mindre aggressiv look */

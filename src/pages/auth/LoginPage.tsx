@@ -54,7 +54,7 @@ const LoginPage: FC = () => {
       if (error) throw error;
 
       setIsSuccess(true);
-      navigate('/admin/dashboard');
+      navigate('/admin');
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setIsSuccess(false);
