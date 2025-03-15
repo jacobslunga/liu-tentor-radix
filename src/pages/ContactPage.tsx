@@ -3,10 +3,11 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { ArrowLeft, Mail, MessageSquare, SquareLibrary } from 'lucide-react';
 import { FC, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 const AboutPage: FC = () => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
 
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
@@ -33,12 +34,10 @@ const AboutPage: FC = () => {
             <h1 className='text-xl font-logo'>{getTranslation('homeTitle')}</h1>
           </Link>
 
-          <Link to='/'>
-            <Button variant='outline' size='sm'>
-              <ArrowLeft className='h-4 w-4' />
-              {language === 'sv' ? 'Tillbaka' : 'Back'}
-            </Button>
-          </Link>
+          <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
+            <ArrowLeft className='h-4 w-4' />
+            {language === 'sv' ? 'Tillbaka' : 'Back'}
+          </Button>
         </div>
       </div>
 

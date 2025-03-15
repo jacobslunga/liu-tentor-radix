@@ -1,12 +1,13 @@
 import React, { useEffect } from 'react';
 import { Upload, Heart, SquareLibrary, ArrowLeft } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import translations, { Language } from '@/util/translations';
 import { Button } from '@/components/ui/button';
 import { Helmet } from 'react-helmet';
 
 const UploadInfoPage: React.FC = () => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const getTranslation = (key: keyof (typeof translations)[Language]) =>
     translations[language][key];
@@ -32,15 +33,15 @@ const UploadInfoPage: React.FC = () => {
             className='flex items-center gap-2 hover:opacity-90 transition-opacity'
           >
             <SquareLibrary className='text-primary h-7 w-7' />
-            <h1 className='text-lg font-logo'>{getTranslation('homeTitle')}</h1>
+            <h1 className='text-xl text-foreground/80 font-logo'>
+              {getTranslation('homeTitle')}
+            </h1>
           </Link>
 
-          <Link to='/'>
-            <Button variant='outline' size='sm'>
-              <ArrowLeft className='h-4 w-4' />
-              {language === 'sv' ? 'Tillbaka' : 'Back'}
-            </Button>
-          </Link>
+          <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
+            <ArrowLeft className='h-4 w-4' />
+            {language === 'sv' ? 'Tillbaka' : 'Back'}
+          </Button>
         </div>
       </div>
 

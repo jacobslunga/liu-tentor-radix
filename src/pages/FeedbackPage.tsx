@@ -22,7 +22,7 @@ import {
 } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { Helmet } from 'react-helmet';
 
@@ -43,6 +43,7 @@ const formSchema = z.object({
 });
 
 const FeedbackPage: FC = () => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
@@ -118,15 +119,15 @@ const FeedbackPage: FC = () => {
             className='flex items-center gap-2 hover:opacity-90 transition-opacity'
           >
             <SquareLibrary className='text-primary h-7 w-7' />
-            <h1 className='text-xl font-logo'>{getTranslation('homeTitle')}</h1>
+            <h1 className='text-xl text-foreground/80 font-logo'>
+              {getTranslation('homeTitle')}
+            </h1>
           </Link>
 
-          <Link to='/'>
-            <Button variant='outline' size='sm'>
-              <ArrowLeft className='h-4 w-4' />
-              {language === 'sv' ? 'Tillbaka' : 'Back'}
-            </Button>
-          </Link>
+          <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
+            <ArrowLeft className='h-4 w-4' />
+            {language === 'sv' ? 'Tillbaka' : 'Back'}
+          </Button>
         </div>
       </div>
 

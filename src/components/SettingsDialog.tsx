@@ -157,7 +157,7 @@ const SettingsDialog: FC = () => {
                       ][language as 'en' | 'sv']
                     }
                   </h4>
-                  <div className='rounded-lg border bg-card p-3'>
+                  <div className='rounded-lg border bg-card'>
                     <table className='w-full'>
                       <tbody className='divide-y'>
                         {categoryShortcuts.map((shortcut) => (

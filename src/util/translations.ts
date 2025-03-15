@@ -187,6 +187,8 @@ export interface Translations {
     continueWhereYouLeftOff: string;
     recentActivityDescription: string;
     noRecentActivity: string;
+    lostMessage: string;
+    goHome: string;
   };
 }
 
@@ -403,6 +405,8 @@ const translations: Translations = {
     daysAgo: 'dagar sedan',
     recentActivityDescription: 'Här är dina senaste aktiviteter',
     noRecentActivity: 'Inga senaste aktiviteter',
+    lostMessage: 'Det verkar som att du kommit till den akademiska jungeln.',
+    goHome: 'Gå hem',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -615,6 +619,8 @@ const translations: Translations = {
     daysAgo: 'days ago',
     recentActivityDescription: 'Here are your recent activities',
     noRecentActivity: 'No recent activities',
+    goHome: 'Go home',
+    lostMessage: "It looks like you're lost in the academic void...",
   },
 };
 

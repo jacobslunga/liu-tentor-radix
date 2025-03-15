@@ -49,7 +49,7 @@ const Header = () => {
         aria-label={getTranslation('homeTitle')}
       >
         <SquareLibrary className='text-primary w-8 h-8 hover:scale-110 transition-transform duration-200' />
-        <h1 className='font-logo text-md'>LiU Tentor</h1>
+        <h1 className='font-logo text-md text-foreground/80'>LiU Tentor</h1>
       </Link>
 
       <div className='relative hidden sm:flex items-center' role='search'>

@@ -14,10 +14,11 @@ import {
   ArrowLeft,
 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 
 const UploadExamPage = () => {
+  const navigate = useNavigate();
   const { language } = useLanguage();
   const [files, setFiles] = useState<File[]>([]);
   const [kurskod, setKurskod] = useState('');
@@ -84,17 +85,15 @@ const UploadExamPage = () => {
             className='flex items-center gap-2 hover:opacity-90 transition-opacity'
           >
             <SquareLibrary className='text-primary h-7 w-7' />
-            <h1 className='text-lg font-logo'>
+            <h1 className='text-xl text-foreground/80 font-logo'>
               {language === 'sv' ? 'LiU Tentor' : 'LiU Exams'}
             </h1>
           </Link>
 
-          <Link to='/upload-info'>
-            <Button variant='outline' size='sm'>
-              <ArrowLeft className='h-4 w-4' />
-              {language === 'sv' ? 'Tillbaka' : 'Back'}
-            </Button>
-          </Link>
+          <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
+            <ArrowLeft className='h-4 w-4' />
+            {language === 'sv' ? 'Tillbaka' : 'Back'}
+          </Button>
         </div>
       </div>
 

@@ -20,11 +20,55 @@ body {
   padding: 0;
 }
 
+.kbd {
+  background-color: #333;
+  color: #fff;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.2rem;
+  font-size: 0.9rem;
+  font-family: monospace;
+}
+
+.react-pdf__Page {
+  display: flex;
+  justify-content: center;
+  margin: 0rem 1rem;
+}
+
+/* Assuming the PDF container has a class like .pdf-container */
+.pdf-container::-webkit-scrollbar {
+  width: 12px;
+}
+
+.pdf-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.pdf-container::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.5);
+  border-radius: 6px;
+  border: 3px solid transparent;
+}
+
+.pdf-container::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(100, 100, 100, 0.8);
+}
+
+/* Firefox-specific scrollbar styling */
+.pdf-container {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(100, 100, 100, 0.5) transparent;
+}
+
+textarea {
+  resize: none;
+}
+
 @layer base {
   :root {
     --background: 240 5% 97%; /* Seasalt */
     --foreground: 0 0% 10%; /* Nästan svart */
-    --card: 0 0% 100%; /* Vitt */
+    --card: 0 0% 97%;
     --card-foreground: 0 0% 10%; /* Nästan svart */
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 10%;
