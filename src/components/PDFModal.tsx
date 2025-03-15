@@ -388,21 +388,24 @@ const PDFModal: FC<PDFModalProps> = ({
   };
 
   useEffect(() => {
-    if (showAIDrawer || layoutMode === 'exam-with-facit' || showGlobalSearch)
-      return;
+    if (showAIDrawer || layoutMode !== 'exam-only' || showGlobalSearch) return;
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'e') {
-        setIsToggled((prev) => !prev);
+        setIsToggled((prev) => {
+          if (prev && isHovering) {
+            setIsHovering(false);
+          }
+          return !prev;
+        });
       }
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [showAIDrawer, setIsToggled, layoutMode, showGlobalSearch]);
+  }, [showAIDrawer, setIsToggled, layoutMode, showGlobalSearch, isHovering]);
 
   const changeLayoutMode = (mode: string) => {
     setLayoutMode(mode);

@@ -72,7 +72,7 @@ const Header = () => {
             {getTranslation('searchCoursePlaceholder')}
           </p>
         </div>
-        <kbd className='text-xs bg-foreground/10 p-1 rounded-md text-foreground/50 absolute right-5'>
+        <kbd className='text-xs bg-foreground/10 px-2 py-1 rounded-sm text-foreground/50 absolute right-5'>
           {modifierKey} + K
         </kbd>
       </div>
