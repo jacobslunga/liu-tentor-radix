@@ -14,7 +14,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center w-screen min-h-screen p-4 bg-background relative'>
+    <div className='flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background relative overflow-x-hidden'>
       <Helmet>
         <title>LiU Tentor</title>
       </Helmet>
@@ -33,7 +33,7 @@ export default function HomePage() {
       </div>
 
       {/* Main Content */}
-      <div className='w-full max-w-[80%] md:max-w-[60%] lg:max-w-[40%] flex flex-col items-center space-y-6'>
+      <div className='w-full max-w-[700px] flex flex-col items-center space-y-6'>
         {/* Search Section */}
         <div className='w-full flex flex-col items-start justify-start'>
           <MainInput />

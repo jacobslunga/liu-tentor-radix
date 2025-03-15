@@ -25,6 +25,15 @@ const SettingsDialog: FC = () => {
   const { changeLanguage, languages, language } = useLanguage();
   const [systemPrefersDark, setSystemPrefersDark] = useState(false);
 
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    const platform = window.navigator.platform.toLowerCase();
+    setIsMac(platform.includes('mac'));
+  }, []);
+
+  const modifierKey = isMac ? '⌘' : 'Ctrl';
+
   useEffect(() => {
     const isDarkMode = window.matchMedia(
       '(prefers-color-scheme: dark)'
@@ -63,7 +72,7 @@ const SettingsDialog: FC = () => {
   ];
 
   const shortcuts = [
-    { action: 'globalSearch', key: '⌘ + J', category: 'search' },
+    { action: 'globalSearch', key: `${modifierKey} + K`, category: 'search' },
     { action: 'moveFacitRight', key: '→', category: 'navigation' },
     { action: 'moveFacitLeft', key: '←', category: 'navigation' },
     { action: 'toggleShowFacit', key: 'T', category: 'visibility' },

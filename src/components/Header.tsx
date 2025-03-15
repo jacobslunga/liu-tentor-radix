@@ -9,6 +9,14 @@ import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 const Header = () => {
   const [transparentBg, setTransparentBg] = useState<boolean>(true);
   const { setShowGlobalSearch } = useContext(ShowGlobalSearchContext);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    const platform = window.navigator.platform.toLowerCase();
+    setIsMac(platform.includes('mac'));
+  }, []);
+
+  const modifierKey = isMac ? '⌘' : 'Ctrl';
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,7 +45,7 @@ const Header = () => {
     <header
       className={`sticky ${
         transparentBg ? 'border-b-transparent' : 'border-b shadow-sm'
-      } transition-all bg-background duration-200 top-0 backdrop-blur-sm z-50 h-16 w-screen flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
+      } transition-all bg-background duration-200 top-0 backdrop-blur-sm z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
       role='banner'
       style={{
         maxWidth: '100vw',
@@ -65,8 +73,7 @@ const Header = () => {
           </p>
         </div>
         <kbd className='text-xs bg-foreground/10 p-1 rounded-md text-foreground/50 absolute right-5'>
-          <kbd className='text-xs text-foreground/50'>⌘</kbd> +{' '}
-          <kbd className='text-xs text-foreground/50'>J</kbd>
+          {modifierKey} + K
         </kbd>
       </div>
 

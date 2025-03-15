@@ -22,8 +22,8 @@ const Footer: FC = () => {
   ];
 
   return (
-    <footer className='w-full bg-background py-10 mt-10 border-t'>
-      <div className='container mx-auto px-6 flex flex-col items-center space-y-6'>
+    <footer className='w-full bg-background py-10 mt-10 border-t max-w-full'>
+      <div className='flex flex-col items-center space-y-6'>
         {/* Länkar */}
         <nav className='flex flex-wrap justify-center gap-6 text-xs font-normal text-foreground/70'>
           {links.map((link) => (
