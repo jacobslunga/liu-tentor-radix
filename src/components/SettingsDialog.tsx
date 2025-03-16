@@ -131,10 +131,10 @@ const SettingsDialog: FC = () => {
                 onClick={() => setTheme(id)}
                 className={cn(
                   'flex-1 cursor-pointer rounded-md border border-border transition-all',
-                  'flex flex-col items-center justify-center gap-2 py-4 hover:border-primary',
+                  'flex flex-col items-center justify-center gap-2 py-4 hover:bg-primary/5 hover:border-primary',
                   theme === id
-                    ? 'bg-primary/10 border-primary'
-                    : 'bg-card hover:bg-card/80'
+                    ? 'bg-primary/10 border-primary hover:bg-primary/10'
+                    : 'bg-card'
                 )}
               >
                 {icon}
@@ -151,21 +151,48 @@ const SettingsDialog: FC = () => {
             {getTranslation('fontDescription')}
           </p>
           <div className='flex gap-2'>
-            {fontOptions.map(({ id, label }) => (
-              <div
-                key={id}
-                onClick={() => setFont(id)}
-                className={cn(
-                  'flex-1 cursor-pointer rounded-md border border-border transition-all',
-                  'flex flex-col items-center justify-center py-4 hover:border-primary',
-                  font === id
-                    ? 'bg-primary/10 border-primary'
-                    : 'bg-card hover:bg-card/80'
-                )}
-              >
-                <span className='text-sm font-medium'>{label}</span>
-              </div>
-            ))}
+            {fontOptions.map(({ id, label }) => {
+              const fontStyle = {
+                custom: { fontFamily: "'Space Grotesk', sans-serif" },
+                system: {
+                  fontFamily:
+                    "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
+                },
+                jetbrains: { fontFamily: "'Roboto Mono', monospace" },
+              };
+
+              return (
+                <div
+                  key={id}
+                  onClick={() => setFont(id)}
+                  className={cn(
+                    'flex-1 cursor-pointer rounded-md border border-border transition-all',
+                    'flex flex-col items-center justify-center py-4 hover:bg-primary/5 hover:border-primary',
+                    font === id
+                      ? 'bg-primary/10 border-primary hover:bg-primary/10'
+                      : 'bg-card'
+                  )}
+                >
+                  <span
+                    className='text-sm font-medium'
+                    style={fontStyle[id as keyof typeof fontStyle]}
+                  >
+                    {label}
+                  </span>
+
+                  <span
+                    className='text-xs text-muted-foreground mt-1'
+                    style={fontStyle[id as keyof typeof fontStyle]}
+                  >
+                    {id === 'custom'
+                      ? 'Space Grotesk'
+                      : id === 'system'
+                      ? 'System UI'
+                      : 'Roboto Mono'}
+                  </span>
+                </div>
+              );
+            })}
           </div>
         </div>
 
