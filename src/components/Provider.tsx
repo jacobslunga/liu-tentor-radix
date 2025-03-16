@@ -1,4 +1,5 @@
 import { AuthProvider } from '@/context/AuthContext';
+import { FontProvider } from '@/context/FontContext';
 import { LanguageProvider } from '@/context/LanguageContext';
 import { ShowGlobalSearchProvider } from '@/context/ShowGlobalSearchContext';
 import { TextSizeProvider } from '@/context/TextSizeContext';
@@ -9,9 +10,11 @@ export default function Provider({ children }: { children: React.ReactNode }) {
     <AuthProvider>
       <ThemeProvider>
         <TextSizeProvider>
-          <LanguageProvider>
-            <ShowGlobalSearchProvider>{children}</ShowGlobalSearchProvider>
-          </LanguageProvider>
+          <FontProvider>
+            <LanguageProvider>
+              <ShowGlobalSearchProvider>{children}</ShowGlobalSearchProvider>
+            </LanguageProvider>
+          </FontProvider>
         </TextSizeProvider>
       </ThemeProvider>
     </AuthProvider>

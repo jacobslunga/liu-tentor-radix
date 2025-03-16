@@ -14,17 +14,19 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Settings, Moon, Sun } from 'lucide-react';
+import { Settings, Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { useFont } from '@/context/FontContext';
 import translations from '@/util/translations';
 import { FC, JSX, useEffect, useState } from 'react';
+import { cn } from '@/lib/utils';
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
   const { changeLanguage, languages, language } = useLanguage();
-  const [systemPrefersDark, setSystemPrefersDark] = useState(false);
-
+  const { font, setFont } = useFont();
+  const [_, setSystemPrefersDark] = useState(false);
   const [isMac, setIsMac] = useState(false);
 
   useEffect(() => {
@@ -58,17 +60,23 @@ const SettingsDialog: FC = () => {
     label: string;
     icon: JSX.Element;
   }[] = [
-    { id: 'light', label: 'Light', icon: <Sun className='w-4 h-4' /> },
-    { id: 'dark', label: 'Dark', icon: <Moon className='w-4 h-4' /> },
+    { id: 'light', label: 'Light', icon: <Sun className='w-5 h-5' /> },
+    { id: 'dark', label: 'Dark', icon: <Moon className='w-5 h-5' /> },
     {
       id: 'system',
       label: 'System',
-      icon: systemPrefersDark ? (
-        <Moon className='w-4 h-4' />
-      ) : (
-        <Sun className='w-4 h-4' />
-      ),
+      icon: <Monitor className='w-5 h-5' />,
     },
+  ];
+
+  const fontOptions: {
+    id: 'custom' | 'system' | 'jetbrains';
+    label: string;
+    description?: string;
+  }[] = [
+    { id: 'custom', label: 'Default' },
+    { id: 'system', label: 'Match system' },
+    { id: 'jetbrains', label: 'Monospace' },
   ];
 
   const shortcuts = [
@@ -111,19 +119,52 @@ const SettingsDialog: FC = () => {
         </DialogHeader>
 
         {/* Theme Selector */}
-        <div className='space-y-4'>
-          <h3 className='font-medium'>{getTranslation('settingsTheme')}</h3>
+        <div className='space-y-3'>
+          <h3 className='font-medium'>{getTranslation('theme')}</h3>
+          <p className='text-sm text-muted-foreground'>
+            {getTranslation('themeDescription')}
+          </p>
           <div className='flex gap-2'>
             {themeOptions.map(({ id, label, icon }) => (
-              <Button
+              <div
                 key={id}
-                variant={theme === id ? 'default' : 'outline'}
-                className='flex items-center gap-2'
                 onClick={() => setTheme(id)}
+                className={cn(
+                  'flex-1 cursor-pointer rounded-md border border-border transition-all',
+                  'flex flex-col items-center justify-center gap-2 py-4 hover:border-primary',
+                  theme === id
+                    ? 'bg-primary/10 border-primary'
+                    : 'bg-card hover:bg-card/80'
+                )}
               >
                 {icon}
-                {label}
-              </Button>
+                <span className='text-sm font-medium'>{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Font Selector */}
+        <div className='space-y-3'>
+          <h3 className='font-medium'>{getTranslation('font')}</h3>
+          <p className='text-sm text-muted-foreground'>
+            {getTranslation('fontDescription')}
+          </p>
+          <div className='flex gap-2'>
+            {fontOptions.map(({ id, label }) => (
+              <div
+                key={id}
+                onClick={() => setFont(id)}
+                className={cn(
+                  'flex-1 cursor-pointer rounded-md border border-border transition-all',
+                  'flex flex-col items-center justify-center py-4 hover:border-primary',
+                  font === id
+                    ? 'bg-primary/10 border-primary'
+                    : 'bg-card hover:bg-card/80'
+                )}
+              >
+                <span className='text-sm font-medium'>{label}</span>
+              </div>
             ))}
           </div>
         </div>

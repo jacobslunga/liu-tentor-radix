@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
 import { ArrowRight, SquareLibrary } from 'lucide-react';
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
@@ -12,6 +13,13 @@ export default function HomePage() {
   const getTranslation = (key: keyof (typeof translations)[Language]) => {
     return translations[language][key] || key;
   };
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, []);
 
   return (
     <div className='flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background relative overflow-x-hidden'>

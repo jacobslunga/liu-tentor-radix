@@ -189,6 +189,10 @@ export interface Translations {
     noRecentActivity: string;
     lostMessage: string;
     goHome: string;
+    theme: string;
+    themeDescription: string;
+    font: string;
+    fontDescription: string;
   };
 }
 
@@ -407,6 +411,10 @@ const translations: Translations = {
     noRecentActivity: 'Inga senaste aktiviteter',
     lostMessage: 'Det verkar som att du kommit till den akademiska jungeln.',
     goHome: 'Gå hem',
+    theme: 'Tema',
+    font: 'Font',
+    fontDescription: 'Välj vilken font du vill använda på LiU Tentor',
+    themeDescription: 'Välj vilket tema du vill använda på LiU Tentor',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -621,6 +629,10 @@ const translations: Translations = {
     noRecentActivity: 'No recent activities',
     goHome: 'Go home',
     lostMessage: "It looks like you're lost in the academic void...",
+    font: 'Font',
+    theme: 'Theme',
+    fontDescription: 'Choose which font you want to use on LiU Exams',
+    themeDescription: 'Choose which theme you want to use on LiU Exams',
   },
 };
 
