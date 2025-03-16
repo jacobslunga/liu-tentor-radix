@@ -239,4 +239,5 @@ export const kurskodArray: string[] = [
   'NKEC16',
   '702G22',
   '732G51',
+  'TSEA22',
 ];
