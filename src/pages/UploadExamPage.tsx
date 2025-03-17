@@ -12,6 +12,8 @@ import {
   Upload,
   SquareLibrary,
   ArrowLeft,
+  CheckCircle,
+  XCircle,
 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { Link, useNavigate } from 'react-router-dom';
@@ -23,6 +25,9 @@ const UploadExamPage = () => {
   const [files, setFiles] = useState<File[]>([]);
   const [kurskod, setKurskod] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<'success' | 'error' | null>(
+    null
+  );
 
   const handleUpload = async () => {
     if (files.length === 0 || !kurskod) {
@@ -30,23 +35,39 @@ const UploadExamPage = () => {
     }
 
     setLoading(true);
-    for (const file of files) {
-      const base64Content = await fileToBase64(file);
-      const { error } = await supabase.from('uploaded_documents').insert([
-        {
-          namn: file.name,
-          kurskod: kurskod.toUpperCase(),
-          content: base64Content,
-          status: 'pending',
-        },
-      ]);
+    let success = true;
 
-      if (error) {
+    for (const file of files) {
+      try {
+        const base64Content = await fileToBase64(file);
+        const { error } = await supabase.from('uploaded_documents').insert([
+          {
+            namn: file.name,
+            kurskod: kurskod.toUpperCase(),
+            content: base64Content,
+            status: 'pending',
+          },
+        ]);
+
+        if (error) {
+          console.error('Upload error:', error.message);
+          success = false;
+          break;
+        }
+      } catch (error) {
+        console.error('File conversion error:', error);
+        success = false;
         break;
       }
     }
 
     setLoading(false);
+    setUploadStatus(success ? 'success' : 'error');
+
+    if (success) {
+      setFiles([]);
+      setKurskod('');
+    }
   };
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -69,7 +90,13 @@ const UploadExamPage = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+
+    // Reset upload status after a few seconds
+    if (uploadStatus) {
+      const timer = setTimeout(() => setUploadStatus(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [uploadStatus]);
 
   return (
     <div className='min-h-screen bg-background flex flex-col'>
@@ -100,7 +127,6 @@ const UploadExamPage = () => {
       {/* Main Content */}
       <div className='container max-w-3xl mx-auto px-4 py-12 space-y-6 text-center'>
         <Upload className='text-primary h-12 w-12 mx-auto' />
-
         <h1 className='text-3xl font-semibold'>
           {language === 'sv' ? 'Ladda upp tenta' : 'Upload exam'}
         </h1>
@@ -161,8 +187,28 @@ const UploadExamPage = () => {
             </div>
           )}
 
-          {/* Upload knapp */}
-          <div className='mt-6 flex flex-col sm:flex-row justify-end gap-3'>
+          {/* Feedback Message */}
+          {uploadStatus && (
+            <div
+              className={`mt-4 flex items-center justify-center text-sm p-2 rounded-lg ${
+                uploadStatus === 'success'
+                  ? 'bg-green-100 text-green-600'
+                  : 'bg-red-100 text-red-600'
+              }`}
+            >
+              {uploadStatus === 'success' ? (
+                <CheckCircle className='h-5 w-5 mr-2' />
+              ) : (
+                <XCircle className='h-5 w-5 mr-2' />
+              )}
+              {uploadStatus === 'success'
+                ? 'Uppladdning lyckades!'
+                : 'Något gick fel. Försök igen.'}
+            </div>
+          )}
+
+          {/* Upload Button */}
+          <div className='mt-6 flex justify-end gap-3'>
             <Button
               variant='outline'
               onClick={() => {
@@ -171,24 +217,18 @@ const UploadExamPage = () => {
               }}
               disabled={loading || (!files.length && !kurskod)}
             >
-              {language === 'sv' ? 'Återställ' : 'Reset'}
+              Återställ
             </Button>
-
             <Button
               onClick={handleUpload}
               disabled={files.length === 0 || !kurskod || loading}
             >
               {loading ? (
-                <span className='flex items-center gap-2'>
-                  <LoaderCircle className='h-4 w-4 animate-spin' />
-                  {language === 'sv' ? 'Laddar upp...' : 'Uploading...'}
-                </span>
+                <LoaderCircle className='h-4 w-4 animate-spin' />
               ) : (
-                <span className='flex items-center gap-2'>
-                  <Upload className='h-4 w-4' />
-                  {language === 'sv' ? 'Ladda upp' : 'Upload'}
-                </span>
-              )}
+                <Upload className='h-4 w-4' />
+              )}{' '}
+              Ladda upp
             </Button>
           </div>
         </Card>

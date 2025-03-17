@@ -19,6 +19,8 @@ import {
 } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 interface UploadedDocument {
   id: number;
@@ -252,19 +254,25 @@ const UploadedExamsPage: FC = () => {
   };
 
   const downloadAll = async () => {
+    if (filteredDocuments.length === 0) return;
+
+    const zip = new JSZip();
+    const folder = zip.folder('Tentor');
+
     for (const doc of filteredDocuments) {
-      const blob = await fetch(
-        `data:application/pdf;base64,${doc.content}`
-      ).then((r) => r.blob());
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = doc.namn;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      window.URL.revokeObjectURL(url);
+      try {
+        const response = await fetch(
+          `data:application/pdf;base64,${doc.content}`
+        );
+        const blob = await response.blob();
+        folder?.file(`${doc.namn}.pdf`, blob);
+      } catch (error) {
+        console.error(`Kunde inte ladda ner ${doc.namn}`, error);
+      }
     }
+
+    const zipBlob = await zip.generateAsync({ type: 'blob' });
+    saveAs(zipBlob, 'Tentor.zip');
   };
 
   const filteredDocuments = documents.filter((doc) => {
