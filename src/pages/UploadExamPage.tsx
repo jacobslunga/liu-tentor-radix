@@ -14,14 +14,18 @@ import {
   ArrowLeft,
   CheckCircle,
   XCircle,
+  Info,
 } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import translations from '@/util/translations';
 
 const UploadExamPage = () => {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const t = translations[language];
+
   const [files, setFiles] = useState<File[]>([]);
   const [kurskod, setKurskod] = useState('');
   const [loading, setLoading] = useState(false);
@@ -91,7 +95,6 @@ const UploadExamPage = () => {
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // Reset upload status after a few seconds
     if (uploadStatus) {
       const timer = setTimeout(() => setUploadStatus(null), 3000);
       return () => clearTimeout(timer);
@@ -101,7 +104,7 @@ const UploadExamPage = () => {
   return (
     <div className='min-h-screen bg-background flex flex-col'>
       <Helmet>
-        <title>{language === 'sv' ? 'Ladda upp' : 'Upload'} | LiU Tentor</title>
+        <title>{t.uploadTitle} | LiU Tentor</title>
       </Helmet>
 
       {/* Header */}
@@ -113,13 +116,13 @@ const UploadExamPage = () => {
           >
             <SquareLibrary className='text-primary h-7 w-7' />
             <h1 className='text-xl text-foreground/80 font-logo'>
-              {language === 'sv' ? 'LiU Tentor' : 'LiU Exams'}
+              {t.homeTitle}
             </h1>
           </Link>
 
           <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
             <ArrowLeft className='h-4 w-4' />
-            {language === 'sv' ? 'Tillbaka' : 'Back'}
+            {t.goBack}
           </Button>
         </div>
       </div>
@@ -127,22 +130,14 @@ const UploadExamPage = () => {
       {/* Main Content */}
       <div className='container max-w-3xl mx-auto px-4 py-12 space-y-6 text-center'>
         <Upload className='text-primary h-12 w-12 mx-auto' />
-        <h1 className='text-3xl font-semibold'>
-          {language === 'sv' ? 'Ladda upp tenta' : 'Upload exam'}
-        </h1>
-        <p className='text-sm text-muted-foreground'>
-          {language === 'sv'
-            ? 'Hjälp andra studenter genom att dela tentor och facit'
-            : 'Help other students by sharing exams and solutions'}
-        </p>
+        <h1 className='text-3xl font-semibold'>{t.uploadTitle}</h1>
+        <p className='text-sm text-muted-foreground'>{t.uploadDescription}</p>
 
         <Card className='p-6 shadow-sm border border-border'>
           {/* Input fält för kurskod */}
           <Input
             type='text'
-            placeholder={
-              language === 'sv' ? 'Ange kurskod' : 'Enter course code'
-            }
+            placeholder={t.courseCodePlaceholder}
             value={kurskod}
             onChange={(e) => setKurskod(e.target.value)}
             className='text-base py-3'
@@ -161,9 +156,7 @@ const UploadExamPage = () => {
             <input {...getInputProps()} disabled={loading} />
             <FilePlus2 className='h-12 w-12 text-muted-foreground mx-auto' />
             <p className='text-sm text-muted-foreground mt-2'>
-              {language === 'sv'
-                ? 'Dra och släpp PDF-filer här'
-                : 'Drag and drop PDF files here'}
+              {t.dragAndDrop}
             </p>
           </div>
 
@@ -201,9 +194,7 @@ const UploadExamPage = () => {
               ) : (
                 <XCircle className='h-5 w-5 mr-2' />
               )}
-              {uploadStatus === 'success'
-                ? 'Uppladdning lyckades!'
-                : 'Något gick fel. Försök igen.'}
+              {uploadStatus === 'success' ? t.uploadSuccess : t.uploadError}
             </div>
           )}
 
@@ -217,7 +208,7 @@ const UploadExamPage = () => {
               }}
               disabled={loading || (!files.length && !kurskod)}
             >
-              Återställ
+              {t.reset}
             </Button>
             <Button
               onClick={handleUpload}
@@ -228,10 +219,19 @@ const UploadExamPage = () => {
               ) : (
                 <Upload className='h-4 w-4' />
               )}{' '}
-              Ladda upp
+              {t.uploadButton}
             </Button>
           </div>
         </Card>
+        {/* Information Box */}
+        <div className='p-4 bg-muted border border-border rounded-lg flex flex-col items-center gap-3'>
+          <Info className='h-5 w-5 text-primary' />
+          <p className='text-sm text-muted-foreground text-center'>
+            {language === 'sv'
+              ? 'Observera att uppladdade tentor granskas innan de blir tillgängliga. Därmed kan det ta en stund innan de syns på sidan.'
+              : 'Please note that uploaded exams are reviewed before they become available. Therefore, it may take a while before they appear on the site.'}
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -410,7 +410,7 @@ const translations: Translations = {
     daysAgo: 'dagar sedan',
     recentActivityDescription: 'Här är dina senaste aktiviteter',
     noRecentActivity: 'Inga senaste aktiviteter',
-    lostMessage: 'Det verkar som att du kommit till den akademiska jungeln.',
+    lostMessage: 'Det verkar som att du kommit till den akademiska djungeln.',
     goHome: 'Gå hem',
     theme: 'Tema',
     font: 'Font',

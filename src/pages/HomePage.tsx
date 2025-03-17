@@ -1,6 +1,7 @@
 import ContinueWhereYouLeftOff from '@/components/ContinueWhereYouLeftOff';
 import MainInput from '@/components/MainInput';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
 import {
@@ -9,6 +10,7 @@ import {
   MessageCircle,
   FileText,
   Mail,
+  Plus,
 } from 'lucide-react';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
@@ -39,7 +41,7 @@ export default function HomePage() {
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
           <MessageCircle className='w-5 h-5' />
-          <span>{getTranslation('feedbackTitle')}</span>
+          <span>{getTranslation('feedbackLink')}</span>
         </Link>
         <Link
           to='/kontakt'
@@ -54,6 +56,15 @@ export default function HomePage() {
         >
           <FileText className='w-5 h-5' />
           <span>Privacy Policy</span>
+        </Link>
+
+        <Separator />
+
+        <Link to='/upload-exams'>
+          <Button size='sm'>
+            <Plus className='w-5 h-5' />
+            <p>{getTranslation('uploadButton')}</p>
+          </Button>
         </Link>
       </aside>
 
