@@ -3,29 +3,59 @@ import MainInput from '@/components/MainInput';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
-import { ArrowRight, SquareLibrary } from 'lucide-react';
+import {
+  ArrowRight,
+  SquareLibrary,
+  MessageCircle,
+  FileText,
+  Mail,
+} from 'lucide-react';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
 
 export default function HomePage() {
   const { language } = useLanguage();
-  const getTranslation = (key: keyof (typeof translations)[Language]) => {
-    return translations[language][key] || key;
-  };
+  const getTranslation = (key: keyof (typeof translations)[Language]) =>
+    translations[language][key] || key;
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   return (
-    <div className='flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background relative overflow-x-hidden'>
+    <div className='relative flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background overflow-x-hidden'>
       <Helmet>
         <title>LiU Tentor</title>
       </Helmet>
+
+      {/* Snabblänkar - visas endast på lg+ skärmar */}
+      <aside className='hidden lg:flex flex-col space-y-4 absolute left-0 top-1/3 bg-foreground/5 p-3 rounded-tr-lg rounded-br-lg'>
+        <h2 className='text-sm text-foreground/60 font-semibold'>
+          {getTranslation('quickLinks')}
+        </h2>
+        <Link
+          to='/feedback'
+          className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
+        >
+          <MessageCircle className='w-5 h-5' />
+          <span>{getTranslation('feedbackTitle')}</span>
+        </Link>
+        <Link
+          to='/kontakt'
+          className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
+        >
+          <Mail className='w-5 h-5' />
+          <span>{getTranslation('contactUs')}</span>
+        </Link>
+        <Link
+          to='/privacy-policy'
+          className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
+        >
+          <FileText className='w-5 h-5' />
+          <span>Privacy Policy</span>
+        </Link>
+      </aside>
 
       {/* Large Centered Logo */}
       <div className='flex flex-col items-center space-y-2 mb-20'>

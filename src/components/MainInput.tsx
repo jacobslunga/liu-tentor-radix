@@ -203,7 +203,7 @@ const MainInput: React.FC = () => {
       <div
         className={`w-full relative border shadow-sm dark:shadow-md border-foreground/20 ${
           focus ? 'border-primary' : 'hover:border-foreground/40'
-        } bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 p-4 text-sm text-foreground/80 outline-none`}
+        } bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 text-sm text-foreground/80 outline-none`}
       >
         <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground' />
         <input
@@ -211,7 +211,7 @@ const MainInput: React.FC = () => {
           value={courseCode}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className='w-full pl-10 pr-10 border-none bg-transparent text-sm text-foreground/80 outline-none'
+          className='w-full pl-10 pr-10 p-4 border-none bg-transparent text-sm text-foreground/80 outline-none'
           autoFocus
           onFocus={() => setFocus(true)}
           onBlur={() => setFocus(false)}

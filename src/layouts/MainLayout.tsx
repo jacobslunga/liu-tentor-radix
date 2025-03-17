@@ -36,12 +36,22 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className='flex flex-col min-h-screen bg-background'>
+      {/* Main Content */}
       <main className='flex-grow'>
         <Outlet />
       </main>
-      <CookieBanner />
-      {!isExam && <Footer />}
 
+      {/* Footer alltid synlig */}
+      {!isExam && (
+        <div className='mt-auto'>
+          <Footer />
+        </div>
+      )}
+
+      {/* Cookie Banner */}
+      <CookieBanner />
+
+      {/* Global Search Overlay */}
       <GlobalCourseSearch
         open={showGlobalSearch}
         setOpen={setShowGlobalSearch}

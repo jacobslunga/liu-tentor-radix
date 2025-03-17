@@ -7,12 +7,8 @@ import { SquareLibrary } from 'lucide-react';
 
 const Footer: FC = () => {
   const { language } = useLanguage();
-
-  const getTranslation = (
-    key: keyof (typeof translations)[typeof language]
-  ) => {
-    return translations[language][key];
-  };
+  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
+    translations[language][key];
 
   const links = [
     { name: getTranslation('homeLink'), href: '/' },
@@ -22,15 +18,15 @@ const Footer: FC = () => {
   ];
 
   return (
-    <footer className='w-full bg-background py-10 mt-10 border-t max-w-full'>
-      <div className='flex flex-col items-center space-y-6'>
+    <footer className='w-full bg-background py-6 border-t border-border mt-auto relative z-10'>
+      <div className='container mx-auto flex flex-col items-center space-y-4'>
         {/* Länkar */}
-        <nav className='flex flex-wrap justify-center gap-6 text-xs font-normal text-foreground/70'>
+        <nav className='flex flex-wrap justify-center gap-6 text-xs text-foreground/70'>
           {links.map((link) => (
             <Link
               key={link.href}
               to={link.href}
-              className='relative group transition-all text-xs'
+              className='relative group transition-all text-xs hover:text-primary'
             >
               {link.name}
               <span className='absolute left-0 bottom-0 w-full h-[1px] bg-foreground/80 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out' />
@@ -39,9 +35,7 @@ const Footer: FC = () => {
         </nav>
 
         {/* Inställningar */}
-        <div className='flex items-center justify-center'>
-          <SettingsDialog />
-        </div>
+        <SettingsDialog />
 
         {/* Copyright */}
         <p className='text-xs text-gray-500'>
@@ -49,9 +43,9 @@ const Footer: FC = () => {
           {getTranslation('allRightsReserved')}
         </p>
 
-        {/* Dimmad Titel */}
-        <p className='text-lg text-foreground/50 font-logo select-none tracking-tight text-center flex flex-row items-center justify-center space-x-2'>
-          <SquareLibrary className='text-primary w-7 h-7' />
+        {/* Branding */}
+        <p className='text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-2'>
+          <SquareLibrary className='text-primary w-6 h-6' />
           <span>{getTranslation('homeTitle')}</span>
         </p>
       </div>
