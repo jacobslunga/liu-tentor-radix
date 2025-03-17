@@ -2,7 +2,7 @@ import { Exam } from '@/components/data-table/columns';
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/context/ThemeContext';
 import { LoaderCircle } from 'lucide-react';
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import { Document, Page } from 'react-pdf';
 import { Link } from 'react-router-dom';
 import { pdfjs } from 'react-pdf';
@@ -17,7 +17,7 @@ interface FacitViewerProps {
   onFacitDocumentLoadSuccess: ({ numPages }: { numPages: number }) => void;
   selectedFacit: Exam | null;
   loadingFacit: boolean;
-  getTranslation: (key: any) => string;
+  getTranslation: any;
   setFacitScale: React.Dispatch<React.SetStateAction<number>>;
 }
 
@@ -34,9 +34,14 @@ const FacitViewer: FC<FacitViewerProps> = ({
   getTranslation,
 }) => {
   const { effectiveTheme } = useTheme();
+  const [isPdfLoaded, setIsPdfLoaded] = useState(false);
   const [pageRotations, setPageRotations] = useState<Record<number, number>>(
     {}
   );
+
+  useEffect(() => {
+    setIsPdfLoaded(false);
+  }, [facitPdfUrl]);
 
   const handlePageLoadSuccess = (
     page: pdfjs.PDFPageProxy,
@@ -48,19 +53,6 @@ const FacitViewer: FC<FacitViewerProps> = ({
       [pageNumber]: nativeRotation,
     }));
   };
-
-  if (loadingFacit) {
-    return (
-      <div className='w-full h-full items-center justify-center flex'>
-        <LoaderCircle
-          className='w-10 h-10 animate-spin'
-          style={{
-            zIndex: 5000,
-          }}
-        />
-      </div>
-    );
-  }
 
   const getPdfStyles = () => {
     switch (effectiveTheme) {
@@ -97,7 +89,6 @@ const FacitViewer: FC<FacitViewerProps> = ({
       <p className='text-sm text-center text-primary/50 max-w-full md:max-w-[70%]'>
         {getTranslation('noFacitAvailableDescription')}
       </p>
-
       <Link to='/upload-exams'>
         <Button>{getTranslation('moreExamsBtn')}</Button>
       </Link>
@@ -105,22 +96,31 @@ const FacitViewer: FC<FacitViewerProps> = ({
   ) : (
     <div
       className='w-full h-full overscroll-auto overflow-auto'
-      style={{
-        backgroundColor: 'var(--background)',
-        color: 'var(--foreground)',
-      }}
+      style={getPdfStyles()}
     >
-      <div style={getPdfStyles()}>
+      {/* Placeholder för att undvika "No PDF file specified" */}
+      {!isPdfLoaded && (
+        <div className='w-full h-full flex items-center justify-center'>
+          <LoaderCircle className='w-10 h-10 animate-spin' />
+        </div>
+      )}
+
+      {/* PDF Viewer */}
+      <div style={{ display: isPdfLoaded ? 'block' : 'none' }}>
         <Document
           file={facitPdfUrl}
-          onLoadSuccess={onFacitDocumentLoadSuccess}
+          onLoadSuccess={(data) => {
+            onFacitDocumentLoadSuccess(data);
+            setIsPdfLoaded(true);
+          }}
+          renderMode='canvas'
+          className='w-full h-full flex flex-col items-center justify-start'
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className='w-full h-full flex flex-col items-center justify-start'
         >
           {facitNumPages &&
             facitNumPages > 0 &&
-            Array.from({ length: facitNumPages || 0 }, (_, i) => (
+            Array.from({ length: facitNumPages }, (_, i) => (
               <Page
                 key={i + 1}
                 pageNumber={i + 1}

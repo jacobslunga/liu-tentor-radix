@@ -71,7 +71,7 @@ export default function HomePage() {
       {/* Large Centered Logo */}
       <div className='flex flex-col items-center space-y-2 mb-20'>
         <div className='flex flex-row items-center justify-center space-x-2'>
-          <SquareLibrary className='text-primary w-12 h-12 md:w-16 md:h-16' />
+          <SquareLibrary className='text-primary w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16' />
           <h1 className='text-3xl md:text-4xl lg:text-5xl font-logo text-foreground/80 tracking-tight'>
             {getTranslation('homeTitle')}
           </h1>
@@ -82,7 +82,7 @@ export default function HomePage() {
       </div>
 
       {/* Main Content */}
-      <div className='w-full max-w-[700px] flex flex-col items-center space-y-6'>
+      <div className='w-full max-w-[600px] flex flex-col items-center space-y-6'>
         {/* Search Section */}
         <div className='w-full flex flex-col items-start justify-start'>
           <MainInput />

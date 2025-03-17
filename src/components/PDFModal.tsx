@@ -556,7 +556,7 @@ const PDFModal: FC<PDFModalProps> = ({
                     ref={leftPanelRef}
                     onResize={handlePanelResize}
                   >
-                    <div className='w-full h-full pdf-container overflow-auto flex items-start justify-start'>
+                    <div className='w-full h-full pdf-container overflow-auto z-50 flex items-start justify-start'>
                       <PDFViewer
                         pdfUrl={pdfUrl!}
                         scale={scale}
