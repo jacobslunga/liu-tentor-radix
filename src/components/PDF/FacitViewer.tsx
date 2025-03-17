@@ -30,7 +30,6 @@ const FacitViewer: FC<FacitViewerProps> = ({
   handleMouseLeave,
   onFacitDocumentLoadSuccess,
   selectedFacit,
-  loadingFacit,
   getTranslation,
 }) => {
   const { effectiveTheme } = useTheme();
