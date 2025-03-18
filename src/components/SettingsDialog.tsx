@@ -188,7 +188,7 @@ const SettingsDialog: FC = () => {
                       ? 'Space Grotesk'
                       : id === 'system'
                       ? 'System UI'
-                      : 'Roboto Mono'}
+                      : 'Menlo'}
                   </span>
                 </div>
               );

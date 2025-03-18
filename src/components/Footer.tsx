@@ -26,7 +26,7 @@ const Footer: FC = () => {
             <Link
               key={link.href}
               to={link.href}
-              className='relative group transition-all text-xs hover:text-primary'
+              className='relative group transition-all text-xs'
             >
               {link.name}
               <span className='absolute left-0 bottom-0 w-full h-[1px] bg-foreground/80 scale-x-0 group-hover:scale-x-100 transition-transform duration-200 ease-in-out' />

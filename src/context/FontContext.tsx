@@ -44,7 +44,7 @@ export const FontProvider: React.FC<{ children: ReactNode }> = ({
       custom: "'Space Grotesk', sans-serif",
       system:
         "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      jetbrains: "'Roboto Mono', monospace",
+      jetbrains: "'Menlo', monospace",
     };
 
     document.documentElement.style.setProperty('--user-font', fontMap[font]);

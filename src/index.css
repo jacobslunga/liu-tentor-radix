@@ -5,6 +5,18 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'Menlo';
+  src: url('/fonts/Menlo-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Menlo';
+  src: url('/fonts/Menlo-Bold.ttf');
+  font-weight: 700;
+}
+
 :root {
   --user-font: 'Space Grotesk', sans-serif;
 }
@@ -23,7 +35,7 @@ body {
 }
 
 .font-jetbrains {
-  --user-font: 'Roboto Mono', monospace;
+  --user-font: 'Menlo', monospace;
 }
 
 @font-face {
