@@ -26,7 +26,7 @@ const MainInput: React.FC = () => {
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
 
-  const COOKIE_VERSION = '1.1';
+  const COOKIE_VERSION = '1.2';
   const COOKIE_NAME = 'recentActivities_v3';
 
   const loadRecentSearches = () => {
@@ -123,14 +123,13 @@ const MainInput: React.FC = () => {
 
     searchesArray.sort((a, b) => b.timestamp - a.timestamp);
 
-    // Store in the correct cookie (only encode once)
     Cookies.set(COOKIE_NAME, JSON.stringify(searchesArray), {
       expires: 365,
-      domain:
-        window.location.hostname === 'liutentor.se'
-          ? '.liutentor.se'
-          : undefined,
-      sameSite: 'Lax',
+      domain: window.location.hostname.includes('liutentor.se')
+        ? '.liutentor.se'
+        : undefined,
+      sameSite: window.location.hostname === 'localhost' ? 'Strict' : 'Lax',
+      secure: window.location.protocol === 'https:',
     });
   };
 

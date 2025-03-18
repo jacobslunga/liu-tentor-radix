@@ -194,6 +194,7 @@ export interface Translations {
     font: string;
     fontDescription: string;
     quickLinks: string;
+    tapToSeeMore: string;
   };
 }
 
@@ -417,6 +418,7 @@ const translations: Translations = {
     fontDescription: 'Välj vilken font du vill använda på LiU Tentor',
     themeDescription: 'Välj vilket tema du vill använda på LiU Tentor',
     quickLinks: 'Snabblänkar',
+    tapToSeeMore: 'Tryck för att se mer',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -636,6 +638,7 @@ const translations: Translations = {
     fontDescription: 'Choose which font you want to use on LiU Exams',
     themeDescription: 'Choose which theme you want to use on LiU Exams',
     quickLinks: 'Quick Links',
+    tapToSeeMore: 'Tap to see more',
   },
 };
 

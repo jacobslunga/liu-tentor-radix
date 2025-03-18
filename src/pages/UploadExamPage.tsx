@@ -128,12 +128,14 @@ const UploadExamPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className='container max-w-3xl mx-auto px-4 py-12 space-y-6 text-center'>
+      <div className='container max-w-2xl mx-auto px-4 py-12 space-y-6 text-center'>
         <Upload className='text-primary h-12 w-12 mx-auto' />
-        <h1 className='text-3xl font-semibold'>{t.uploadTitle}</h1>
+        <h1 className='text-3xl text-foreground/80 font-semibold'>
+          {t.uploadTitle}
+        </h1>
         <p className='text-sm text-muted-foreground'>{t.uploadDescription}</p>
 
-        <Card className='p-6 shadow-sm border border-border'>
+        <Card className='p-6'>
           {/* Input fält för kurskod */}
           <Input
             type='text'
