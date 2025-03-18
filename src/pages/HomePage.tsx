@@ -4,17 +4,17 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
-import {
-  ArrowRight,
-  SquareLibrary,
-  MessageCircle,
-  FileText,
-  Mail,
-  Plus,
-} from 'lucide-react';
+import { SquareLibrary } from 'lucide-react';
 import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
+import {
+  ArrowRight,
+  At,
+  FileText,
+  ChatCentered,
+  Plus,
+} from '@phosphor-icons/react';
 
 export default function HomePage() {
   const { language } = useLanguage();
@@ -40,14 +40,14 @@ export default function HomePage() {
           to='/feedback'
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
-          <MessageCircle className='w-5 h-5' />
+          <ChatCentered className='w-5 h-5' />
           <span>{getTranslation('feedbackLink')}</span>
         </Link>
         <Link
           to='/kontakt'
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
-          <Mail className='w-5 h-5' />
+          <At className='w-5 h-5' />
           <span>{getTranslation('contactUs')}</span>
         </Link>
         <Link

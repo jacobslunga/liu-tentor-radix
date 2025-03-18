@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
-import { Upload, Heart, SquareLibrary, ArrowLeft } from 'lucide-react';
+import { SquareLibrary } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 import { Link, useNavigate } from 'react-router-dom';
 import translations, { Language } from '@/util/translations';
 import { Button } from '@/components/ui/button';
 import { Helmet } from 'react-helmet';
 import { Separator } from '@/components/ui/separator';
+import { UploadSimple, Heart, ArrowLeft } from '@phosphor-icons/react';
 
 const UploadInfoPage: React.FC = () => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const UploadInfoPage: React.FC = () => {
       <div className='container mx-auto px-4 py-12'>
         <div className='max-w-md mx-auto flex flex-col space-y-8'>
           <div className='flex flex-col items-center text-center space-y-4'>
-            <Upload className='text-primary h-12 w-12' />
+            <UploadSimple className='text-primary h-12 w-12' />
 
             <h1 className='text-3xl text-foreground/80 font-semibold'>
               {language === 'sv'
@@ -120,7 +121,7 @@ const UploadInfoPage: React.FC = () => {
           <div className='flex justify-center pt-4'>
             <Link to='/upload-exams'>
               <Button size='lg' className='flex items-center gap-2'>
-                <Upload className='h-5 w-5' />
+                <UploadSimple className='h-5 w-5' />
                 <span>
                   {language === 'sv' ? 'Ladda upp tenta' : 'Upload exam'}
                 </span>

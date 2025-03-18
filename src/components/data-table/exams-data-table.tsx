@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Check, X, ArrowRight, ArrowUpDown } from 'lucide-react';
+import { Check, X, ArrowRight, ArrowsDownUp } from '@phosphor-icons/react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/context/LanguageContext';
 import {
@@ -94,7 +94,7 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                           header.getContext()
                         )}
                         {header.id === 'created_at' && (
-                          <ArrowUpDown className='h-4 w-4 text-muted-foreground' />
+                          <ArrowsDownUp className='h-4 w-4 text-muted-foreground' />
                         )}
                       </div>
                     </TableHead>

@@ -2,7 +2,7 @@ import { Exam } from '@/components/data-table/columns';
 import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
-import { Check, ChevronsUpDownIcon, CornerUpLeft } from 'lucide-react';
+import { Check, SortAscending, ArrowLeft } from '@phosphor-icons/react';
 import { FC, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { findFacitForExam } from './PDF/utils';
@@ -130,7 +130,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           }}
           aria-label={getTranslation('goBack')}
         >
-          <CornerUpLeft className='w-5 h-5' />
+          <ArrowLeft className='w-5 h-5' />
         </Button>
 
         <DropdownMenu>
@@ -144,7 +144,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
                   ? `${displayName.slice(0, 20)}...`
                   : displayName}
               </p>
-              <ChevronsUpDownIcon className='w-4 h-4' />
+              <SortAscending className='w-4 h-4' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className='max-h-80 ml-20 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>

@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Separator } from './ui/separator';
-import { ArrowRight, ClockIcon } from 'lucide-react';
+import { Clock, ArrowRight } from '@phosphor-icons/react';
 
 interface RecentActivity {
   courseCode: string;
@@ -102,7 +102,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
               </div>
               <div className='flex items-center'>
                 <span className='text-xs text-muted-foreground flex items-center mr-2'>
-                  <ClockIcon className='w-3 h-3 mr-1' />
+                  <Clock className='w-3 h-3 mr-1' />
                   {getTimeAgo(activity.timestamp)}
                 </span>
                 <ArrowRight className='w-4 h-4 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-transform duration-200' />

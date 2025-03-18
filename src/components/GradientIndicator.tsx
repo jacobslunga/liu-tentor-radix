@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'framer-motion';
-import { ArrowLeftToLine, LoaderCircle } from 'lucide-react';
+import { CircleNotch, CaretLineLeft } from '@phosphor-icons/react';
 import { Exam } from './data-table/columns';
 
 interface GradientIndicatorProps {
@@ -56,11 +56,11 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
       >
         <div className='flex items-center space-x-2'>
           {detectedFacit && !facitPdfUrl ? (
-            <LoaderCircle className='w-10 h-10 animate-spin text-primary' />
+            <CircleNotch className='w-10 h-10 animate-spin text-primary' />
           ) : facitPdfUrl ? (
             <div className='h-20 flex items-center justify-center'>
               <div className='bg-primary/10 px-3 py-2 rounded-l-xl'>
-                <ArrowLeftToLine className='w-5 h-5 text-primary' />
+                <CaretLineLeft className='w-5 h-5 text-primary' />
               </div>
             </div>
           ) : (

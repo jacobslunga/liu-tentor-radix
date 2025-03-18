@@ -19,21 +19,21 @@ import { Exam } from '@/components/data-table/columns';
 import { Separator } from '@/components/ui/separator';
 import { filterExamsByDate, isFacit } from './utils';
 import {
-  BookOpenIcon,
-  Check,
-  ChevronDown,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  EyeIcon,
   Minus,
   Plus,
-  RotateCcw,
-  RotateCw,
   Square,
   X,
-} from 'lucide-react';
-import { EyeClosedIcon } from '@radix-ui/react-icons';
+  DownloadSimple,
+  Check,
+  ArrowClockwise,
+  ArrowCounterClockwise,
+  Eye,
+  EyeClosed,
+  CaretLeft,
+  CaretRight,
+  CaretDown,
+  BookOpen,
+} from '@phosphor-icons/react';
 import { toast } from 'sonner';
 import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 
@@ -198,7 +198,7 @@ const Toolbar: FC<ToolbarProps> = ({
   const TentaToolbar = () => (
     <div className='flex flex-col items-start justify-start space-y-2'>
       <ToolbarButton
-        icon={isTentaToolbarOpen ? ChevronDown : ChevronRight}
+        icon={isTentaToolbarOpen ? CaretDown : CaretRight}
         onClick={() => setIsTentaToolbarOpen((prev) => !prev)}
         tooltip={getTranslation(
           isTentaToolbarOpen ? 'hideExamToolbar' : 'showExamToolbar'
@@ -219,18 +219,18 @@ const Toolbar: FC<ToolbarProps> = ({
           />
           <Separator />
           <ToolbarButton
-            icon={RotateCcw}
+            icon={ArrowCounterClockwise}
             onClick={onRotateCounterClockwise}
             tooltip={getTranslation('rotateLeft')}
           />
           <ToolbarButton
-            icon={RotateCw}
+            icon={ArrowClockwise}
             onClick={onRotateClockwise}
             tooltip={getTranslation('rotateRight')}
           />
           <Separator />
           <ToolbarButton
-            icon={Download}
+            icon={DownloadSimple}
             href={pdfUrl || '#'}
             download={selectedExam ? generateFileName(selectedExam) : undefined}
             onClick={(e: React.MouseEvent) =>
@@ -252,7 +252,7 @@ const Toolbar: FC<ToolbarProps> = ({
   const FacitToolbar = () => (
     <div className='flex flex-col items-start justify-start space-y-2'>
       <ToolbarButton
-        icon={isFacitToolbarOpen ? ChevronDown : ChevronLeft}
+        icon={isFacitToolbarOpen ? CaretDown : CaretLeft}
         onClick={() => setIsFacitToolbarOpen((prev) => !prev)}
         tooltip={getTranslation(
           isFacitToolbarOpen ? 'hideFacitToolbar' : 'showFacitToolbar'
@@ -273,18 +273,18 @@ const Toolbar: FC<ToolbarProps> = ({
           />
           <Separator />
           <ToolbarButton
-            icon={RotateCcw}
+            icon={ArrowCounterClockwise}
             onClick={onRotateFacitCounterClockwise}
             tooltip={getTranslation('rotateLeft')}
           />
           <ToolbarButton
-            icon={RotateCw}
+            icon={ArrowClockwise}
             onClick={onRotateFacitClockwise}
             tooltip={getTranslation('rotateRight')}
           />
           <Separator />
           <ToolbarButton
-            icon={Download}
+            icon={DownloadSimple}
             href={facitPdfUrl || '#'}
             download={
               selectedExam ? generateFacitFileName(selectedExam) : undefined
@@ -300,7 +300,7 @@ const Toolbar: FC<ToolbarProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className='z-50'>
                     <Button variant='secondary' size='icon'>
-                      <BookOpenIcon size={17} />
+                      <BookOpen size={17} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -325,7 +325,7 @@ const Toolbar: FC<ToolbarProps> = ({
           </TooltipProvider>
           {toggleBlur && (
             <ToolbarButton
-              icon={isBlurred ? EyeClosedIcon : EyeIcon}
+              icon={isBlurred ? EyeClosed : Eye}
               onClick={toggleBlur}
               tooltip={getTranslation(isBlurred ? 'showFacit' : 'hideFacit')}
             />

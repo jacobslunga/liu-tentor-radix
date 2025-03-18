@@ -1,10 +1,11 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
-import { ArrowLeft, Mail, MessageSquare, SquareLibrary } from 'lucide-react';
+import { SquareLibrary } from 'lucide-react';
 import { FC, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
+import { ChatCentered, ArrowLeft } from '@phosphor-icons/react';
 
 const AboutPage: FC = () => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const AboutPage: FC = () => {
       <div className='container mx-auto px-4 py-12'>
         <div className='max-w-md mx-auto flex flex-col space-y-8'>
           <div className='flex flex-col items-center text-center space-y-4'>
-            <MessageSquare className='text-primary h-12 w-12' />
+            <ChatCentered className='text-primary h-12 w-12' />
 
             <h1 className='text-3xl text-foreground/80 font-semibold'>
               {getTranslation('contactLink')}
@@ -61,7 +62,6 @@ const AboutPage: FC = () => {
 
           {/* Email Section */}
           <div className='flex flex-col items-center space-y-4'>
-            <Mail className='h-6 w-6 text-primary' />
             <Button
               variant='default'
               size='lg'

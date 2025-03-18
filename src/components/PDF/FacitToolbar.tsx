@@ -18,15 +18,15 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import { filterExamsByDate, isFacit } from './utils';
 import {
-  BookOpenIcon,
-  ChevronDown,
-  ChevronLeft,
-  Download,
   Minus,
   Plus,
-  RotateCcw,
-  RotateCw,
-} from 'lucide-react';
+  DownloadSimple,
+  ArrowClockwise,
+  ArrowCounterClockwise,
+  CaretLeft,
+  CaretDown,
+  BookOpen,
+} from '@phosphor-icons/react';
 
 interface FacitToolbarProps {
   onFacitZoomIn: () => void;
@@ -95,7 +95,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
   const FacitToolbar = () => (
     <div className='flex flex-col items-end justify-end space-y-2'>
       <ToolbarButton
-        icon={isFacitToolbarOpen ? ChevronDown : ChevronLeft}
+        icon={isFacitToolbarOpen ? CaretDown : CaretLeft}
         onClick={toggleFacitToolbar}
         tooltip={getTranslation(
           isFacitToolbarOpen ? 'hideFacitToolbar' : 'showFacitToolbar'
@@ -119,13 +119,13 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           <Separator />
 
           <ToolbarButton
-            icon={RotateCcw}
+            icon={ArrowCounterClockwise}
             onClick={onRotateFacitCounterClockwise}
             tooltip={getTranslation('rotateLeft')}
           />
 
           <ToolbarButton
-            icon={RotateCw}
+            icon={ArrowClockwise}
             onClick={onRotateFacitClockwise}
             tooltip={getTranslation('rotateRight')}
           />
@@ -133,7 +133,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           <Separator />
 
           <ToolbarButton
-            icon={Download}
+            icon={DownloadSimple}
             href={facitPdfUrl}
             download
             tooltip={getTranslation('downloadFacit')}
@@ -155,7 +155,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className='z-50'>
                     <Button variant='secondary' size='icon'>
-                      <BookOpenIcon size={17} />
+                      <BookOpen size={17} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

@@ -13,18 +13,18 @@ import { supabase } from '@/supabase/supabaseClient';
 import translations from '@/util/translations';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import {
-  AlertCircleIcon,
-  ArrowLeft,
-  CheckCircleIcon,
-  MessageSquare,
-  SquareLibrary,
-} from 'lucide-react';
+import { SquareLibrary } from 'lucide-react';
 import { FC, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { Helmet } from 'react-helmet';
+import {
+  ArrowLeft,
+  CheckCircle,
+  Warning,
+  ChatCentered,
+} from '@phosphor-icons/react';
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
@@ -135,7 +135,7 @@ const FeedbackPage: FC = () => {
         {/* Page Title */}
         <div className='relative w-full flex flex-col items-center mb-10'>
           <div className='absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center'>
-            <MessageSquare className='text-primary h-10 w-10' />
+            <ChatCentered className='text-primary h-10 w-10' />
           </div>
 
           <h1 className='text-3xl text-foreground/80 font-semibold text-center mt-10 mb-4'>
@@ -156,7 +156,7 @@ const FeedbackPage: FC = () => {
             {isSuccess ? (
               <div className='flex flex-col items-center gap-6 text-center'>
                 <div className='w-16 h-16 rounded-full bg-green-100 flex items-center justify-center'>
-                  <CheckCircleIcon className='h-10 w-10 text-green-600' />
+                  <CheckCircle className='h-10 w-10 text-green-600' />
                 </div>
                 <div>
                   <h2 className='text-2xl font-medium mb-2'>
@@ -173,7 +173,7 @@ const FeedbackPage: FC = () => {
             ) : (
               <div className='flex flex-col items-center gap-6 text-center'>
                 <div className='w-16 h-16 rounded-full bg-red-100 flex items-center justify-center'>
-                  <AlertCircleIcon className='h-10 w-10 text-red-600' />
+                  <Warning className='h-10 w-10 text-red-600' />
                 </div>
                 <div>
                   <h2 className='text-2xl font-medium mb-2'>

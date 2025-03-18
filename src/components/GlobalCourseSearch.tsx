@@ -2,7 +2,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { kurskodArray } from '@/data/kurskoder';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
-import { Book, Clock } from 'lucide-react';
+import { Clock, Book } from '@phosphor-icons/react';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {

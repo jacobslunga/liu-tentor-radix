@@ -4,22 +4,22 @@ import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useLanguage } from '@/context/LanguageContext';
 import { supabase } from '@/supabase/supabaseClient';
-import {
-  FilePlus2,
-  LoaderCircle,
-  File,
-  X,
-  Upload,
-  SquareLibrary,
-  ArrowLeft,
-  CheckCircle,
-  XCircle,
-  Info,
-} from 'lucide-react';
+import { SquareLibrary } from 'lucide-react';
 import { useDropzone } from 'react-dropzone';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import translations from '@/util/translations';
+import {
+  ArrowLeft,
+  CheckCircle,
+  XCircle,
+  Info,
+  UploadSimple,
+  FilePdf,
+  CircleNotch,
+  File,
+  X,
+} from '@phosphor-icons/react';
 
 const UploadExamPage = () => {
   const navigate = useNavigate();
@@ -129,7 +129,7 @@ const UploadExamPage = () => {
 
       {/* Main Content */}
       <div className='container max-w-2xl mx-auto px-4 py-12 space-y-6 text-center'>
-        <Upload className='text-primary h-12 w-12 mx-auto' />
+        <UploadSimple className='text-primary h-12 w-12 mx-auto' />
         <h1 className='text-3xl text-foreground/80 font-semibold'>
           {t.uploadTitle}
         </h1>
@@ -156,7 +156,7 @@ const UploadExamPage = () => {
             } ${loading ? 'opacity-50' : ''}`}
           >
             <input {...getInputProps()} disabled={loading} />
-            <FilePlus2 className='h-12 w-12 text-muted-foreground mx-auto' />
+            <FilePdf className='h-12 w-12 text-muted-foreground mx-auto' />
             <p className='text-sm text-muted-foreground mt-2'>
               {t.dragAndDrop}
             </p>
@@ -217,9 +217,9 @@ const UploadExamPage = () => {
               disabled={files.length === 0 || !kurskod || loading}
             >
               {loading ? (
-                <LoaderCircle className='h-4 w-4 animate-spin' />
+                <CircleNotch className='h-4 w-4 animate-spin' />
               ) : (
-                <Upload className='h-4 w-4' />
+                <UploadSimple className='h-4 w-4' />
               )}{' '}
               {t.uploadButton}
             </Button>

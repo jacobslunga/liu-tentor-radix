@@ -15,12 +15,12 @@ import { supabase } from '@/supabase/supabaseClient';
 import translations from '@/util/translations';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
-  ArrowRight,
-  CheckCircle,
-  FilePlus2,
-  LoaderCircle,
   XCircle,
-} from 'lucide-react';
+  CircleNotch,
+  FilePlus,
+  CheckCircle,
+  ArrowRight,
+} from '@phosphor-icons/react';
 import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDropzone } from 'react-dropzone';
@@ -251,7 +251,7 @@ const SearchPage: React.FC = () => {
   if (!exams) {
     return (
       <div className='flex items-center justify-center min-h-[calc(100vh-5rem)]'>
-        <LoaderCircle className='animate-spin w-10 h-10' />
+        <CircleNotch className='animate-spin w-10 h-10' />
       </div>
     );
   }
@@ -279,7 +279,7 @@ const SearchPage: React.FC = () => {
                 }`}
               >
                 <input {...getInputProps()} disabled={loading} />
-                <FilePlus2 className='mx-auto h-12 w-12 text-muted-foreground mb-4' />
+                <FilePlus className='mx-auto h-12 w-12 text-muted-foreground mb-4' />
                 <p className='text-sm text-muted-foreground'>
                   {getTranslation('dragAndDrop')}
                 </p>
@@ -310,7 +310,7 @@ const SearchPage: React.FC = () => {
                   disabled={!files.length || loading}
                 >
                   {loading && (
-                    <LoaderCircle className='w-4 h-4 mr-2 animate-spin' />
+                    <CircleNotch className='w-4 h-4 mr-2 animate-spin' />
                   )}
                   {getTranslation('uploadTitle')}
                 </Button>

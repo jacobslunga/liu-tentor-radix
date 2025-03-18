@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import Cookies from 'js-cookie';
 
-type FontOption = 'custom' | 'system' | 'jetbrains';
+type FontOption = 'serif' | 'system' | 'jetbrains';
 
 interface FontContextProps {
   font: FontOption;
@@ -27,13 +27,22 @@ export const useFont = () => {
 export const FontProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const validFonts: FontOption[] = ['serif', 'system', 'jetbrains'];
+
   const [font, setFont] = useState<FontOption>(() => {
-    return (Cookies.get('font') as FontOption) || 'custom';
+    const savedFont = Cookies.get('font') as FontOption;
+
+    if (!savedFont || !validFonts.includes(savedFont)) {
+      Cookies.remove('font');
+      return 'system';
+    }
+
+    return savedFont;
   });
 
   useEffect(() => {
     document.documentElement.classList.remove(
-      'font-custom',
+      'font-serif',
       'font-system',
       'font-jetbrains'
     );
@@ -41,7 +50,7 @@ export const FontProvider: React.FC<{ children: ReactNode }> = ({
     document.documentElement.classList.add(`font-${font}`);
 
     const fontMap = {
-      custom: "'Space Grotesk', sans-serif",
+      serif: "'IBM Plex Serif', sans-serif",
       system:
         "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
       jetbrains: "'Menlo', monospace",

@@ -1,6 +1,6 @@
 import { Exam } from '@/components/data-table/columns';
 import { Card } from '@/components/ui/card';
-import { BookCheck, BookX, Calendar, ChevronRight } from 'lucide-react';
+import { BookOpenText, BookX, Calendar, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
@@ -65,7 +65,7 @@ const MobileExamList: React.FC<MobileExamListProps> = ({
             >
               <div className='h-10 w-10 shrink-0 rounded-full flex items-center justify-center border'>
                 {exam.hasFacit ? (
-                  <BookCheck className='w-5 h-5 text-green-500' />
+                  <BookOpenText className='w-5 h-5 text-green-500' />
                 ) : (
                   <BookX className='w-5 h-5 text-muted-foreground' />
                 )}

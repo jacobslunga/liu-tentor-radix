@@ -2,9 +2,10 @@ import { useLanguage } from '@/context/LanguageContext';
 import { kurskodArray } from '@/data/kurskoder';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
-import { CornerUpRight, X, Clock, Search } from 'lucide-react';
+import { CornerUpRight, X, Clock } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { MagnifyingGlass } from '@phosphor-icons/react';
 
 interface RecentActivity {
   courseCode: string;
@@ -204,7 +205,7 @@ const MainInput: React.FC = () => {
           focus ? 'border-primary' : 'hover:border-foreground/40'
         } bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 text-sm text-foreground/80 outline-none`}
       >
-        <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground' />
+        <MagnifyingGlass className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground' />
         <input
           placeholder={getTranslation('searchCoursePlaceholder')}
           value={courseCode}

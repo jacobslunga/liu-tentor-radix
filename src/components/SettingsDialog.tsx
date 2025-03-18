@@ -14,13 +14,13 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { Settings, Moon, Sun, Monitor } from 'lucide-react';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { useFont } from '@/context/FontContext';
 import translations from '@/util/translations';
 import { FC, JSX, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
+import { GearSix, Moon, Sun, Monitor } from '@phosphor-icons/react';
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
@@ -70,12 +70,12 @@ const SettingsDialog: FC = () => {
   ];
 
   const fontOptions: {
-    id: 'custom' | 'system' | 'jetbrains';
+    id: 'serif' | 'system' | 'jetbrains';
     label: string;
     description?: string;
   }[] = [
-    { id: 'custom', label: 'Default' },
     { id: 'system', label: 'Match system' },
+    { id: 'serif', label: 'Serif' },
     { id: 'jetbrains', label: 'Monospace' },
   ];
 
@@ -105,7 +105,7 @@ const SettingsDialog: FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant='outline' size='icon'>
-          <Settings className='w-5 h-5' />
+          <GearSix className='w-7 h-7' />
         </Button>
       </DialogTrigger>
       <DialogContent className='w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg'>
@@ -153,7 +153,7 @@ const SettingsDialog: FC = () => {
           <div className='flex gap-2'>
             {fontOptions.map(({ id, label }) => {
               const fontStyle = {
-                custom: { fontFamily: "'Space Grotesk', sans-serif" },
+                serif: { fontFamily: "'IBM Plex Serif', sans-serif" },
                 system: {
                   fontFamily:
                     "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
@@ -184,8 +184,8 @@ const SettingsDialog: FC = () => {
                     className='text-xs text-muted-foreground mt-1'
                     style={fontStyle[id as keyof typeof fontStyle]}
                   >
-                    {id === 'custom'
-                      ? 'Space Grotesk'
+                    {id === 'serif'
+                      ? 'IBM Plex Serif'
                       : id === 'system'
                       ? 'System UI'
                       : 'Menlo'}

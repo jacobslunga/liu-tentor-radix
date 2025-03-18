@@ -1,11 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
-import { ArrowLeft, Mail, SquareLibrary } from 'lucide-react';
+import { SquareLibrary } from 'lucide-react';
 import { FC, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Separator } from '@/components/ui/separator';
+import { ArrowLeft, Mailbox } from '@phosphor-icons/react';
 
 const PrivacyPolicy: FC = () => {
   const navigate = useNavigate();
@@ -133,7 +134,7 @@ const PrivacyPolicy: FC = () => {
 
           {/* Contact Section */}
           <div className='mt-10 pt-6 border-t border-border/30 flex flex-col items-center text-center space-y-3'>
-            <Mail className='h-5 w-5 text-primary' />
+            <Mailbox className='h-10 w-10 text-primary' />
             <h3 className='text-md font-medium'>
               {getTranslation('contactUs') || 'Contact Us'}
             </h3>
@@ -148,7 +149,6 @@ const PrivacyPolicy: FC = () => {
                 (window.location.href = 'mailto:liutentor@gmail.com')
               }
             >
-              <Mail className='h-4 w-4 mr-2' />
               {getTranslation('contactEmail') || 'Contact Email'}
             </Button>
           </div>

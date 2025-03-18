@@ -176,7 +176,7 @@ const AddExamsPage: FC = () => {
         if (examError) throw examError;
 
         updateFileStatus(file, 'uploaded');
-      } catch (error) {
+      } catch (_) {
         updateFileStatus(file, 'error');
         setUploading(false);
         return;
