@@ -55,7 +55,7 @@ export default function HomePage() {
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
           <FileText className='w-5 h-5' />
-          <span>Privacy Policy</span>
+          <span>{getTranslation('privacyPolicyTitle')}</span>
         </Link>
 
         <Separator />
