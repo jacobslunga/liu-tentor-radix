@@ -72,17 +72,14 @@ const PrivacyPolicy: FC = () => {
               {getTranslation('privacyPolicyTitle')}
             </h1>
             <p className='text-xs text-muted-foreground mt-2'>
-              {getTranslation('privacyPolicyLastUpdated')} 2025/03/08
+              {getTranslation('privacyPolicyLastUpdated')} 2025/03/18
             </p>
           </div>
-
           {/* Intro */}
           <div className='mb-8 text-sm leading-relaxed'>
             <p>{getTranslation('privacyPolicyIntro')}</p>
           </div>
-
           <Separator />
-
           {/* Sections */}
           <div className='space-y-6 mt-8'>
             <Section
@@ -126,12 +123,26 @@ const PrivacyPolicy: FC = () => {
               content={getTranslation('privacyPolicySection6Content')}
             />
 
+            {/* GDPR Section */}
             <Section
-              title={getTranslation('privacyPolicySection7Title')}
-              content={getTranslation('privacyPolicySection7Content')}
+              title={
+                getTranslation('privacyPolicyGDPRTitle') ||
+                'Hantering av personuppgifter och GDPR'
+              }
+              content={
+                getTranslation('privacyPolicyGDPRContent') ||
+                'Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss.'
+              }
+              items={[
+                getTranslation('privacyPolicyGDPRItem1') ||
+                  'Vi publicerar endast tentor som är offentligt tillgängliga.',
+                getTranslation('privacyPolicyGDPRItem2') ||
+                  'Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.',
+                getTranslation('privacyPolicyGDPRItem3') ||
+                  'Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.',
+              ]}
             />
-          </div>
-
+          </div>{' '}
           {/* Contact Section */}
           <div className='mt-10 pt-6 border-t border-border/30 flex flex-col items-center text-center space-y-3'>
             <Mailbox className='h-10 w-10 text-primary' />

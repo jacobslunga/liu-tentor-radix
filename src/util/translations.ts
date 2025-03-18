@@ -195,6 +195,11 @@ export interface Translations {
     fontDescription: string;
     quickLinks: string;
     tapToSeeMore: string;
+    privacyPolicyGDPRTitle: string;
+    privacyPolicyGDPRContent: string;
+    privacyPolicyGDPRItem1: string;
+    privacyPolicyGDPRItem2: string;
+    privacyPolicyGDPRItem3: string;
   };
 }
 
@@ -419,6 +424,15 @@ const translations: Translations = {
     themeDescription: 'Välj vilket tema du vill använda på LiU Tentor',
     quickLinks: 'Snabblänkar',
     tapToSeeMore: 'Tryck för att se mer',
+    privacyPolicyGDPRContent:
+      'Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss.',
+    privacyPolicyGDPRItem1:
+      'Vi publicerar endast tentor som är offentligt tillgängliga.',
+    privacyPolicyGDPRItem2:
+      'Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.',
+    privacyPolicyGDPRItem3:
+      'Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.',
+    privacyPolicyGDPRTitle: 'Hantering av personuppgifter och GDPR',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -639,6 +653,15 @@ const translations: Translations = {
     themeDescription: 'Choose which theme you want to use on LiU Exams',
     quickLinks: 'Quick Links',
     tapToSeeMore: 'Tap to see more',
+    privacyPolicyGDPRContent:
+      'We display publicly available exams published by the university, including names of examiners as part of the document original content. We respect the right to privacy and follow GDPR regulations. If you are an examiner and want to request removal of your name from an exam, please contact us.',
+    privacyPolicyGDPRItem1:
+      'We only publish exams that are publicly available.',
+    privacyPolicyGDPRItem2:
+      'Examiners names are included only if they are part of the original exam.',
+    privacyPolicyGDPRItem3:
+      'If you want to request removal of an exam or a name, please contact us via email.',
+    privacyPolicyGDPRTitle: 'Handling of personal data and GDPR',
   },
 };
 
