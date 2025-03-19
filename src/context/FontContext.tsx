@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import Cookies from 'js-cookie';
 
-type FontOption = 'serif' | 'system' | 'jetbrains';
+type FontOption = 'serif' | 'system' | 'custom';
 
 interface FontContextProps {
   font: FontOption;
@@ -27,14 +27,14 @@ export const useFont = () => {
 export const FontProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const validFonts: FontOption[] = ['serif', 'system', 'jetbrains'];
+  const validFonts: FontOption[] = ['serif', 'system', 'custom'];
 
   const [font, setFont] = useState<FontOption>(() => {
     const savedFont = Cookies.get('font') as FontOption;
 
     if (!savedFont || !validFonts.includes(savedFont)) {
       Cookies.remove('font');
-      return 'system';
+      return 'custom';
     }
 
     return savedFont;
@@ -44,7 +44,7 @@ export const FontProvider: React.FC<{ children: ReactNode }> = ({
     document.documentElement.classList.remove(
       'font-serif',
       'font-system',
-      'font-jetbrains'
+      'font-custom'
     );
 
     document.documentElement.classList.add(`font-${font}`);
@@ -53,7 +53,7 @@ export const FontProvider: React.FC<{ children: ReactNode }> = ({
       serif: "'IBM Plex Serif', sans-serif",
       system:
         "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      jetbrains: "'Menlo', monospace",
+      custom: "'Lato', monospace",
     };
 
     document.documentElement.style.setProperty('--user-font', fontMap[font]);

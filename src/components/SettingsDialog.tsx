@@ -70,13 +70,13 @@ const SettingsDialog: FC = () => {
   ];
 
   const fontOptions: {
-    id: 'serif' | 'system' | 'jetbrains';
+    id: 'serif' | 'system' | 'custom';
     label: string;
     description?: string;
   }[] = [
+    { id: 'custom', label: 'Default' },
     { id: 'system', label: 'Match system' },
     { id: 'serif', label: 'Serif' },
-    { id: 'jetbrains', label: 'Monospace' },
   ];
 
   const shortcuts = [
@@ -158,7 +158,7 @@ const SettingsDialog: FC = () => {
                   fontFamily:
                     "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                 },
-                jetbrains: { fontFamily: "'Roboto Mono', monospace" },
+                custom: { fontFamily: "'Lato', sans-serif" },
               };
 
               return (
@@ -188,7 +188,7 @@ const SettingsDialog: FC = () => {
                       ? 'IBM Plex Serif'
                       : id === 'system'
                       ? 'System UI'
-                      : 'Menlo'}
+                      : 'Lato'}
                   </span>
                 </div>
               );

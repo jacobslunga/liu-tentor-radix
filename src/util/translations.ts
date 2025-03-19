@@ -256,7 +256,7 @@ const translations: Translations = {
     toggleShowFacit: 'Toggla facit visning',
     noPopularSearchesMessage:
       'Börja söka för att se dina mest besökta kurser här',
-    feedbackSuccessMessage: 'Tack för din feedback!',
+    feedbackSuccessMessage: 'Vi återkommer så snart som möjligt!',
     feedbackErrorMessage: 'Något gick fel när din feedback skickades.',
     tryAgainButton: 'Försök igen',
     homeButton: 'Hitta din tenta!',
@@ -486,7 +486,7 @@ const translations: Translations = {
     toggleShowFacit: 'Toggle show solution',
     noPopularSearchesMessage:
       'Start searching to see your most visited courses here',
-    feedbackSuccessMessage: 'Thank you for your feedback!',
+    feedbackSuccessMessage: 'We will get back to you as soon as possible!',
     feedbackErrorMessage: 'Something went wrong when your feedback was sent.',
     tryAgainButton: 'Try again',
     homeButton: 'Find your exam!',

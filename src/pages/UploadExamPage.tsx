@@ -26,6 +26,13 @@ const UploadExamPage = () => {
   const { language } = useLanguage();
   const t = translations[language];
 
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    });
+  }, []);
+
   const [files, setFiles] = useState<File[]>([]);
   const [kurskod, setKurskod] = useState('');
   const [loading, setLoading] = useState(false);
