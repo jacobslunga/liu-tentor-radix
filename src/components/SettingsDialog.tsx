@@ -105,7 +105,7 @@ const SettingsDialog: FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant='outline' size='icon'>
-          <GearSix className='w-7 h-7' />
+          <GearSix weight='bold' />
         </Button>
       </DialogTrigger>
       <DialogContent className='w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg'>
@@ -158,7 +158,7 @@ const SettingsDialog: FC = () => {
                   fontFamily:
                     "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                 },
-                custom: { fontFamily: "'Lato', sans-serif" },
+                custom: { fontFamily: "'Figtree', sans-serif" },
               };
 
               return (
@@ -188,7 +188,7 @@ const SettingsDialog: FC = () => {
                       ? 'IBM Plex Serif'
                       : id === 'system'
                       ? 'System UI'
-                      : 'Lato'}
+                      : 'Figtree'}
                   </span>
                 </div>
               );

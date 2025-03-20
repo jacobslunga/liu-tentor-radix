@@ -13,7 +13,7 @@ const Footer: FC = () => {
   const links = [
     { name: getTranslation('homeLink'), href: '/' },
     { name: getTranslation('contactLink'), href: '/kontakt' },
-    { name: 'Privacy Policy', href: '/privacy-policy' },
+    { name: getTranslation('privacyPolicyTitle'), href: '/privacy-policy' },
     { name: 'Feedback', href: '/feedback' },
   ];
 

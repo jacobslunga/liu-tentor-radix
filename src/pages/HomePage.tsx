@@ -40,21 +40,21 @@ export default function HomePage() {
           to='/feedback'
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
-          <ChatCentered className='w-5 h-5' />
+          <ChatCentered className='w-5 h-5' weight='bold' />
           <span>{getTranslation('feedbackLink')}</span>
         </Link>
         <Link
           to='/kontakt'
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
-          <At className='w-5 h-5' />
+          <At className='w-5 h-5' weight='bold' />
           <span>{getTranslation('contactUs')}</span>
         </Link>
         <Link
           to='/privacy-policy'
           className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
         >
-          <FileText className='w-5 h-5' />
+          <FileText className='w-5 h-5' weight='bold' />
           <span>{getTranslation('privacyPolicyTitle')}</span>
         </Link>
 

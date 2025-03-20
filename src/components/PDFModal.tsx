@@ -11,7 +11,11 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
-import { MousePointerClick } from 'lucide-react';
+import {
+  CursorClick,
+  SquareHalf,
+  SquareSplitHorizontal,
+} from '@phosphor-icons/react';
 import {
   Tooltip,
   TooltipContent,
@@ -33,7 +37,6 @@ import useSWR from 'swr';
 import Toolbar from './PDF/Toolbar';
 
 import { retryFetch } from '@/components/PDF/utils';
-import { IconLayoutColumns, IconLayoutSidebarRight } from '@tabler/icons-react';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import FacitToolbar from './PDF/FacitToolbar';
@@ -587,7 +590,11 @@ const PDFModal: FC<PDFModalProps> = ({
                         <p className='font-medium'>
                           {getTranslation('mouseOverDescription')}
                         </p>
-                        <MousePointerClick />
+                        <CursorClick
+                          className='w-7 h-7 mt-2'
+                          onClick={() => setIsBlurred(false)}
+                          weight='bold'
+                        />
                       </div>
                     )}
                     <div className='w-full h-full pdf-container flex flex-col items-center justify-start overflow-auto z-20'>
@@ -655,7 +662,12 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className='z-40'>
-                    <IconLayoutColumns />
+                    <SquareSplitHorizontal
+                      className='w-7 h-7'
+                      weight={
+                        layoutMode === 'exam-with-facit' ? 'regular' : 'duotone'
+                      }
+                    />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation('examAndFacit')}</p>
@@ -674,7 +686,12 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className='z-40'>
-                    <IconLayoutSidebarRight />
+                    <SquareHalf
+                      className='w-7 h-7'
+                      weight={
+                        layoutMode === 'exam-only' ? 'regular' : 'duotone'
+                      }
+                    />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation('examOnly')}</p>
