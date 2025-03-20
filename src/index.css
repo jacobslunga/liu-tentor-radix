@@ -5,6 +5,13 @@
 @tailwind components;
 @tailwind utilities;
 
+.pdf-page {
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 0 0.5em rgba(0, 0, 0, 0.1);
+  gap: 1rem;
+}
+
 .not-scroll {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
   scrollbar-width: none; /* Firefox */

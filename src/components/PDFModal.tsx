@@ -11,11 +11,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
-import {
-  CursorClick,
-  SquareHalf,
-  SquareSplitHorizontal,
-} from '@phosphor-icons/react';
+import { CursorClick } from '@phosphor-icons/react';
 import {
   Tooltip,
   TooltipContent,
@@ -35,6 +31,7 @@ import { pdfjs } from 'react-pdf';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import useSWR from 'swr';
 import Toolbar from './PDF/Toolbar';
+import { IconLayoutColumns, IconLayoutSidebarRight } from '@tabler/icons-react';
 
 import { retryFetch } from '@/components/PDF/utils';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
@@ -593,7 +590,6 @@ const PDFModal: FC<PDFModalProps> = ({
                         <CursorClick
                           className='w-7 h-7 mt-2'
                           onClick={() => setIsBlurred(false)}
-                          weight='bold'
                         />
                       </div>
                     )}
@@ -662,12 +658,7 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className='z-40'>
-                    <SquareSplitHorizontal
-                      className='w-7 h-7'
-                      weight={
-                        layoutMode === 'exam-with-facit' ? 'regular' : 'duotone'
-                      }
-                    />
+                    <IconLayoutColumns />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation('examAndFacit')}</p>
@@ -686,12 +677,7 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className='z-40'>
-                    <SquareHalf
-                      className='w-7 h-7'
-                      weight={
-                        layoutMode === 'exam-only' ? 'regular' : 'duotone'
-                      }
-                    />
+                    <IconLayoutSidebarRight />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation('examOnly')}</p>

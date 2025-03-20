@@ -113,7 +113,7 @@ const FacitViewer: FC<FacitViewerProps> = ({
             setIsPdfLoaded(true);
           }}
           renderMode='canvas'
-          className='w-full h-full flex flex-col items-center justify-start'
+          className='w-full h-full flex flex-col items-center space-y-10 justify-start'
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -126,6 +126,7 @@ const FacitViewer: FC<FacitViewerProps> = ({
                 scale={facitScale}
                 rotate={(pageRotations[i + 1] || 0) + facitRotation}
                 onLoadSuccess={(page) => handlePageLoadSuccess(page, i + 1)}
+                className='pdf-page'
               />
             ))}
         </Document>
