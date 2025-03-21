@@ -1,7 +1,6 @@
 import ContinueWhereYouLeftOff from '@/components/ContinueWhereYouLeftOff';
 import MainInput from '@/components/MainInput';
 import { Button } from '@/components/ui/button';
-import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
 import { Plus, SquareLibrary } from 'lucide-react';
@@ -75,50 +74,51 @@ export default function HomePage() {
           <MainInput setFocusInput={setFocusInput} />
 
           {/* <ContinueWhereYouLeftOff /> */}
-
-          <div className='flex flex-col items-start justify-start p-5 space-y-2'>
-            <Separator />
-            <h2 className='text-sm font-medium text-foreground/70'>
-              {getTranslation('quickLinks')}{' '}
-            </h2>
-            <div className='flex flex-row items-start justify-start space-x-2'>
-              {quickLinks.map(({ text, icon, to }) => (
-                <Link key={text} to={to}>
-                  <Button size='sm' variant='outline'>
-                    {icon &&
-                      React.createElement(icon, {
-                        className: 'w-5 h-5',
-                        weight: 'bold',
-                      })}
-                    <span>{text}</span>
-                  </Button>
-                </Link>
-              ))}
-            </div>
-          </div>
         </div>
 
-        {/* CTA Button */}
-        <div className='flex flex-col md:flex-row items-center justify-center'>
-          <Link to='/upload-info'>
-            <Button variant='outline' className='group'>
-              {getTranslation('weNeedYourHelp')}
-              <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
-            </Button>
-          </Link>
+        <div className='flex flex-col items-center justify-center w-full space-y-6'>
+          {/* CTA Button */}
+          <div className='flex flex-col md:flex-row items-center justify-center'>
+            <Link to='/upload-info'>
+              <Button variant='outline' size='sm' className='group'>
+                {getTranslation('weNeedYourHelp')}
+                <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
+              </Button>
+            </Link>
 
-          <div className='w-[1px] bg-foreground/20 dark:bg-foreground/40 h-6 mx-5 hidden md:flex' />
+            <div className='w-[1px] bg-foreground/20 dark:bg-foreground/40 h-6 mx-5 hidden md:flex' />
 
-          <Link to='/upload-exams'>
-            <Button className='hidden md:flex flex-row items-center justify-center'>
-              <Plus className='w-5 h-5' />
-              {getTranslation('uploadTitle')}
-            </Button>
-          </Link>
+            <Link to='/upload-exams'>
+              <Button
+                size='sm'
+                className='hidden md:flex flex-row items-center justify-center'
+              >
+                <Plus className='w-5 h-5' />
+                {getTranslation('uploadTitle')}
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
 
       <div className='fixed right-5 top-5 items-center justify-center flex'>
+        <div className='flex flex-row items-center justify-center space-x-2'>
+          {quickLinks.map(({ text, icon, to }) => (
+            <Link key={text} to={to} className='hidden md:flex'>
+              <Button size='sm' variant='outline'>
+                {icon &&
+                  React.createElement(icon, {
+                    className: 'w-5 h-5',
+                    weight: 'bold',
+                  })}
+                <span>{text}</span>
+              </Button>
+            </Link>
+          ))}
+        </div>
+
+        <div className='w-[1px] bg-foreground/20 dark:bg-foreground/40 h-6 mx-5 hidden md:flex' />
+
         <SettingsDialog />
       </div>
     </div>

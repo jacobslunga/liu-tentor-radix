@@ -4,12 +4,7 @@ import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Separator } from './ui/separator';
-import {
-  Clock,
-  CaretLineLeft,
-  CaretLineRight,
-  ArrowRight,
-} from '@phosphor-icons/react';
+import { Clock, ArrowRight } from '@phosphor-icons/react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from './ui/button';
 import {
@@ -19,6 +14,7 @@ import {
   TooltipContent,
 } from '@/components/ui/tooltip';
 import { Badge } from './ui/badge';
+import { ArrowLeftToLine, ArrowRightToLine } from 'lucide-react';
 
 interface RecentActivity {
   courseCode: string;
@@ -35,16 +31,33 @@ const ContinueWhereYouLeftOff: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [userToggled, setUserToggled] = useState(false);
   const location = useLocation();
+  const COOKIE_NAME = 'recentActivities_v3';
+  const COOKIE_VERSION = '1.2';
 
   useEffect(() => {
-    const checkScreenSize = () => {
+    const cookieConsent = Cookies.get('cookieConsent');
+    if (cookieConsent === 'true') {
+      const storedSidebar = Cookies.get('sidebarVisible');
+      if (storedSidebar !== undefined) {
+        setIsSidebarOpen(storedSidebar === 'true');
+        setUserToggled(true);
+      } else {
+        const isDesktop = window.matchMedia('(min-width: 1200px)').matches;
+        setIsSidebarOpen(isDesktop);
+      }
+    } else {
       const isDesktop = window.matchMedia('(min-width: 1200px)').matches;
-      if (!userToggled) setIsSidebarOpen(isDesktop);
-    };
-    checkScreenSize();
+      setIsSidebarOpen(isDesktop);
+    }
     const resizeHandler = () => {
-      checkScreenSize();
-      if (window.innerWidth < 768 && isSidebarOpen) setIsSidebarOpen(false);
+      if (!userToggled) {
+        const isDesktop = window.matchMedia('(min-width: 1200px)').matches;
+        setIsSidebarOpen(isDesktop);
+      }
+      if (window.innerWidth < 768 && isSidebarOpen) {
+        setIsSidebarOpen(false);
+        Cookies.set('sidebarVisible', 'false', { expires: 365 });
+      }
     };
     window.addEventListener('resize', resizeHandler);
     return () => window.removeEventListener('resize', resizeHandler);
@@ -53,10 +66,8 @@ const ContinueWhereYouLeftOff: React.FC = () => {
   const handleToggle = (open: boolean) => {
     setUserToggled(true);
     setIsSidebarOpen(open);
+    Cookies.set('sidebarVisible', open.toString(), { expires: 365 });
   };
-
-  const COOKIE_NAME = 'recentActivities_v3';
-  const COOKIE_VERSION = '1.2';
 
   useEffect(() => {
     const cookieConsent = Cookies.get('cookieConsent');
@@ -125,7 +136,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
       {isSidebarOpen && (
         <motion.div
           key='sidebar'
-          className='fixed left-0 top-0 h-screen w-[300px] bg-background/90 backdrop-blur-sm border-r border-foreground/10 z-50 shadow-lg'
+          className='fixed left-0 top-0 h-screen w-[300px] bg-background/90 backdrop-blur-sm border-r border-foreground/10 z-50 shadow-sm'
           variants={sidebarVariants}
           initial='hidden'
           animate='visible'
@@ -145,7 +156,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
                       variant='outline'
                       size='icon'
                     >
-                      <CaretLineLeft className='w-5 h-5' weight='bold' />
+                      <ArrowLeftToLine className='w-5 h-5' />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false} side='right'>
@@ -178,14 +189,12 @@ const ContinueWhereYouLeftOff: React.FC = () => {
                           <span className='text-lg font-medium'>
                             {activity.courseCode}
                           </span>
-
                           {isNew && (
                             <Badge variant='outline'>
                               {getTranslation('new')}
                             </Badge>
                           )}
                         </div>
-
                         <span className='text-xs text-muted-foreground flex items-center'>
                           <Clock className='w-3 h-3 mr-1' />
                           {getTimeAgo(activity.timestamp)}
@@ -212,7 +221,7 @@ const ContinueWhereYouLeftOff: React.FC = () => {
                 size='icon'
                 variant='outline'
               >
-                <CaretLineRight className='w-5 h-5' weight='bold' />
+                <ArrowRightToLine className='w-5 h-5' />
               </Button>
             </TooltipTrigger>
             <TooltipContent autoFocus={false} side='right'>

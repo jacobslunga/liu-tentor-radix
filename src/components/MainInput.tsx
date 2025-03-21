@@ -227,7 +227,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className='absolute w-full mt-0 bg-background/80 backdrop-blur-sm border shadow-lg z-[60] max-h-60 rounded-br-xl rounded-bl-xl overflow-y-auto'
+            className='absolute w-full mt-3 bg-background/90 backdrop-blur-sm border shadow-lg z-[60] max-h-60 rounded-xl overflow-y-auto'
           >
             {recentSearches.length > 0 && (
               <>
