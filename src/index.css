@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -39,7 +39,7 @@ body {
 }
 
 .font-custom {
-  --user-font: 'Inter', monospace;
+  --user-font: 'Funnel Sans', monospace;
 }
 
 @font-face {
@@ -127,40 +127,40 @@ textarea {
   }
 
   .dark {
-    --background: 220 5% 12%; /* Davy's gray */
-    --foreground: 0 0% 95%; /* Ljusare text för bättre kontrast */
+    --background: 220 5% 12%; /* Davy's gray - Deep, calm background */
+    --foreground: 0 0% 95%; /* Light text for high contrast and readability */
 
-    --card: 220 5% 14%; /* Lite mörkare än bakgrunden */
+    --card: 220 5% 14%; /* Slightly darker than background for depth */
     --card-foreground: var(--foreground);
 
-    --popover: var(--card);
+    --popover: var(--card); /* Consistent with card for uniformity */
     --popover-foreground: var(--foreground);
 
-    --primary: 120 40% 75%;
-    --primary-foreground: 0 0% 10%; /* Vit för bra kontrast */
+    --primary: 120 40% 75%; /* Soft green for primary actions */
+    --primary-foreground: 0 0% 10%; /* Dark text for contrast on primary */
 
-    --secondary: 220 5% 18%; /* En nyans ljusare än background */
+    --secondary: 220 5% 18%; /* Slightly lighter than background for secondary elements */
     --secondary-foreground: var(--foreground);
 
-    --muted: 220 5% 20%; /* Mjukare och bättre för UI-element */
-    --muted-foreground: 0 0% 55%; /* Ljusare grå för subtila texter */
+    --muted: 220 5% 20%; /* Muted tone for UI elements */
+    --muted-foreground: 0 0% 65%; /* Lighter gray for subtle text */
 
-    --accent: 220 10% 18%; /* Mer definierad accent */
+    --accent: 220 5% 15%; /* Accent color for emphasis */
     --accent-foreground: var(--foreground);
 
-    --destructive: 0 55% 35%; /* Dämpad röd för mindre aggressiv look */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 55% 35%; /* Subdued red for a less aggressive look */
+    --destructive-foreground: 0 0% 98%; /* Light text for contrast */
 
-    --border: 220 5% 16%; /* Lätt kontrast för att separera element */
-    --input: var(--secondary);
-    --ring: 220 5% 22%; /* Mjuk men märkbar ring-effekt */
+    --border: 220 5% 18%; /* Slightly lighter than background for subtle separation */
+    --input: var(--secondary); /* Consistent with secondary for inputs */
+    --ring: 220 5% 22%; /* Soft but noticeable ring effect */
 
-    /* Diagramfärger (Balanserade kring huvudtemat) */
-    --chart-1: 220 5% 95%;
+    /* Chart colors (Balanced around the main theme) */
+    --chart-1: 220 5% 95%; /* Lightest for chart highlights */
     --chart-2: 220 5% 85%;
     --chart-3: 220 5% 75%;
     --chart-4: 220 5% 65%;
-    --chart-5: 220 5% 55%;
+    --chart-5: 220 5% 55%; /* Darkest for chart lowlights */
   }
 }
 

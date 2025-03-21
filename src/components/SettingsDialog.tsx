@@ -158,7 +158,7 @@ const SettingsDialog: FC = () => {
                   fontFamily:
                     "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                 },
-                custom: { fontFamily: "'Inter', sans-serif" },
+                custom: { fontFamily: "'Funnel Sans', sans-serif" },
               };
 
               return (
@@ -188,7 +188,7 @@ const SettingsDialog: FC = () => {
                       ? 'IBM Plex Serif'
                       : id === 'system'
                       ? 'System UI'
-                      : 'Inter'}
+                      : 'Funnel Sans'}
                   </span>
                 </div>
               );

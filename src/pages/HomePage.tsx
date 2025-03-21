@@ -4,26 +4,41 @@ import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { useLanguage } from '@/context/LanguageContext';
 import translations, { Language } from '@/util/translations';
-import { SquareLibrary } from 'lucide-react';
-import { useEffect } from 'react';
+import { Plus, SquareLibrary } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import {
-  ArrowRight,
-  At,
-  FileText,
-  ChatCentered,
-  Plus,
-} from '@phosphor-icons/react';
+import { ArrowRight, At, FileText, ChatCentered } from '@phosphor-icons/react';
+import React from 'react';
+import SettingsDialog from '@/components/SettingsDialog';
 
 export default function HomePage() {
   const { language } = useLanguage();
   const getTranslation = (key: keyof (typeof translations)[Language]) =>
     translations[language][key] || key;
+  const [focusInput, setFocusInput] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
+
+  const quickLinks = [
+    {
+      text: getTranslation('feedbackLink'),
+      icon: ChatCentered,
+      to: '/feedback',
+    },
+    {
+      text: getTranslation('contactUs'),
+      icon: At,
+      to: '/kontakt',
+    },
+    {
+      text: getTranslation('privacyPolicyTitle'),
+      icon: FileText,
+      to: '/privacy-policy',
+    },
+  ];
 
   return (
     <div className='relative flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background overflow-x-hidden'>
@@ -31,48 +46,14 @@ export default function HomePage() {
         <title>LiU Tentor</title>
       </Helmet>
 
-      {/* Snabblänkar - visas endast på lg+ skärmar */}
-      <aside className='hidden lg:flex flex-col space-y-4 absolute left-0 top-1/3 bg-foreground/5 p-3 rounded-tr-lg rounded-br-lg'>
-        <h2 className='text-sm text-foreground/60 font-semibold'>
-          {getTranslation('quickLinks')}
-        </h2>
-        <Link
-          to='/feedback'
-          className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
-        >
-          <ChatCentered className='w-5 h-5' weight='bold' />
-          <span>{getTranslation('feedbackLink')}</span>
-        </Link>
-        <Link
-          to='/kontakt'
-          className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
-        >
-          <At className='w-5 h-5' weight='bold' />
-          <span>{getTranslation('contactUs')}</span>
-        </Link>
-        <Link
-          to='/privacy-policy'
-          className='flex items-center hover:underline space-x-2 text-sm text-foreground/70 hover:text-primary transition'
-        >
-          <FileText className='w-5 h-5' weight='bold' />
-          <span>{getTranslation('privacyPolicyTitle')}</span>
-        </Link>
-
-        <Separator />
-
-        <Link to='/upload-exams'>
-          <Button size='sm'>
-            <Plus className='w-5 h-5' />
-            <p>{getTranslation('uploadButton')}</p>
-          </Button>
-        </Link>
-      </aside>
+      {/* Sidebar */}
+      <ContinueWhereYouLeftOff />
 
       {/* Large Centered Logo */}
-      <div className='flex flex-col items-center space-y-2 mb-20'>
+      <div className='flex flex-col items-center space-y-2 mb-10'>
         <div className='flex flex-row items-center justify-center space-x-2'>
           <SquareLibrary className='text-primary w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16' />
-          <h1 className='text-3xl md:text-4xl lg:text-5xl font-logo text-foreground/80 tracking-tight'>
+          <h1 className='text-4xl lg:text-5xl font-logo text-foreground/80 tracking-tight'>
             {getTranslation('homeTitle')}
           </h1>
         </div>
@@ -84,26 +65,61 @@ export default function HomePage() {
       {/* Main Content */}
       <div className='w-full max-w-[600px] flex flex-col items-center space-y-6'>
         {/* Search Section */}
-        <div className='w-full flex flex-col items-start justify-start'>
-          <MainInput />
-        </div>
+        <div
+          className={`w-full relative border shadow-sm dark:shadow-md border-foreground/20 ${
+            focusInput
+              ? 'border-primary ring-1 ring-primary'
+              : 'hover:border-foreground/40'
+          } bg-background/5 dark:bg-foreground/5 rounded-2xl transition-all duration-200 text-sm text-foreground/80 outline-none`}
+        >
+          <MainInput setFocusInput={setFocusInput} />
 
-        {/* Continue Where You Left Off */}
-        <div className='w-full'>
-          <ContinueWhereYouLeftOff />
+          {/* <ContinueWhereYouLeftOff /> */}
+
+          <div className='flex flex-col items-start justify-start p-5 space-y-2'>
+            <Separator />
+            <h2 className='text-sm font-medium text-foreground/70'>
+              {getTranslation('quickLinks')}{' '}
+            </h2>
+            <div className='flex flex-row items-start justify-start space-x-2'>
+              {quickLinks.map(({ text, icon, to }) => (
+                <Link key={text} to={to}>
+                  <Button size='sm' variant='outline'>
+                    {icon &&
+                      React.createElement(icon, {
+                        className: 'w-5 h-5',
+                        weight: 'bold',
+                      })}
+                    <span>{text}</span>
+                  </Button>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* CTA Button */}
-        <Link to='/upload-info'>
-          <Button
-            variant='outline'
-            size='sm'
-            className='group flex items-center px-6 py-3 shadow-md transition-all duration-200'
-          >
-            {getTranslation('weNeedYourHelp')}
-            <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
-          </Button>
-        </Link>
+        <div className='flex flex-col md:flex-row items-center justify-center'>
+          <Link to='/upload-info'>
+            <Button variant='outline' className='group'>
+              {getTranslation('weNeedYourHelp')}
+              <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
+            </Button>
+          </Link>
+
+          <div className='w-[1px] bg-foreground/20 dark:bg-foreground/40 h-6 mx-5 hidden md:flex' />
+
+          <Link to='/upload-exams'>
+            <Button className='hidden md:flex flex-row items-center justify-center'>
+              <Plus className='w-5 h-5' />
+              {getTranslation('uploadTitle')}
+            </Button>
+          </Link>
+        </div>
+      </div>
+
+      <div className='fixed right-5 top-5 items-center justify-center flex'>
+        <SettingsDialog />
       </div>
     </div>
   );

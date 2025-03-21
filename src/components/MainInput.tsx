@@ -5,7 +5,6 @@ import Cookies from 'js-cookie';
 import { CornerUpRight, X, Clock } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MagnifyingGlass } from '@phosphor-icons/react';
 
 interface RecentActivity {
   courseCode: string;
@@ -14,7 +13,11 @@ interface RecentActivity {
   timestamp: number;
 }
 
-const MainInput: React.FC = () => {
+interface MainInputProps {
+  setFocusInput: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const [courseCode, setCourseCode] = useState('');
@@ -196,25 +199,18 @@ const MainInput: React.FC = () => {
     navigate(`/search/${searchCode}`);
   };
 
-  const [focus, setFocus] = useState(false);
-
   return (
     <div className='relative w-full'>
-      <div
-        className={`w-full relative border shadow-sm dark:shadow-md border-foreground/20 ${
-          focus ? 'border-primary' : 'hover:border-foreground/40'
-        } bg-white dark:bg-foreground/5 rounded-xl transition-all duration-200 text-sm text-foreground/80 outline-none`}
-      >
-        <MagnifyingGlass className='absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground' />
+      <div className={`w-full relative`}>
         <input
           placeholder={getTranslation('searchCoursePlaceholder')}
           value={courseCode}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className='w-full pl-10 pr-10 p-4 border-none bg-transparent text-sm text-foreground/80 outline-none'
+          className='w-full p-5 border-none bg-transparent text-sm text-foreground/80 outline-none'
           autoFocus
-          onFocus={() => setFocus(true)}
-          onBlur={() => setFocus(false)}
+          onFocus={() => setFocusInput(true)}
+          onBlur={() => setFocusInput(false)}
         />
         {courseCode && (
           <button
@@ -231,7 +227,7 @@ const MainInput: React.FC = () => {
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className='absolute w-full mt-3 bg-background border rounded-md shadow-lg z-[100] max-h-60 overflow-y-auto'
+            className='absolute w-full mt-0 bg-background/80 backdrop-blur-sm border shadow-lg z-[60] max-h-60 rounded-br-xl rounded-bl-xl overflow-y-auto'
           >
             {recentSearches.length > 0 && (
               <>

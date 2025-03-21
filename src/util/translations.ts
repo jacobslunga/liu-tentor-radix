@@ -200,6 +200,9 @@ export interface Translations {
     privacyPolicyGDPRItem1: string;
     privacyPolicyGDPRItem2: string;
     privacyPolicyGDPRItem3: string;
+    showContinueWhereYouLeftOff: string;
+    hideContinueWhereYouLeftOff: string;
+    new: string;
   };
 }
 
@@ -409,7 +412,7 @@ const translations: Translations = {
     contactEmail: 'Kontakta via e-post',
     feedbackSuccessTitle: 'Tack för din feedback!',
     feedbackErrorTitle: 'Något gick fel',
-    continueWhereYouLeftOff: 'Fortsätt där du slutade',
+    continueWhereYouLeftOff: 'Senaste aktiviteter',
     justNow: 'Just nu',
     minutesAgo: 'minuter sedan',
     hoursAgo: 'timmar sedan',
@@ -433,6 +436,9 @@ const translations: Translations = {
     privacyPolicyGDPRItem3:
       'Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.',
     privacyPolicyGDPRTitle: 'Hantering av personuppgifter och GDPR',
+    showContinueWhereYouLeftOff: 'Visa fortsätt där du slutade',
+    hideContinueWhereYouLeftOff: 'Dölj fortsätt där du slutade',
+    new: 'Ny',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -638,7 +644,7 @@ const translations: Translations = {
     contactEmail: 'Contact Email',
     feedbackSuccessTitle: 'Thank you for your feedback!',
     feedbackErrorTitle: 'Something went wrong',
-    continueWhereYouLeftOff: 'Continue where you left off',
+    continueWhereYouLeftOff: 'Recent activities',
     justNow: 'Just now',
     minutesAgo: 'minutes ago',
     hoursAgo: 'hours ago',
@@ -662,6 +668,9 @@ const translations: Translations = {
     privacyPolicyGDPRItem3:
       'If you want to request removal of an exam or a name, please contact us via email.',
     privacyPolicyGDPRTitle: 'Handling of personal data and GDPR',
+    hideContinueWhereYouLeftOff: 'Hide continue where you left off',
+    showContinueWhereYouLeftOff: 'Show continue where you left off',
+    new: 'New',
   },
 };
 
