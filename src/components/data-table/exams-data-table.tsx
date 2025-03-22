@@ -94,7 +94,10 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                           header.getContext()
                         )}
                         {header.id === 'created_at' && (
-                          <ArrowsDownUp className='h-4 w-4 text-muted-foreground' />
+                          <ArrowsDownUp
+                            className='h-4 w-4 text-muted-foreground'
+                            weight='bold'
+                          />
                         )}
                       </div>
                     </TableHead>
@@ -124,9 +127,12 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                               }
                             >
                               {row.original.hasFacit ? (
-                                <Check className='h-3 w-3' />
+                                <Check className='h-3 w-3' weight='bold' />
                               ) : (
-                                <X className='h-3 w-3 text-red-500' />
+                                <X
+                                  className='h-3 w-3 text-red-500'
+                                  weight='bold'
+                                />
                               )}
                             </Badge>
                           </div>

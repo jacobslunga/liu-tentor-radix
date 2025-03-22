@@ -408,7 +408,7 @@ const SearchPage: React.FC = () => {
             className='flex flex-row items-center justify-center space-x-2'
           >
             <p>{getTranslation('uploadExamsOrFacit')}</p>
-            <ArrowRight className='rotate-[-45deg] w-4 h-4' />
+            <ArrowRight className='rotate-[-45deg] w-4 h-4' weight='bold' />
           </Button>
         </Link>
       </div>

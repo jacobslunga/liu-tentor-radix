@@ -53,7 +53,7 @@ export const FontProvider: React.FC<{ children: ReactNode }> = ({
       serif: "'IBM Plex Serif', sans-serif",
       system:
         "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-      custom: "'Funnel Sans', monospace",
+      custom: "'Outfit', monospace",
     };
 
     document.documentElement.style.setProperty('--user-font', fontMap[font]);

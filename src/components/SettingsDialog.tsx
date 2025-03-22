@@ -60,12 +60,20 @@ const SettingsDialog: FC = () => {
     label: string;
     icon: JSX.Element;
   }[] = [
-    { id: 'light', label: 'Light', icon: <Sun className='w-5 h-5' /> },
-    { id: 'dark', label: 'Dark', icon: <Moon className='w-5 h-5' /> },
+    {
+      id: 'light',
+      label: 'Light',
+      icon: <Sun className='w-5 h-5' weight='bold' />,
+    },
+    {
+      id: 'dark',
+      label: 'Dark',
+      icon: <Moon className='w-5 h-5' weight='bold' />,
+    },
     {
       id: 'system',
       label: 'System',
-      icon: <Monitor className='w-5 h-5' />,
+      icon: <Monitor className='w-5 h-5' weight='bold' />,
     },
   ];
 
@@ -158,7 +166,7 @@ const SettingsDialog: FC = () => {
                   fontFamily:
                     "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
                 },
-                custom: { fontFamily: "'Funnel Sans', sans-serif" },
+                custom: { fontFamily: "'Outfit', sans-serif" },
               };
 
               return (
@@ -188,7 +196,7 @@ const SettingsDialog: FC = () => {
                       ? 'IBM Plex Serif'
                       : id === 'system'
                       ? 'System UI'
-                      : 'Funnel Sans'}
+                      : 'Outfit'}
                   </span>
                 </div>
               );

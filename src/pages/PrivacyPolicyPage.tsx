@@ -24,7 +24,7 @@ const PrivacyPolicy: FC = () => {
     items,
   }) => (
     <div className='mb-6'>
-      <h2 className='text-lg font-medium mb-2 flex items-center gap-2'>
+      <h2 className='text-lg font-medium mb-2 flex items-center gap-2 text-foreground/80'>
         {title}
       </h2>
       <p className='text-sm text-foreground/80 leading-relaxed'>{content}</p>
@@ -145,7 +145,7 @@ const PrivacyPolicy: FC = () => {
           </div>{' '}
           {/* Contact Section */}
           <div className='mt-10 pt-6 border-t border-border/30 flex flex-col items-center text-center space-y-3'>
-            <Mailbox className='h-10 w-10 text-primary' />
+            <Mailbox className='h-10 w-10 text-primary' weight='duotone' />
             <h3 className='text-md font-medium'>
               {getTranslation('contactUs') || 'Contact Us'}
             </h3>

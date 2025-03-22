@@ -174,7 +174,7 @@ const Toolbar: FC<ToolbarProps> = ({
                 onClick={onClick}
                 className={className}
               >
-                <Icon size={17} />
+                <Icon size={17} weight='bold' />
               </Button>
             </a>
           ) : (
@@ -184,7 +184,7 @@ const Toolbar: FC<ToolbarProps> = ({
               onClick={onClick}
               className={className}
             >
-              <Icon size={17} />
+              <Icon size={17} weight='bold' />
             </Button>
           )}
         </TooltipTrigger>
@@ -300,7 +300,7 @@ const Toolbar: FC<ToolbarProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className='z-50'>
                     <Button variant='secondary' size='icon'>
-                      <BookOpen size={17} />
+                      <BookOpen size={17} weight='bold' />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

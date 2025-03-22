@@ -130,7 +130,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           }}
           aria-label={getTranslation('goBack')}
         >
-          <ArrowLeft className='w-5 h-5' />
+          <ArrowLeft className='w-5 h-5 rotate-[45deg]' weight='bold' />
         </Button>
 
         <DropdownMenu>
@@ -144,7 +144,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
                   ? `${displayName.slice(0, 20)}...`
                   : displayName}
               </p>
-              <SortAscending className='w-4 h-4' />
+              <SortAscending className='w-4 h-4' weight='bold' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent className='max-h-80 ml-20 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>

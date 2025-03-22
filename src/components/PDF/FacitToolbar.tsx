@@ -76,12 +76,12 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           {href ? (
             <a href={href} download={download}>
               <Button variant='secondary' size='icon' onClick={onClick}>
-                <Icon size={17} />
+                <Icon size={17} weight='bold' />
               </Button>
             </a>
           ) : (
             <Button variant='secondary' size='icon' onClick={onClick}>
-              <Icon size={17} />
+              <Icon size={17} weight='bold' />
             </Button>
           )}
         </TooltipTrigger>
@@ -155,7 +155,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className='z-50'>
                     <Button variant='secondary' size='icon'>
-                      <BookOpen size={17} />
+                      <BookOpen size={17} weight='bold' />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
