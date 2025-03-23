@@ -18,15 +18,15 @@ import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import { filterExamsByDate, isFacit } from './utils';
 import {
+  BookOpenIcon,
+  ChevronDown,
+  ChevronLeft,
+  Download,
   Minus,
   Plus,
-  DownloadSimple,
-  ArrowClockwise,
-  ArrowCounterClockwise,
-  CaretLeft,
-  CaretDown,
-  BookOpen,
-} from '@phosphor-icons/react';
+  RotateCcw,
+  RotateCw,
+} from 'lucide-react';
 
 interface FacitToolbarProps {
   onFacitZoomIn: () => void;
@@ -76,12 +76,12 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           {href ? (
             <a href={href} download={download}>
               <Button variant='secondary' size='icon' onClick={onClick}>
-                <Icon size={17} weight='bold' />
+                <Icon size={17} />
               </Button>
             </a>
           ) : (
             <Button variant='secondary' size='icon' onClick={onClick}>
-              <Icon size={17} weight='bold' />
+              <Icon size={17} />
             </Button>
           )}
         </TooltipTrigger>
@@ -95,7 +95,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
   const FacitToolbar = () => (
     <div className='flex flex-col items-end justify-end space-y-2'>
       <ToolbarButton
-        icon={isFacitToolbarOpen ? CaretDown : CaretLeft}
+        icon={isFacitToolbarOpen ? ChevronDown : ChevronLeft}
         onClick={toggleFacitToolbar}
         tooltip={getTranslation(
           isFacitToolbarOpen ? 'hideFacitToolbar' : 'showFacitToolbar'
@@ -119,13 +119,13 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           <Separator />
 
           <ToolbarButton
-            icon={ArrowCounterClockwise}
+            icon={RotateCcw}
             onClick={onRotateFacitCounterClockwise}
             tooltip={getTranslation('rotateLeft')}
           />
 
           <ToolbarButton
-            icon={ArrowClockwise}
+            icon={RotateCw}
             onClick={onRotateFacitClockwise}
             tooltip={getTranslation('rotateRight')}
           />
@@ -133,7 +133,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           <Separator />
 
           <ToolbarButton
-            icon={DownloadSimple}
+            icon={Download}
             href={facitPdfUrl}
             download
             tooltip={getTranslation('downloadFacit')}
@@ -155,7 +155,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className='z-50'>
                     <Button variant='secondary' size='icon'>
-                      <BookOpen size={17} weight='bold' />
+                      <BookOpenIcon size={17} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent

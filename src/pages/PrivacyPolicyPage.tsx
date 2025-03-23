@@ -6,7 +6,7 @@ import { FC, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Separator } from '@/components/ui/separator';
-import { ArrowLeft, Mailbox } from '@phosphor-icons/react';
+import { ArrowLeft, Mailbox } from 'lucide-react';
 
 const PrivacyPolicy: FC = () => {
   const navigate = useNavigate();
@@ -145,7 +145,7 @@ const PrivacyPolicy: FC = () => {
           </div>{' '}
           {/* Contact Section */}
           <div className='mt-10 pt-6 border-t border-border/30 flex flex-col items-center text-center space-y-3'>
-            <Mailbox className='h-10 w-10 text-primary' weight='duotone' />
+            <Mailbox className='h-10 w-10 text-primary' />
             <h3 className='text-md font-medium'>
               {getTranslation('contactUs') || 'Contact Us'}
             </h3>

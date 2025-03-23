@@ -1,11 +1,11 @@
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { supabase } from '@/supabase/supabaseClient';
 import { AlertCircle, CheckCircle } from 'lucide-react';
-import { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const RemoveExamsPage: FC = () => {
+const RemoveExamsPage = () => {
   const [kurskod, setKurskod] = useState('');
   const [removing, setRemoving] = useState(false);
   const [message, setMessage] = useState('');
@@ -16,24 +16,21 @@ const RemoveExamsPage: FC = () => {
 
   useEffect(() => {
     const checkUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        navigate('/');
-      }
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) navigate('/');
     };
-
     checkUser();
   }, [navigate]);
 
   const handleRemove = async () => {
     if (!kurskod) {
       setMessageType('error');
-      setMessage('Vänligen ange en kurskod innan du försöker ta bort tentor.');
+      setMessage('Ange en kurskod innan du försöker ta bort.');
       return;
     }
 
     const confirmed = window.confirm(
-      `Är du säker på att du vill radera alla tentor och dokument för kurskoden ${kurskod.toUpperCase()}? Detta kan inte ångras.`
+      `Är du säker på att du vill ta bort ALLT för ${kurskod.toUpperCase()}? Det går inte att ångra.`
     );
     if (!confirmed) return;
 
@@ -42,106 +39,87 @@ const RemoveExamsPage: FC = () => {
     setMessageType('info');
 
     try {
-      const { data: tentor, error: tentorError } = await supabase
+      const { data: tentor, error } = await supabase
         .from('tentor')
         .select('*')
         .eq('kurskod', kurskod.toUpperCase());
 
-      if (tentorError) throw tentorError;
+      if (error) throw error;
 
-      if (tentor && tentor.length > 0) {
-        const documentIds = tentor.map((tenta) => tenta.document_id);
-
-        const { error: examError } = await supabase
-          .from('tentor')
-          .delete()
-          .eq('kurskod', kurskod.toUpperCase());
-
-        if (examError) throw examError;
-
-        const { error: documentsError } = await supabase
-          .from('documents')
-          .delete()
-          .in('id', documentIds);
-
-        if (documentsError) throw documentsError;
-
-        setMessageType('success');
-        setMessage(
-          `Alla tentor och dokument för kurskoden ${kurskod.toUpperCase()} har raderats.`
-        );
-      } else {
+      if (!tentor || tentor.length === 0) {
         setMessageType('info');
-        setMessage(
-          `Inga tentor hittades för kurskoden ${kurskod.toUpperCase()}.`
-        );
+        setMessage(`Inga tentor hittades för ${kurskod.toUpperCase()}.`);
+        setRemoving(false);
+        return;
       }
-    } catch (error) {
-      setMessageType('error');
+
+      const documentIds = tentor.map((t) => t.document_id);
+
+      const { error: delTentorError } = await supabase
+        .from('tentor')
+        .delete()
+        .eq('kurskod', kurskod.toUpperCase());
+
+      if (delTentorError) throw delTentorError;
+
+      const { error: delDocsError } = await supabase
+        .from('documents')
+        .delete()
+        .in('id', documentIds);
+
+      if (delDocsError) throw delDocsError;
+
+      setMessageType('success');
       setMessage(
-        'Ett fel inträffade vid borttagning av tentor och dokument. Försök igen.'
+        `Alla tentor och dokument för ${kurskod.toUpperCase()} har raderats.`
       );
+    } catch (err) {
+      setMessageType('error');
+      setMessage('Något gick fel. Försök igen.');
     } finally {
       setRemoving(false);
     }
   };
 
   return (
-    <div className='p-10 w-full min-h-screen space-y-4 flex flex-col items-start justify-start'>
-      <h1 className='text-3xl font-medium text-center mb-4'>
-        Ta bort Tentor och Dokument
-      </h1>
+    <div className='ml-[20%] w-[80%] min-h-screen px-6 py-10 space-y-6'>
+      <h1 className='text-2xl font-semibold'>Ta bort tentor</h1>
 
-      {/* Kurskod Input */}
-      <div className='w-full max-w-md space-y-2'>
-        <label htmlFor='kurskod' className='block text-sm font-semibold'>
+      <div className='max-w-sm space-y-3'>
+        <label htmlFor='kurskod' className='text-sm font-medium'>
           Kurskod
         </label>
         <Input
           id='kurskod'
-          type='text'
-          placeholder='Ange kurskod (t.ex. TDDC17)'
+          placeholder='T.ex. TDDC17'
           value={kurskod}
           onChange={(e) => setKurskod(e.target.value)}
-          className='w-full placeholder:text-gray-400'
+          className='text-sm'
         />
+        <Button
+          className='w-full bg-destructive text-white hover:bg-destructive/80'
+          onClick={handleRemove}
+          disabled={removing || !kurskod}
+        >
+          {removing ? 'Tar bort...' : 'Radera tentor + dokument'}
+        </Button>
       </div>
 
-      {/* Remove Button */}
-      <Button
-        className='w-full max-w-md bg-red-600 hover:bg-red-700 transition text-white font-semibold'
-        onClick={handleRemove}
-        disabled={removing || !kurskod}
-      >
-        {removing ? 'Tar bort...' : 'Ta bort tentor och dokument'}
-      </Button>
-
-      {/* Meddelande */}
       {message && (
         <div
-          className={`w-full max-w-md p-4 rounded-md text-center ${
+          className={`max-w-sm p-3 rounded-md text-sm flex items-center gap-2 ${
             messageType === 'success'
-              ? 'bg-green-100 text-green-600'
+              ? 'bg-green-100 text-green-700'
               : messageType === 'error'
-              ? 'bg-red-100 text-red-600'
-              : 'bg-gray-100 text-gray-600'
+              ? 'bg-red-100 text-red-700'
+              : 'bg-muted text-muted-foreground'
           }`}
         >
-          <div className='flex items-center justify-center space-x-2'>
-            {messageType === 'success' && <CheckCircle size={20} />}
-            {messageType === 'error' && <AlertCircle size={20} />}
-            <span>{message}</span>
-          </div>
+          {messageType === 'success' && <CheckCircle className='h-4 w-4' />}
+          {messageType === 'error' && <AlertCircle className='h-4 w-4' />}
+          <span>{message}</span>
         </div>
       )}
-
-      {/* Back to Main Menu Button */}
-      <Button
-        className='w-full max-w-md bg-gray-500 hover:bg-gray-600 transition text-white font-semibold'
-        onClick={() => navigate('/')}
-      >
-        Tillbaka till Huvudmenyn
-      </Button>
     </div>
   );
 };

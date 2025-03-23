@@ -19,21 +19,21 @@ import { Exam } from '@/components/data-table/columns';
 import { Separator } from '@/components/ui/separator';
 import { filterExamsByDate, isFacit } from './utils';
 import {
+  BookOpenIcon,
+  Check,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Download,
+  EyeIcon,
   Minus,
   Plus,
+  RotateCcw,
+  RotateCw,
   Square,
   X,
-  DownloadSimple,
-  Check,
-  ArrowClockwise,
-  ArrowCounterClockwise,
-  Eye,
-  EyeClosed,
-  CaretLeft,
-  CaretRight,
-  CaretDown,
-  BookOpen,
-} from '@phosphor-icons/react';
+} from 'lucide-react';
+import { EyeClosedIcon } from '@radix-ui/react-icons';
 import { toast } from 'sonner';
 import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 
@@ -174,7 +174,7 @@ const Toolbar: FC<ToolbarProps> = ({
                 onClick={onClick}
                 className={className}
               >
-                <Icon size={17} weight='bold' />
+                <Icon size={17} />
               </Button>
             </a>
           ) : (
@@ -184,7 +184,7 @@ const Toolbar: FC<ToolbarProps> = ({
               onClick={onClick}
               className={className}
             >
-              <Icon size={17} weight='bold' />
+              <Icon size={17} />
             </Button>
           )}
         </TooltipTrigger>
@@ -198,7 +198,7 @@ const Toolbar: FC<ToolbarProps> = ({
   const TentaToolbar = () => (
     <div className='flex flex-col items-start justify-start space-y-2'>
       <ToolbarButton
-        icon={isTentaToolbarOpen ? CaretDown : CaretRight}
+        icon={isTentaToolbarOpen ? ChevronDown : ChevronRight}
         onClick={() => setIsTentaToolbarOpen((prev) => !prev)}
         tooltip={getTranslation(
           isTentaToolbarOpen ? 'hideExamToolbar' : 'showExamToolbar'
@@ -219,18 +219,18 @@ const Toolbar: FC<ToolbarProps> = ({
           />
           <Separator />
           <ToolbarButton
-            icon={ArrowCounterClockwise}
+            icon={RotateCcw}
             onClick={onRotateCounterClockwise}
             tooltip={getTranslation('rotateLeft')}
           />
           <ToolbarButton
-            icon={ArrowClockwise}
+            icon={RotateCw}
             onClick={onRotateClockwise}
             tooltip={getTranslation('rotateRight')}
           />
           <Separator />
           <ToolbarButton
-            icon={DownloadSimple}
+            icon={Download}
             href={pdfUrl || '#'}
             download={selectedExam ? generateFileName(selectedExam) : undefined}
             onClick={(e: React.MouseEvent) =>
@@ -252,7 +252,7 @@ const Toolbar: FC<ToolbarProps> = ({
   const FacitToolbar = () => (
     <div className='flex flex-col items-start justify-start space-y-2'>
       <ToolbarButton
-        icon={isFacitToolbarOpen ? CaretDown : CaretLeft}
+        icon={isFacitToolbarOpen ? ChevronDown : ChevronLeft}
         onClick={() => setIsFacitToolbarOpen((prev) => !prev)}
         tooltip={getTranslation(
           isFacitToolbarOpen ? 'hideFacitToolbar' : 'showFacitToolbar'
@@ -273,18 +273,18 @@ const Toolbar: FC<ToolbarProps> = ({
           />
           <Separator />
           <ToolbarButton
-            icon={ArrowCounterClockwise}
+            icon={RotateCcw}
             onClick={onRotateFacitCounterClockwise}
             tooltip={getTranslation('rotateLeft')}
           />
           <ToolbarButton
-            icon={ArrowClockwise}
+            icon={RotateCw}
             onClick={onRotateFacitClockwise}
             tooltip={getTranslation('rotateRight')}
           />
           <Separator />
           <ToolbarButton
-            icon={DownloadSimple}
+            icon={Download}
             href={facitPdfUrl || '#'}
             download={
               selectedExam ? generateFacitFileName(selectedExam) : undefined
@@ -300,7 +300,7 @@ const Toolbar: FC<ToolbarProps> = ({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className='z-50'>
                     <Button variant='secondary' size='icon'>
-                      <BookOpen size={17} weight='bold' />
+                      <BookOpenIcon size={17} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
@@ -325,7 +325,7 @@ const Toolbar: FC<ToolbarProps> = ({
           </TooltipProvider>
           {toggleBlur && (
             <ToolbarButton
-              icon={isBlurred ? EyeClosed : Eye}
+              icon={isBlurred ? EyeClosedIcon : EyeIcon}
               onClick={toggleBlur}
               tooltip={getTranslation(isBlurred ? 'showFacit' : 'hideFacit')}
             />

@@ -11,15 +11,15 @@ import { Helmet } from 'react-helmet';
 import translations from '@/util/translations';
 import {
   ArrowLeft,
+  X,
+  FilePlus2,
+  Upload,
   CheckCircle,
+  Loader2,
+  File,
   XCircle,
   Info,
-  UploadSimple,
-  FilePdf,
-  CircleNotch,
-  File,
-  X,
-} from '@phosphor-icons/react';
+} from 'lucide-react';
 
 const UploadExamPage = () => {
   const navigate = useNavigate();
@@ -136,7 +136,7 @@ const UploadExamPage = () => {
 
       {/* Main Content */}
       <div className='container max-w-2xl mx-auto px-4 py-12 space-y-6 text-center'>
-        <UploadSimple className='text-primary h-12 w-12 mx-auto' />
+        <Upload className='text-primary h-12 w-12 mx-auto' />
         <h1 className='text-3xl text-foreground/80 font-semibold'>
           {t.uploadTitle}
         </h1>
@@ -163,7 +163,7 @@ const UploadExamPage = () => {
             } ${loading ? 'opacity-50' : ''}`}
           >
             <input {...getInputProps()} disabled={loading} />
-            <FilePdf className='h-12 w-12 text-muted-foreground mx-auto' />
+            <FilePlus2 className='h-12 w-12 text-muted-foreground mx-auto' />
             <p className='text-sm text-muted-foreground mt-2'>
               {t.dragAndDrop}
             </p>
@@ -224,9 +224,9 @@ const UploadExamPage = () => {
               disabled={files.length === 0 || !kurskod || loading}
             >
               {loading ? (
-                <CircleNotch className='h-4 w-4 animate-spin' />
+                <Loader2 className='h-4 w-4 animate-spin' />
               ) : (
-                <UploadSimple className='h-4 w-4' />
+                <Upload className='h-4 w-4' />
               )}{' '}
               {t.uploadButton}
             </Button>
@@ -240,6 +240,19 @@ const UploadExamPage = () => {
               ? 'Observera att uppladdade tentor granskas innan de blir tillgängliga. Därmed kan det ta en stund innan de syns på sidan.'
               : 'Please note that uploaded exams are reviewed before they become available. Therefore, it may take a while before they appear on the site.'}
           </p>
+        </div>
+        {/* Upload Guidelines */}
+        <div className='p-4 bg-background border border-border rounded-lg space-y-3 text-left'>
+          <h2 className='text-base font-semibold text-foreground'>
+            {t.uploadGuidelinesTitle}
+          </h2>
+          <ul className='list-disc list-inside text-sm text-muted-foreground space-y-1'>
+            <li>{t.uploadGuidelineCourseCode}</li>
+            <li>{t.uploadGuidelineNaming}</li>
+            <li>{t.uploadGuidelineDate}</li>
+            <li>{t.uploadGuidelineDuplicateCheck}</li>
+            <li>{t.uploadGuidelineQuality}</li>
+          </ul>
         </div>
       </div>
     </div>

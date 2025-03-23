@@ -5,28 +5,21 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Leftbar: FC = () => {
   const location = useLocation();
-
   const isActive = (path: string) => location.pathname === path;
 
   return (
-    <div className='w-[20%] flex flex-col items-start p-4 justify-start bg-foreground/5 h-screen fixed left-0'>
-      <h1 className='text-lg font-logo tracking-tight text-center flex flex-row items-center justify-center space-x-2'>
-        <SquareLibrary className='text-primary w-7 h-7' />
-        <p>LiU Tentor</p>
+    <div className='w-[20%] flex flex-col items-start p-4 justify-start bg-foreground/5 h-screen fixed left-0 border-r'>
+      <h1 className='text-lg font-logo tracking-tight flex items-center gap-2 mb-6'>
+        <SquareLibrary className='text-primary w-6 h-6' />
+        LiU Tentor
       </h1>
-      <nav className='mt-4 flex flex-col space-y-2'>
-        <Link to='/admin/dashboard'>
-          <Button
-            variant={isActive('/admin/dashboard') ? 'default' : 'outline'}
-          >
-            Dashboard
-          </Button>
-        </Link>
+      <nav className='flex flex-col space-y-2 w-full'>
         <Link to='/admin/dashboard/add-exams'>
           <Button
             variant={
               isActive('/admin/dashboard/add-exams') ? 'default' : 'outline'
             }
+            className='w-full justify-start'
           >
             Ladda upp tentor
           </Button>
@@ -36,8 +29,9 @@ const Leftbar: FC = () => {
             variant={
               isActive('/admin/dashboard/review') ? 'default' : 'outline'
             }
+            className='w-full justify-start'
           >
-            Uppladdade tentor
+            Hantera tentor
           </Button>
         </Link>
         <Link to='/admin/dashboard/remove-exams'>
@@ -45,6 +39,7 @@ const Leftbar: FC = () => {
             variant={
               isActive('/admin/dashboard/remove-exams') ? 'default' : 'outline'
             }
+            className='w-full justify-start'
           >
             Ta bort tentor
           </Button>

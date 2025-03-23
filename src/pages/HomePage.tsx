@@ -1,4 +1,3 @@
-import ContinueWhereYouLeftOff from '@/components/ContinueWhereYouLeftOff';
 import MainInput from '@/components/MainInput';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/context/LanguageContext';
@@ -7,9 +6,10 @@ import { Plus, SquareLibrary } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { Link } from 'react-router-dom';
-import { ArrowRight, At, FileText, ChatCentered } from '@phosphor-icons/react';
+import { ArrowRight, AtSign, MessageCircle, FileText } from 'lucide-react';
 import React from 'react';
 import SettingsDialog from '@/components/SettingsDialog';
+import InlineRecentActivity from '@/components/InlineRecentActivity';
 
 export default function HomePage() {
   const { language } = useLanguage();
@@ -24,12 +24,12 @@ export default function HomePage() {
   const quickLinks = [
     {
       text: getTranslation('feedbackLink'),
-      icon: ChatCentered,
+      icon: MessageCircle,
       to: '/feedback',
     },
     {
       text: getTranslation('contactUs'),
-      icon: At,
+      icon: AtSign,
       to: '/kontakt',
     },
     {
@@ -44,9 +44,6 @@ export default function HomePage() {
       <Helmet>
         <title>LiU Tentor</title>
       </Helmet>
-
-      {/* Sidebar */}
-      <ContinueWhereYouLeftOff />
 
       {/* Large Centered Logo */}
       <div className='flex flex-col items-center space-y-2 mb-10'>
@@ -72,9 +69,9 @@ export default function HomePage() {
           } bg-background/5 dark:bg-foreground/5 rounded-2xl transition-all duration-200 text-sm text-foreground/80 outline-none`}
         >
           <MainInput setFocusInput={setFocusInput} />
-
-          {/* <ContinueWhereYouLeftOff /> */}
         </div>
+
+        <InlineRecentActivity />
 
         <div className='flex flex-col items-center justify-center w-full space-y-6'>
           {/* CTA Button */}
@@ -109,7 +106,6 @@ export default function HomePage() {
                 {icon &&
                   React.createElement(icon, {
                     className: 'w-5 h-5',
-                    weight: 'bold',
                   })}
                 <span>{text}</span>
               </Button>

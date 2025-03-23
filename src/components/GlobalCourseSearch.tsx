@@ -2,7 +2,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import { kurskodArray } from '@/data/kurskoder';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
-import { Clock, Book } from '@phosphor-icons/react';
+import { Clock, Book } from 'lucide-react';
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -42,8 +42,8 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
     return translations[language][key];
   };
 
-  const COOKIE_NAME = 'recentActivities_v3'; // Standardized cookie name
-  const COOKIE_VERSION = '1.2'; // Increment version if structure changes
+  const COOKIE_NAME = 'recentActivities_v3';
+  const COOKIE_VERSION = '1.2';
 
   useEffect(() => {
     if (open) {

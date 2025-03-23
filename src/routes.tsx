@@ -12,7 +12,6 @@ import SearchPage from '@/pages/SearchPage';
 import TentaPage from '@/pages/TentaPage';
 import LoginPage from './pages/auth/LoginPage';
 import AdminLayout from './layouts/AdminLayout';
-import Dashboard from './pages/auth/Dashboard';
 import RemoveExamsPage from './pages/auth/RemoveExamsPage';
 import UploadedExamsPage from './pages/auth/UploadedExamsPage';
 import AddExamsPage from './pages/auth/AddExamsPage';
@@ -33,7 +32,6 @@ const routes: RouteObject[] = [
         path: 'admin',
         element: <AdminLayout />,
         children: [
-          { index: true, element: <Dashboard /> },
           { path: 'dashboard/add-exams', element: <AddExamsPage /> },
           { path: 'dashboard/review', element: <UploadedExamsPage /> },
           { path: 'dashboard/remove-exams', element: <RemoveExamsPage /> },

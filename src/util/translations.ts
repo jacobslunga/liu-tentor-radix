@@ -203,6 +203,15 @@ export interface Translations {
     showContinueWhereYouLeftOff: string;
     hideContinueWhereYouLeftOff: string;
     new: string;
+    minShort: string;
+    hShort: string;
+    dShort: string;
+    uploadGuidelinesTitle: string;
+    uploadGuidelineCourseCode: string;
+    uploadGuidelineNaming: string;
+    uploadGuidelineDate: string;
+    uploadGuidelineDuplicateCheck: string;
+    uploadGuidelineQuality: string;
   };
 }
 
@@ -439,6 +448,17 @@ const translations: Translations = {
     showContinueWhereYouLeftOff: 'Visa fortsätt där du slutade',
     hideContinueWhereYouLeftOff: 'Dölj fortsätt där du slutade',
     new: 'Ny',
+    dShort: 'd',
+    hShort: 'h',
+    minShort: 'm',
+    uploadGuidelinesTitle: 'Riktlinjer för uppladdning',
+    uploadGuidelineCourseCode:
+      'Se till att kurskoden är korrekt innan uppladdning.',
+    uploadGuidelineNaming:
+      'Namnge filerna tydligt – t.ex. "2024-03-20-Frågor.pdf" eller "2024-03-20-Lösningar.pdf".',
+    uploadGuidelineDate: 'Inkludera gärna datum eller termin i filnamnet.',
+    uploadGuidelineDuplicateCheck: 'Dubbelkolla om filen redan finns på sidan.',
+    uploadGuidelineQuality: 'Ladda endast upp tydliga och läsbara PDF-filer.',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -671,6 +691,19 @@ const translations: Translations = {
     hideContinueWhereYouLeftOff: 'Hide continue where you left off',
     showContinueWhereYouLeftOff: 'Show continue where you left off',
     new: 'New',
+    dShort: 'd',
+    hShort: 'h',
+    minShort: 'm',
+    uploadGuidelinesTitle: 'Upload Guidelines',
+    uploadGuidelineCourseCode:
+      'Make sure the course code is correct before uploading.',
+    uploadGuidelineNaming:
+      'Name files clearly – e.g., "2024-03-20-Questions.pdf" or "2024-03-20-Solutions.pdf".',
+    uploadGuidelineDate:
+      'Include the date or term in the filename if possible.',
+    uploadGuidelineDuplicateCheck:
+      'Double-check if the file already exists on the site.',
+    uploadGuidelineQuality: 'Only upload clear and readable PDF files.',
   },
 };
 

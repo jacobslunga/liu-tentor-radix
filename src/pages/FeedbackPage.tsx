@@ -21,10 +21,10 @@ import { z } from 'zod';
 import { Helmet } from 'react-helmet';
 import {
   ArrowLeft,
+  AlertCircle,
+  MessageCircle,
   CheckCircle,
-  Warning,
-  ChatCentered,
-} from '@phosphor-icons/react';
+} from 'lucide-react';
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
@@ -135,7 +135,7 @@ const FeedbackPage: FC = () => {
         {/* Page Title */}
         <div className='relative w-full flex flex-col items-center mb-10'>
           <div className='absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center'>
-            <ChatCentered className='text-primary h-10 w-10' />
+            <MessageCircle className='text-primary h-10 w-10' />
           </div>
 
           <h1 className='text-3xl text-foreground/80 font-semibold text-center mt-10 mb-4'>
@@ -173,7 +173,7 @@ const FeedbackPage: FC = () => {
             ) : (
               <div className='flex flex-col items-center gap-6 text-center'>
                 <div className='w-16 h-16 rounded-full bg-red-100 flex items-center justify-center'>
-                  <Warning className='h-10 w-10 text-red-600' />
+                  <AlertCircle className='h-10 w-10 text-red-600' />
                 </div>
                 <div>
                   <h2 className='text-2xl font-medium mb-2'>

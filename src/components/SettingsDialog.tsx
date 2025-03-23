@@ -20,7 +20,7 @@ import { useFont } from '@/context/FontContext';
 import translations from '@/util/translations';
 import { FC, JSX, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { GearSix, Moon, Sun, Monitor } from '@phosphor-icons/react';
+import { Settings, Moon, Sun, Monitor } from 'lucide-react';
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
@@ -63,17 +63,17 @@ const SettingsDialog: FC = () => {
     {
       id: 'light',
       label: 'Light',
-      icon: <Sun className='w-5 h-5' weight='bold' />,
+      icon: <Sun className='w-5 h-5' />,
     },
     {
       id: 'dark',
       label: 'Dark',
-      icon: <Moon className='w-5 h-5' weight='bold' />,
+      icon: <Moon className='w-5 h-5' />,
     },
     {
       id: 'system',
       label: 'System',
-      icon: <Monitor className='w-5 h-5' weight='bold' />,
+      icon: <Monitor className='w-5 h-5' />,
     },
   ];
 
@@ -113,7 +113,7 @@ const SettingsDialog: FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant='outline' size='icon'>
-          <GearSix weight='bold' />
+          <Settings />
         </Button>
       </DialogTrigger>
       <DialogContent className='w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg'>

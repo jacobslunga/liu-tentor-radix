@@ -2,6 +2,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { FC } from 'react';
 import { Link } from 'react-router-dom';
+import SettingsDialog from '@/components/SettingsDialog';
 import { SquareLibrary } from 'lucide-react';
 
 const Footer: FC = () => {
@@ -33,19 +34,20 @@ const Footer: FC = () => {
           ))}
         </nav>
 
-        <div className='flex flex-row items-center justify-center space-x-5'>
-          {/* Copyright */}
-          <p className='text-xs text-gray-500'>
-            &copy; {new Date().getFullYear()}{' '}
-            {getTranslation('allRightsReserved')}
-          </p>
+        {/* Inställningar */}
+        <SettingsDialog />
 
-          {/* Branding */}
-          <p className='text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-2'>
-            <SquareLibrary className='text-primary w-6 h-6' />
-            <span>{getTranslation('homeTitle')}</span>
-          </p>
-        </div>
+        {/* Copyright */}
+        <p className='text-xs text-gray-500'>
+          &copy; {new Date().getFullYear()}{' '}
+          {getTranslation('allRightsReserved')}
+        </p>
+
+        {/* Branding */}
+        <p className='text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-2'>
+          <SquareLibrary className='text-primary w-6 h-6' />
+          <span>{getTranslation('homeTitle')}</span>
+        </p>
       </div>
     </footer>
   );

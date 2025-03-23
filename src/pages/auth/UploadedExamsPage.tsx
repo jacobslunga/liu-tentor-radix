@@ -1,418 +1,244 @@
-import PDFViewer from '@/components/PDF/PDFViewer';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
+import { Card } from '@/components/ui/card';
 import { supabase } from '@/supabase/supabaseClient';
-import {
-  CheckCircle,
-  Clock,
-  Download,
-  Eye,
-  LoaderCircle,
-  XCircle,
-} from 'lucide-react';
-import { FC, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet';
+import { ArrowLeft, Download, Loader2, Trash } from 'lucide-react';
 import JSZip from 'jszip';
-import { saveAs } from 'file-saver';
 
-interface UploadedDocument {
+type DocumentMeta = {
   id: number;
   namn: string;
   kurskod: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  created_at: string;
-  content: string;
-}
+  status: string;
+};
 
-const UploadedExamsPage: FC = () => {
-  const [documents, setDocuments] = useState<UploadedDocument[]>([]);
-  const [filter, setFilter] = useState<
-    'all' | 'pending' | 'accepted' | 'rejected'
-  >('all');
-  const [editedNames, setEditedNames] = useState<{ [key: number]: string }>({});
-  const [selectedDocument, setSelectedDocument] =
-    useState<UploadedDocument | null>(null);
-  const [loadingStates, setLoadingStates] = useState<{
-    [key: number]: 'accept' | 'reject' | null;
-  }>({});
-  const [numPages, setNumPages] = useState<number>(0);
+const ManageExamsPage = () => {
+  const [documents, setDocuments] = useState<DocumentMeta[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('');
+  const [downloadingId, setDownloadingId] = useState<number | null>(null);
+  const [downloadingCourse, setDownloadingCourse] = useState<string | null>(
+    null
+  );
+  const [removingCourse, setRemovingCourse] = useState<string | null>(null);
+  const [removingId, setRemovingId] = useState<number | null>(null);
 
-  const navigate = useNavigate();
+  const fetchDocuments = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('uploaded_documents')
+      .select('id, namn, kurskod, status');
 
-  useEffect(() => {
-    const checkUser = async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) {
-        navigate('/');
-      }
-    };
-
-    checkUser();
-  }, [navigate]);
+    if (!error && data) setDocuments(data);
+    setLoading(false);
+  };
 
   useEffect(() => {
     fetchDocuments();
   }, []);
 
-  const fetchDocuments = async () => {
+  const groupedDocuments = documents.reduce(
+    (acc: Record<string, DocumentMeta[]>, doc) => {
+      const code = doc.kurskod.toUpperCase();
+      if (!acc[code]) acc[code] = [];
+      acc[code].push(doc);
+      return acc;
+    },
+    {}
+  );
+
+  const fetchAndDownload = async (id: number, namn: string) => {
+    setDownloadingId(id);
     const { data, error } = await supabase
       .from('uploaded_documents')
-      .select('*');
-    if (error) {
-      console.error('Error fetching documents:', error.message);
-    } else {
-      setDocuments(data);
-    }
-  };
+      .select('content')
+      .eq('id', id)
+      .single();
 
-  const extractDateFromName = (name: string) => {
-    const patterns = [
-      /(\d{4})-(\d{2})-(\d{2})/, // YYYY-MM-DD
-      /(\d{4})(\d{2})(\d{2})/, // YYYYMMDD
-      /(\d{2})(\d{2})(\d{2})/, // YYMMDD
-      /(\d{2})_(\d{2})_(\d{2})/, // YY_MM_DD
-      /(\d{4})_(\d{2})_(\d{2})/, // YYYY_MM_DD
-      /(\d{1,2})[-/](\d{1,2})[-/](\d{4})/, // D-M-YYYY or D/M/YYYY
-      /(\d{4})[-/](\d{1,2})[-/](\d{1,2})/, // YYYY-M-D or YYYY/M/D
-      /(?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*[-_](\d{2,4})/, // month-YY[YY]
-      /(\d{2,4})[-_](?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*/, // YY[YY]-month
-      /T?(\d{1,2})[-_](\d{4})/, // T1-2024 or 1-2024 (term format)
-      /HT(\d{2})/, // HT23 (fall term)
-      /VT(\d{2})/, // VT24 (spring term)
-    ];
-
-    const monthMap: Record<string, string> = {
-      jan: '01',
-      feb: '02',
-      mar: '03',
-      apr: '04',
-      maj: '05',
-      jun: '06',
-      jul: '07',
-      aug: '08',
-      sep: '09',
-      okt: '10',
-      nov: '11',
-      dec: '12',
-    };
-
-    for (const pattern of patterns) {
-      const match = name.toLowerCase().match(pattern);
-      if (!match) continue;
-
-      try {
-        let year, month, day;
-
-        if (match[0].startsWith('ht')) {
-          year = `20${match[1]}`;
-          month = '12';
-          day = '01';
-        } else if (match[0].startsWith('vt')) {
-          year = `20${match[1]}`;
-          month = '01';
-          day = '01';
-        } else if (match[0].includes('t')) {
-          year = match[2];
-          month = match[1] === '1' ? '01' : '06';
-          day = '01';
-        } else {
-          year = match[1];
-          month = match[2];
-          day = match[3];
-          if (year.length === 2) year = `20${year}`;
-          if (monthMap[month]) month = monthMap[month];
-        }
-
-        if (!year || !month || !day) continue;
-
-        const monthNum = parseInt(month);
-        const dayNum = parseInt(day);
-        if (monthNum < 1 || monthNum > 12 || dayNum < 1 || dayNum > 31)
-          continue;
-
-        const date = new Date(parseInt(year), monthNum - 1, dayNum);
-        if (!isNaN(date.getTime())) return date;
-      } catch {
-        continue;
-      }
+    if (!error && data) {
+      const byteCharacters = atob(data.content);
+      const byteArray = new Uint8Array(
+        [...byteCharacters].map((c) => c.charCodeAt(0))
+      );
+      const blob = new Blob([byteArray], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = namn;
+      link.click();
+      URL.revokeObjectURL(url);
     }
 
-    return null;
+    setDownloadingId(null);
   };
 
-  const updateDocumentStatus = async (
-    id: number,
-    status: 'accepted' | 'rejected'
+  const handleDownloadAll = async (
+    courseCode: string,
+    files: DocumentMeta[]
   ) => {
-    const action = status === 'accepted' ? 'acceptera' : 'avslå';
-    const confirmed = window.confirm(
-      `Är du säker på att du vill ${action} detta dokument?`
-    );
-
-    if (!confirmed) {
-      return;
-    }
-
-    setLoadingStates((prev) => ({
-      ...prev,
-      [id]: status === 'accepted' ? 'accept' : 'reject',
-    }));
-    const customName = editedNames[id] || '';
-
-    try {
-      if (status === 'accepted') {
-        const { data: uploadedDocument, error: fetchError } = await supabase
-          .from('uploaded_documents')
-          .select('content, kurskod')
-          .eq('id', id)
-          .single();
-
-        if (fetchError) throw fetchError;
-
-        const { content, kurskod } = uploadedDocument;
-        const tentaNamn = customName || 'Namn saknas';
-        const tentaDatum = extractDateFromName(tentaNamn);
-
-        if (!tentaDatum) {
-          alert('Datum kunde inte extraheras från tenta-namnet.');
-          return;
-        }
-
-        const { data: existingExams, error: examCheckError } = await supabase
-          .from('tentor')
-          .select('tenta_namn')
-          .eq('kurskod', kurskod);
-
-        if (examCheckError) throw examCheckError;
-
-        const isDuplicate = existingExams.some((exam) => {
-          const examDate = extractDateFromName(exam.tenta_namn);
-          return examDate === tentaDatum;
-        });
-
-        if (isDuplicate) {
-          alert('En tenta med samma kurskod och datum finns redan.');
-          return;
-        }
-
-        const { data: documentData, error: documentError } = await supabase
-          .from('documents')
-          .insert([
-            {
-              document_type: 'tenta',
-              content: content,
-              pdf_hash: null,
-            },
-          ])
-          .select();
-
-        if (documentError) throw documentError;
-        const documentId = documentData[0].id;
-
-        const { error: examError } = await supabase.from('tentor').insert([
-          {
-            kurskod: kurskod,
-            tenta_namn: tentaNamn,
-            document_id: documentId,
-            is_duplicate: false,
-            created_at: tentaDatum,
-          },
-        ]);
-
-        if (examError) throw examError;
-      }
-
-      const { error: deleteError } = await supabase
-        .from('uploaded_documents')
-        .delete()
-        .eq('id', id);
-
-      if (deleteError) throw deleteError;
-
-      fetchDocuments();
-    } catch (error) {
-      console.error('Error updating document status:');
-      alert('Ett fel inträffade vid uppdateringen.');
-    } finally {
-      setLoadingStates((prev) => ({ ...prev, [id]: null }));
-    }
-  };
-
-  const handleNameChange = (id: number, newName: string) => {
-    setEditedNames((prevNames) => ({ ...prevNames, [id]: newName }));
-  };
-
-  const handlePreview = (doc: UploadedDocument) => {
-    setSelectedDocument(doc);
-  };
-
-  const downloadAll = async () => {
-    if (filteredDocuments.length === 0) return;
-
+    setDownloadingCourse(courseCode);
     const zip = new JSZip();
-    const folder = zip.folder('Tentor');
 
-    for (const doc of filteredDocuments) {
-      try {
-        const response = await fetch(
-          `data:application/pdf;base64,${doc.content}`
-        );
-        const blob = await response.blob();
-        folder?.file(`${doc.namn}.pdf`, blob);
-      } catch (error) {
-        console.error(`Kunde inte ladda ner ${doc.namn}`, error);
-      }
+    for (const file of files) {
+      const { data, error } = await supabase
+        .from('uploaded_documents')
+        .select('content')
+        .eq('id', file.id)
+        .single();
+
+      if (error || !data) continue;
+
+      const byteCharacters = atob(data.content);
+      const byteArray = new Uint8Array(
+        [...byteCharacters].map((c) => c.charCodeAt(0))
+      );
+      zip.file(file.namn, byteArray);
     }
 
-    const zipBlob = await zip.generateAsync({ type: 'blob' });
-    saveAs(zipBlob, 'Tentor.zip');
+    const blob = await zip.generateAsync({ type: 'blob' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = courseCode + '.zip';
+    link.click();
+    URL.revokeObjectURL(url);
+
+    setDownloadingCourse(null);
   };
 
-  const filteredDocuments = documents.filter((doc) => {
-    if (filter === 'all') return true;
-    return doc.status === filter;
-  });
+  const handleRemoveDocument = async (id: number) => {
+    setRemovingId(id);
+    await supabase.from('uploaded_documents').delete().eq('id', id);
+    await fetchDocuments();
+    setRemovingId(null);
+  };
 
-  const onLoadSuccess = ({ numPages }: { numPages: number }) => {
-    setNumPages(numPages);
+  const handleRemoveCourse = async (courseCode: string) => {
+    setRemovingCourse(courseCode);
+    await supabase
+      .from('uploaded_documents')
+      .delete()
+      .eq('kurskod', courseCode);
+    await fetchDocuments();
+    setRemovingCourse(null);
   };
 
   return (
-    <div className='p-10 w-full flex flex-col items-start justify-start min-h-screen space-y-4'>
-      <h1 className='text-2xl font-medium'>Uploaded Exams</h1>
+    <div className='min-h-screen bg-background flex flex-col w-[80%]'>
+      <Helmet>
+        <title>Manage Exams | LiU Tentor</title>
+      </Helmet>
 
-      {/* Filter Buttons */}
-      <div className='flex space-x-2 mb-4'>
-        <Button
-          variant={filter === 'all' ? 'default' : 'outline'}
-          onClick={() => setFilter('all')}
-        >
-          All
-        </Button>
-        <Button
-          variant={filter === 'pending' ? 'default' : 'outline'}
-          onClick={() => setFilter('pending')}
-        >
-          Pending
-        </Button>
-        <Button
-          variant={filter === 'accepted' ? 'default' : 'outline'}
-          onClick={() => setFilter('accepted')}
-        >
-          Accepted
-        </Button>
-        <Button
-          variant={filter === 'rejected' ? 'default' : 'outline'}
-          onClick={() => setFilter('rejected')}
-        >
-          Rejected
-        </Button>
-
+      <div className='border-b border-border py-4 px-6 flex justify-between items-center'>
+        <h1 className='text-2xl font-semibold'>Hantera tentor</h1>
         <Button
           variant='outline'
-          onClick={downloadAll}
-          disabled={filteredDocuments.length === 0}
+          size='sm'
+          onClick={() => window.history.back()}
         >
-          <Download className='w-4 h-4 mr-2' />
-          Download All ({filteredDocuments.length})
+          <ArrowLeft className='h-4 w-4 mr-1' />
+          Tillbaka
         </Button>
       </div>
 
-      {/* Document List */}
-      <div className='space-y-4'>
-        {filteredDocuments.map((doc) => (
-          <div
-            key={doc.id}
-            className='p-4 border rounded-lg shadow-sm flex items-center justify-between space-x-4'
-          >
-            <div className='space-y-2 w-3/4'>
-              <Input
-                type='text'
-                value={editedNames[doc.id] || doc.namn}
-                onChange={(e) => handleNameChange(doc.id, e.target.value)}
-                placeholder='Ange namn för dokumentet'
-                className='w-full'
-              />
-              <div className='flex items-center space-x-2'>
-                {doc.status === 'accepted' && <CheckCircle size={24} />}
-                {doc.status === 'rejected' && <XCircle size={24} />}
-                {doc.status === 'pending' && <Clock size={24} />}
-                <p className='text-sm'>Kurskod: {doc.kurskod}</p>
-                <p className='text-sm'>
-                  Skapad: {new Date(doc.created_at).toLocaleDateString()}
-                </p>
-              </div>
-            </div>
+      <div className='px-6 py-8 space-y-8'>
+        <input
+          type='text'
+          placeholder='Filtrera efter kurskod...'
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+          className='w-full p-2 border border-border rounded-md text-sm'
+        />
 
-            <div className='flex flex-row space-x-2 items-center'>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant='outline' onClick={() => handlePreview(doc)}>
-                    <Eye size={16} className='mr-1' />
-                    Förhandsgranska
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className='w-full max-h-full overflow-auto max-w-3xl p-4'>
-                  <DialogTitle>Förhandsgranska PDF</DialogTitle>
-                  {selectedDocument ? (
-                    <PDFViewer
-                      pdfUrl={`data:application/pdf;base64,${selectedDocument.content}`}
-                      scale={1.2}
-                      rotation={0}
-                      onLoadSuccess={onLoadSuccess}
-                      numPages={numPages}
-                    />
-                  ) : (
-                    <p>Laddar PDF...</p>
-                  )}
-                  <DialogClose asChild>
-                    <Button variant='secondary' className='mt-4'>
-                      Stäng
-                    </Button>
-                  </DialogClose>
-                </DialogContent>
-              </Dialog>
-              <Button
-                variant='outline'
-                onClick={() => updateDocumentStatus(doc.id, 'accepted')}
-                disabled={
-                  doc.status === 'accepted' ||
-                  loadingStates[doc.id] === 'accept'
-                }
-              >
-                {loadingStates[doc.id] === 'accept' ? (
-                  <LoaderCircle className='animate-spin mr-2' size={16} />
-                ) : (
-                  'Acceptera'
-                )}
-              </Button>
-              <Button
-                variant='outline'
-                onClick={() => updateDocumentStatus(doc.id, 'rejected')}
-                disabled={
-                  doc.status === 'rejected' ||
-                  loadingStates[doc.id] === 'reject'
-                }
-              >
-                {loadingStates[doc.id] === 'reject' ? (
-                  <LoaderCircle className='animate-spin mr-2' size={16} />
-                ) : (
-                  'Avslå'
-                )}
-              </Button>
-            </div>
+        {loading ? (
+          <div className='text-center text-sm mt-10 flex justify-center items-center gap-2'>
+            <Loader2 className='h-4 w-4 animate-spin' />
+            Laddar tentor...
           </div>
-        ))}
+        ) : (
+          Object.entries(groupedDocuments)
+            .filter(([code]) => code.includes(filter.toUpperCase()))
+            .map(([courseCode, files]) => (
+              <Card key={courseCode} className='p-4 space-y-4'>
+                <div className='flex justify-between items-center border-b pb-2'>
+                  <div className='flex items-center gap-4'>
+                    <h2 className='text-lg font-medium'>{courseCode}</h2>
+                    <span className='text-xs text-muted-foreground'>
+                      {files.length} dokument
+                    </span>
+                  </div>
+                  <div className='flex gap-2'>
+                    <Button
+                      size='sm'
+                      variant='outline'
+                      onClick={() => handleDownloadAll(courseCode, files)}
+                      disabled={downloadingCourse === courseCode}
+                    >
+                      {downloadingCourse === courseCode ? (
+                        <Loader2 className='h-4 w-4 mr-1 animate-spin' />
+                      ) : (
+                        <Download className='h-4 w-4 mr-1' />
+                      )}
+                      Ladda ner alla
+                    </Button>
+                    <Button
+                      size='sm'
+                      variant='destructive'
+                      onClick={() => handleRemoveCourse(courseCode)}
+                      disabled={removingCourse === courseCode}
+                    >
+                      {removingCourse === courseCode ? (
+                        <Loader2 className='h-4 w-4 mr-1 animate-spin' />
+                      ) : (
+                        <Trash className='h-4 w-4 mr-1' />
+                      )}
+                      Ta bort kurs
+                    </Button>
+                  </div>
+                </div>
+
+                <div className='space-y-2'>
+                  {files.map((doc) => (
+                    <div
+                      key={doc.id}
+                      className='flex justify-between items-center px-3 py-2 bg-muted rounded-md'
+                    >
+                      <span className='text-sm truncate'>{doc.namn}</span>
+                      <div className='flex gap-2'>
+                        <Button
+                          size='icon'
+                          onClick={() => fetchAndDownload(doc.id, doc.namn)}
+                          disabled={downloadingId === doc.id}
+                        >
+                          {downloadingId === doc.id ? (
+                            <Loader2 className='h-4 w-4 animate-spin' />
+                          ) : (
+                            <Download className='h-4 w-4' />
+                          )}
+                        </Button>
+                        <Button
+                          size='icon'
+                          variant='destructive'
+                          onClick={() => handleRemoveDocument(doc.id)}
+                          disabled={removingId === doc.id}
+                        >
+                          {removingId === doc.id ? (
+                            <Loader2 className='h-4 w-4 animate-spin' />
+                          ) : (
+                            <Trash className='h-4 w-4' />
+                          )}
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
+            ))
+        )}
       </div>
     </div>
   );
 };
 
-export default UploadedExamsPage;
+export default ManageExamsPage;

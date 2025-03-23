@@ -16,11 +16,11 @@ import translations from '@/util/translations';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   XCircle,
-  CircleNotch,
+  ArrowRight,
+  Loader2,
   FilePlus,
   CheckCircle,
-  ArrowRight,
-} from '@phosphor-icons/react';
+} from 'lucide-react';
 import React, { useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDropzone } from 'react-dropzone';
@@ -251,7 +251,7 @@ const SearchPage: React.FC = () => {
   if (!exams) {
     return (
       <div className='flex items-center justify-center min-h-[calc(100vh-5rem)]'>
-        <CircleNotch className='animate-spin w-10 h-10' />
+        <Loader2 className='animate-spin w-10 h-10' />
       </div>
     );
   }
@@ -309,9 +309,7 @@ const SearchPage: React.FC = () => {
                   onClick={handleUpload}
                   disabled={!files.length || loading}
                 >
-                  {loading && (
-                    <CircleNotch className='w-4 h-4 mr-2 animate-spin' />
-                  )}
+                  {loading && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
                   {getTranslation('uploadTitle')}
                 </Button>
               </div>
@@ -408,7 +406,7 @@ const SearchPage: React.FC = () => {
             className='flex flex-row items-center justify-center space-x-2'
           >
             <p>{getTranslation('uploadExamsOrFacit')}</p>
-            <ArrowRight className='rotate-[-45deg] w-4 h-4' weight='bold' />
+            <ArrowRight className='rotate-[-45deg] w-4 h-4' />
           </Button>
         </Link>
       </div>

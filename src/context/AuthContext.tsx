@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { Session, User } from "@supabase/supabase-js";
-import { supabase } from "@/supabase/supabaseClient";
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import { Session, User } from '@supabase/supabase-js';
+import { supabase } from '@/supabase/supabaseClient';
 
 interface AuthContextType {
   user: User | null;
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         error,
       } = await supabase.auth.getSession();
       if (error) {
-        console.error("Error fetching session:", error);
+        console.error('Error fetching session:', error);
         setLoading(false);
         return;
       }
@@ -47,13 +47,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     const fetchUserProfile = async (userId: string) => {
       const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", userId)
+        .from('users')
+        .select('*')
+        .eq('id', userId)
         .single();
 
       if (error) {
-        console.error("Error fetching user profile:", error);
+        console.error('Error fetching user profile:', error);
         return;
       }
 

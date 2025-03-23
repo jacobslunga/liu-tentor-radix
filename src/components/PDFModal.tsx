@@ -11,7 +11,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { motion } from 'framer-motion';
 import Cookies from 'js-cookie';
-import { CursorClick } from '@phosphor-icons/react';
+import { MousePointerClick } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -587,7 +587,7 @@ const PDFModal: FC<PDFModalProps> = ({
                         <p className='font-medium'>
                           {getTranslation('mouseOverDescription')}
                         </p>
-                        <CursorClick
+                        <MousePointerClick
                           className='w-7 h-7 mt-2'
                           onClick={() => setIsBlurred(false)}
                         />
