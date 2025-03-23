@@ -75,7 +75,7 @@ export default function HomePage() {
 
         <div className='flex flex-col items-center justify-center w-full space-y-6'>
           {/* CTA Button */}
-          <div className='flex flex-col md:flex-row items-center justify-center'>
+          <div className='flex flex-col md:flex-row items-center justify-center w-full'>
             <Link to='/upload-info'>
               <Button variant='outline' size='sm' className='group'>
                 {getTranslation('weNeedYourHelp')}
@@ -98,7 +98,7 @@ export default function HomePage() {
         </div>
       </div>
 
-      <div className='fixed right-5 top-5 items-center justify-center flex'>
+      <div className='fixed bg-gradient-to-b from-background to-background/0 w-full top-0 h-20 items-center justify-end px-5 flex'>
         <div className='flex flex-row items-center justify-center space-x-2'>
           {quickLinks.map(({ text, icon, to }) => (
             <Link key={text} to={to} className='hidden md:flex'>
