@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -58,7 +58,7 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
       <Card>
         <CardHeader className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
           <div>
-            <CardTitle className='text-xl font-semibold'>{title}</CardTitle>
+            <h1 className='text-xl font-semibold tracking-tight'>{title}</h1>
             <p className='text-sm text-muted-foreground'>{description}</p>
           </div>
           <Badge>

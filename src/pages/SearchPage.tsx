@@ -27,6 +27,7 @@ import { useDropzone } from 'react-dropzone';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import MobileExamList from '@/components/MobileExamList';
+import LoadingSpinner from '@/components/LoadingSpinnger';
 
 export const extractDateFromName = (name: string) => {
   const patterns = [
@@ -251,7 +252,7 @@ const SearchPage: React.FC = () => {
   if (!exams) {
     return (
       <div className='flex items-center justify-center min-h-[calc(100vh-5rem)]'>
-        <Loader2 className='animate-spin w-10 h-10' />
+        <LoadingSpinner />
       </div>
     );
   }
