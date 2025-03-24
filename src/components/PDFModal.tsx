@@ -86,9 +86,8 @@ const PDFModal: FC<PDFModalProps> = ({
     const savedLayoutMode = Cookies.get('layoutMode');
     return savedLayoutMode || 'exam-with-facit';
   });
-  const [scale, setScale] = useState<number>(
-    layoutMode === 'exam-only' ? 1.5 : 1.2
-  );
+  const [scale, setScale] = useState<number>(1.2);
+
   const facitPanelRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<boolean>(false);
@@ -98,6 +97,22 @@ const PDFModal: FC<PDFModalProps> = ({
 
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
+
+  useEffect(() => {
+    const screenWidth = window.innerWidth;
+
+    let baseScale = 1.2;
+    if (screenWidth >= 1600) {
+      baseScale = 1.6;
+    } else if (screenWidth <= 1280) {
+      baseScale = 1.0;
+    }
+
+    const newExamScale =
+      layoutMode === 'exam-only' ? baseScale + 0.2 : baseScale;
+    setScale(newExamScale);
+    setFacitScale(baseScale);
+  }, []);
 
   const getTranslation = (
     key: keyof (typeof translations)[typeof language]

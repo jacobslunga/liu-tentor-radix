@@ -20,7 +20,7 @@ const Footer: FC = () => {
       ],
     },
     {
-      title: language === 'sv' ? 'Juridik' : 'Legal',
+      title: language === 'sv' ? 'Juridiskt' : 'Legal',
       links: [
         { name: getTranslation('privacyPolicyTitle'), href: '/privacy-policy' },
       ],
