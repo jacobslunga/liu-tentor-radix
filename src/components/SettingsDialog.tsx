@@ -16,7 +16,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { useTheme } from '@/context/ThemeContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { useFont } from '@/context/FontContext';
 import translations from '@/util/translations';
 import { FC, JSX, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
@@ -25,7 +24,6 @@ import { Settings, Moon, Sun, Monitor } from 'lucide-react';
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
   const { changeLanguage, languages, language } = useLanguage();
-  const { font, setFont } = useFont();
   const [_, setSystemPrefersDark] = useState(false);
   const [isMac, setIsMac] = useState(false);
 
@@ -75,16 +73,6 @@ const SettingsDialog: FC = () => {
       label: 'System',
       icon: <Monitor className='w-5 h-5' />,
     },
-  ];
-
-  const fontOptions: {
-    id: 'serif' | 'system' | 'custom';
-    label: string;
-    description?: string;
-  }[] = [
-    { id: 'custom', label: 'Default' },
-    { id: 'system', label: 'Match system' },
-    { id: 'serif', label: 'Serif' },
   ];
 
   const shortcuts = [
@@ -149,58 +137,6 @@ const SettingsDialog: FC = () => {
                 <span className='text-sm font-medium'>{label}</span>
               </div>
             ))}
-          </div>
-        </div>
-
-        {/* Font Selector */}
-        <div className='space-y-3'>
-          <h3 className='font-medium'>{getTranslation('font')}</h3>
-          <p className='text-sm text-muted-foreground'>
-            {getTranslation('fontDescription')}
-          </p>
-          <div className='flex gap-2'>
-            {fontOptions.map(({ id, label }) => {
-              const fontStyle = {
-                serif: { fontFamily: "'IBM Plex Serif', sans-serif" },
-                system: {
-                  fontFamily:
-                    "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif",
-                },
-                custom: { fontFamily: "'Inter', sans-serif" },
-              };
-
-              return (
-                <div
-                  key={id}
-                  onClick={() => setFont(id)}
-                  className={cn(
-                    'flex-1 cursor-pointer rounded-md border border-border transition-all',
-                    'flex flex-col items-center justify-center py-4 hover:bg-primary/5 hover:border-primary',
-                    font === id
-                      ? 'bg-primary/10 border-primary hover:bg-primary/10'
-                      : 'bg-card'
-                  )}
-                >
-                  <span
-                    className='text-sm font-medium'
-                    style={fontStyle[id as keyof typeof fontStyle]}
-                  >
-                    {label}
-                  </span>
-
-                  <span
-                    className='text-xs text-muted-foreground mt-1'
-                    style={fontStyle[id as keyof typeof fontStyle]}
-                  >
-                    {id === 'serif'
-                      ? 'IBM Plex Serif'
-                      : id === 'system'
-                      ? 'System UI'
-                      : 'Inter'}
-                  </span>
-                </div>
-              );
-            })}
           </div>
         </div>
 

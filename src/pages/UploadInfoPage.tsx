@@ -28,23 +28,21 @@ const UploadInfoPage: React.FC = () => {
       </Helmet>
 
       {/* Header */}
-      <div className='bg-background border-b border-border py-4'>
-        <div className='container max-w-3xl mx-auto flex justify-between items-center px-4'>
-          <Link
-            to='/'
-            className='flex items-center gap-2 hover:opacity-90 transition-opacity'
-          >
-            <SquareLibrary className='text-primary h-7 w-7' />
-            <h1 className='text-xl text-foreground/80 font-logo'>
-              {getTranslation('homeTitle')}
-            </h1>
-          </Link>
+      <div className='bg-background py-4 mx-auto container max-w-2xl flex flex-row items-center justify-between'>
+        <Link
+          to='/'
+          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
+        >
+          <SquareLibrary className='text-primary h-7 w-7' />
+          <h1 className='text-xl text-foreground/80 font-logo'>
+            {getTranslation('homeTitle')}
+          </h1>
+        </Link>
 
-          <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
-            <ArrowLeft className='h-4 w-4' />
-            {language === 'sv' ? 'Tillbaka' : 'Back'}
-          </Button>
-        </div>
+        <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
+          <ArrowLeft className='h-4 w-4' />
+          {language === 'sv' ? 'Tillbaka' : 'Back'}
+        </Button>
       </div>
 
       {/* Main Content */}

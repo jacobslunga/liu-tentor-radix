@@ -10,7 +10,6 @@ import UploadExamPage from '@/pages/UploadExamPage';
 import SearchLayout from '@/layouts/SearchLayout';
 import SearchPage from '@/pages/SearchPage';
 import TentaPage from '@/pages/TentaPage';
-import Partners from '@/pages/Partners';
 import OmOss from '@/pages/AboutUs';
 // import LoginPage from './pages/auth/LoginPage';
 // import AdminLayout from './layouts/AdminLayout';
@@ -29,7 +28,7 @@ const routes: RouteObject[] = [
       { path: 'feedback', element: <FeedbackPage /> },
       { path: 'privacy-policy', element: <PrivacyPolicyPage /> },
       { path: 'upload-exams', element: <UploadExamPage /> },
-      { path: 'partners', element: <Partners /> },
+      // { path: 'partners', element: <Partners /> },
       { path: 'om-oss', element: <OmOss /> },
       { path: '*', element: <NotFoundPage /> },
       // {

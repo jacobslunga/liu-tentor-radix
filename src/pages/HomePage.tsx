@@ -77,7 +77,15 @@ export default function HomePage() {
           {/* CTA Button */}
           <div className='flex flex-col md:flex-row items-center justify-center w-full'>
             <Link to='/upload-info'>
-              <Button variant='outline' size='sm' className='group'>
+              <Button variant='outline' size='sm' className='group relative'>
+                <div
+                  className='w-3 h-3 rounded-full absolute top-[-3px] left-[-3px] z-50'
+                  style={{
+                    backgroundColor: '#f23b57',
+                    boxShadow: '0 0 10px 0px #f23b57',
+                  }}
+                />
+
                 {getTranslation('weNeedYourHelp')}
                 <ArrowRight className='w-5 h-5 group-hover:translate-x-1 transition-transform' />
               </Button>

@@ -44,8 +44,10 @@ const Header = () => {
   return (
     <header
       className={`sticky ${
-        transparentBg ? 'border-b-transparent' : 'border-b shadow-sm'
-      } transition-all bg-background duration-200 top-0 backdrop-blur-sm z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
+        transparentBg
+          ? 'border-b-transparent'
+          : 'border-b shadow-sm backdrop-blur-sm'
+      } transition-all bg-background/90 duration-200 top-0 z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
       role='banner'
       style={{
         maxWidth: '100vw',

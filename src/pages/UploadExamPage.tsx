@@ -20,6 +20,15 @@ import {
   XCircle,
   Info,
 } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+} from '@/components/ui/alert-dialog';
 
 const UploadExamPage = () => {
   const navigate = useNavigate();
@@ -41,9 +50,7 @@ const UploadExamPage = () => {
   );
 
   const handleUpload = async () => {
-    if (files.length === 0 || !kurskod) {
-      return;
-    }
+    if (files.length === 0 || !kurskod) return;
 
     setLoading(true);
     let success = true;
@@ -78,6 +85,7 @@ const UploadExamPage = () => {
     if (success) {
       setFiles([]);
       setKurskod('');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -99,42 +107,29 @@ const UploadExamPage = () => {
     accept: { 'application/pdf': ['.pdf'] },
   });
 
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    if (uploadStatus) {
-      const timer = setTimeout(() => setUploadStatus(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [uploadStatus]);
-
   return (
     <div className='min-h-screen bg-background flex flex-col'>
       <Helmet>
         <title>{t.uploadTitle} | LiU Tentor</title>
       </Helmet>
 
-      {/* Header */}
-      <div className='bg-background border-b border-border py-4'>
-        <div className='container max-w-3xl mx-auto flex justify-between items-center px-4'>
-          <Link
-            to='/'
-            className='flex items-center gap-2 hover:opacity-90 transition-opacity'
-          >
-            <SquareLibrary className='text-primary h-7 w-7' />
-            <h1 className='text-xl text-foreground/80 font-logo'>
-              {t.homeTitle}
-            </h1>
-          </Link>
+      <div className='bg-background py-4 mx-auto container max-w-2xl flex flex-row items-center justify-between'>
+        <Link
+          to='/'
+          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
+        >
+          <SquareLibrary className='text-primary h-7 w-7' />
+          <h1 className='text-xl text-foreground/80 font-logo'>
+            {t.homeTitle}
+          </h1>
+        </Link>
 
-          <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
-            <ArrowLeft className='h-4 w-4' />
-            {t.goBack}
-          </Button>
-        </div>
+        <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
+          <ArrowLeft className='h-4 w-4' />
+          {t.goBack}
+        </Button>
       </div>
 
-      {/* Main Content */}
       <div className='container max-w-2xl mx-auto px-4 py-12 space-y-6 text-center'>
         <Upload className='text-primary h-12 w-12 mx-auto' />
         <h1 className='text-3xl text-foreground/80 font-semibold'>
@@ -143,7 +138,6 @@ const UploadExamPage = () => {
         <p className='text-sm text-muted-foreground'>{t.uploadDescription}</p>
 
         <Card className='p-6'>
-          {/* Input fält för kurskod */}
           <Input
             type='text'
             placeholder={t.courseCodePlaceholder}
@@ -153,7 +147,6 @@ const UploadExamPage = () => {
             disabled={loading}
           />
 
-          {/* Dropzone */}
           <div
             {...getRootProps()}
             className={`mt-6 border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all ${
@@ -169,7 +162,6 @@ const UploadExamPage = () => {
             </p>
           </div>
 
-          {/* Fil-lista */}
           {files.length > 0 && (
             <div className='mt-4 text-left space-y-2'>
               {files.map((file, index) => (
@@ -189,25 +181,6 @@ const UploadExamPage = () => {
             </div>
           )}
 
-          {/* Feedback Message */}
-          {uploadStatus && (
-            <div
-              className={`mt-4 flex items-center justify-center text-sm p-2 rounded-lg ${
-                uploadStatus === 'success'
-                  ? 'bg-green-100 text-green-600'
-                  : 'bg-red-100 text-red-600'
-              }`}
-            >
-              {uploadStatus === 'success' ? (
-                <CheckCircle className='h-5 w-5 mr-2' />
-              ) : (
-                <XCircle className='h-5 w-5 mr-2' />
-              )}
-              {uploadStatus === 'success' ? t.uploadSuccess : t.uploadError}
-            </div>
-          )}
-
-          {/* Upload Button */}
           <div className='mt-6 flex justify-end gap-3'>
             <Button
               variant='outline'
@@ -232,7 +205,7 @@ const UploadExamPage = () => {
             </Button>
           </div>
         </Card>
-        {/* Information Box */}
+
         <div className='p-4 bg-muted border border-border rounded-lg flex flex-col items-center gap-3'>
           <Info className='h-5 w-5 text-primary' />
           <p className='text-sm text-muted-foreground text-center'>
@@ -241,7 +214,7 @@ const UploadExamPage = () => {
               : 'Please note that uploaded exams are reviewed before they become available. Therefore, it may take a while before they appear on the site.'}
           </p>
         </div>
-        {/* Upload Guidelines */}
+
         <div className='p-4 bg-background border border-border rounded-lg space-y-3 text-left'>
           <h2 className='text-base font-semibold text-foreground'>
             {t.uploadGuidelinesTitle}
@@ -255,6 +228,35 @@ const UploadExamPage = () => {
           </ul>
         </div>
       </div>
+
+      <AlertDialog open={uploadStatus !== null}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className='flex items-center gap-2'>
+              {uploadStatus === 'success' ? (
+                <CheckCircle className='text-green-500 h-5 w-5' />
+              ) : (
+                <XCircle className='text-red-500 h-5 w-5' />
+              )}
+              {uploadStatus === 'success' ? t.uploadSuccess : t.uploadError}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {uploadStatus === 'success'
+                ? language === 'sv'
+                  ? 'Tack! Din tenta har laddats upp och kommer granskas innan publicering.'
+                  : 'Thank you! Your exam has been uploaded and will be reviewed before being published.'
+                : language === 'sv'
+                ? 'Något gick fel vid uppladdningen. Försök igen eller kontakta oss om problemet kvarstår.'
+                : 'Something went wrong during upload. Please try again or contact us if the issue persists.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setUploadStatus(null)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
