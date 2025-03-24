@@ -20,10 +20,7 @@ export default function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    const timeout = setTimeout(() => setIsLoading(false), 1000);
-
-    return () => clearTimeout(timeout);
+    setIsLoading(false);
   }, []);
 
   useEffect(() => {
