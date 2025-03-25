@@ -28,7 +28,6 @@ import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import MobileExamList from '@/components/MobileExamList';
 import LoadingSpinner from '@/components/LoadingSpinnger';
-import Cookies from 'js-cookie';
 
 export const extractDateFromName = (name: string) => {
   const patterns = [
@@ -132,19 +131,6 @@ const SearchPage: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [showBanner, setShowBanner] = useState(true);
-
-  useEffect(() => {
-    const bannerDismissed = Cookies.get('bannerDismissed');
-    if (bannerDismissed === 'true') {
-      setShowBanner(false);
-    }
-  }, []);
-
-  const handleDismissBanner = () => {
-    Cookies.set('bannerDismissed', 'true', { expires: 365 }); // Store the dismissal for 1 year
-    setShowBanner(false);
-  };
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: { 'application/pdf': ['.pdf'] },
