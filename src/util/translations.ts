@@ -212,6 +212,8 @@ export interface Translations {
     uploadGuidelineDate: string;
     uploadGuidelineDuplicateCheck: string;
     uploadGuidelineQuality: string;
+    passedCount: string;
+    examStatisticsDescription: string;
   };
 }
 
@@ -459,6 +461,9 @@ const translations: Translations = {
     uploadGuidelineDate: 'Inkludera gärna datum eller termin i filnamnet.',
     uploadGuidelineDuplicateCheck: 'Dubbelkolla om filen redan finns på sidan.',
     uploadGuidelineQuality: 'Ladda endast upp tydliga och läsbara PDF-filer.',
+    passedCount: 'Godkända',
+    examStatisticsDescription:
+      'Vi har precis introducerat tentastatistik, klicka på procenten för att få en mer detaljerad vy',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -704,6 +709,9 @@ const translations: Translations = {
     uploadGuidelineDuplicateCheck:
       'Double-check if the file already exists on the site.',
     uploadGuidelineQuality: 'Only upload clear and readable PDF files.',
+    passedCount: 'Passed',
+    examStatisticsDescription:
+      'We have just introduced exam statistics, click on the percentage to get a more detailed view',
   },
 };
 

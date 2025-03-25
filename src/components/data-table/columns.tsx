@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import translations from '@/util/translations';
 import { Check, X } from 'lucide-react';
+import { ExamStatsDialog } from '../ExamStatsDialog';
 
 export type Exam = {
   document_id: string;
@@ -16,6 +17,9 @@ export type Exam = {
   created_at: string;
   kurskod: string;
   hasFacit: boolean;
+  rawDate?: Date;
+  passedCount?: number;
+  gradeDistribution?: Record<string, number>;
 };
 
 export const getColumns = (
@@ -48,6 +52,52 @@ export const getColumns = (
   {
     accessorKey: 'hasFacit',
     header: translations[language].hasFacit,
+  },
+  {
+    id: 'approvalRate',
+    header: translations[language].passedCount || 'Godkända',
+    cell: ({ row }) => {
+      const dist = row.original.gradeDistribution;
+      const approvalRate = row.original.passedCount;
+
+      if (!dist || approvalRate === undefined) return '–';
+
+      let color = 'text-orange-500 dark:text-orange-400';
+      if (approvalRate >= 70)
+        color = 'text-green-600 dark:text-green-400 font-semibold';
+      else if (approvalRate < 30)
+        color = 'text-red-600 dark:text-red-400 font-semibold';
+
+      const [hovered, setHovered] = useState(false);
+
+      return (
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+          onMouseEnter={() => setHovered(true)} // Hover start
+          onMouseLeave={() => setHovered(false)} // Hover end
+        >
+          {hovered && dist ? (
+            <ExamStatsDialog
+              gradeDistribution={dist}
+              date={row.original.created_at}
+              trigger={
+                <span
+                  className={`${color} font-medium underline cursor-pointer`}
+                >
+                  {approvalRate.toFixed(1)}%
+                </span>
+              }
+            />
+          ) : (
+            <span className={`${color} font-medium underline cursor-pointer`}>
+              {approvalRate.toFixed(1)}%
+            </span>
+          )}
+        </div>
+      );
+    },
   },
 ];
 

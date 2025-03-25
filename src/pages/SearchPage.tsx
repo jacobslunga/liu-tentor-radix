@@ -21,13 +21,14 @@ import {
   FilePlus,
   CheckCircle,
 } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useDropzone } from 'react-dropzone';
 import { Link, useParams } from 'react-router-dom';
 import useSWR from 'swr';
 import MobileExamList from '@/components/MobileExamList';
 import LoadingSpinner from '@/components/LoadingSpinnger';
+import Cookies from 'js-cookie';
 
 export const extractDateFromName = (name: string) => {
   const patterns = [
@@ -131,6 +132,19 @@ const SearchPage: React.FC = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [showError, setShowError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showBanner, setShowBanner] = useState(true);
+
+  useEffect(() => {
+    const bannerDismissed = Cookies.get('bannerDismissed');
+    if (bannerDismissed === 'true') {
+      setShowBanner(false);
+    }
+  }, []);
+
+  const handleDismissBanner = () => {
+    Cookies.set('bannerDismissed', 'true', { expires: 365 }); // Store the dismissal for 1 year
+    setShowBanner(false);
+  };
 
   const { getRootProps, getInputProps } = useDropzone({
     accept: { 'application/pdf': ['.pdf'] },
@@ -178,8 +192,20 @@ const SearchPage: React.FC = () => {
     }
   };
 
+  const [stats, setStats] = useState<Record<string, any> | null>(null);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      const res = await fetch('/exam_stats.json');
+      const data = await res.json();
+      setStats(data);
+    };
+
+    fetchStats();
+  }, []);
+
   const formattedExams = useMemo(() => {
-    if (!exams) return [];
+    if (!exams || !stats) return [];
 
     return exams
       .map((e: Exam) => {
@@ -187,6 +213,18 @@ const SearchPage: React.FC = () => {
           const dateFromName = extractDateFromName(e.tenta_namn);
           const fallbackDate = new Date(e.created_at || Date.now());
           const date = dateFromName || fallbackDate;
+
+          const toLocalDateString = (date: Date) => {
+            const year = date.getFullYear();
+            const month = `${date.getMonth() + 1}`.padStart(2, '0');
+            const day = `${date.getDate()}`.padStart(2, '0');
+            return `${year}-${month}-${day}`;
+          };
+
+          const isoDate = toLocalDateString(date);
+          const courseCode = e.kurskod.toUpperCase();
+          const statEntry = stats?.[courseCode]?.[isoDate];
+          console.log(statEntry);
 
           const includesFacit = !!e.tenta_namn
             .toLowerCase()
@@ -208,9 +246,10 @@ const SearchPage: React.FC = () => {
             hasFacit: includesFacit || !!facit,
             isFacit: isFacit(e.tenta_namn),
             tenta_namn: e.tenta_namn.replace(/_/g, ' ').replace('.pdf', ''),
+            passedCount: statEntry ? statEntry.approvalRate : undefined,
+            gradeDistribution: statEntry?.gradeDistribution,
           };
-        } catch (error) {
-          // Return exam with default date values if date parsing fails
+        } catch {
           return {
             ...e,
             created_at: '-',
@@ -220,19 +259,14 @@ const SearchPage: React.FC = () => {
           };
         }
       })
-      .filter((e: { isFacit: any }) => !e.isFacit)
-      .sort(
-        (
-          a: { hasFacit: any; rawDate: { getTime: () => number } },
-          b: { hasFacit: any; rawDate: { getTime: () => number } }
-        ) => {
-          if (a.hasFacit !== b.hasFacit) return a.hasFacit ? -1 : 1;
-          return sortOrder === 'desc'
-            ? b.rawDate.getTime() - a.rawDate.getTime()
-            : a.rawDate.getTime() - b.rawDate.getTime();
-        }
-      );
-  }, [exams, sortOrder]);
+      .filter((e) => !e.isFacit)
+      .sort((a, b) => {
+        if (a.hasFacit !== b.hasFacit) return a.hasFacit ? -1 : 1;
+        return sortOrder === 'desc'
+          ? b.rawDate.getTime() - a.rawDate.getTime()
+          : a.rawDate.getTime() - b.rawDate.getTime();
+      });
+  }, [exams, stats, sortOrder]);
 
   if (error) {
     return (
@@ -367,7 +401,6 @@ const SearchPage: React.FC = () => {
         <meta property='og:description' content={pageDescription} />
         <meta property='og:type' content='website' />
       </Helmet>
-      {/* <div className="absolute inset-0 h-[450px] bg-gradient-to-b from-primary/15 o-background" /> */}
 
       {/* Mobile view */}
       <div className='md:hidden w-full mt-6 mb-8 px-5'>
