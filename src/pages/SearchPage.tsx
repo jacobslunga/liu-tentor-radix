@@ -413,13 +413,13 @@ const SearchPage: React.FC = () => {
         />
       </div>
 
-      <div className='mt-8 text-center'>
+      <div className='mt-10 text-center'>
         <p className='text-sm text-muted-foreground mb-2'>
           {getTranslation('moreExamsTitle')}
         </p>
       </div>
 
-      <div className='sticky bottom-0 w-screen h-20 bg-gradient-to-t from-background to-transparent z-50 flex items-center justify-center'>
+      <div className='sticky bottom-0 mb-10 w-screen h-20 bg-gradient-to-t from-background to-transparent z-50 flex items-center justify-center'>
         <Link to='/upload-exams'>
           <Button
             variant='outline'

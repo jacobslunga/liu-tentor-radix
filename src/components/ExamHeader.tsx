@@ -119,7 +119,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
 
   return (
     <div
-      className={`hidden md:flex z-50 absolute w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-16 bg-transparent`}
+      className={`hidden md:flex z-[60] fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-16 bg-transparent`}
     >
       <div className='flex flex-row items-center justify-center space-x-5'>
         <Button

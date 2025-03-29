@@ -113,7 +113,7 @@ const FacitViewer: FC<FacitViewerProps> = ({
             setIsPdfLoaded(true);
           }}
           renderMode='canvas'
-          className='w-full h-full flex flex-col items-center space-y-10 justify-start'
+          className='w-full h-full flex flex-col items-center space-y-5 justify-start'
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >

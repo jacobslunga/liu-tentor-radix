@@ -162,7 +162,7 @@ const TentaPage: FC = () => {
   const description = `Tentor för kursen ${formattedCourseCode} med tenta ID ${tenta_id} från Linköpings universitet.`;
 
   return (
-    <div className='flex h-screen flex-col items-center justify-center w-screen'>
+    <div className='flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden'>
       <ExamHeader
         tenta_namn={
           selectedExam?.tenta_namn.replace('.pdf', '') || 'Unknown Exam'
