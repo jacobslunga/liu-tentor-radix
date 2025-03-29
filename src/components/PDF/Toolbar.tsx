@@ -14,7 +14,7 @@ import {
 import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import Cookies from 'js-cookie';
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import { Exam } from '@/components/data-table/columns';
 import { Separator } from '@/components/ui/separator';
 import { filterExamsByDate, isFacit } from './utils';
@@ -31,11 +31,10 @@ import {
   RotateCcw,
   RotateCw,
   Square,
-  X,
 } from 'lucide-react';
 import { EyeClosedIcon } from '@radix-ui/react-icons';
-import { toast } from 'sonner';
 import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
+import { motion } from 'framer-motion';
 
 interface ToolbarProps {
   onZoomIn: () => void;
@@ -87,6 +86,20 @@ const Toolbar: FC<ToolbarProps> = ({
     }
   );
 
+  const [isHovered, setIsHovered] = useState(true);
+  const hoverTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const handleMouseEnter = () => {
+    if (hoverTimeout.current) clearTimeout(hoverTimeout.current);
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    hoverTimeout.current = setTimeout(() => {
+      setIsHovered(false);
+    }, 700);
+  };
+
   const getTranslation = (
     key: keyof (typeof translations)[typeof language]
   ) => {
@@ -112,18 +125,6 @@ const Toolbar: FC<ToolbarProps> = ({
   const toggleCompleted = (id: number) => {
     setCompletedExams((prev) => {
       const newCompletedState = !prev[id];
-      const message = newCompletedState
-        ? translations[language]['markedAsCompleted']
-        : translations[language]['unMarkedAsCompleted'];
-
-      toast(message, {
-        description: newCompletedState ? translations[language]['goodJob'] : '',
-        icon: newCompletedState ? (
-          <Check className='w-5 h-5 text-primary' />
-        ) : (
-          <X className='w-5 h-5 text-red-500' />
-        ),
-      });
 
       const newCompletedExams = { ...prev, [id]: newCompletedState };
 
@@ -336,7 +337,12 @@ const Toolbar: FC<ToolbarProps> = ({
   );
 
   return (
-    <div className='hidden md:flex flex-row w-screen absolute top-16 right-0 left-0'>
+    <motion.div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className='hidden md:flex flex-row w-screen absolute top-16 right-0 left-0 transition-opacity duration-300'
+      animate={{ opacity: isHovered ? 1 : 0 }}
+    >
       <div className='flex flex-col w-full items-between bg-transparent px-5'>
         <TentaToolbar />
       </div>
@@ -345,7 +351,7 @@ const Toolbar: FC<ToolbarProps> = ({
           <FacitToolbar />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 };
 

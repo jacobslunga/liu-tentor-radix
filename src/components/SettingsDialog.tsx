@@ -19,7 +19,7 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { FC, JSX, useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
-import { Settings, Moon, Sun, Monitor } from 'lucide-react';
+import { Moon, Sun, Monitor, Settings } from 'lucide-react';
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();

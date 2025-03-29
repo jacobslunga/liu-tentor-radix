@@ -47,7 +47,7 @@ const Header = () => {
         transparentBg
           ? 'border-b-transparent'
           : 'border-b shadow-sm backdrop-blur-sm'
-      } transition-all bg-background/90 duration-200 top-0 z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
+      } transition-all bg-background/90 duration-200 top-0 z-50 h-20 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
       role='banner'
       style={{
         maxWidth: '100vw',
@@ -64,7 +64,7 @@ const Header = () => {
 
       <div className='relative hidden sm:flex items-center' role='search'>
         <div
-          className='w-auto hover:cursor-text hover:border-foreground/70 transition-all duration-200 sm:min-w-[300px] md:w-60 pr-10 md:min-w-[350px] lg:min-w-[500px] bg-foreground/5 border p-2 rounded-md'
+          className='w-auto hover:cursor-text hover:border-primary/70 transition-all duration-200 sm:min-w-[300px] md:w-60 pr-10 md:min-w-[350px] lg:min-w-[500px] bg-foreground/5 border-2 p-3 rounded-full'
           onClick={() => {
             setShowGlobalSearch(true);
           }}

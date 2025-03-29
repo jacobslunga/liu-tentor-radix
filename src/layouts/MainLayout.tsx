@@ -18,10 +18,6 @@ const MainLayout: React.FC = () => {
     setIsExam(examPattern.test(pathname));
   }, [pathname]);
 
-  useEffect(() => {
-    document.body.style.overflow = isExam ? 'hidden' : 'auto';
-  }, [isExam]);
-
   return (
     <div className='flex flex-col min-h-screen bg-background'>
       {/* Main Content */}

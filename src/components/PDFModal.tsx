@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/resizable';
 import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Cookies from 'js-cookie';
 import { MousePointerClick } from 'lucide-react';
 import {
@@ -30,17 +30,18 @@ import {
 import { pdfjs } from 'react-pdf';
 import { ImperativePanelHandle } from 'react-resizable-panels';
 import useSWR from 'swr';
-import Toolbar from './PDF/Toolbar';
 import { IconLayoutColumns, IconLayoutSidebarRight } from '@tabler/icons-react';
 
 import { retryFetch } from '@/components/PDF/utils';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
 import FacitToolbar from './PDF/FacitToolbar';
+import TentaFacitToolbar from './PDF/Toolbar/TentaFacitToolbar';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GradientIndicator from '@/components/GradientIndicator';
 import MobilePDFView from '@/components/MobilePdfViewer';
 import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
+import TentaToolbar from './PDF/Toolbar/TentaToolbar';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -79,17 +80,20 @@ const PDFModal: FC<PDFModalProps> = ({
   const [facitRotation, setFacitRotation] = useState<number>(0);
   const [selectedFacit, setSelectedFacit] = useState<Exam | null>(null);
   const [isBlurred, setIsBlurred] = useState<boolean>(true);
-  const [isMouseOver, setIsMouseOver] = useState<boolean>(false);
+  const [isMouseOverFacitViewer, setIsMouseOverFacitViewer] =
+    useState<boolean>(false);
   const [isMiddleMouseDown, setIsMiddleMouseDown] = useState(false);
   const [loadingFacit, setLoadingFacit] = useState(true);
   const [layoutMode, setLayoutMode] = useState<string>(() => {
     const savedLayoutMode = Cookies.get('layoutMode');
     return savedLayoutMode || 'exam-with-facit';
   });
+  const [isMouseActive, setIsMouseActive] = useState(true);
   const [scale, setScale] = useState<number>(1.2);
 
   const facitPanelRef = useRef<HTMLDivElement>(null);
-  const [isHovering, setIsHovering] = useState<boolean>(false);
+  const [isHoveringFacitPanel, setIsHoveringFacitPanel] =
+    useState<boolean>(false);
   const [isToggled, setIsToggled] = useState<boolean>(false);
 
   const [leftPanelWidth, setLeftPanelWidth] = useState<number>(50);
@@ -98,20 +102,38 @@ const PDFModal: FC<PDFModalProps> = ({
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
 
+  const [isHoveringTabs, setIsHoveringTabs] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isHoveringFacitPanelRef = useRef(isHoveringFacitPanel);
+  const isHoveringTabsRef = useRef(isHoveringTabs);
+
   useEffect(() => {
     const screenWidth = window.innerWidth;
-
     let baseScale = 1.2;
-    if (screenWidth >= 1600) {
-      baseScale = 1.6;
-    } else if (screenWidth <= 1280) {
-      baseScale = 1.0;
-    }
-
+    if (screenWidth >= 1600) baseScale = 1.6;
+    else if (screenWidth <= 1280) baseScale = 1.0;
     const newExamScale =
       layoutMode === 'exam-only' ? baseScale + 0.2 : baseScale;
     setScale(newExamScale);
     setFacitScale(baseScale);
+  }, [layoutMode]);
+
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setIsMouseActive(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = setTimeout(() => {
+        if (!isHoveringFacitPanelRef.current && !isHoveringTabsRef.current) {
+          setIsMouseActive(false);
+        }
+      }, 1000);
+    };
+    handleMouseMove();
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
   }, []);
 
   const getTranslation = (
@@ -121,65 +143,40 @@ const PDFModal: FC<PDFModalProps> = ({
   };
 
   const handleToggleBlur = useCallback(() => setIsBlurred((prev) => !prev), []);
-  const handleMouseEnter = () => setIsMouseOver(true);
-  const handleMouseLeave = () => setIsMouseOver(false);
+  const handleMouseEnterFacitViewer = () => setIsMouseOverFacitViewer(true);
+  const handleMouseLeaveFacitViewer = () => setIsMouseOverFacitViewer(false);
 
   const MIN_SCALE = 0.5;
   const MAX_SCALE = 3.0;
 
-  const zoomIn = useCallback(() => {
-    setScale((prev) => {
-      if (prev < MAX_SCALE) {
-        return prev + 0.1;
-      }
-      return prev;
-    });
-  }, []);
-
-  const zoomOut = useCallback(() => {
-    setScale((prev) => {
-      if (prev > MIN_SCALE) {
-        return prev - 0.1;
-      }
-      return prev;
-    });
-  }, []);
-
-  const zoomInFacit = useCallback(() => {
-    setFacitScale((prev) => {
-      if (prev < MAX_SCALE) {
-        return prev + 0.1;
-      }
-      return prev;
-    });
-  }, []);
-
-  const zoomOutFacit = useCallback(() => {
-    setFacitScale((prev) => {
-      if (prev > MIN_SCALE) {
-        return prev - 0.1;
-      }
-      return prev;
-    });
-  }, []);
+  const zoomIn = useCallback(
+    () => setScale((p) => Math.min(p + 0.1, MAX_SCALE)),
+    []
+  );
+  const zoomOut = useCallback(
+    () => setScale((p) => Math.max(p - 0.1, MIN_SCALE)),
+    []
+  );
+  const zoomInFacit = useCallback(
+    () => setFacitScale((p) => Math.min(p + 0.1, MAX_SCALE)),
+    []
+  );
+  const zoomOutFacit = useCallback(
+    () => setFacitScale((p) => Math.max(p - 0.1, MIN_SCALE)),
+    []
+  );
 
   useEffect(() => {
-    const handleMouseDown = (event: MouseEvent) => {
-      if (event.button === 1) {
-        setIsMiddleMouseDown(true);
-      }
+    const handleMouseDown = (e: MouseEvent) => {
+      if (e.button === 1) setIsMiddleMouseDown(true);
     };
-
-    const handleMouseUp = (event: MouseEvent) => {
-      if (event.button === 1) {
-        setIsMiddleMouseDown(false);
-      }
+    const handleMouseUp = (e: MouseEvent) => {
+      if (e.button === 1) setIsMiddleMouseDown(false);
     };
-
-    const handleWheel = (event: WheelEvent) => {
+    const handleWheel = (e: WheelEvent) => {
       if (isMiddleMouseDown) {
-        event.preventDefault();
-        if (event.deltaY < 0) {
+        e.preventDefault();
+        if (e.deltaY < 0) {
           zoomIn();
           zoomInFacit();
         } else {
@@ -188,11 +185,9 @@ const PDFModal: FC<PDFModalProps> = ({
         }
       }
     };
-
     window.addEventListener('mousedown', handleMouseDown);
     window.addEventListener('mouseup', handleMouseUp);
     window.addEventListener('wheel', handleWheel, { passive: false });
-
     return () => {
       window.removeEventListener('mousedown', handleMouseDown);
       window.removeEventListener('mouseup', handleMouseUp);
@@ -200,20 +195,17 @@ const PDFModal: FC<PDFModalProps> = ({
     };
   }, [isMiddleMouseDown, zoomIn, zoomOut, zoomInFacit, zoomOutFacit]);
 
-  const rotateClockwise = useCallback(
-    () => setRotation((prev) => prev + 90),
-    []
-  );
+  const rotateClockwise = useCallback(() => setRotation((p) => p + 90), []);
   const rotateCounterClockwise = useCallback(
-    () => setRotation((prev) => prev - 90),
+    () => setRotation((p) => p - 90),
     []
   );
   const rotateFacitClockwise = useCallback(
-    () => setFacitRotation((prev) => prev + 90),
+    () => setFacitRotation((p) => p + 90),
     []
   );
   const rotateFacitCounterClockwise = useCallback(
-    () => setFacitRotation((prev) => prev - 90),
+    () => setFacitRotation((p) => p - 90),
     []
   );
 
@@ -230,13 +222,10 @@ const PDFModal: FC<PDFModalProps> = ({
     if (leftPanelRef.current && rightPanelRef.current) {
       const leftSize = leftPanelRef.current.getSize();
       const rightSize = rightPanelRef.current.getSize();
-
       const newScale = (leftSize / leftPanelWidth) * scale;
       const newFacitScale = (rightSize / rightPanelWidth) * facitScale;
-
       setScale(Math.min(Math.max(newScale, 0.5), 3.0));
       setFacitScale(Math.min(Math.max(newFacitScale, 0.5), 3.0));
-
       setLeftPanelWidth(leftSize);
       setRightPanelWidth(rightSize);
     }
@@ -246,58 +235,52 @@ const PDFModal: FC<PDFModalProps> = ({
     handlePanelResize();
   }, [leftPanelWidth, rightPanelWidth, handlePanelResize]);
 
-  const handleArrowKeyPress = useCallback((event: KeyboardEvent) => {
-    if (showGlobalSearch) return;
-
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      const leftPanel = leftPanelRef.current;
-      const rightPanel = rightPanelRef.current;
-      if (leftPanel && rightPanel) {
-        const leftSize = leftPanel.getSize();
-        const increment = event.key === 'ArrowLeft' ? -5 : 5;
-        const newLeftSize = Math.max(0, Math.min(100, leftSize + increment));
-        leftPanel.resize(newLeftSize);
-        rightPanel.resize(100 - newLeftSize);
+  const handleArrowKeyPress = useCallback(
+    (e: KeyboardEvent) => {
+      if (showGlobalSearch) return;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        const leftPanel = leftPanelRef.current;
+        const rightPanel = rightPanelRef.current;
+        if (leftPanel && rightPanel) {
+          const leftSize = leftPanel.getSize();
+          const increment = e.key === 'ArrowLeft' ? -5 : 5;
+          const newLeftSize = Math.max(0, Math.min(100, leftSize + increment));
+          leftPanel.resize(newLeftSize);
+          rightPanel.resize(100 - newLeftSize);
+        }
       }
-    }
-  }, []);
+    },
+    [showGlobalSearch]
+  );
 
   useEffect(() => {
     window.addEventListener('keydown', handleArrowKeyPress);
-    return () => {
-      window.removeEventListener('keydown', handleArrowKeyPress);
-    };
+    return () => window.removeEventListener('keydown', handleArrowKeyPress);
   }, [handleArrowKeyPress]);
 
   useEffect(() => {
     if (showAIDrawer || showGlobalSearch) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 't') {
-        handleToggleBlur();
-      }
-      if (event.key === '+') {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 't') handleToggleBlur();
+      if (e.key === '+') {
         zoomIn();
         zoomInFacit();
       }
-      if (event.key === '-') {
+      if (e.key === '-') {
         zoomOut();
         zoomOutFacit();
       }
-      if (event.key === 'l') {
+      if (e.key === 'l') {
         rotateClockwise();
         rotateFacitClockwise();
       }
-      if (event.key === 'r') {
+      if (e.key === 'r') {
         rotateCounterClockwise();
         rotateFacitCounterClockwise();
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
     handleToggleBlur,
     zoomIn,
@@ -330,38 +313,30 @@ const PDFModal: FC<PDFModalProps> = ({
         setLoadingFacit(true);
         if (examData) {
           setSelectedExam(examData);
-
           const pdfData = await retryFetch(() =>
             fetcher(`pdf:${examData.document_id}`)
           );
           setPdfUrl(pdfData);
         }
       } catch (error) {
-        setError('Failed to load the main PDF. Please try again later.');
+        setError('Failed to load the main PDF.');
       } finally {
         setLoadingFacit(false);
       }
     };
-
-    if (examData) {
-      fetchExamData();
-    }
-  }, [examData]);
+    if (examData) fetchExamData();
+  }, [examData, setPdfUrl]);
 
   useEffect(() => {
-    if (!selectedFacit && detectedFacit) {
-      setSelectedFacit(detectedFacit);
-    }
+    if (!selectedFacit && detectedFacit) setSelectedFacit(detectedFacit);
   }, [detectedFacit, selectedFacit]);
 
   useEffect(() => {
     if (!selectedFacit) return;
-
     const fetchFacitData = async () => {
       try {
         setFacitNumPages(0);
         setLoadingFacit(true);
-
         if (selectedFacit.document_id) {
           const pdfData = await retryFetch(() =>
             fetcher(`pdf:${selectedFacit.document_id}`)
@@ -371,134 +346,110 @@ const PDFModal: FC<PDFModalProps> = ({
           setFacitPdfUrl(null);
         }
       } catch (error) {
-        console.error('Failed to load the Facit PDF:', error);
-        setError('Failed to load the Facit PDF. Please try again later.');
+        console.error('Failed to load Facit PDF:', error);
+        setError('Failed to load the Facit PDF.');
       } finally {
         setLoadingFacit(false);
       }
     };
-
     fetchFacitData();
-  }, [selectedFacit]);
+  }, [selectedFacit, setFacitPdfUrl]);
 
-  const handleMouseMove = (event: MouseEvent) => {
+  const handleFacitPanelMouseMove = (event: React.MouseEvent) => {
     const facitPanel = facitPanelRef.current;
-    const mouseX = event.clientX;
-    const mouseY = event.clientY;
-
-    if (facitPanel) {
-      const rect = facitPanel.getBoundingClientRect();
-      const isOverFacit =
-        mouseX >= rect.left &&
-        mouseX <= rect.right &&
-        mouseY >= rect.top &&
-        mouseY <= rect.bottom;
-
-      if (isOverFacit || mouseX > window.innerWidth * 0.95) {
-        setIsHovering(true);
-      } else if (!isOverFacit) {
-        setIsHovering(false);
-      }
+    if (!facitPanel) return;
+    const rect = facitPanel.getBoundingClientRect();
+    const isOverFacit =
+      event.clientX >= rect.left &&
+      event.clientX <= rect.right &&
+      event.clientY >= rect.top &&
+      event.clientY <= rect.bottom;
+    if (isOverFacit || event.clientX > window.innerWidth * 0.95) {
+      setIsHoveringFacitPanel(true);
+      setIsMouseActive(true);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    } else {
+      setIsHoveringFacitPanel(false);
     }
   };
 
   useEffect(() => {
     if (showAIDrawer || layoutMode !== 'exam-only' || showGlobalSearch) return;
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'e') {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'e') {
         setIsToggled((prev) => {
-          if (prev && isHovering) {
-            setIsHovering(false);
-          }
+          if (prev && isHoveringFacitPanel) setIsHoveringFacitPanel(false);
           return !prev;
         });
       }
     };
-
     window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [showAIDrawer, setIsToggled, layoutMode, showGlobalSearch, isHovering]);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [
+    showAIDrawer,
+    setIsToggled,
+    layoutMode,
+    showGlobalSearch,
+    isHoveringFacitPanel,
+  ]);
 
   const changeLayoutMode = (mode: string) => {
     setLayoutMode(mode);
     Cookies.set('layoutMode', mode, { expires: 365 });
   };
 
-  const facitVariants = {
-    hidden: {
-      x: '100%',
-      opacity: 0,
-    },
-    visible: {
-      x: '0%',
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: [0.4, 0, 0.2, 1],
-        opacity: { duration: 0.3 },
-        filter: { duration: 0.2, delay: 0.1 },
-      },
-    },
-    exit: {
-      x: '100%',
-      opacity: 0,
-      transition: {
-        duration: 0.2,
-        ease: [0.4, 0, 1, 1],
-      },
-    },
-  };
+  const facitVariants = { hidden: { x: '100%' }, visible: { x: '0%' } };
+  const shouldFacitPanelBeVisible = isHoveringFacitPanel || isToggled;
+  const facitPanelOpacity =
+    shouldFacitPanelBeVisible && (isMouseActive || isHoveringFacitPanel)
+      ? 1
+      : 0;
 
   useEffect(() => {
     if (layoutMode === 'exam-only') {
-      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mousemove', handleFacitPanelMouseMove as any);
+    } else {
+      setIsHoveringFacitPanel(false);
+      setIsToggled(false);
     }
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-    };
+    return () =>
+      window.removeEventListener('mousemove', handleFacitPanelMouseMove as any);
   }, [layoutMode]);
 
   if (fetchError) return <p>{fetchError.message}</p>;
-
-  if (!selectedExam || isLoading) {
-    return null;
-  }
+  if (!selectedExam || isLoading) return null;
 
   return (
     <div className='w-full bg-background relative h-full flex flex-col items-center justify-center overflow-hidden'>
       {error ? (
         <div className='flex flex-col items-center justify-center w-full h-full'>
-          <h2 className='text-2xl font-bold'>Error</h2>
-          <p>{error}</p>
-          <p>
-            Please try refreshing the page or contact support if the issue
-            persists.
-          </p>
+          <h2 className='text-2xl font-bold'>Error</h2> <p>{error}</p>
+          <p>Please try refreshing the page or contact support.</p>
         </div>
       ) : (
         <>
-          <Toolbar
-            facitScale={facitScale}
-            isBlurred={isBlurred}
-            onRotateClockwise={rotateClockwise}
-            onRotateCounterClockwise={rotateCounterClockwise}
-            onRotateFacitClockwise={rotateFacitClockwise}
-            onRotateFacitCounterClockwise={rotateFacitCounterClockwise}
-            toggleBlur={handleToggleBlur}
+          <TentaToolbar
+            pdfUrl={pdfUrl}
             onZoomIn={zoomIn}
             onZoomOut={zoomOut}
-            onFacitZoomIn={zoomInFacit}
-            onFacitZoomOut={zoomOutFacit}
-            facitPdfUrl={facitPdfUrl}
-            pdfUrl={pdfUrl}
+            onRotateClockwise={rotateClockwise}
+            onRotateCounterClockwise={rotateCounterClockwise}
             selectedExam={selectedExam}
-            exams={exams as Exam[]}
-            layoutMode={layoutMode}
-            setSelectedFacit={setSelectedFacit}
           />
+          {layoutMode !== 'exam-only' && (
+            <TentaFacitToolbar
+              facitPdfUrl={facitPdfUrl}
+              selectedExam={selectedExam}
+              exams={exams as Exam[]}
+              onFacitZoomIn={zoomInFacit}
+              onFacitZoomOut={zoomOutFacit}
+              onRotateFacitClockwise={rotateFacitClockwise}
+              onRotateFacitCounterClockwise={rotateFacitCounterClockwise}
+              onToggleBlur={handleToggleBlur}
+              isBlurred={isBlurred}
+              setSelectedFacit={setSelectedFacit}
+            />
+          )}
           <div className='flex flex-col w-full h-full overflow-hidden'>
             <div className='flex-grow hidden md:flex w-full h-full overflow-hidden'>
               {layoutMode === 'exam-only' ? (
@@ -516,43 +467,62 @@ const PDFModal: FC<PDFModalProps> = ({
                       onLoadSuccess={onDocumentLoadSuccess}
                     />
                   </div>
-                  {facitPdfUrl && (
-                    <motion.div
-                      className='absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel'
-                      variants={facitVariants}
-                      initial='hidden'
-                      animate={isHovering || isToggled ? 'visible' : 'hidden'}
-                      ref={facitPanelRef}
-                    >
-                      <FacitToolbar
-                        onRotateFacitClockwise={rotateFacitClockwise}
-                        onRotateFacitCounterClockwise={
-                          rotateFacitCounterClockwise
+                  <AnimatePresence mode='wait'>
+                    {facitPdfUrl && (
+                      <motion.div
+                        className='absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel'
+                        ref={facitPanelRef}
+                        variants={facitVariants}
+                        initial='hidden'
+                        animate={
+                          shouldFacitPanelBeVisible ? 'visible' : 'hidden'
                         }
-                        onFacitZoomIn={zoomInFacit}
-                        onFacitZoomOut={zoomOutFacit}
-                        facitPdfUrl={facitPdfUrl}
-                        exams={exams as Exam[]}
-                        setSelectedFacit={setSelectedFacit}
-                        selectedExam={selectedExam}
-                      />
-                      <FacitViewer
-                        facitPdfUrl={facitPdfUrl}
-                        facitScale={facitScale}
-                        facitRotation={facitRotation}
-                        facitNumPages={facitNumPages}
-                        handleMouseEnter={handleMouseEnter}
-                        handleMouseLeave={handleMouseLeave}
-                        onFacitDocumentLoadSuccess={onFacitDocumentLoadSuccess}
-                        selectedFacit={selectedFacit}
-                        loadingFacit={loadingFacit}
-                        getTranslation={getTranslation}
-                        setFacitScale={setFacitScale}
-                      />
-                    </motion.div>
-                  )}
-
-                  {!isHovering && (
+                        exit='hidden'
+                        style={{
+                          opacity: facitPanelOpacity,
+                          pointerEvents:
+                            shouldFacitPanelBeVisible && facitPanelOpacity > 0
+                              ? 'auto'
+                              : 'none',
+                        }}
+                        transition={{
+                          x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                          opacity: { duration: 0.3 },
+                        }}
+                        onHoverStart={() => setIsHoveringFacitPanel(true)}
+                        onHoverEnd={() => setIsHoveringFacitPanel(false)}
+                      >
+                        <FacitToolbar
+                          onRotateFacitClockwise={rotateFacitClockwise}
+                          onRotateFacitCounterClockwise={
+                            rotateFacitCounterClockwise
+                          }
+                          onFacitZoomIn={zoomInFacit}
+                          onFacitZoomOut={zoomOutFacit}
+                          facitPdfUrl={facitPdfUrl}
+                          exams={exams as Exam[]}
+                          setSelectedFacit={setSelectedFacit}
+                          selectedExam={selectedExam}
+                        />
+                        <FacitViewer
+                          facitPdfUrl={facitPdfUrl}
+                          facitScale={facitScale}
+                          facitRotation={facitRotation}
+                          facitNumPages={facitNumPages}
+                          handleMouseEnter={handleMouseEnterFacitViewer}
+                          handleMouseLeave={handleMouseLeaveFacitViewer}
+                          onFacitDocumentLoadSuccess={
+                            onFacitDocumentLoadSuccess
+                          }
+                          selectedFacit={selectedFacit}
+                          loadingFacit={loadingFacit}
+                          getTranslation={getTranslation}
+                          setFacitScale={setFacitScale}
+                        />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  {!isHoveringFacitPanel && !isToggled && (
                     <GradientIndicator
                       detectedFacit={detectedFacit}
                       facitPdfUrl={facitPdfUrl}
@@ -592,14 +562,14 @@ const PDFModal: FC<PDFModalProps> = ({
                     {selectedFacit && facitPdfUrl && (
                       <div
                         className={`flex h-full w-full top-0 absolute flex-col items-center justify-center transition-all duration-300 ${
-                          isBlurred && !isMouseOver
-                            ? 'backdrop-blur-md bg-background/50 z-30'
+                          isBlurred && !isMouseOverFacitViewer
+                            ? 'backdrop-blur-md bg-background/20 z-30'
                             : 'bg-transparent z-[-10]'
                         }`}
-                        onMouseEnter={handleMouseEnter}
-                        onMouseLeave={handleMouseLeave}
+                        onMouseEnter={handleMouseEnterFacitViewer}
+                        onMouseLeave={handleMouseLeaveFacitViewer}
                       >
-                        <p className='font-medium'>
+                        <p className='font-normal'>
                           {getTranslation('mouseOverDescription')}
                         </p>
                         <MousePointerClick
@@ -614,8 +584,8 @@ const PDFModal: FC<PDFModalProps> = ({
                         facitScale={facitScale}
                         facitRotation={facitRotation}
                         facitNumPages={facitNumPages}
-                        handleMouseEnter={handleMouseEnter}
-                        handleMouseLeave={handleMouseLeave}
+                        handleMouseEnter={handleMouseEnterFacitViewer}
+                        handleMouseLeave={handleMouseLeaveFacitViewer}
                         onFacitDocumentLoadSuccess={onFacitDocumentLoadSuccess}
                         selectedFacit={selectedFacit}
                         loadingFacit={loadingFacit}
@@ -627,7 +597,6 @@ const PDFModal: FC<PDFModalProps> = ({
                 </ResizablePanelGroup>
               )}
             </div>
-            {/* Small pdf */}
             <div className='overflow-x-auto flex md:hidden h-full'>
               <MobilePDFView
                 facitPdfUrl={facitPdfUrl}
@@ -655,19 +624,29 @@ const PDFModal: FC<PDFModalProps> = ({
         </>
       )}
 
-      {/* Change Layout Buttons */}
-      <div className='fixed z-40 bottom-10 left-5 hidden md:flex space-x-2'>
-        <Tabs
-          defaultValue={layoutMode}
-          className='fixed z-40 bottom-10 left-5 w-auto'
-        >
+      <motion.div
+        className='fixed z-40 bottom-10 left-5 hidden md:flex space-x-2'
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isMouseActive || isHoveringTabs ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        style={{
+          pointerEvents: isMouseActive || isHoveringTabs ? 'auto' : 'none',
+        }}
+        onMouseEnter={() => {
+          setIsHoveringTabs(true);
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
+        }}
+        onMouseLeave={() => {
+          setIsHoveringTabs(false);
+        }}
+      >
+        <Tabs defaultValue={layoutMode} className='w-auto'>
           <TabsList>
             <TabsTrigger
               value='exam-with-facit'
-              onClick={() => {
-                changeLayoutMode('exam-with-facit');
-                setScale(1.2);
-              }}
+              onClick={() => changeLayoutMode('exam-with-facit')}
               className='transition-all duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
             >
               <TooltipProvider delayDuration={0}>
@@ -683,10 +662,7 @@ const PDFModal: FC<PDFModalProps> = ({
             </TabsTrigger>
             <TabsTrigger
               value='exam-only'
-              onClick={() => {
-                changeLayoutMode('exam-only');
-                setScale(1.4);
-              }}
+              onClick={() => changeLayoutMode('exam-only')}
               className='transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
             >
               <TooltipProvider delayDuration={0}>
@@ -702,7 +678,7 @@ const PDFModal: FC<PDFModalProps> = ({
             </TabsTrigger>
           </TabsList>
         </Tabs>
-      </div>
+      </motion.div>
     </div>
   );
 };

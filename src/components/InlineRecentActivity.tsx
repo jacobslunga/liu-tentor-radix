@@ -71,7 +71,7 @@ const InlineRecentActivity = () => {
           <Link
             key={activity.path}
             to={activity.path}
-            className='flex items-center gap-2 border group text-sm px-3 py-2 bg-white/60 dark:bg-black/40 text-black dark:text-white hover:opacity-80 transition-opacity duration-200 rounded-xl whitespace-nowrap'
+            className='flex items-center gap-2 border group text-sm px-3 py-2 bg-white/60 dark:bg-black/40 text-black dark:text-white hover:opacity-80 transition-opacity duration-200 rounded-full whitespace-nowrap'
           >
             <span className='font-normal text-xs'>{activity.courseCode}</span>
             <Clock className='w-3 h-3 text-black/60 dark:text-white/60' />

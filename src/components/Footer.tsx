@@ -35,7 +35,7 @@ const Footer: FC = () => {
   ];
 
   return (
-    <footer className='w-full bg-secondary/20 py-10 border-t border-border mt-auto flex flex-col items-center justify-center relative z-10'>
+    <footer className='w-full bg-secondary/30 py-10 border-t border-border mt-auto flex flex-col items-center justify-center relative z-10'>
       {/* Länkar */}
       <div className='flex flex-col sm:flex-row justify-center items-center md:items-start gap-12 sm:gap-24 text-sm text-foreground/70'>
         {groupedLinks.map((section) => (

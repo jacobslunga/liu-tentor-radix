@@ -89,7 +89,7 @@ const PDFViewer: FC<PDFViewerProps> = ({
         <Document
           file={pdfUrl}
           onLoadSuccess={onLoadSuccess}
-          className='w-full h-full flex items-center justify-start space-y-10 flex-col'
+          className='w-full h-full flex items-center justify-start space-y-5 flex-col'
         >
           {Array.from({ length: numPages || 0 }, (_, i) => (
             <Page

@@ -16,6 +16,7 @@ import AdminLayout from './layouts/AdminLayout';
 import RemoveExamsPage from './pages/auth/RemoveExamsPage';
 import UploadedExamsPage from './pages/auth/UploadedExamsPage';
 import AddExamsPage from './pages/auth/AddExamsPage';
+// import Partners from './pages/Partners';
 
 const routes: RouteObject[] = [
   {
