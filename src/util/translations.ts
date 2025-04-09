@@ -214,6 +214,10 @@ export interface Translations {
     uploadGuidelineQuality: string;
     passedCount: string;
     examStatisticsDescription: string;
+    ai: string;
+    copy: string;
+    privacyPolicySection8Content: string;
+    privacyPolicySection8Title: string;
   };
 }
 
@@ -464,6 +468,11 @@ const translations: Translations = {
     passedCount: 'Godkända',
     examStatisticsDescription:
       'Vi har precis introducerat tentastatistik, klicka på procenten för att få en mer detaljerad vy',
+    ai: 'AI Assistent',
+    copy: 'Kopiera',
+    privacyPolicySection8Title: '7. AI-assistent och Gemini API',
+    privacyPolicySection8Content:
+      'Vår AI-assistent använder Gemini API, en tredjepartstjänst som tillhandahålls av Google, för att generera svar på dina frågor. När du interagerar med AI-assistenten skickas dina frågor till Gemini API för bearbetning. Vi lagrar dock inte några av dina frågor eller de genererade svaren på våra servrar. All data som överförs till Gemini API hanteras i enlighet med Googles integritetspolicy.',
   },
   en: {
     homeTitle: 'LiU Exams',
@@ -712,6 +721,10 @@ const translations: Translations = {
     passedCount: 'Passed',
     examStatisticsDescription:
       'We have just introduced exam statistics, click on the percentage to get a more detailed view',
+    ai: 'AI Assistant',
+    copy: 'Copy',
+    privacyPolicySection8Title: '7. AI Assistant and Gemini API',
+    privacyPolicySection8Content: `Our AI assistant uses the Gemini API, a third-party service provided by Google, to generate answers to your questions. When you interact with the AI assistant, your questions are sent to the Gemini API for processing. However, we do not store any of your questions or the generated answers on our servers. All data transferred to the Gemini API is handled in accordance with Google's privacy policy.`,
   },
 };
 

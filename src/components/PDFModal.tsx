@@ -42,6 +42,7 @@ import GradientIndicator from '@/components/GradientIndicator';
 import MobilePDFView from '@/components/MobilePdfViewer';
 import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 import TentaToolbar from './PDF/Toolbar/TentaToolbar';
+import { ShowAiDialogContext } from '@/context/ShowAiDialogContext';
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -51,8 +52,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 interface PDFModalProps {
   exams?: Exam[];
   tenta_id: string;
-  showAIDrawer: boolean;
-  setShowAIDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   pdfUrl: string | null;
   setPdfUrl: React.Dispatch<React.SetStateAction<string | null>>;
   facitPdfUrl: string | null;
@@ -62,7 +61,6 @@ interface PDFModalProps {
 const PDFModal: FC<PDFModalProps> = ({
   exams,
   tenta_id,
-  showAIDrawer,
   pdfUrl,
   setPdfUrl,
   facitPdfUrl,
@@ -70,6 +68,7 @@ const PDFModal: FC<PDFModalProps> = ({
 }) => {
   const { language } = useLanguage();
   const { showGlobalSearch } = useContext(ShowGlobalSearchContext);
+  const { showAiDialog } = useContext(ShowAiDialogContext);
 
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -119,6 +118,8 @@ const PDFModal: FC<PDFModalProps> = ({
   }, [layoutMode]);
 
   useEffect(() => {
+    if (showAiDialog || showGlobalSearch) return;
+
     const handleMouseMove = () => {
       setIsMouseActive(true);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -134,7 +135,7 @@ const PDFModal: FC<PDFModalProps> = ({
       window.removeEventListener('mousemove', handleMouseMove);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, []);
+  }, [showAiDialog, showGlobalSearch]);
 
   const getTranslation = (
     key: keyof (typeof translations)[typeof language]
@@ -237,7 +238,7 @@ const PDFModal: FC<PDFModalProps> = ({
 
   const handleArrowKeyPress = useCallback(
     (e: KeyboardEvent) => {
-      if (showGlobalSearch) return;
+      if (showGlobalSearch || showAiDialog) return;
       if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
         const leftPanel = leftPanelRef.current;
         const rightPanel = rightPanelRef.current;
@@ -250,7 +251,7 @@ const PDFModal: FC<PDFModalProps> = ({
         }
       }
     },
-    [showGlobalSearch]
+    [showGlobalSearch, showAiDialog]
   );
 
   useEffect(() => {
@@ -259,7 +260,7 @@ const PDFModal: FC<PDFModalProps> = ({
   }, [handleArrowKeyPress]);
 
   useEffect(() => {
-    if (showAIDrawer || showGlobalSearch) return;
+    if (showGlobalSearch || showAiDialog) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 't') handleToggleBlur();
       if (e.key === '+') {
@@ -291,7 +292,7 @@ const PDFModal: FC<PDFModalProps> = ({
     rotateCounterClockwise,
     rotateFacitClockwise,
     rotateFacitCounterClockwise,
-    showAIDrawer,
+    showAiDialog,
     showGlobalSearch,
   ]);
 
@@ -374,7 +375,7 @@ const PDFModal: FC<PDFModalProps> = ({
   };
 
   useEffect(() => {
-    if (showAIDrawer || layoutMode !== 'exam-only' || showGlobalSearch) return;
+    if (layoutMode !== 'exam-only' || showGlobalSearch || showAiDialog) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'e') {
         setIsToggled((prev) => {
@@ -386,10 +387,10 @@ const PDFModal: FC<PDFModalProps> = ({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [
-    showAIDrawer,
     setIsToggled,
     layoutMode,
     showGlobalSearch,
+    showAiDialog,
     isHoveringFacitPanel,
   ]);
 
@@ -406,7 +407,7 @@ const PDFModal: FC<PDFModalProps> = ({
       : 0;
 
   useEffect(() => {
-    if (layoutMode === 'exam-only') {
+    if (layoutMode === 'exam-only' || showGlobalSearch || showAiDialog) {
       window.addEventListener('mousemove', handleFacitPanelMouseMove as any);
     } else {
       setIsHoveringFacitPanel(false);
@@ -569,7 +570,7 @@ const PDFModal: FC<PDFModalProps> = ({
                         onMouseEnter={handleMouseEnterFacitViewer}
                         onMouseLeave={handleMouseLeaveFacitViewer}
                       >
-                        <p className='font-normal'>
+                        <p className='font-medium'>
                           {getTranslation('mouseOverDescription')}
                         </p>
                         <MousePointerClick

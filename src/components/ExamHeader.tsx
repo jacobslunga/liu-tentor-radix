@@ -14,6 +14,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import SettingsDialog from '@/components/SettingsDialog';
+import AiChatDialog from './AiChatDialog';
 
 const normalizeName = (name: string): string => {
   return name.toLowerCase().replace(/[^a-z0-9-_]/g, '');
@@ -55,11 +56,11 @@ interface ExamHeaderProps {
   allExams: Exam[];
   courseCode: any;
   setSelectedExam: (exam: Exam) => void;
-  showAIDrawer: boolean;
-  setShowAIDrawer: React.Dispatch<React.SetStateAction<boolean>>;
   pdfUrl: string | null;
   facitPdfUrl: string | null;
   currentExamId: string;
+  exam_id: string;
+  facit_id: string;
 }
 
 const ExamHeader: FC<ExamHeaderProps> = ({
@@ -69,10 +70,8 @@ const ExamHeader: FC<ExamHeaderProps> = ({
   setSelectedExam,
   courseCode,
   currentExamId,
-  // setShowAIDrawer,
-  // showAIDrawer,
-  // pdfUrl,
-  // facitPdfUrl,
+  exam_id,
+  facit_id,
 }) => {
   const { language } = useLanguage();
   const [selectedExamName, setSelectedExamName] = useState(tenta_namn);
@@ -138,6 +137,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
             <Button
               variant='outline'
               className='flex flex-row items-center justify-center space-x-1'
+              size='sm'
             >
               <p className='flex-1 text-left'>
                 {displayName.length > 20
@@ -193,6 +193,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
       </div>
 
       <div className='flex flex-row items-center justify-center space-x-3 min-w-fit'>
+        <AiChatDialog examId={Number(exam_id)} facitId={Number(facit_id)} />
         <SettingsDialog />
       </div>
     </div>

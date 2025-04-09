@@ -120,6 +120,17 @@ const PrivacyPolicy: FC = () => {
               title={getTranslation('privacyPolicySection6Title')}
               content={getTranslation('privacyPolicySection6Content')}
             />
+            {/* Gemini API Section */}
+            <Section
+              title={
+                getTranslation('privacyPolicySection8Title') ||
+                'AI Assistant and Gemini API'
+              }
+              content={
+                getTranslation('privacyPolicySection8Content') ||
+                "Our AI Assistant uses the Gemini API, a third-party service provided by Google, to generate responses to your queries. While interacting with the AI Assistant, your questions are sent to the Gemini API for processing. However, we do not store any of your questions or the generated responses on our servers. All data transmitted to the Gemini API is handled according to Google's privacy policy."
+              }
+            />
 
             <Separator />
 

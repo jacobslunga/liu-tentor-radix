@@ -125,7 +125,6 @@ const TentaPage: FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const [showAIDrawer, setShowAIDrawer] = useState(false);
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [facitPdfUrl, setFacitPdfUrl] = useState<string | null>(null);
 
@@ -172,10 +171,10 @@ const TentaPage: FC = () => {
         allExams={exams as Exam[]}
         setSelectedExam={setSelectedExam}
         courseCode={courseCode}
-        showAIDrawer={showAIDrawer}
-        setShowAIDrawer={setShowAIDrawer}
         pdfUrl={pdfUrl}
         facitPdfUrl={facitPdfUrl}
+        exam_id={selectedExam.id}
+        facit_id={exams?.find((e) => isFacit(e.tenta_namn))?.id}
       />
       <Helmet>
         <title>{title}</title>
@@ -195,8 +194,6 @@ const TentaPage: FC = () => {
           <PDFModal
             exams={exams}
             tenta_id={tenta_id}
-            setShowAIDrawer={setShowAIDrawer}
-            showAIDrawer={showAIDrawer}
             pdfUrl={pdfUrl}
             setPdfUrl={setPdfUrl}
             facitPdfUrl={facitPdfUrl}

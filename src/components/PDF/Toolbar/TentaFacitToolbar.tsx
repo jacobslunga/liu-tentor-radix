@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useContext, useEffect, useRef, useState } from 'react';
 import {
   Plus,
   Minus,
@@ -28,6 +28,8 @@ import { useLanguage } from '@/context/LanguageContext';
 import translations from '@/util/translations';
 import { filterExamsByDate, isFacit } from '@/components/PDF/utils';
 import { motion } from 'framer-motion';
+import { ShowAiDialogContext } from '@/context/ShowAiDialogContext';
+import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 
 interface Props {
   facitPdfUrl: string | null;
@@ -84,16 +86,16 @@ const TentaFacitToolbar: FC<Props> = ({
   setSelectedFacit,
   exams,
 }) => {
+  const { showAiDialog } = useContext(ShowAiDialogContext);
+  const { showGlobalSearch } = useContext(ShowGlobalSearchContext);
   const [isMouseActive, setIsMouseActive] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(isHovering);
 
   useEffect(() => {
-    isHoveringRef.current = isHovering;
-  }, [isHovering]);
+    if (showAiDialog || showGlobalSearch) return;
 
-  useEffect(() => {
     const handleMouseMove = () => {
       setIsMouseActive(true);
 
@@ -118,7 +120,7 @@ const TentaFacitToolbar: FC<Props> = ({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [showAiDialog, showGlobalSearch]);
 
   const { language } = useLanguage();
 

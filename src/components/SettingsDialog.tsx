@@ -77,6 +77,7 @@ const SettingsDialog: FC = () => {
 
   const shortcuts = [
     { action: 'globalSearch', key: `${modifierKey} + K`, category: 'search' },
+    { action: 'ai', key: `${modifierKey} + J`, category: 'search' },
     { action: 'moveFacitRight', key: '→', category: 'navigation' },
     { action: 'moveFacitLeft', key: '←', category: 'navigation' },
     { action: 'toggleShowFacit', key: 'T', category: 'visibility' },

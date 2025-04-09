@@ -15,7 +15,7 @@ const Footer: FC = () => {
       title: language === 'sv' ? 'Sidor' : 'Pages',
       links: [
         { name: getTranslation('homeLink'), href: '/' },
-        // { name: 'Partners', href: '/partners' },
+        { name: 'Partners', href: '/partners' },
         { name: 'Om oss', href: '/om-oss' },
       ],
     },

@@ -16,6 +16,7 @@ export const fetchExamData = async (tenta_id: string) => {
 };
 
 export const fetchPdfData = async (documentId: number) => {
+  console.log("Fetching PDF data for document ID:", documentId);
   const { data, error } = await supabase
     .from("documents")
     .select("content")

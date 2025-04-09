@@ -16,7 +16,7 @@ import AdminLayout from './layouts/AdminLayout';
 import RemoveExamsPage from './pages/auth/RemoveExamsPage';
 import UploadedExamsPage from './pages/auth/UploadedExamsPage';
 import AddExamsPage from './pages/auth/AddExamsPage';
-// import Partners from './pages/Partners';
+import Partners from './pages/Partners';
 
 const routes: RouteObject[] = [
   {
@@ -29,7 +29,7 @@ const routes: RouteObject[] = [
       { path: 'feedback', element: <FeedbackPage /> },
       { path: 'privacy-policy', element: <PrivacyPolicyPage /> },
       { path: 'upload-exams', element: <UploadExamPage /> },
-      // { path: 'partners', element: <Partners /> },
+      { path: 'partners', element: <Partners /> },
       { path: 'om-oss', element: <OmOss /> },
       { path: '*', element: <NotFoundPage /> },
       {

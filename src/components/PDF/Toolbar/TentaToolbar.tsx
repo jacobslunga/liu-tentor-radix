@@ -1,4 +1,4 @@
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, useState, useEffect, useRef, useContext } from 'react';
 import {
   Plus,
   Minus,
@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/tooltip';
 import Cookies from 'js-cookie';
 import { motion } from 'framer-motion';
+import { ShowAiDialogContext } from '@/context/ShowAiDialogContext';
+import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 
 interface Props {
   selectedExam: Exam;
@@ -73,6 +75,8 @@ const TentaToolbar: FC<Props> = ({
       return stored ? JSON.parse(stored) : {};
     }
   );
+  const { showAiDialog } = useContext(ShowAiDialogContext);
+  const { showGlobalSearch } = useContext(ShowGlobalSearchContext);
 
   const [isMouseActive, setIsMouseActive] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
@@ -80,10 +84,8 @@ const TentaToolbar: FC<Props> = ({
   const isHoveringRef = useRef(isHovering);
 
   useEffect(() => {
-    isHoveringRef.current = isHovering;
-  }, [isHovering]);
+    if (showAiDialog || showGlobalSearch) return;
 
-  useEffect(() => {
     const handleMouseMove = () => {
       setIsMouseActive(true);
 
@@ -108,7 +110,7 @@ const TentaToolbar: FC<Props> = ({
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [showAiDialog, showGlobalSearch]);
 
   const toggleCompleted = () => {
     const id = selectedExam.id;
