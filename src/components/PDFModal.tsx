@@ -1,23 +1,23 @@
-import { Exam } from '@/components/data-table/columns';
-import FacitViewer from '@/components/PDF/FacitViewer';
-import PDFViewer from '@/components/PDF/PDFViewer';
-import { fetcher, findFacitForExam } from '@/components/PDF/utils';
+import { Exam } from "@/components/data-table/columns";
+import FacitViewer from "@/components/PDF/FacitViewer";
+import PDFViewer from "@/components/PDF/PDFViewer";
+import { fetcher, findFacitForExam } from "@/components/PDF/utils";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from '@/components/ui/resizable';
-import { useLanguage } from '@/context/LanguageContext';
-import translations from '@/util/translations';
-import { AnimatePresence, motion } from 'framer-motion';
-import Cookies from 'js-cookie';
-import { MousePointerClick } from 'lucide-react';
+} from "@/components/ui/resizable";
+import { useLanguage } from "@/context/LanguageContext";
+import translations from "@/util/translations";
+import { AnimatePresence, motion } from "framer-motion";
+import Cookies from "js-cookie";
+import { MousePointerClick } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 import {
   FC,
   useCallback,
@@ -26,25 +26,25 @@ import {
   useMemo,
   useRef,
   useState,
-} from 'react';
-import { pdfjs } from 'react-pdf';
-import { ImperativePanelHandle } from 'react-resizable-panels';
-import useSWR from 'swr';
-import { IconLayoutColumns, IconLayoutSidebarRight } from '@tabler/icons-react';
+} from "react";
+import { pdfjs } from "react-pdf";
+import { ImperativePanelHandle } from "react-resizable-panels";
+import useSWR from "swr";
+import { IconLayoutColumns, IconLayoutSidebarRight } from "@tabler/icons-react";
 
-import { retryFetch } from '@/components/PDF/utils';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/TextLayer.css';
-import FacitToolbar from './PDF/FacitToolbar';
-import TentaFacitToolbar from './PDF/Toolbar/TentaFacitToolbar';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import GradientIndicator from '@/components/GradientIndicator';
-import MobilePDFView from '@/components/MobilePdfViewer';
-import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
-import TentaToolbar from './PDF/Toolbar/TentaToolbar';
+import { retryFetch } from "@/components/PDF/utils";
+import "react-pdf/dist/esm/Page/AnnotationLayer.css";
+import "react-pdf/dist/esm/Page/TextLayer.css";
+import FacitToolbar from "./PDF/FacitToolbar";
+import TentaFacitToolbar from "./PDF/Toolbar/TentaFacitToolbar";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import GradientIndicator from "@/components/GradientIndicator";
+import MobilePDFView from "@/components/MobilePdfViewer";
+import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
+import TentaToolbar from "./PDF/Toolbar/TentaToolbar";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.mjs',
+  "pdfjs-dist/build/pdf.worker.min.mjs",
   import.meta.url
 ).toString();
 
@@ -85,8 +85,8 @@ const PDFModal: FC<PDFModalProps> = ({
   const [isMiddleMouseDown, setIsMiddleMouseDown] = useState(false);
   const [loadingFacit, setLoadingFacit] = useState(true);
   const [layoutMode, setLayoutMode] = useState<string>(() => {
-    const savedLayoutMode = Cookies.get('layoutMode');
-    return savedLayoutMode || 'exam-with-facit';
+    const savedLayoutMode = Cookies.get("layoutMode");
+    return savedLayoutMode || "exam-with-facit";
   });
   const [isMouseActive, setIsMouseActive] = useState(true);
   const [scale, setScale] = useState<number>(1.2);
@@ -113,7 +113,7 @@ const PDFModal: FC<PDFModalProps> = ({
     if (screenWidth >= 1600) baseScale = 1.6;
     else if (screenWidth <= 1280) baseScale = 1.0;
     const newExamScale =
-      layoutMode === 'exam-only' ? baseScale + 0.2 : baseScale;
+      layoutMode === "exam-only" ? baseScale + 0.2 : baseScale;
     setScale(newExamScale);
     setFacitScale(baseScale);
   }, [layoutMode]);
@@ -129,9 +129,9 @@ const PDFModal: FC<PDFModalProps> = ({
       }, 1000);
     };
     handleMouseMove();
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
@@ -185,13 +185,13 @@ const PDFModal: FC<PDFModalProps> = ({
         }
       }
     };
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("wheel", handleWheel);
     };
   }, [isMiddleMouseDown, zoomIn, zoomOut, zoomInFacit, zoomOutFacit]);
 
@@ -238,12 +238,12 @@ const PDFModal: FC<PDFModalProps> = ({
   const handleArrowKeyPress = useCallback(
     (e: KeyboardEvent) => {
       if (showGlobalSearch) return;
-      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+      if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
         const leftPanel = leftPanelRef.current;
         const rightPanel = rightPanelRef.current;
         if (leftPanel && rightPanel) {
           const leftSize = leftPanel.getSize();
-          const increment = e.key === 'ArrowLeft' ? -5 : 5;
+          const increment = e.key === "ArrowLeft" ? -5 : 5;
           const newLeftSize = Math.max(0, Math.min(100, leftSize + increment));
           leftPanel.resize(newLeftSize);
           rightPanel.resize(100 - newLeftSize);
@@ -254,33 +254,33 @@ const PDFModal: FC<PDFModalProps> = ({
   );
 
   useEffect(() => {
-    window.addEventListener('keydown', handleArrowKeyPress);
-    return () => window.removeEventListener('keydown', handleArrowKeyPress);
+    window.addEventListener("keydown", handleArrowKeyPress);
+    return () => window.removeEventListener("keydown", handleArrowKeyPress);
   }, [handleArrowKeyPress]);
 
   useEffect(() => {
     if (showAIDrawer || showGlobalSearch) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 't') handleToggleBlur();
-      if (e.key === '+') {
+      if (e.key === "t") handleToggleBlur();
+      if (e.key === "+") {
         zoomIn();
         zoomInFacit();
       }
-      if (e.key === '-') {
+      if (e.key === "-") {
         zoomOut();
         zoomOutFacit();
       }
-      if (e.key === 'l') {
+      if (e.key === "l") {
         rotateClockwise();
         rotateFacitClockwise();
       }
-      if (e.key === 'r') {
+      if (e.key === "r") {
         rotateCounterClockwise();
         rotateFacitCounterClockwise();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     handleToggleBlur,
     zoomIn,
@@ -319,7 +319,7 @@ const PDFModal: FC<PDFModalProps> = ({
           setPdfUrl(pdfData);
         }
       } catch (error) {
-        setError('Failed to load the main PDF.');
+        setError("Failed to load the main PDF.");
       } finally {
         setLoadingFacit(false);
       }
@@ -346,8 +346,8 @@ const PDFModal: FC<PDFModalProps> = ({
           setFacitPdfUrl(null);
         }
       } catch (error) {
-        console.error('Failed to load Facit PDF:', error);
-        setError('Failed to load the Facit PDF.');
+        console.error("Failed to load Facit PDF:", error);
+        setError("Failed to load the Facit PDF.");
       } finally {
         setLoadingFacit(false);
       }
@@ -374,17 +374,17 @@ const PDFModal: FC<PDFModalProps> = ({
   };
 
   useEffect(() => {
-    if (showAIDrawer || layoutMode !== 'exam-only' || showGlobalSearch) return;
+    if (showAIDrawer || layoutMode !== "exam-only" || showGlobalSearch) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'e') {
+      if (e.key === "e") {
         setIsToggled((prev) => {
           if (prev && isHoveringFacitPanel) setIsHoveringFacitPanel(false);
           return !prev;
         });
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [
     showAIDrawer,
     setIsToggled,
@@ -395,10 +395,10 @@ const PDFModal: FC<PDFModalProps> = ({
 
   const changeLayoutMode = (mode: string) => {
     setLayoutMode(mode);
-    Cookies.set('layoutMode', mode, { expires: 365 });
+    Cookies.set("layoutMode", mode, { expires: 365 });
   };
 
-  const facitVariants = { hidden: { x: '100%' }, visible: { x: '0%' } };
+  const facitVariants = { hidden: { x: "100%" }, visible: { x: "0%" } };
   const shouldFacitPanelBeVisible = isHoveringFacitPanel || isToggled;
   const facitPanelOpacity =
     shouldFacitPanelBeVisible && (isMouseActive || isHoveringFacitPanel)
@@ -406,24 +406,24 @@ const PDFModal: FC<PDFModalProps> = ({
       : 0;
 
   useEffect(() => {
-    if (layoutMode === 'exam-only') {
-      window.addEventListener('mousemove', handleFacitPanelMouseMove as any);
+    if (layoutMode === "exam-only") {
+      window.addEventListener("mousemove", handleFacitPanelMouseMove as any);
     } else {
       setIsHoveringFacitPanel(false);
       setIsToggled(false);
     }
     return () =>
-      window.removeEventListener('mousemove', handleFacitPanelMouseMove as any);
+      window.removeEventListener("mousemove", handleFacitPanelMouseMove as any);
   }, [layoutMode]);
 
   if (fetchError) return <p>{fetchError.message}</p>;
   if (!selectedExam || isLoading) return null;
 
   return (
-    <div className='w-full bg-background relative h-full flex flex-col items-center justify-center overflow-hidden'>
+    <div className="w-full bg-background relative h-full flex flex-col items-center justify-center overflow-hidden">
       {error ? (
-        <div className='flex flex-col items-center justify-center w-full h-full'>
-          <h2 className='text-2xl font-bold'>Error</h2> <p>{error}</p>
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          <h2 className="text-2xl font-bold">Error</h2> <p>{error}</p>
           <p>Please try refreshing the page or contact support.</p>
         </div>
       ) : (
@@ -436,7 +436,7 @@ const PDFModal: FC<PDFModalProps> = ({
             onRotateCounterClockwise={rotateCounterClockwise}
             selectedExam={selectedExam}
           />
-          {layoutMode !== 'exam-only' && (
+          {layoutMode !== "exam-only" && (
             <TentaFacitToolbar
               facitPdfUrl={facitPdfUrl}
               selectedExam={selectedExam}
@@ -450,13 +450,13 @@ const PDFModal: FC<PDFModalProps> = ({
               setSelectedFacit={setSelectedFacit}
             />
           )}
-          <div className='flex flex-col w-full h-full overflow-hidden'>
-            <div className='flex-grow hidden md:flex w-full h-full overflow-hidden'>
-              {layoutMode === 'exam-only' ? (
+          <div className="flex flex-col w-full h-full overflow-hidden">
+            <div className="flex-grow hidden md:flex w-full h-full overflow-hidden">
+              {layoutMode === "exam-only" ? (
                 <>
                   <div
                     className={`w-full h-full pdf-container ${
-                      isToggled ? 'overflow-hidden' : 'overflow-auto'
+                      isToggled ? "overflow-hidden" : "overflow-auto"
                     } flex items-center justify-center`}
                   >
                     <PDFViewer
@@ -467,23 +467,23 @@ const PDFModal: FC<PDFModalProps> = ({
                       onLoadSuccess={onDocumentLoadSuccess}
                     />
                   </div>
-                  <AnimatePresence mode='wait'>
+                  <AnimatePresence mode="wait">
                     {facitPdfUrl && (
                       <motion.div
-                        className='absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel'
+                        className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
                         ref={facitPanelRef}
                         variants={facitVariants}
-                        initial='hidden'
+                        initial="hidden"
                         animate={
-                          shouldFacitPanelBeVisible ? 'visible' : 'hidden'
+                          shouldFacitPanelBeVisible ? "visible" : "hidden"
                         }
-                        exit='hidden'
+                        exit="hidden"
                         style={{
                           opacity: facitPanelOpacity,
                           pointerEvents:
                             shouldFacitPanelBeVisible && facitPanelOpacity > 0
-                              ? 'auto'
-                              : 'none',
+                              ? "auto"
+                              : "none",
                         }}
                         transition={{
                           x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
@@ -532,8 +532,8 @@ const PDFModal: FC<PDFModalProps> = ({
                 </>
               ) : (
                 <ResizablePanelGroup
-                  direction='horizontal'
-                  className='w-full h-full'
+                  direction="horizontal"
+                  className="w-full h-full"
                 >
                   <ResizablePanel
                     defaultSize={55}
@@ -541,7 +541,7 @@ const PDFModal: FC<PDFModalProps> = ({
                     ref={leftPanelRef}
                     onResize={handlePanelResize}
                   >
-                    <div className='w-full h-full pdf-container overflow-auto z-50 flex items-start justify-start'>
+                    <div className="w-full h-full pdf-container overflow-auto z-50 flex items-start justify-start">
                       <PDFViewer
                         pdfUrl={pdfUrl!}
                         scale={scale}
@@ -556,29 +556,29 @@ const PDFModal: FC<PDFModalProps> = ({
                     defaultSize={45}
                     minSize={20}
                     ref={rightPanelRef}
-                    className='relative'
+                    className="relative"
                     onResize={handlePanelResize}
                   >
                     {selectedFacit && facitPdfUrl && (
                       <div
                         className={`flex h-full w-full top-0 absolute flex-col items-center justify-center transition-all duration-300 ${
                           isBlurred && !isMouseOverFacitViewer
-                            ? 'backdrop-blur-md bg-background/20 z-30'
-                            : 'bg-transparent z-[-10]'
+                            ? "backdrop-blur-md bg-background/20 z-30"
+                            : "bg-transparent z-[-10]"
                         }`}
                         onMouseEnter={handleMouseEnterFacitViewer}
                         onMouseLeave={handleMouseLeaveFacitViewer}
                       >
-                        <p className='font-normal'>
-                          {getTranslation('mouseOverDescription')}
+                        <p className="font-medium">
+                          {getTranslation("mouseOverDescription")}
                         </p>
                         <MousePointerClick
-                          className='w-7 h-7 mt-2'
+                          className="w-7 h-7 mt-2"
                           onClick={() => setIsBlurred(false)}
                         />
                       </div>
                     )}
-                    <div className='w-full h-full pdf-container flex flex-col items-center justify-start overflow-auto z-20'>
+                    <div className="w-full h-full pdf-container flex flex-col items-center justify-start overflow-auto z-20">
                       <FacitViewer
                         facitPdfUrl={facitPdfUrl}
                         facitScale={facitScale}
@@ -597,7 +597,7 @@ const PDFModal: FC<PDFModalProps> = ({
                 </ResizablePanelGroup>
               )}
             </div>
-            <div className='overflow-x-auto flex md:hidden h-full'>
+            <div className="overflow-x-auto flex md:hidden h-full">
               <MobilePDFView
                 facitPdfUrl={facitPdfUrl}
                 facitRotation={facitRotation}
@@ -625,12 +625,12 @@ const PDFModal: FC<PDFModalProps> = ({
       )}
 
       <motion.div
-        className='fixed z-40 bottom-10 left-5 hidden md:flex space-x-2'
+        className="fixed z-40 bottom-10 left-5 hidden md:flex space-x-2"
         initial={{ opacity: 1 }}
         animate={{ opacity: isMouseActive || isHoveringTabs ? 1 : 0 }}
         transition={{ duration: 0.3 }}
         style={{
-          pointerEvents: isMouseActive || isHoveringTabs ? 'auto' : 'none',
+          pointerEvents: isMouseActive || isHoveringTabs ? "auto" : "none",
         }}
         onMouseEnter={() => {
           setIsHoveringTabs(true);
@@ -642,36 +642,36 @@ const PDFModal: FC<PDFModalProps> = ({
           setIsHoveringTabs(false);
         }}
       >
-        <Tabs defaultValue={layoutMode} className='w-auto'>
+        <Tabs defaultValue={layoutMode} className="w-auto">
           <TabsList>
             <TabsTrigger
-              value='exam-with-facit'
-              onClick={() => changeLayoutMode('exam-with-facit')}
-              className='transition-all duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+              value="exam-with-facit"
+              onClick={() => changeLayoutMode("exam-with-facit")}
+              className="transition-all duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
-                  <TooltipTrigger asChild className='z-40'>
+                  <TooltipTrigger asChild className="z-40">
                     <IconLayoutColumns />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
-                    <p>{getTranslation('examAndFacit')}</p>
+                    <p>{getTranslation("examAndFacit")}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             </TabsTrigger>
             <TabsTrigger
-              value='exam-only'
-              onClick={() => changeLayoutMode('exam-only')}
-              className='transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground'
+              value="exam-only"
+              onClick={() => changeLayoutMode("exam-only")}
+              className="transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
-                  <TooltipTrigger asChild className='z-40'>
+                  <TooltipTrigger asChild className="z-40">
                     <IconLayoutSidebarRight />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
-                    <p>{getTranslation('examOnly')}</p>
+                    <p>{getTranslation("examOnly")}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
