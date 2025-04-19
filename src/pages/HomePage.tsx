@@ -71,7 +71,7 @@ export default function HomePage() {
                 focusInput
                   ? "border-primary ring-1 ring-primary"
                   : "hover:border-foreground/40"
-              } bg-background/5 dark:bg-foreground/5 rounded-md transition-all duration-200 text-sm text-foreground/80 outline-none`}
+              } bg-background/5 dark:bg-foreground/5 rounded-full transition-all duration-200 text-sm text-foreground/80 outline-none`}
             >
               <MainInput setFocusInput={setFocusInput} />
             </div>

@@ -62,7 +62,7 @@ const InlineRecentActivity = () => {
   if (recentActivities.length === 0) return null;
 
   return (
-    <div className="w-full pt-2 bg-secondary p-4 rounded-md border">
+    <div className="w-full pt-2 bg-secondary p-4 rounded-2xl border">
       <p className="text-sm text-muted-foreground mt-2">
         {getTranslation("continueWhereYouLeftOff")}
       </p>
@@ -71,7 +71,7 @@ const InlineRecentActivity = () => {
           <Link
             key={activity.path}
             to={activity.path}
-            className="flex items-center gap-2 bg-foreground/10 group text-sm px-3 py-2 duration-200 rounded-md whitespace-nowrap"
+            className="flex items-center gap-2 bg-foreground/10 group text-sm px-3 py-2 duration-200 rounded-xl whitespace-nowrap"
           >
             <span className="font-normal text-xs">{activity.courseCode}</span>
             <Clock className="w-3 h-3 text-black/60 dark:text-white/60" />
