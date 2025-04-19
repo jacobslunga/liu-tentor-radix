@@ -4,7 +4,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations, { Language } from "@/util/translations";
 import { SquareLibrary, Upload } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import SettingsDialog from "@/components/SettingsDialog";
 import InlineRecentActivity from "@/components/InlineRecentActivity";

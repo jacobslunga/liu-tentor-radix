@@ -1,49 +1,43 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useLanguage } from '@/context/LanguageContext';
-import { supabase } from '@/supabase/supabaseClient';
-import translations from '@/util/translations';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { motion } from 'framer-motion';
-import { SquareLibrary } from 'lucide-react';
-import { FC, useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
-import { z } from 'zod';
-import { Helmet } from 'react-helmet';
-import {
-  ArrowLeft,
-  AlertCircle,
-  MessageCircle,
-  CheckCircle,
-} from 'lucide-react';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useLanguage } from "@/context/LanguageContext";
+import { supabase } from "@/supabase/supabaseClient";
+import translations from "@/util/translations";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { motion } from "framer-motion";
+import { FC, useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { z } from "zod";
+import { Helmet } from "react-helmet-async";
+import { AlertCircle, MessageCircle, CheckCircle } from "lucide-react";
+import PageHeader from "@/components/PageHeader";
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
   message: z
     .string()
-    .min(10, { message: 'Meddelande måste innehålla minst 10 symboler' })
+    .min(10, { message: "Meddelande måste innehålla minst 10 symboler" })
     .max(500),
   name: z.string().optional(),
   liu_mail: z
     .string()
-    .email({ message: 'Ogiltig e-postadress' })
+    .email({ message: "Ogiltig e-postadress" })
     .regex(/^[a-z]{4,6}[0-9]{3}@student\.liu\.se$/, {
-      message: 'Endast LiU studentmail tillåten',
+      message: "Endast LiU studentmail tillåten",
     })
-    .min(1, { message: 'LiU email är obligatoriskt' }),
+    .min(1, { message: "LiU email är obligatoriskt" }),
 });
 
 const FeedbackPage: FC = () => {
-  const navigate = useNavigate();
   const { language } = useLanguage();
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
@@ -56,16 +50,16 @@ const FeedbackPage: FC = () => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      message: '',
-      name: '',
-      partOfWebsite: '',
-      liu_mail: '',
+      message: "",
+      name: "",
+      partOfWebsite: "",
+      liu_mail: "",
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const { error } = await supabase.from('feedback').insert([
+      const { error } = await supabase.from("feedback").insert([
         {
           name: values.name,
           message: values.message,
@@ -85,7 +79,7 @@ const FeedbackPage: FC = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }, []);
 
@@ -93,54 +87,37 @@ const FeedbackPage: FC = () => {
     isRequired = false,
     children,
   }) => (
-    <div className='flex items-center justify-between mb-2'>
-      <span className='text-sm font-normal'>{children}</span>
-      <span className='text-sm text-muted-foreground'>
+    <div className="flex items-center justify-between mb-2">
+      <span className="text-sm font-normal">{children}</span>
+      <span className="text-sm text-muted-foreground">
         {isRequired ? (
-          <span className='text-destructive'>*</span>
+          <span className="text-destructive">*</span>
         ) : (
-          getTranslation('nameDescription')
+          getTranslation("nameDescription")
         )}
       </span>
     </div>
   );
 
   return (
-    <div className='min-h-screen bg-background/50 flex flex-col'>
+    <div className="min-h-screen bg-background/50 flex flex-col">
       <Helmet>
-        <title>LiU Tentor | {getTranslation('feedbackTitle')}</title>
+        <title>LiU Tentor | {getTranslation("feedbackTitle")}</title>
       </Helmet>
 
-      {/* Header */}
-      <div className='bg-background py-4 mx-auto container max-w-2xl flex flex-row items-center justify-between'>
-        <Link
-          to='/'
-          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
-        >
-          <SquareLibrary className='text-primary h-7 w-7' />
-          <h1 className='text-xl text-foreground/80 font-logo'>
-            {getTranslation('homeTitle')}
-          </h1>
-        </Link>
-
-        <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {language === 'sv' ? 'Tillbaka' : 'Back'}
-        </Button>
-      </div>
-
-      <div className='container max-w-2xl mx-auto px-4 py-16 flex-grow'>
+      <div className="container max-w-2xl mx-auto px-4 py-16 flex-grow">
         {/* Page Title */}
-        <div className='relative w-full flex flex-col items-center mb-10'>
-          <div className='absolute -top-10 left-1/2 -translate-x-1/2 w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center'>
-            <MessageCircle className='text-primary h-10 w-10' />
+        <PageHeader />
+        <div className="relative w-full flex flex-col items-center mb-10">
+          <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+            <MessageCircle className="text-primary h-10 w-10" />
           </div>
 
-          <h1 className='text-3xl text-foreground/80 font-semibold text-center mt-10 mb-4'>
-            {getTranslation('feedbackTitle')}
+          <h1 className="text-3xl text-foreground/80 font-semibold text-center mt-10 mb-4">
+            {getTranslation("feedbackTitle")}
           </h1>
-          <p className='text-lg text-muted-foreground text-center max-w-xl'>
-            {getTranslation('feedbackDescription')}
+          <p className="text-lg text-muted-foreground text-center max-w-xl">
+            {getTranslation("feedbackDescription")}
           </p>
         </div>
 
@@ -149,41 +126,41 @@ const FeedbackPage: FC = () => {
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className='bg-card border border-border/40 rounded-lg p-8 shadow-sm'
+            className="bg-card border border-border/40 rounded-lg p-8 shadow-sm"
           >
             {isSuccess ? (
-              <div className='flex flex-col items-center gap-6 text-center'>
-                <div className='w-16 h-16 rounded-full bg-green-100 flex items-center justify-center'>
-                  <CheckCircle className='h-10 w-10 text-green-600' />
+              <div className="flex flex-col items-center gap-6 text-center">
+                <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
+                  <CheckCircle className="h-10 w-10 text-green-600" />
                 </div>
                 <div>
-                  <h2 className='text-2xl font-medium mb-2'>
-                    {getTranslation('feedbackSuccessTitle') || 'Thank you!'}
+                  <h2 className="text-2xl font-medium mb-2">
+                    {getTranslation("feedbackSuccessTitle") || "Thank you!"}
                   </h2>
-                  <p className='text-foreground/80'>
-                    {getTranslation('feedbackSuccessMessage')}
+                  <p className="text-foreground/80">
+                    {getTranslation("feedbackSuccessMessage")}
                   </p>
                 </div>
                 <Button>
-                  <Link to='/'>{getTranslation('homeButton')}</Link>
+                  <Link to="/">{getTranslation("homeButton")}</Link>
                 </Button>
               </div>
             ) : (
-              <div className='flex flex-col items-center gap-6 text-center'>
-                <div className='w-16 h-16 rounded-full bg-red-100 flex items-center justify-center'>
-                  <AlertCircle className='h-10 w-10 text-red-600' />
+              <div className="flex flex-col items-center gap-6 text-center">
+                <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+                  <AlertCircle className="h-10 w-10 text-red-600" />
                 </div>
                 <div>
-                  <h2 className='text-2xl font-medium mb-2'>
-                    {getTranslation('feedbackErrorTitle') ||
-                      'Something went wrong'}
+                  <h2 className="text-2xl font-medium mb-2">
+                    {getTranslation("feedbackErrorTitle") ||
+                      "Something went wrong"}
                   </h2>
-                  <p className='text-foreground/80'>
-                    {getTranslation('feedbackErrorMessage')}
+                  <p className="text-foreground/80">
+                    {getTranslation("feedbackErrorMessage")}
                   </p>
                 </div>
                 <Button onClick={() => setIsSuccess(null)}>
-                  {getTranslation('tryAgainButton')}
+                  {getTranslation("tryAgainButton")}
                 </Button>
               </div>
             )}
@@ -192,22 +169,22 @@ const FeedbackPage: FC = () => {
 
         {/* Form */}
         {isSuccess === null && (
-          <div className='bg-card border border-border/40 rounded-lg p-6 md:p-8 shadow-sm'>
+          <div className="bg-card border border-border/40 rounded-lg p-6 md:p-8 shadow-sm">
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className='space-y-6'
+                className="space-y-6"
               >
-                <div className='space-y-5'>
+                <div className="space-y-5">
                   <FormField
                     control={form.control}
-                    name='name'
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{getTranslation('nameLegend')}</FormLabel>
+                        <FormLabel>{getTranslation("nameLegend")}</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={getTranslation('namePlaceholder')}
+                            placeholder={getTranslation("namePlaceholder")}
                             {...field}
                           />
                         </FormControl>
@@ -218,18 +195,18 @@ const FeedbackPage: FC = () => {
 
                   <FormField
                     control={form.control}
-                    name='liu_mail'
+                    name="liu_mail"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel isRequired>LiU Mail</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder={getTranslation('emailPlaceholder')}
+                            placeholder={getTranslation("emailPlaceholder")}
                             {...field}
                           />
                         </FormControl>
                         <FormMessage />
-                        <p className='text-xs text-muted-foreground mt-1'>
+                        <p className="text-xs text-muted-foreground mt-1">
                           Format: liuid123@student.liu.se
                         </p>
                       </FormItem>
@@ -238,16 +215,16 @@ const FeedbackPage: FC = () => {
 
                   <FormField
                     control={form.control}
-                    name='partOfWebsite'
+                    name="partOfWebsite"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          {getTranslation('partOfWebsiteLegend')}
+                          {getTranslation("partOfWebsiteLegend")}
                         </FormLabel>
                         <FormControl>
                           <Input
                             placeholder={getTranslation(
-                              'partOfWebsitePlaceholder'
+                              "partOfWebsitePlaceholder"
                             )}
                             {...field}
                           />
@@ -259,21 +236,21 @@ const FeedbackPage: FC = () => {
 
                   <FormField
                     control={form.control}
-                    name='message'
+                    name="message"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel isRequired>
-                          {getTranslation('messageLegend')}
+                          {getTranslation("messageLegend")}
                         </FormLabel>
                         <FormControl>
                           <Textarea
-                            placeholder={getTranslation('messagePlaceholder')}
-                            className='min-h-[150px] resize-none'
+                            placeholder={getTranslation("messagePlaceholder")}
+                            className="min-h-[150px] resize-none"
                             {...field}
                           />
                         </FormControl>
                         <FormMessage />
-                        <p className='text-xs text-muted-foreground mt-1'>
+                        <p className="text-xs text-muted-foreground mt-1">
                           Minimum 10 characters
                         </p>
                       </FormItem>
@@ -281,13 +258,13 @@ const FeedbackPage: FC = () => {
                   />
                 </div>
 
-                <div className='space-y-4 pt-2'>
-                  <p className='text-sm text-muted-foreground'>
-                    <span className='text-destructive'>*</span>{' '}
-                    {getTranslation('requiredField')}
+                <div className="space-y-4 pt-2">
+                  <p className="text-sm text-muted-foreground">
+                    <span className="text-destructive">*</span>{" "}
+                    {getTranslation("requiredField")}
                   </p>
-                  <Button type='submit' className='w-full'>
-                    {getTranslation('submitButton')}
+                  <Button type="submit" className="w-full">
+                    {getTranslation("submitButton")}
                   </Button>
                 </div>
               </form>

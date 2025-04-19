@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { fetchExamsByCourseCode } from "@/lib/fetchers";
 import translations from "@/util/translations";
 import React, { useEffect, useMemo, useState } from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
 import MobileExamList from "@/components/MobileExamList";

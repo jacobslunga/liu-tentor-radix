@@ -1,12 +1,12 @@
-import { Exam } from '@/components/data-table/columns';
-import ExamHeader from '@/components/ExamHeader';
-import { isFacit } from '@/components/PDF/utils';
-import PDFModal from '@/components/PDFModal';
-import { supabase } from '@/supabase/supabaseClient';
-import { FC, useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
-import { useNavigate, useParams } from 'react-router-dom';
-import useSWR from 'swr';
+import { Exam } from "@/components/data-table/columns";
+import ExamHeader from "@/components/ExamHeader";
+import { isFacit } from "@/components/PDF/utils";
+import PDFModal from "@/components/PDFModal";
+import { supabase } from "@/supabase/supabaseClient";
+import { FC, useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
+import { useNavigate, useParams } from "react-router-dom";
+import useSWR from "swr";
 
 export const extractDateStringFromName = (name: string) => {
   const patterns = [
@@ -20,18 +20,18 @@ export const extractDateStringFromName = (name: string) => {
   ];
 
   const monthMap: Record<string, string> = {
-    jan: '01',
-    feb: '02',
-    mar: '03',
-    apr: '04',
-    maj: '05',
-    jun: '06',
-    jul: '07',
-    aug: '08',
-    sep: '09',
-    okt: '10',
-    nov: '11',
-    dec: '12',
+    jan: "01",
+    feb: "02",
+    mar: "03",
+    apr: "04",
+    maj: "05",
+    jun: "06",
+    jul: "07",
+    aug: "08",
+    sep: "09",
+    okt: "10",
+    nov: "11",
+    dec: "12",
   };
 
   for (const pattern of patterns) {
@@ -39,38 +39,38 @@ export const extractDateStringFromName = (name: string) => {
     if (!match) continue;
 
     let year: string,
-      month: string = '01',
-      day: string = '01';
+      month: string = "01",
+      day: string = "01";
 
-    if (match[0].startsWith('ht')) {
+    if (match[0].startsWith("ht")) {
       year = `20${match[1]}`;
-      month = '12';
-    } else if (match[0].startsWith('vt')) {
+      month = "12";
+    } else if (match[0].startsWith("vt")) {
       year = `20${match[1]}`;
-      month = '01';
-    } else if (match[0].includes('t')) {
+      month = "01";
+    } else if (match[0].includes("t")) {
       year = match[2];
-      month = match[1] === '1' ? '01' : '06';
+      month = match[1] === "1" ? "01" : "06";
     } else {
       year = match[1];
-      month = match[2] || '01';
-      day = match[3] || '01';
+      month = match[2] || "01";
+      day = match[3] || "01";
 
       if (year.length === 2) year = `20${year}`;
       if (monthMap[month]) month = monthMap[month];
     }
 
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
   }
 
-  return 'Unknown Date';
+  return "Unknown Date";
 };
 
 const fetchExamByTentaId = async (tenta_id: string) => {
   const { data, error } = await supabase
-    .from('tentor')
-    .select('*')
-    .eq('id', tenta_id)
+    .from("tentor")
+    .select("*")
+    .eq("id", tenta_id)
     .single();
 
   if (error) {
@@ -82,9 +82,9 @@ const fetchExamByTentaId = async (tenta_id: string) => {
 
 const fetchExamsByCourseCode = async (courseCode: string) => {
   const { data, error } = await supabase
-    .from('tentor')
-    .select('*')
-    .eq('kurskod', courseCode);
+    .from("tentor")
+    .select("*")
+    .eq("kurskod", courseCode);
 
   if (error) {
     throw error;
@@ -102,21 +102,21 @@ const fetchExamsByCourseCode = async (courseCode: string) => {
 };
 
 const formatDate = (dateString: any) => {
-  if (typeof dateString !== 'string') {
-    return '';
+  if (typeof dateString !== "string") {
+    return "";
   }
 
-  const isoDateString = dateString.replace(' ', 'T');
+  const isoDateString = dateString.replace(" ", "T");
   const date = new Date(isoDateString);
 
   if (isNaN(date.getTime())) {
-    return '';
+    return "";
   }
 
-  return new Intl.DateTimeFormat('sv-SE', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+  return new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   }).format(date);
 };
 
@@ -134,7 +134,7 @@ const TentaPage: FC = () => {
   const [selectedExam, setSelectedExam] = useState<any>(null);
 
   if (!courseCode || !tenta_id) {
-    navigate('/');
+    navigate("/");
     return null;
   }
 
@@ -155,17 +155,17 @@ const TentaPage: FC = () => {
 
   if (!selectedExam) return;
 
-  const formattedCourseCode = courseCode ? courseCode.toUpperCase() : '';
+  const formattedCourseCode = courseCode ? courseCode.toUpperCase() : "";
   const title = `${formattedCourseCode}(${extractDateStringFromName(
     selectedExam.tenta_namn
   )}) - LiU Tentor`;
   const description = `Tentor för kursen ${formattedCourseCode} med tenta ID ${tenta_id} från Linköpings universitet.`;
 
   return (
-    <div className='flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden'>
+    <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <ExamHeader
         tenta_namn={
-          selectedExam?.tenta_namn.replace('.pdf', '') || 'Unknown Exam'
+          selectedExam?.tenta_namn.replace(".pdf", "") || "Unknown Exam"
         }
         currentExamId={tenta_id}
         exams={exams?.filter((e) => !isFacit(e.tenta_namn))}
@@ -179,13 +179,13 @@ const TentaPage: FC = () => {
       />
       <Helmet>
         <title>{title}</title>
-        <meta name='description' content={description} />
-        <meta property='og:title' content={title} />
-        <meta property='og:description' content={description} />
-        <meta property='og:type' content='article' />
-        <meta name='twitter:card' content='summary_large_image' />
-        <meta name='twitter:title' content={title} />
-        <meta name='twitter:description' content={description} />
+        <meta name="description" content={description} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
       </Helmet>
       {error && <div>Error loading exams: {error.message}</div>}
       {!exams ? (

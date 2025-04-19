@@ -1,0 +1,17 @@
+export const breadcrumbMap = {
+  "/": { sv: "Hem", en: "Home" },
+  "/upload-info": { sv: "Ladda upp info", en: "Upload Info" },
+  "/kontakt": { sv: "Kontakt", en: "Contact" },
+  "/feedback": { sv: "Feedback", en: "Feedback" },
+  "/privacy-policy": { sv: "Integritetspolicy", en: "Privacy Policy" },
+  "/upload-exams": { sv: "Ladda upp tentor", en: "Upload Exams" },
+  "/om-oss": { sv: "Om oss", en: "About Us" },
+  "/admin/dashboard/add-exams": { sv: "Lägg till tentor", en: "Add Exams" },
+  "/admin/dashboard/review": { sv: "Granska tentor", en: "Review Exams" },
+  "/admin/dashboard/remove-exams": { sv: "Ta bort tentor", en: "Remove Exams" },
+  "/admin/login": { sv: "Admin Login", en: "Admin Login" },
+  "/search": { sv: "Sök", en: "Search" },
+  "/search/:courseCode": { sv: "Sökresultat", en: "Search Results" },
+  "/search/:courseCode/:tenta_id": { sv: "Tenta", en: "Exam" },
+  "/faq": { sv: "Vanliga Frågor", en: "FAQ" },
+};

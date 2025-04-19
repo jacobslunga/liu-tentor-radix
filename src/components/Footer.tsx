@@ -15,7 +15,6 @@ const Footer: FC = () => {
       title: language === "sv" ? "Sidor" : "Pages",
       links: [
         { name: getTranslation("homeLink"), href: "/" },
-        // { name: 'Partners', href: '/partners' },
         { name: "Om oss", href: "/om-oss" },
       ],
     },
@@ -30,6 +29,7 @@ const Footer: FC = () => {
       links: [
         { name: getTranslation("contactLink"), href: "/kontakt" },
         { name: "Feedback", href: "/feedback" },
+        { name: language === "sv" ? "Vanliga frågor" : "FAQ", href: "/faq" },
       ],
     },
   ];

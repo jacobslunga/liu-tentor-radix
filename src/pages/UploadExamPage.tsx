@@ -4,10 +4,9 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import { supabase } from "@/supabase/supabaseClient";
-import { SquareLibrary } from "lucide-react";
 import { useDropzone } from "react-dropzone";
-import { Link, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet";
+import { useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import translations from "@/util/translations";
 import {
   ArrowLeft,
@@ -113,24 +112,19 @@ const UploadExamPage = () => {
         <title>{t.uploadTitle} | LiU Tentor</title>
       </Helmet>
 
-      <div className="bg-background py-4 mx-auto container max-w-2xl flex flex-row items-center justify-between">
-        <Link
-          to="/"
-          className="flex items-center gap-2 hover:opacity-90 transition-opacity"
-        >
-          <SquareLibrary className="text-primary h-7 w-7" />
-          <h1 className="text-xl text-foreground/80 font-logo">
-            {t.homeTitle}
-          </h1>
-        </Link>
-
-        <Button variant="outline" size="sm" onClick={() => navigate(-1)}>
-          <ArrowLeft className="h-4 w-4" />
-          {t.goBack}
-        </Button>
-      </div>
-
       <div className="container max-w-2xl mx-auto px-4 py-12 space-y-6 text-center">
+        <div className="flex flex-row items-center justify-start space-x-2 w-full">
+          <Button
+            onClick={() => navigate(-1)}
+            variant="outline"
+            className="mr-5"
+            size="sm"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            {language === "sv" ? "Tillbaka" : "Back"}
+          </Button>
+        </div>
+
         <Upload className="text-primary h-12 w-12 mx-auto" />
         <h1 className="text-3xl text-foreground/80 font-semibold">
           {t.uploadTitle}
@@ -143,11 +137,7 @@ const UploadExamPage = () => {
             placeholder={t.courseCodePlaceholder}
             value={kurskod}
             onChange={(e) => setKurskod(e.target.value)}
-            className="py-3 h-12 font-medium"
             disabled={loading}
-            style={{
-              fontSize: "1rem",
-            }}
           />
 
           <div

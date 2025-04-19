@@ -4,11 +4,11 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from 'react';
-import { Helmet } from 'react-helmet';
+} from "react";
+import { Helmet } from "react-helmet-async";
 
-type BaseTheme = 'light' | 'dark' | 'paper' | 'system';
-type EffectiveTheme = 'light' | 'dark' | 'paper-light' | 'paper-dark';
+type BaseTheme = "light" | "dark" | "paper" | "system";
+type EffectiveTheme = "light" | "dark" | "paper-light" | "paper-dark";
 
 interface ThemeContextProps {
   theme: BaseTheme;
@@ -22,7 +22,7 @@ const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
@@ -31,17 +31,17 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [theme, setTheme] = useState<BaseTheme>(() => {
-    const storedTheme = localStorage.getItem('theme');
-    return storedTheme ? (storedTheme as BaseTheme) : 'system';
+    const storedTheme = localStorage.getItem("theme");
+    return storedTheme ? (storedTheme as BaseTheme) : "system";
   });
 
-  const [effectiveTheme, setEffectiveTheme] = useState<EffectiveTheme>('light');
-  const themes: BaseTheme[] = ['light', 'dark', 'system', 'paper'];
+  const [effectiveTheme, setEffectiveTheme] = useState<EffectiveTheme>("light");
+  const themes: BaseTheme[] = ["light", "dark", "system", "paper"];
 
   const getSystemTheme = () =>
-    window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? 'dark'
-      : 'light';
+    window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -49,20 +49,20 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
 
     const applyTheme = (baseTheme: BaseTheme) => {
       let appliedTheme: EffectiveTheme;
-      root.className = '';
-      body.className = '';
+      root.className = "";
+      body.className = "";
 
-      if (baseTheme === 'system') {
+      if (baseTheme === "system") {
         appliedTheme = getSystemTheme();
         root.className = appliedTheme;
         body.className = appliedTheme;
-      } else if (baseTheme === 'paper') {
-        root.classList.add('paper');
-        if (getSystemTheme() === 'dark') {
-          root.classList.add('dark');
-          appliedTheme = 'paper-dark';
+      } else if (baseTheme === "paper") {
+        root.classList.add("paper");
+        if (getSystemTheme() === "dark") {
+          root.classList.add("dark");
+          appliedTheme = "paper-dark";
         } else {
-          appliedTheme = 'paper-light';
+          appliedTheme = "paper-light";
         }
       } else {
         appliedTheme = baseTheme;
@@ -76,36 +76,36 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     applyTheme(theme);
 
     const handleSystemThemeChange = (_: MediaQueryListEvent) => {
-      if (theme === 'system' || theme === 'paper') {
+      if (theme === "system" || theme === "paper") {
         applyTheme(theme);
       }
     };
 
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', handleSystemThemeChange);
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
 
     return () => {
-      mediaQuery.removeEventListener('change', handleSystemThemeChange);
+      mediaQuery.removeEventListener("change", handleSystemThemeChange);
     };
   }, [theme]);
 
   const changeTheme = (newTheme: BaseTheme) => {
     setTheme(newTheme);
-    localStorage.setItem('theme', newTheme);
+    localStorage.setItem("theme", newTheme);
   };
 
   const getFaviconUrl = (theme: EffectiveTheme) => {
     switch (theme) {
-      case 'light':
-        return '/light-favicon.svg';
-      case 'dark':
-        return '/dark-favicon.svg';
-      case 'paper-dark':
-        return '/paper-dark-favicon.svg';
-      case 'paper-light':
-        return '/paper-light-favicon.svg';
+      case "light":
+        return "/light-favicon.svg";
+      case "dark":
+        return "/dark-favicon.svg";
+      case "paper-dark":
+        return "/paper-dark-favicon.svg";
+      case "paper-light":
+        return "/paper-light-favicon.svg";
       default:
-        return '/light-favicon.svg';
+        return "/light-favicon.svg";
     }
   };
 
@@ -114,13 +114,13 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
       value={{ theme, effectiveTheme, setTheme: changeTheme, themes }}
     >
       <Helmet>
-        <link rel='icon' href={getFaviconUrl(effectiveTheme)} />
+        <link rel="icon" href={getFaviconUrl(effectiveTheme)} />
       </Helmet>
       <div
         className={
-          theme === 'paper'
-            ? `paper ${effectiveTheme.includes('dark') ? 'dark' : ''}`
-            : theme === 'system'
+          theme === "paper"
+            ? `paper ${effectiveTheme.includes("dark") ? "dark" : ""}`
+            : theme === "system"
             ? getSystemTheme()
             : theme
         }

@@ -1,50 +1,29 @@
-import { FC, useEffect } from 'react';
-import { Helmet } from 'react-helmet';
-import { Link, useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/context/LanguageContext';
-import translations, { Language } from '@/util/translations';
-import { SquareLibrary, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { FC, useEffect } from "react";
+import { Helmet } from "react-helmet-async";
+import { useLanguage } from "@/context/LanguageContext";
+import PageHeader from "@/components/PageHeader";
 
 const OmOss: FC = () => {
-  const navigate = useNavigate();
   const { language } = useLanguage();
-  const getTranslation = (key: keyof (typeof translations)[Language]) =>
-    translations[language][key] || key;
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
   return (
-    <div className='min-h-screen bg-background flex flex-col'>
+    <div className="min-h-screen bg-background flex flex-col">
       <Helmet>
         <title>LiU Tentor | Om oss</title>
       </Helmet>
 
-      <div className='container mx-auto px-4 max-w-2xl flex flex-row items-center justify-between mt-5 mb-10'>
-        <Link
-          to='/'
-          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
-        >
-          <SquareLibrary className='text-primary h-7 w-7' />
-          <h1 className='text-xl text-foreground/80 font-logo'>
-            {getTranslation('homeTitle')}
-          </h1>
-        </Link>
+      <div className="container mx-auto px-4 py-12 max-w-2xl">
+        <PageHeader />
 
-        <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {language === 'sv' ? 'Tillbaka' : 'Back'}
-        </Button>
-      </div>
-
-      <div className='container mx-auto px-4 py-12 max-w-2xl'>
-        <h1 className='text-2xl font-semibold text-foreground/90 mb-4'>
-          {language === 'sv' ? 'Om oss' : 'About Us'}
+        <h1 className="text-2xl font-semibold text-foreground/90 mb-4 mt-12">
+          {language === "sv" ? "Om oss" : "About Us"}
         </h1>
-        <div className='text-sm text-foreground/80 leading-relaxed space-y-4'>
-          {language === 'sv' ? (
+        <div className="text-sm text-foreground/80 leading-relaxed space-y-4">
+          {language === "sv" ? (
             <>
               <p>
                 LiU Tentor är ett ideellt initiativ som startades av några

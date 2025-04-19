@@ -1,89 +1,60 @@
-import { Button } from '@/components/ui/button';
-import { useLanguage } from '@/context/LanguageContext';
-import translations from '@/util/translations';
-import { SquareLibrary } from 'lucide-react';
-import { FC, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
-import { MessageCircle, ArrowLeft } from 'lucide-react';
+import { useLanguage } from "@/context/LanguageContext";
+import translations from "@/util/translations";
+import { Helmet } from "react-helmet-async";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import PageHeader from "@/components/PageHeader";
 
-const AboutPage: FC = () => {
-  const navigate = useNavigate();
+const ContactPage = () => {
   const { language } = useLanguage();
-
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
-
-  useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
+  const t = translations[language];
 
   return (
-    <div className='min-h-screen bg-background flex flex-col'>
+    <div className="min-h-screen bg-background flex flex-col">
       <Helmet>
-        <title>LiU Tentor | {getTranslation('contactLink')}</title>
+        <title>LiU Tentor | {t.contactLink}</title>
       </Helmet>
 
-      {/* Header */}
-      <div className='bg-background py-4 mx-auto container max-w-2xl flex flex-row items-center justify-between'>
-        <Link
-          to='/'
-          className='flex items-center gap-2 hover:opacity-90 transition-opacity'
-        >
-          <SquareLibrary className='text-primary h-7 w-7' />
-          <h1 className='text-xl text-foreground/80 font-logo'>
-            {getTranslation('homeTitle')}
+      <div className="container mx-auto px-4 py-6">
+        <div className="max-w-md mx-auto flex flex-col space-y-8 mt-4">
+          <PageHeader />
+
+          {/* Stor rubrik med låg opacity */}
+          <h1 className="text-6xl sm:text-7xl font-bold text-primary/80 mb-4">
+            {t.contactLink}
           </h1>
-        </Link>
 
-        <Button variant='outline' size='sm' onClick={() => navigate(-1)}>
-          <ArrowLeft className='h-4 w-4' />
-          {language === 'sv' ? 'Tillbaka' : 'Back'}
-        </Button>
-      </div>
-
-      {/* Main Content */}
-      <div className='container mx-auto px-4 py-12'>
-        <div className='max-w-md mx-auto flex flex-col space-y-8'>
-          <div className='flex flex-col items-center text-center space-y-4'>
-            <MessageCircle className='text-primary h-12 w-12' />
-
-            <h1 className='text-3xl text-foreground/80 font-semibold'>
-              {getTranslation('contactLink')}
-            </h1>
-            <p className='text-sm text-muted-foreground'>
-              {language === 'sv'
-                ? 'Har du frågor eller feedback? Kontakta oss på mejl så svarar vi så fort vi kan!'
+          {/* Kontakttext */}
+          <div className="flex flex-col items-start text-left space-y-6">
+            <p className="text-sm text-muted-foreground">
+              {language === "sv"
+                ? "Har du frågor eller feedback? Kontakta oss på mejl så svarar vi så fort vi kan!"
                 : "Have questions or feedback? Reach out via email and we'll respond as soon as possible!"}
             </p>
-          </div>
 
-          {/* Email Section */}
-          <div className='flex flex-col items-center space-y-4'>
             <Button
-              variant='default'
-              size='lg'
-              className='font-medium'
+              variant="link"
+              size="lg"
+              className="pl-0"
               onClick={() =>
-                (window.location.href = 'mailto:liutentor@gmail.com')
+                (window.location.href = "mailto:liutentor@gmail.com")
               }
             >
               liutentor@gmail.com
             </Button>
-          </div>
 
-          {/* Feedback Link */}
-          <div className='flex flex-col items-center pt-6 border-t border-border/30'>
-            <p className='text-xs text-muted-foreground mb-3'>
-              {language === 'sv'
-                ? 'Ge oss feedback direkt på webbplatsen.'
-                : 'Leave feedback directly on the website.'}
-            </p>
-            <Link to='/feedback'>
-              <Button variant='outline'>
-                {language === 'sv' ? 'Ge feedback' : 'Give feedback'}
-              </Button>
-            </Link>
+            <div className="pt-6 border-t border-border/30">
+              <p className="text-xs text-muted-foreground mb-3">
+                {language === "sv"
+                  ? "Ge oss feedback direkt på webbplatsen."
+                  : "Leave feedback directly on the website."}
+              </p>
+              <Link to="/feedback">
+                <Button variant="outline">
+                  {language === "sv" ? "Ge feedback" : "Give feedback"}
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
@@ -91,4 +62,4 @@ const AboutPage: FC = () => {
   );
 };
 
-export default AboutPage;
+export default ContactPage;

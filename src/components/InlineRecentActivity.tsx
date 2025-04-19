@@ -3,7 +3,8 @@ import translations from "@/util/translations";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import { Separator } from "@/components/ui/separator";
 
 interface RecentActivity {
   courseCode: string;
@@ -17,9 +18,23 @@ const InlineRecentActivity = () => {
   const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(
     []
   );
+  const [maxVisible, setMaxVisible] = useState(3);
 
   const COOKIE_NAME = "recentActivities_v3";
   const COOKIE_VERSION = "1.2";
+
+  useEffect(() => {
+    const updateVisible = () => {
+      const width = window.innerWidth;
+      if (width >= 1024) setMaxVisible(6); // lg
+      else if (width >= 768) setMaxVisible(5); // md
+      else setMaxVisible(4); // sm
+    };
+
+    updateVisible();
+    window.addEventListener("resize", updateVisible);
+    return () => window.removeEventListener("resize", updateVisible);
+  }, []);
 
   useEffect(() => {
     const cookieConsent = Cookies.get("cookieConsent");
@@ -38,7 +53,7 @@ const InlineRecentActivity = () => {
           decodeURIComponent(cookie)
         ) as RecentActivity[];
         const sorted = parsed.sort((a, b) => b.timestamp - a.timestamp);
-        setRecentActivities(sorted.slice(0, 3));
+        setRecentActivities(sorted.slice(0, 6));
       } catch (e) {
         console.error("Failed to parse recent activity:", e);
       }
@@ -48,38 +63,43 @@ const InlineRecentActivity = () => {
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
 
-  const getTimeAgo = (timestamp: number) => {
-    const seconds = Math.floor((Date.now() - timestamp) / 1000);
-    if (seconds < 60) return getTranslation("justNow");
-    const minutes = Math.floor(seconds / 60);
-    if (minutes < 60) return `${minutes}${getTranslation("minShort")}`;
-    const hours = Math.floor(minutes / 60);
-    if (hours < 24) return `${hours}${getTranslation("hShort")}`;
-    const days = Math.floor(hours / 24);
-    return `${days}${getTranslation("dShort")}`;
-  };
+  const visibleActivities = recentActivities.slice(0, maxVisible);
 
-  if (recentActivities.length === 0) return null;
+  if (visibleActivities.length === 0) return null;
 
   return (
-    <div className="w-full pt-2 bg-secondary p-4 rounded-2xl border">
-      <p className="text-sm text-muted-foreground mt-2">
-        {getTranslation("continueWhereYouLeftOff")}
-      </p>
-      <div className="flex gap-2 overflow-x-auto mt-2">
-        {recentActivities.map((activity) => (
-          <Link
-            key={activity.path}
-            to={activity.path}
-            className="flex items-center gap-2 bg-foreground/10 group text-sm px-3 py-2 duration-200 rounded-xl whitespace-nowrap"
-          >
-            <span className="font-normal text-xs">{activity.courseCode}</span>
-            <Clock className="w-3 h-3 text-black/60 dark:text-white/60" />
-            <span className="text-xs text-black/60 dark:text-white/60">
-              {getTimeAgo(activity.timestamp)}
-            </span>
-            <ArrowRight className="w-4 h-4 opacity-50 group-hover:translate-x-1 transition-all duration-200 group-hover:opacity-100" />
-          </Link>
+    <div className="flex flex-col w-full items-center justify-center p-5 bg-foreground/[3%] border rounded-md">
+      <div className="flex flex-col items-start justify-start w-full">
+        <p className="text-sm font-medium text-foreground/80">
+          {getTranslation("continueWhereYouLeftOff")}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {getTranslation("recentActivityDescription") ??
+            "Snabb åtkomst till dina senaste sökningar."}
+        </p>
+      </div>
+
+      <Separator className="my-4" />
+
+      <div className="flex items-center justify-start w-full space-x-4 overflow-x-auto">
+        {visibleActivities.map((activity, index) => (
+          <div key={activity.path} className="flex items-center space-x-4">
+            <Link
+              to={activity.path}
+              className="flex flex-col group rounded-md transition-colors text-xs"
+            >
+              <div className="flex items-center">
+                <span className="font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-200">
+                  {activity.courseCode}
+                </span>
+                <ArrowTopRightIcon className="w-3 h-3 ml-1 opacity-50 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-200" />
+              </div>
+            </Link>
+
+            {index < visibleActivities.length - 1 && (
+              <Separator orientation="vertical" className="h-5" />
+            )}
+          </div>
         ))}
       </div>
     </div>
