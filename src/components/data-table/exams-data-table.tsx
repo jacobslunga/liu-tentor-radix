@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -6,33 +6,43 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Check, X, ArrowRight, ArrowUpDown } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/context/LanguageContext';
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Check, X, ArrowRight, ArrowUpDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/context/LanguageContext";
 import {
   flexRender,
   useReactTable,
   getCoreRowModel,
   getFilteredRowModel,
-} from '@tanstack/react-table';
-import { useState } from 'react';
-import { Exam, getColumns, useCompletedExams } from './columns';
-import translations from '@/util/translations';
+} from "@tanstack/react-table";
+import { useState } from "react";
+import { Exam, getColumns } from "./columns";
+import translations from "@/util/translations";
+import { useCompletedExams } from "@/hooks/useCompletedExams";
 
 interface Props {
   data: Exam[];
-  title: string;
+  courseCode: string;
   description: string;
   onSortChange: () => void;
+  courseNameSwe?: string;
+  courseNameEng?: string;
 }
 
-export function DataTable({ data, title, description, onSortChange }: Props) {
+export function DataTable({
+  data,
+  courseCode,
+  description,
+  onSortChange,
+  courseNameEng,
+  courseNameSwe,
+}: Props) {
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState("");
   const { completedExams, toggleCompleted } = useCompletedExams();
 
   const columns = getColumns(
@@ -53,21 +63,26 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
     onGlobalFilterChange: setFilter,
   });
 
+  console.log(data);
+
   return (
-    <div className='w-full space-y-6 mt-10'>
+    <div className="w-full space-y-6 mt-10 max-w-screen-lg">
       <Card>
-        <CardHeader className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3'>
+        <CardHeader className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
           <div>
-            <CardTitle className='text-xl font-semibold tracking-tight'>
-              {title}
+            <Badge className="mb-2" variant="outline">
+              {courseCode}
+            </Badge>
+            <CardTitle className="text-xl font-semibold tracking-tight">
+              {language === "sv" ? courseNameSwe : courseNameEng}
             </CardTitle>
-            <p className='text-sm text-muted-foreground'>{description}</p>
+            <p className="text-sm text-muted-foreground">{description}</p>
           </div>
           <Badge>
             {data.length} {translations[language].exams}
           </Badge>
         </CardHeader>
-        <CardContent className='flex flex-col sm:flex-row gap-3'>
+        <CardContent className="flex flex-col sm:flex-row gap-3">
           <Input
             placeholder={translations[language].searchPlaceholder}
             value={filter}
@@ -77,7 +92,7 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
       </Card>
 
       <Card>
-        <CardContent className='p-0'>
+        <CardContent className="p-0">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -85,18 +100,18 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className='cursor-pointer hover:bg-muted/60 transition-all text-left'
+                      className="cursor-pointer hover:bg-muted/60 transition-all text-left"
                       onClick={() =>
-                        header.id === 'created_at' && onSortChange()
+                        header.id === "created_at" && onSortChange()
                       }
                     >
-                      <div className='flex items-center gap-1'>
+                      <div className="flex items-center gap-1">
                         {flexRender(
                           header.column.columnDef.header,
                           header.getContext()
                         )}
-                        {header.id === 'created_at' && (
-                          <ArrowUpDown className='h-4 w-4 text-muted-foreground' />
+                        {header.id === "created_at" && (
+                          <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
                         )}
                       </div>
                     </TableHead>
@@ -114,33 +129,33 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                         `/search/${row.original.kurskod}/${row.original.id}`
                       );
                     }}
-                    className='group cursor-pointer hover:bg-muted/50 transition-all'
+                    className="group cursor-pointer hover:bg-muted/50 transition-all"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className='py-3 relative'>
-                        {cell.column.id === 'hasFacit' ? (
-                          <div className='flex justify-center'>
+                      <TableCell key={cell.id} className="py-3 relative">
+                        {cell.column.id === "hasFacit" ? (
+                          <div className="flex justify-center">
                             <Badge
                               variant={
-                                row.original.hasFacit ? 'default' : 'outline'
+                                row.original.hasFacit ? "default" : "outline"
                               }
                             >
                               {row.original.hasFacit ? (
-                                <Check className='h-3 w-3' />
+                                <Check className="h-3 w-3" />
                               ) : (
-                                <X className='h-3 w-3 text-red-500' />
+                                <X className="h-3 w-3 text-red-500" />
                               )}
                             </Badge>
                           </div>
-                        ) : cell.column.id === 'tenta_namn' ? (
-                          <div className='flex items-center font-medium justify-start group-hover:text-primary transition-colors'>
+                        ) : cell.column.id === "tenta_namn" ? (
+                          <div className="flex items-center font-medium justify-start group-hover:text-primary transition-colors">
                             <span>
                               {flexRender(
                                 cell.column.columnDef.cell,
                                 cell.getContext()
                               )}
                             </span>
-                            <ArrowRight className='h-4 w-4 ml-5 text-primary opacity-0 transition-all transform -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0' />
+                            <ArrowRight className="h-4 w-4 ml-5 text-primary opacity-0 transition-all transform -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />
                           </div>
                         ) : (
                           flexRender(
@@ -156,7 +171,7 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className='h-24 text-center text-muted-foreground'
+                    className="h-24 text-center text-muted-foreground"
                   >
                     {translations[language].noResults}
                   </TableCell>
@@ -167,7 +182,7 @@ export function DataTable({ data, title, description, onSortChange }: Props) {
         </CardContent>
       </Card>
 
-      <div className='sm:hidden text-center text-xs text-muted-foreground'>
+      <div className="sm:hidden text-center text-xs text-muted-foreground">
         {translations[language].scrollHint}
       </div>
     </div>

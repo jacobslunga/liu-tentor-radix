@@ -1,19 +1,24 @@
-import { AuthProvider } from '@/context/AuthContext';
-import { LanguageProvider } from '@/context/LanguageContext';
-import { ShowGlobalSearchProvider } from '@/context/ShowGlobalSearchContext';
-import { TextSizeProvider } from '@/context/TextSizeContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { AuthProvider } from "@/context/AuthContext";
+import { LanguageProvider } from "@/context/LanguageContext";
+import { ShowGlobalSearchProvider } from "@/context/ShowGlobalSearchContext";
+import { TextSizeProvider } from "@/context/TextSizeContext";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export default function Provider({ children }: { children: React.ReactNode }) {
+  const queryClient = new QueryClient();
+
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <TextSizeProvider>
-          <LanguageProvider>
-            <ShowGlobalSearchProvider>{children}</ShowGlobalSearchProvider>
-          </LanguageProvider>
-        </TextSizeProvider>
-      </ThemeProvider>
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <ThemeProvider>
+          <TextSizeProvider>
+            <LanguageProvider>
+              <ShowGlobalSearchProvider>{children}</ShowGlobalSearchProvider>
+            </LanguageProvider>
+          </TextSizeProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </QueryClientProvider>
   );
 }

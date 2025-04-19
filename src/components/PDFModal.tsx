@@ -400,10 +400,7 @@ const PDFModal: FC<PDFModalProps> = ({
 
   const facitVariants = { hidden: { x: "100%" }, visible: { x: "0%" } };
   const shouldFacitPanelBeVisible = isHoveringFacitPanel || isToggled;
-  const facitPanelOpacity =
-    shouldFacitPanelBeVisible && (isMouseActive || isHoveringFacitPanel)
-      ? 1
-      : 0;
+  const facitPanelOpacity = shouldFacitPanelBeVisible ? 1 : 0;
 
   useEffect(() => {
     if (layoutMode === "exam-only") {

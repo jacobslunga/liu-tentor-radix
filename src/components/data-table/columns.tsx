@@ -1,13 +1,8 @@
-import { Checkbox } from '@/components/ui/checkbox';
-import { useLanguage } from '@/context/LanguageContext';
-import { Language, Translations } from '@/util/translations';
-import { ColumnDef } from '@tanstack/react-table';
-import Cookies from 'js-cookie';
-import { useEffect, useState } from 'react';
-import { toast } from 'sonner';
-import translations from '@/util/translations';
-import { Check, X } from 'lucide-react';
-import { ExamStatsDialog } from '../ExamStatsDialog';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Language, Translations } from "@/util/translations";
+import { ColumnDef } from "@tanstack/react-table";
+import { useState } from "react";
+import { ExamStatsDialog } from "../ExamStatsDialog";
 
 export type Exam = {
   document_id: string;
@@ -29,54 +24,66 @@ export const getColumns = (
   toggleCompleted: (id: number) => void
 ): ColumnDef<Exam, any>[] => [
   {
-    id: 'completed',
+    id: "completed",
     header: translations[language].completed,
-    cell: ({ row }) => {
-      return (
-        <Checkbox
-          checked={completedExams[row.original.id]}
-          onCheckedChange={() => toggleCompleted(row.original.id)}
-          onClick={(e) => e.stopPropagation()}
-        />
-      );
-    },
+    cell: ({ row }) => (
+      <Checkbox
+        checked={completedExams[row.original.id]}
+        onCheckedChange={() => toggleCompleted(row.original.id)}
+        onClick={(e) => e.stopPropagation()}
+      />
+    ),
   },
   {
-    accessorKey: 'tenta_namn',
+    accessorKey: "tenta_namn",
     header: translations[language].examName,
+    cell: ({ row }) => (
+      <div className="truncate max-w-[220px]">{row.original.tenta_namn}</div>
+    ),
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: "created_at",
     header: translations[language].createdAt,
   },
   {
-    accessorKey: 'hasFacit',
+    accessorKey: "hasFacit",
     header: translations[language].hasFacit,
+    cell: ({ row }) => (
+      <div className="flex justify-center">
+        <span
+          className={`text-sm font-medium ${
+            row.original.hasFacit
+              ? "text-green-600 dark:text-green-400"
+              : "text-red-500"
+          }`}
+        >
+          {row.original.hasFacit ? "✓" : "–"}
+        </span>
+      </div>
+    ),
   },
   {
-    id: 'approvalRate',
-    header: translations[language].passedCount || 'Godkända',
+    id: "approvalRate",
+    header: translations[language].passedCount || "Godkända",
     cell: ({ row }) => {
       const dist = row.original.gradeDistribution;
       const approvalRate = row.original.passedCount;
 
-      if (!dist || approvalRate === undefined) return '–';
+      if (!dist || approvalRate === undefined) return "–";
 
-      let color = 'text-orange-500 dark:text-orange-400';
+      let color = "text-orange-500 dark:text-orange-400";
       if (approvalRate >= 70)
-        color = 'text-green-600 dark:text-green-400 font-semibold';
+        color = "text-green-600 dark:text-green-400 font-semibold";
       else if (approvalRate < 30)
-        color = 'text-red-600 dark:text-red-400 font-semibold';
+        color = "text-red-600 dark:text-red-400 font-semibold";
 
       const [hovered, setHovered] = useState(false);
 
       return (
         <div
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-          onMouseEnter={() => setHovered(true)} // Hover start
-          onMouseLeave={() => setHovered(false)} // Hover end
+          onClick={(e) => e.stopPropagation()}
+          onMouseEnter={() => setHovered(true)}
+          onMouseLeave={() => setHovered(false)}
         >
           {hovered && dist ? (
             <ExamStatsDialog
@@ -100,58 +107,3 @@ export const getColumns = (
     },
   },
 ];
-
-export const useCompletedExams = () => {
-  const { language } = useLanguage();
-
-  const [completedExams, setCompletedExamsState] = useState<
-    Record<number, boolean>
-  >(() => {
-    const cookieConsent = Cookies.get('cookieConsent');
-    if (cookieConsent === 'true') {
-      const stored = Cookies.get('completedExams');
-      return stored ? JSON.parse(stored) : {};
-    }
-    return {};
-  });
-
-  useEffect(() => {
-    const cookieConsent = Cookies.get('cookieConsent');
-    if (cookieConsent === 'true') {
-      Cookies.set('completedExams', JSON.stringify(completedExams), {
-        secure: true,
-        domain:
-          window.location.hostname === 'liutentor.se'
-            ? '.liutentor.se'
-            : undefined,
-        sameSite: 'Lax',
-        expires: 365 * 100,
-      });
-    }
-  }, [completedExams]);
-
-  const toggleCompleted = (id: number) => {
-    setCompletedExamsState((prev) => {
-      const newCompletedState = !prev[id];
-
-      const message = newCompletedState
-        ? translations[language]['markedAsCompleted']
-        : translations[language]['unMarkedAsCompleted'];
-      toast(message, {
-        description: newCompletedState ? translations[language]['goodJob'] : '',
-        icon: newCompletedState ? (
-          <Check className='w-5 h-5 text-primary' />
-        ) : (
-          <X className='w-5 h-5 text-red-500' />
-        ),
-      });
-
-      return {
-        ...prev,
-        [id]: newCompletedState,
-      };
-    });
-  };
-
-  return { completedExams, toggleCompleted };
-};
