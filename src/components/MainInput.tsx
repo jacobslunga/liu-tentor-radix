@@ -230,18 +230,17 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
         )}
       </div>
 
-      {isLoading && (
-        <div className="mt-2 text-sm text-muted-foreground">
-          Laddar kurser...
-        </div>
-      )}
-
       {showSuggestions &&
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
             className="absolute w-full mt-3 bg-background border shadow-xl z-[60] max-h-72 rounded-md overflow-y-auto text-sm"
           >
+            {isLoading && (
+              <div className="mt-2 absolute left-3 text-sm text-muted-foreground">
+                Laddar kurser...
+              </div>
+            )}
             {recentSearches.length > 0 && (
               <>
                 <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium tracking-tight">

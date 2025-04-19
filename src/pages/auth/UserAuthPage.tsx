@@ -1,46 +1,46 @@
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { Button } from '@/components/ui/button';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SquareLibrary } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { useLanguage } from '@/context/LanguageContext';
-import translations from '@/util/translations';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '@/supabase/supabaseClient';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { SquareLibrary } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useLanguage } from "@/context/LanguageContext";
+import translations from "@/util/translations";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/supabase/supabaseClient";
 
 const authSchema = z
   .object({
     liu_mail: z
       .string()
-      .email({ message: 'Ogiltig e-postadress' })
+      .email({ message: "Ogiltig e-postadress" })
       .regex(/^[a-z]{4,6}[0-9]{3}@student\.liu\.se$/, {
-        message: 'Endast LiU studentmail tillåten',
+        message: "Endast LiU studentmail tillåten",
       })
-      .min(1, { message: 'LiU email är obligatoriskt' }),
+      .min(1, { message: "LiU email är obligatoriskt" }),
     password: z
       .string()
-      .min(6, { message: 'Lösenordet måste innehålla minst 6 tecken' }),
+      .min(6, { message: "Lösenordet måste innehålla minst 6 tecken" }),
     confirmPassword: z
       .string()
-      .min(6, { message: 'Lösenordet måste innehålla minst 6 tecken' })
+      .min(6, { message: "Lösenordet måste innehålla minst 6 tecken" })
       .optional(),
   })
   .refine(
@@ -51,8 +51,8 @@ const authSchema = z
       return true;
     },
     {
-      message: 'Lösenorden matchar inte',
-      path: ['confirmPassword'],
+      message: "Lösenorden matchar inte",
+      path: ["confirmPassword"],
     }
   );
 
@@ -62,7 +62,7 @@ const MotionCard = motion(Card);
 const MotionFormItem = motion(FormItem);
 
 const UsersAuthPage = () => {
-  const [mode, setMode] = useState<'login' | 'signup'>('login');
+  const [mode, setMode] = useState<"login" | "signup">("login");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { language } = useLanguage();
   const navigate = useNavigate();
@@ -76,23 +76,22 @@ const UsersAuthPage = () => {
   const form = useForm<AuthFormType>({
     resolver: zodResolver(authSchema),
     defaultValues: {
-      liu_mail: '',
-      password: '',
-      confirmPassword: '',
+      liu_mail: "",
+      password: "",
+      confirmPassword: "",
     },
   });
 
   const onSubmit = async (values: AuthFormType) => {
     try {
       setErrorMessage(null);
-      console.log(values);
 
-      if (mode === 'signup' && values.password !== values.confirmPassword) {
-        setErrorMessage('Lösenorden matchar inte');
+      if (mode === "signup" && values.password !== values.confirmPassword) {
+        setErrorMessage("Lösenorden matchar inte");
         return;
       }
 
-      if (mode === 'login') {
+      if (mode === "login") {
         // Login with Supabase
         const { error } = await supabase.auth.signInWithPassword({
           email: values.liu_mail,
@@ -105,8 +104,8 @@ const UsersAuthPage = () => {
         }
 
         // Redirect to home page after successful login
-        navigate('/');
-      } else if (mode === 'signup') {
+        navigate("/");
+      } else if (mode === "signup") {
         // Signup with Supabase
         const { error } = await supabase.auth.signUp({
           email: values.liu_mail,
@@ -119,7 +118,7 @@ const UsersAuthPage = () => {
         }
 
         // Redirect to home page after successful signup
-        navigate('/');
+        navigate("/");
       }
     } catch (error: any) {
       setErrorMessage(error.message);
@@ -127,25 +126,25 @@ const UsersAuthPage = () => {
   };
 
   return (
-    <div className='flex flex-col items-center justify-center w-screen h-screen bg-background'>
+    <div className="flex flex-col items-center justify-center w-screen h-screen bg-background">
       <motion.h1
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className='text-2xl absolute top-10 lg:text-3xl font-logo tracking-tight text-center flex flex-row items-center justify-center space-x-2'
+        className="text-2xl absolute top-10 lg:text-3xl font-logo tracking-tight text-center flex flex-row items-center justify-center space-x-2"
       >
-        <SquareLibrary className='text-primary' size={32} />
+        <SquareLibrary className="text-primary" size={32} />
         <p>LiU Tentor</p>
       </motion.h1>
 
-      <div className='w-96 space-y-2'>
+      <div className="w-96 space-y-2">
         <Tabs
-          defaultValue='login'
-          className='w-full'
-          onValueChange={(value) => setMode(value as 'login' | 'signup')}
+          defaultValue="login"
+          className="w-full"
+          onValueChange={(value) => setMode(value as "login" | "signup")}
         >
-          <TabsList className='grid w-full grid-cols-2'>
-            <TabsTrigger value='login'>Logga in</TabsTrigger>
-            <TabsTrigger value='signup'>Skapa konto</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="login">Logga in</TabsTrigger>
+            <TabsTrigger value="signup">Skapa konto</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -157,21 +156,21 @@ const UsersAuthPage = () => {
         >
           <CardHeader>
             <CardTitle>
-              {mode === 'login'
-                ? getTranslation('welcome_back')
-                : getTranslation('create_account')}
+              {mode === "login"
+                ? getTranslation("welcome_back")
+                : getTranslation("create_account")}
             </CardTitle>
             <CardDescription>
-              {mode === 'login'
-                ? getTranslation('login_with_liu_mail')
-                : getTranslation('register_with_liu_mail')}
+              {mode === "login"
+                ? getTranslation("login_with_liu_mail")
+                : getTranslation("register_with_liu_mail")}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
               <motion.form
                 onSubmit={form.handleSubmit(onSubmit)}
-                className='space-y-4'
+                className="space-y-4"
               >
                 <MotionFormItem
                   layout
@@ -181,11 +180,11 @@ const UsersAuthPage = () => {
                 >
                   <FormField
                     control={form.control}
-                    name='liu_mail'
+                    name="liu_mail"
                     render={({ field }) => (
                       <FormControl>
                         <Input
-                          placeholder='LiU e-post (ex: abcde123@student.liu.se)'
+                          placeholder="LiU e-post (ex: abcde123@student.liu.se)"
                           {...field}
                         />
                       </FormControl>
@@ -202,12 +201,12 @@ const UsersAuthPage = () => {
                 >
                   <FormField
                     control={form.control}
-                    name='password'
+                    name="password"
                     render={({ field }) => (
                       <FormControl>
                         <Input
-                          type='password'
-                          placeholder='Lösenord'
+                          type="password"
+                          placeholder="Lösenord"
                           {...field}
                         />
                       </FormControl>
@@ -216,23 +215,23 @@ const UsersAuthPage = () => {
                   <FormMessage />
                 </MotionFormItem>
 
-                <AnimatePresence mode='popLayout'>
-                  {mode === 'signup' && (
+                <AnimatePresence mode="popLayout">
+                  {mode === "signup" && (
                     <MotionFormItem
                       layout
                       initial={{ opacity: 0, height: 0, y: -20 }}
-                      animate={{ opacity: 1, height: 'auto', y: 0 }}
+                      animate={{ opacity: 1, height: "auto", y: 0 }}
                       exit={{ opacity: 0, height: 0, y: -20 }}
                       transition={{ duration: 0.3 }}
                     >
                       <FormField
                         control={form.control}
-                        name='confirmPassword'
+                        name="confirmPassword"
                         render={({ field }) => (
                           <FormControl>
                             <Input
-                              type='password'
-                              placeholder='Bekräfta lösenord'
+                              type="password"
+                              placeholder="Bekräfta lösenord"
                               {...field}
                             />
                           </FormControl>
@@ -244,18 +243,18 @@ const UsersAuthPage = () => {
                 </AnimatePresence>
 
                 <motion.div layout>
-                  <Button type='submit' className='w-full'>
-                    {mode === 'login' ? 'Logga in' : 'Skapa konto'}
+                  <Button type="submit" className="w-full">
+                    {mode === "login" ? "Logga in" : "Skapa konto"}
                   </Button>
                 </motion.div>
 
-                <AnimatePresence mode='wait'>
+                <AnimatePresence mode="wait">
                   {errorMessage && (
                     <motion.p
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
-                      className='text-red-600 text-center mt-2'
+                      className="text-red-600 text-center mt-2"
                     >
                       {errorMessage}
                     </motion.p>

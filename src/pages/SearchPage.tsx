@@ -1,7 +1,6 @@
 import { Exam } from "@/components/data-table/columns";
 import { DataTable } from "@/components/data-table/exams-data-table";
 import { findFacitForExam, isFacit } from "@/components/PDF/utils";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardDescription,
@@ -11,7 +10,6 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { fetchExamsByCourseCode } from "@/lib/fetchers";
 import translations from "@/util/translations";
-import { ArrowRight } from "lucide-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link, useParams } from "react-router-dom";
@@ -21,76 +19,88 @@ import LoadingSpinner from "@/components/LoadingSpinnger";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 
-export const extractDateFromName = (name: string): Date | null => {
-  const lower = name.toLowerCase();
-  const monthMap: Record<string, string> = {
-    januari: "01",
-    februari: "02",
-    mars: "03",
-    april: "04",
-    maj: "05",
-    juni: "06",
-    juli: "07",
-    augusti: "08",
-    september: "09",
-    oktober: "10",
-    november: "11",
-    december: "12",
-  };
-
-  // Försök med direkta datumformat
-  const directPatterns = [
-    /(\d{4})[-_/](\d{2})[-_/](\d{2})/, // 2024-08-01
-    /(\d{2})[-_/](\d{2})[-_/](\d{4})/, // 01-08-2024
-    /(\d{4})(\d{2})(\d{2})/, // 20240801
-    /t(\d{2})(\d{2})(\d{2})/i, // T240601
+export const extractDateFromName = (name: string) => {
+  const patterns = [
+    /(\d{4})-(\d{2})-(\d{2})/, // YYYY-MM-DD
+    /(\d{4})(\d{2})(\d{2})/, // YYYYMMDD
+    /(\d{2})(\d{2})(\d{2})/, // YYMMDD
+    /(\d{2})_(\d{2})_(\d{2})/, // YY_MM_DD
+    /(\d{4})_(\d{2})_(\d{2})/, // YYYY_MM_DD
+    /(\d{1,2})[-/](\d{1,2})[-/](\d{4})/, // D-M-YYYY or D/M/YYYY
+    /(\d{4})[-/](\d{1,2})[-/](\d{1,2})/, // YYYY-M-D or YYYY/M/D
+    /(?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*[-_](\d{2,4})/, // month-YY[YY]
+    /(\d{2,4})[-_](?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*/, // YY[YY]-month
+    /T?(\d{1,2})[-_](\d{4})/, // T1-2024 or 1-2024 (term format)
+    /HT(\d{2})/, // HT23 (fall term)
+    /VT(\d{2})/, // VT24 (spring term)
   ];
 
-  for (const pattern of directPatterns) {
-    const match = lower.match(pattern);
-    if (match) {
-      const [_, a, b, c] = match;
-      const y = a.length === 4 ? a : `20${a}`;
-      const m = a.length === 4 ? b : a;
-      const d = a.length === 4 ? c : b;
-      const date = new Date(`${y}-${m}-${d}`);
+  const monthMap: Record<string, string> = {
+    jan: "01",
+    feb: "02",
+    mar: "03",
+    apr: "04",
+    maj: "05",
+    jun: "06",
+    jul: "07",
+    aug: "08",
+    sep: "09",
+    okt: "10",
+    nov: "11",
+    dec: "12",
+  };
+
+  for (const pattern of patterns) {
+    const match = name.toLowerCase().match(pattern);
+    if (!match) continue;
+
+    try {
+      let year, month, day;
+
+      if (match[0].startsWith("ht")) {
+        year = `20${match[1]}`;
+        month = "12";
+        day = "01";
+      } else if (match[0].startsWith("vt")) {
+        year = `20${match[1]}`;
+        month = "01";
+        day = "01";
+      } else if (match[0].includes("t")) {
+        year = match[2];
+        month = match[1] === "1" ? "01" : "06";
+        day = "01";
+      } else {
+        year = match[1];
+        month = match[2];
+        day = match[3];
+        if (year.length === 2) year = `20${year}`;
+        if (monthMap[month]) month = monthMap[month];
+      }
+
+      if (!year || !month || !day) continue;
+
+      const monthNum = parseInt(month);
+      const dayNum = parseInt(day);
+      if (monthNum < 1 || monthNum > 12 || dayNum < 1 || dayNum > 31) continue;
+
+      const date = new Date(parseInt(year), monthNum - 1, dayNum);
       if (!isNaN(date.getTime())) return date;
+    } catch {
+      continue;
     }
   }
-
-  // HT/VT format
-  const termMatch = lower.match(/(ht|vt)(\d{2})/);
-  if (termMatch) {
-    const [_, term, year] = termMatch;
-    const month = term === "ht" ? "12" : "01";
-    return new Date(`20${year}-${month}-01`);
-  }
-
-  // Svenska månadsnamn format: "1 augusti 2024"
-  const swedishMonthMatch = lower.match(
-    /(\d{1,2})\s+(januari|februari|mars|april|maj|juni|juli|augusti|september|oktober|november|december)\s+(\d{4})/
-  );
-  if (swedishMonthMatch) {
-    const [_, day, month, year] = swedishMonthMatch;
-    return new Date(`${year}-${monthMap[month]}-${day.padStart(2, "0")}`);
-  }
-
-  // Fallback med Date.parse
-  const fallback = Date.parse(name);
-  if (!isNaN(fallback)) return new Date(fallback);
 
   return null;
 };
 
 const formatDate = (name: string) => {
   const date = extractDateFromName(name);
-  return date
-    ? new Intl.DateTimeFormat("sv-SE", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      }).format(date)
-    : "-";
+  if (!date) return "-";
+  return new Intl.DateTimeFormat("sv-SE", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  }).format(date);
 };
 
 const SearchPage: React.FC = () => {
@@ -127,8 +137,6 @@ const SearchPage: React.FC = () => {
 
     fetchStats();
   }, [courseCode]);
-
-  console.log("Course Stats:", courseStats);
 
   const formattedExams = useMemo(() => {
     if (!exams || !courseStats) return [];
@@ -280,21 +288,13 @@ const SearchPage: React.FC = () => {
           courseCode={courseCode?.toUpperCase() ?? ""}
           courseNameSwe={courseStats?.courseNameSwe ?? ""}
           courseNameEng={courseStats?.courseNameEng ?? ""}
-          description={pageDescription}
           onSortChange={() =>
             setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
           }
         />
       </div>
 
-      <div className="sticky bottom-0 mt-10 mb-10 w-screen h-20 bg-gradient-to-t from-background to-transparent flex items-center justify-center">
-        <Link to="/upload-exams">
-          <Button variant="outline" className="flex items-center gap-2">
-            <p>{getTranslation("uploadExamsOrFacit")}</p>
-            <ArrowRight className="rotate-[-45deg] w-4 h-4" />
-          </Button>
-        </Link>
-      </div>
+      <div className="sticky bottom-0 mb-10 w-screen h-20 bg-gradient-to-t from-background to-transparent flex items-center justify-center"></div>
     </div>
   );
 };

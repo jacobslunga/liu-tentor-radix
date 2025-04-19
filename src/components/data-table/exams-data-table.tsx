@@ -7,10 +7,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Check, X, ArrowRight, ArrowUpDown } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import {
   flexRender,
@@ -26,7 +25,6 @@ import { useCompletedExams } from "@/hooks/useCompletedExams";
 interface Props {
   data: Exam[];
   courseCode: string;
-  description: string;
   onSortChange: () => void;
   courseNameSwe?: string;
   courseNameEng?: string;
@@ -35,7 +33,6 @@ interface Props {
 export function DataTable({
   data,
   courseCode,
-  description,
   onSortChange,
   courseNameEng,
   courseNameSwe,
@@ -44,6 +41,9 @@ export function DataTable({
   const { language } = useLanguage();
   const [filter, setFilter] = useState("");
   const { completedExams, toggleCompleted } = useCompletedExams();
+
+  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
+    translations[language][key];
 
   const columns = getColumns(
     language,
@@ -63,44 +63,50 @@ export function DataTable({
     onGlobalFilterChange: setFilter,
   });
 
-  console.log(data);
-
   return (
-    <div className="w-full space-y-6 mt-10 max-w-screen-lg">
-      <Card>
-        <CardHeader className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3">
-          <div>
-            <Badge className="mb-2" variant="outline">
-              {courseCode}
-            </Badge>
-            <CardTitle className="text-xl font-semibold tracking-tight">
+    <div className="w-full space-y-6 mt-10 max-w-screen-lg relative">
+      <div className="absolute z-0 h-[200px] bg-gradient-to-b rounded-xl from-primary/10 dark:from-primary/5 to-transparent w-full" />
+      <Card className="z-10">
+        <CardHeader>
+          <div className="w-full flex flex-col items-start justify-start relative">
+            <div className="flex flex-row items-center justify-between mb-5 w-full z-10">
+              <div className="flex flex-row items-center justify-center space-x-2">
+                <Badge variant="outline">{courseCode}</Badge>
+                <Badge>
+                  {data.length} {translations[language].exams}
+                </Badge>
+              </div>
+              <Link to="/upload-exams" className="self-end z-10">
+                <Badge
+                  variant="outline"
+                  className="flex items-center gap-2 hover:bg-muted transition-colors duration-200"
+                >
+                  <p>{getTranslation("uploadExamsOrFacit")}</p>
+                  <ArrowRight className="rotate-[-45deg] w-4 h-4" />
+                </Badge>
+              </Link>
+            </div>
+            <CardTitle
+              className={`${
+                (courseNameEng?.length ?? 0) > 40 ||
+                (courseNameSwe?.length ?? 0) > 40
+                  ? "text-xl"
+                  : "text-2xl"
+              } font-semibold tracking-tight`}
+            >
               {language === "sv" ? courseNameSwe : courseNameEng}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">{description}</p>
           </div>
-          <Badge>
-            {data.length} {translations[language].exams}
-          </Badge>
         </CardHeader>
-        <CardContent className="flex flex-col sm:flex-row gap-3">
-          <Input
-            placeholder={translations[language].searchPlaceholder}
-            value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-          />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
+        <CardContent className="p-0 z-10">
+          <Table className="z-10">
+            <TableHeader className="z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
-                      className="cursor-pointer hover:bg-muted/60 transition-all text-left"
+                      className="cursor-pointer z-10 hover:bg-muted/60 transition-all text-left"
                       onClick={() =>
                         header.id === "created_at" && onSortChange()
                       }
@@ -119,7 +125,7 @@ export function DataTable({
                 </TableRow>
               ))}
             </TableHeader>
-            <TableBody>
+            <TableBody className="z-10">
               {table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <TableRow
@@ -129,12 +135,12 @@ export function DataTable({
                         `/search/${row.original.kurskod}/${row.original.id}`
                       );
                     }}
-                    className="group cursor-pointer hover:bg-muted/50 transition-all"
+                    className="group cursor-pointer hover:bg-muted/50 transition-all z-10"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="py-3 relative">
+                      <TableCell key={cell.id} className="py-3 relative z-10">
                         {cell.column.id === "hasFacit" ? (
-                          <div className="flex justify-center">
+                          <div className="flex justify-center z-10">
                             <Badge
                               variant={
                                 row.original.hasFacit ? "default" : "outline"
@@ -148,7 +154,7 @@ export function DataTable({
                             </Badge>
                           </div>
                         ) : cell.column.id === "tenta_namn" ? (
-                          <div className="flex items-center font-medium justify-start group-hover:text-primary transition-colors">
+                          <div className="flex items-center z-10 font-medium justify-start group-hover:text-primary transition-colors">
                             <span>
                               {flexRender(
                                 cell.column.columnDef.cell,
