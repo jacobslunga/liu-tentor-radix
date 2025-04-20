@@ -64,7 +64,7 @@ const Header = () => {
 
       <div className="relative hidden sm:flex items-center" role="search">
         <div
-          className="w-auto font-medium hover:cursor-text hover:border-primary/70 transition-all duration-200 sm:min-w-[300px] md:w-60 pr-10 md:min-w-[350px] lg:min-w-[500px] bg-foreground/5 border p-2.5 rounded-md"
+          className="w-auto font-medium hover:cursor-text hover:border-primary/70 transition-all duration-200 sm:min-w-[300px] md:w-60 pr-10 md:min-w-[350px] lg:min-w-[500px] bg-foreground/5 border p-2.5 rounded-full"
           onClick={() => {
             setShowGlobalSearch(true);
           }}

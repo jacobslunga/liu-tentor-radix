@@ -2,7 +2,6 @@ import { RouteObject } from "react-router-dom";
 import MainLayout from "@/layouts/MainLayout";
 import HomePage from "@/pages/HomePage";
 import UploadInfoPage from "@/pages/UploadInfoPage";
-import ContactPage from "@/pages/ContactPage";
 import FeedbackPage from "@/pages/FeedbackPage";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import NotFoundPage from "@/pages/NotFoundPage";
@@ -26,7 +25,6 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "upload-info", element: <UploadInfoPage /> },
-      { path: "kontakt", element: <ContactPage /> },
       { path: "feedback", element: <FeedbackPage /> },
       { path: "privacy-policy", element: <PrivacyPolicyPage /> },
       { path: "upload-exams", element: <UploadExamPage /> },

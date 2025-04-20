@@ -1,10 +1,8 @@
-import { useLanguage } from "@/context/LanguageContext";
-import translations from "@/util/translations";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowTopRightIcon } from "@radix-ui/react-icons";
-import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 
 interface RecentActivity {
   courseCode: string;
@@ -14,7 +12,6 @@ interface RecentActivity {
 }
 
 const InlineRecentActivity = () => {
-  const { language } = useLanguage();
   const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(
     []
   );
@@ -53,53 +50,32 @@ const InlineRecentActivity = () => {
           decodeURIComponent(cookie)
         ) as RecentActivity[];
         const sorted = parsed.sort((a, b) => b.timestamp - a.timestamp);
-        setRecentActivities(sorted.slice(0, 6));
+        setRecentActivities(sorted.slice(0, 3));
       } catch (e) {
         console.error("Failed to parse recent activity:", e);
       }
     }
   }, []);
 
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
-
   const visibleActivities = recentActivities.slice(0, maxVisible);
 
   if (visibleActivities.length === 0) return null;
 
   return (
-    <div className="flex flex-col w-full items-center justify-center p-5 bg-foreground/[3%] border rounded-md">
-      <div className="flex flex-col items-start justify-start w-full">
-        <p className="text-sm font-medium text-foreground/80">
-          {getTranslation("continueWhereYouLeftOff")}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          {getTranslation("recentActivityDescription") ??
-            "Snabb åtkomst till dina senaste sökningar."}
-        </p>
-      </div>
-
-      <Separator className="my-4" />
-
-      <div className="flex items-center justify-start w-full space-x-4 overflow-x-auto">
+    <div className="w-full max-w-md">
+      <div className="flex items-center justify-center w-full overflow-x-auto space-x-3 text-sm">
         {visibleActivities.map((activity, index) => (
-          <div key={activity.path} className="flex items-center space-x-4">
-            <Link
-              to={activity.path}
-              className="flex flex-col group rounded-md transition-colors text-xs"
-            >
-              <div className="flex items-center">
-                <span className="font-medium text-foreground/70 group-hover:text-foreground transition-colors duration-200">
-                  {activity.courseCode}
-                </span>
-                <ArrowTopRightIcon className="w-3 h-3 ml-1 opacity-50 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all duration-200" />
-              </div>
-            </Link>
-
+          <Link key={activity.path} to={activity.path}>
+            <Button variant="ghost" size="sm" className="group">
+              <span className="text-foreground/80 hover:text-foreground transition-colors">
+                {activity.courseCode}
+              </span>
+              <ArrowTopRightIcon className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:-translate-y-[2px] group-hover:translate-x-1 transition-all duration-200" />
+            </Button>
             {index < visibleActivities.length - 1 && (
-              <Separator orientation="vertical" className="h-5" />
+              <span className="mx-2 text-foreground/40">|</span>
             )}
-          </div>
+          </Link>
         ))}
       </div>
     </div>

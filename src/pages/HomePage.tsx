@@ -31,10 +31,6 @@ export default function HomePage() {
       to: "/feedback",
     },
     {
-      text: getTranslation("contactUs"),
-      to: "/kontakt",
-    },
-    {
       text: getTranslation("privacyPolicyTitle"),
       to: "/privacy-policy",
     },
@@ -58,16 +54,16 @@ export default function HomePage() {
                 {getTranslation("homeTitle")}
               </h1>
             </div>
-            <p className="text-xs text-foreground/70 max-w-[350px] text-center mb-4">
+            {/* <p className="text-xs text-foreground/70 max-w-[350px] text-center mb-4">
               {getTranslation("homeDescription")}
-            </p>
+            </p> */}
           </div>
 
           {/* Main Content */}
           <div className="w-full max-w-[600px] flex flex-col items-center space-y-6 mb-20">
             {/* Search Section */}
             <div
-              className={`w-full relative border shadow-sm dark:shadow-md border-foreground/20 ${
+              className={`w-full shadow-md dark:shadow-lg border border-foreground/20 ${
                 focusInput
                   ? "border-primary ring-1 ring-primary"
                   : "hover:border-foreground/40"
@@ -94,13 +90,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="fixed bg-gradient-to-b from-background to-background/0 w-full top-0 h-20 items-center justify-between px-5 flex">
-            <div className="flex flex-row items-center justify-center">
+          <div className="fixed bg-gradient-to-b from-background to-background/0 space-x-5 w-full top-0 h-20 items-center justify-end px-5 flex">
+            <div className="flex flex-row items-center justify-center space-x-2">
               {quickLinks.map(({ text, to }) => (
-                <Link key={text} to={to} className="hidden md:flex">
-                  <Button size="sm" variant="link">
-                    <span>{text}</span>
-                  </Button>
+                <Link
+                  key={text}
+                  to={to}
+                  className="hidden md:flex hover:underline"
+                >
+                  <span className="text-[12px]">{text}</span>
                 </Link>
               ))}
             </div>

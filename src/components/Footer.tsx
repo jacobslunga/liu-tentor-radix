@@ -27,7 +27,6 @@ const Footer: FC = () => {
     {
       title: language === "sv" ? "Support" : "Support",
       links: [
-        { name: getTranslation("contactLink"), href: "/kontakt" },
         { name: "Feedback", href: "/feedback" },
         { name: language === "sv" ? "Vanliga frågor" : "FAQ", href: "/faq" },
       ],
@@ -57,6 +56,15 @@ const Footer: FC = () => {
             </ul>
           </div>
         ))}
+      </div>
+
+      <div className="h-[1px] w-1/3 self-center bg-foreground/10 my-8" />
+
+      <div className="flex flex-row items-center justify-center space-x-2 text-xs text-foreground/70 group">
+        <p>{getTranslation("contactLink")}: </p>
+        <p className="text-primary transition-colors duration-150 hover:underline cursor-pointer">
+          liutentor@gmail.com
+        </p>
       </div>
 
       <div className="h-[1px] w-1/3 self-center bg-foreground/10 my-8" />

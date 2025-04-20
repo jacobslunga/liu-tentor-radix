@@ -70,6 +70,57 @@ const FAQPage = () => {
               : "You can easily upload exams via the upload page. We review all content before it goes live."}
           </AccordionContent>
         </AccordionItem>
+        <AccordionItem value="4">
+          <AccordionTrigger>
+            {language === "sv"
+              ? "Varför finns det inga tentor för min kurs?"
+              : "Why are there no exams for my course?"}
+          </AccordionTrigger>
+          <AccordionContent>
+            {language === "sv"
+              ? "Antingen har vi inte fått in några tentor för den kursen än, eller så är de ännu inte uppladdade. Du får gärna bidra själv!"
+              : "Either we haven’t received any exams for that course yet, or they haven’t been uploaded. Feel free to contribute!"}
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="5">
+          <AccordionTrigger>
+            {language === "sv"
+              ? "Vad är facit och hur vet jag om en tenta har det?"
+              : "What is a facit and how do I know if an exam includes one?"}
+          </AccordionTrigger>
+          <AccordionContent>
+            {language === "sv"
+              ? "Ett facit är en lösningsdel eller svarsmall till tentan. Om ett facit finns bifogat visas det som en separat fil bredvid tentan."
+              : "A facit is a solution or answer key to the exam. If one is included, it will appear as a separate file next to the exam."}
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="6">
+          <AccordionTrigger>
+            {language === "sv"
+              ? "Hur fungerar statistiken på kurssidorna?"
+              : "How does the statistics on course pages work?"}
+          </AccordionTrigger>
+          <AccordionContent>
+            {language === "sv"
+              ? "Statistiken baseras på data från tidigare tentor, såsom betygsfördelning och godkändprocent. All data är hämtad från universitetets officiella källor."
+              : "The statistics are based on historical exam data like grade distribution and pass rate. All data is sourced from the university’s official records."}
+          </AccordionContent>
+        </AccordionItem>
+
+        <AccordionItem value="7">
+          <AccordionTrigger>
+            {language === "sv"
+              ? "Vad gör jag om en tenta inte laddas?"
+              : "What should I do if an exam doesn’t load?"}
+          </AccordionTrigger>
+          <AccordionContent>
+            {language === "sv"
+              ? "Försök att ladda om sidan eller öppna tentan i en ny flik. Om problemet kvarstår, kontakta oss gärna via mejl eller via feedbackformuläret på hemsidan."
+              : "Try refreshing the page or opening the exam in a new tab. If the issue persists, feel free to contact us via email or through the feedback form on the website."}
+          </AccordionContent>
+        </AccordionItem>
       </Accordion>
     </div>
   );

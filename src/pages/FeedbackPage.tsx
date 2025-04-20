@@ -108,12 +108,12 @@ const FeedbackPage: FC = () => {
       <div className="container max-w-2xl mx-auto px-4 py-16 flex-grow">
         {/* Page Title */}
         <PageHeader />
-        <div className="relative w-full flex flex-col items-center mb-10">
+        <div className="relative w-full flex flex-col items-center mb-5 mt-12">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
             <MessageCircle className="text-primary h-10 w-10" />
           </div>
 
-          <h1 className="text-3xl text-foreground/80 font-semibold text-center mt-10 mb-4">
+          <h1 className="text-3xl text-foreground/80 font-semibold text-center mt-5 mb-4">
             {getTranslation("feedbackTitle")}
           </h1>
           <p className="text-lg text-muted-foreground text-center max-w-xl">

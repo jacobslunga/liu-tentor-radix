@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import { AnimatePresence, motion } from "framer-motion";
 import Cookies from "js-cookie";
-import { MousePointerClick } from "lucide-react";
+import { Columns2, MousePointerClick, PanelRight } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -30,7 +30,6 @@ import {
 import { pdfjs } from "react-pdf";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import useSWR from "swr";
-import { IconLayoutColumns, IconLayoutSidebarRight } from "@tabler/icons-react";
 
 import { retryFetch } from "@/components/PDF/utils";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
@@ -649,7 +648,7 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className="z-40">
-                    <IconLayoutColumns />
+                    <Columns2 />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation("examAndFacit")}</p>
@@ -665,7 +664,7 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className="z-40">
-                    <IconLayoutSidebarRight />
+                    <PanelRight />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation("examOnly")}</p>
