@@ -648,7 +648,7 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className="z-40">
-                    <Columns2 />
+                    <Columns2 className="w-5 h-5" />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation("examAndFacit")}</p>
@@ -664,7 +664,7 @@ const PDFModal: FC<PDFModalProps> = ({
               <TooltipProvider delayDuration={0}>
                 <Tooltip>
                   <TooltipTrigger asChild className="z-40">
-                    <PanelRight />
+                    <PanelRight className="w-5 h-5" />
                   </TooltipTrigger>
                   <TooltipContent autoFocus={false}>
                     <p>{getTranslation("examOnly")}</p>
