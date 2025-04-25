@@ -65,7 +65,6 @@ export function DataTable({
 
   return (
     <div className="w-full space-y-6 mt-10 max-w-screen-lg relative">
-      <div className="absolute z-0 h-[200px] bg-gradient-to-b rounded-xl from-primary/10 dark:from-primary/5 to-transparent w-full" />
       <Card className="z-10">
         <CardHeader>
           <div className="w-full flex flex-col items-start justify-start relative">

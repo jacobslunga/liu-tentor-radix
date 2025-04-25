@@ -19,7 +19,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import { FC, JSX, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Moon, Sun, Monitor, EllipsisVertical } from "lucide-react";
+import { Moon, Sun, Monitor, Settings } from "lucide-react";
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
@@ -101,7 +101,7 @@ const SettingsDialog: FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
-          <EllipsisVertical />
+          <Settings />
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg">

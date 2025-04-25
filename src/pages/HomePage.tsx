@@ -93,12 +93,10 @@ export default function HomePage() {
           <div className="fixed bg-gradient-to-b from-background to-background/0 space-x-5 w-full top-0 h-20 items-center justify-end px-5 flex">
             <div className="flex flex-row items-center justify-center space-x-2">
               {quickLinks.map(({ text, to }) => (
-                <Link
-                  key={text}
-                  to={to}
-                  className="hidden md:flex hover:underline"
-                >
-                  <span className="text-[12px]">{text}</span>
+                <Link key={text} to={to} className="hidden md:flex">
+                  <Button variant="link" className="text-[12px]">
+                    {text}
+                  </Button>
                 </Link>
               ))}
             </div>
