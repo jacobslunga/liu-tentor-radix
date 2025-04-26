@@ -1,11 +1,11 @@
-import { Exam } from '@/components/data-table/columns';
-import { Button } from '@/components/ui/button';
-import { useTheme } from '@/context/ThemeContext';
-import { LoaderCircle } from 'lucide-react';
-import { FC, useState, useEffect } from 'react';
-import { Document, Page } from 'react-pdf';
-import { Link } from 'react-router-dom';
-import { pdfjs } from 'react-pdf';
+import { Exam } from "@/components/data-table/columns";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/context/ThemeContext";
+import { LoaderCircle } from "lucide-react";
+import { FC, useState, useEffect } from "react";
+import { Document, Page } from "react-pdf";
+import { Link } from "react-router-dom";
+import { pdfjs } from "react-pdf";
 
 interface FacitViewerProps {
   facitPdfUrl: string | null;
@@ -55,65 +55,53 @@ const FacitViewer: FC<FacitViewerProps> = ({
 
   const getPdfStyles = () => {
     switch (effectiveTheme) {
-      case 'dark':
+      case "dark":
         return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'invert(1) brightness(1) contrast(0.8)',
-        };
-      case 'paper-dark':
-        return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'invert(0.95) brightness(1) contrast(0.85)',
-        };
-      case 'paper-light':
-        return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'invert(0.02) brightness(1) contrast(1)',
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          filter: "invert(1) brightness(1) contrast(0.8)",
         };
       default:
         return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'none',
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          filter: "none",
         };
     }
   };
 
   return !selectedFacit ? (
-    <div className='w-full h-full flex flex-col items-center justify-center space-y-4'>
-      <p className='font-medium'>{getTranslation('noFacitAvailable')}</p>
-      <p className='text-sm text-center text-primary/50 max-w-full md:max-w-[70%]'>
-        {getTranslation('noFacitAvailableDescription')}
+    <div className="w-full h-full flex flex-col items-center justify-center space-y-4">
+      <p className="font-medium">{getTranslation("noFacitAvailable")}</p>
+      <p className="text-sm text-center text-primary/50 max-w-full md:max-w-[70%]">
+        {getTranslation("noFacitAvailableDescription")}
       </p>
-      <Link to='/upload-exams'>
-        <Button>{getTranslation('moreExamsBtn')}</Button>
+      <Link to="/upload-exams">
+        <Button>{getTranslation("moreExamsBtn")}</Button>
       </Link>
     </div>
   ) : (
     <div
-      className='w-full h-full overscroll-auto overflow-auto'
+      className="w-full h-full overscroll-auto overflow-auto"
       style={getPdfStyles()}
     >
       {/* Placeholder för att undvika "No PDF file specified" */}
       {!isPdfLoaded && (
-        <div className='w-full h-full flex items-center justify-center'>
-          <LoaderCircle className='w-10 h-10 animate-spin' />
+        <div className="w-full h-full flex items-center justify-center">
+          <LoaderCircle className="w-10 h-10 animate-spin" />
         </div>
       )}
 
       {/* PDF Viewer */}
-      <div style={{ display: isPdfLoaded ? 'block' : 'none' }}>
+      <div style={{ display: isPdfLoaded ? "block" : "none" }}>
         <Document
           file={facitPdfUrl}
           onLoadSuccess={(data) => {
             onFacitDocumentLoadSuccess(data);
             setIsPdfLoaded(true);
           }}
-          renderMode='canvas'
-          className='w-full h-full flex flex-col items-center space-y-5 justify-start'
+          renderMode="canvas"
+          className="w-full h-full flex flex-col items-center space-y-5 justify-start"
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -126,7 +114,7 @@ const FacitViewer: FC<FacitViewerProps> = ({
                 scale={facitScale}
                 rotate={(pageRotations[i + 1] || 0) + facitRotation}
                 onLoadSuccess={(page) => handlePageLoadSuccess(page, i + 1)}
-                className='pdf-page'
+                className="pdf-page"
               />
             ))}
         </Document>

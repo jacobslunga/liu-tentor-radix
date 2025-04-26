@@ -1,7 +1,7 @@
-import { useTheme } from '@/context/ThemeContext';
-import { LoaderCircle } from 'lucide-react';
-import { FC, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { useTheme } from "@/context/ThemeContext";
+import { LoaderCircle } from "lucide-react";
+import { FC, useState } from "react";
+import { Document, Page, pdfjs } from "react-pdf";
 
 interface PDFViewerProps {
   pdfUrl: string;
@@ -37,9 +37,9 @@ const PDFViewer: FC<PDFViewerProps> = ({
 
   if (!pdfUrl) {
     return (
-      <div className='w-full h-full items-center justify-center flex'>
+      <div className="w-full h-full items-center justify-center flex">
         <LoaderCircle
-          className='w-10 h-10 animate-spin'
+          className="w-10 h-10 animate-spin"
           style={{
             zIndex: 5000,
           }}
@@ -50,46 +50,34 @@ const PDFViewer: FC<PDFViewerProps> = ({
 
   const getPdfStyles = () => {
     switch (effectiveTheme) {
-      case 'dark':
+      case "dark":
         return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'invert(1) brightness(1) contrast(0.8)',
-        };
-      case 'paper-dark':
-        return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'invert(0.95) brightness(1) contrast(0.85)',
-        };
-      case 'paper-light':
-        return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'invert(0.02) brightness(1) contrast(1)',
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          filter: "invert(1) brightness(1) contrast(0.8)",
         };
       default:
         return {
-          backgroundColor: 'var(--background)',
-          color: 'var(--foreground)',
-          filter: 'none',
+          backgroundColor: "var(--background)",
+          color: "var(--foreground)",
+          filter: "none",
         };
     }
   };
 
   return (
     <div
-      className='w-full h-full overscroll-auto'
+      className="w-full h-full overscroll-auto"
       style={{
-        backgroundColor: 'var(--background)',
-        color: 'var(--foreground)',
+        backgroundColor: "var(--background)",
+        color: "var(--foreground)",
       }}
     >
       <div style={getPdfStyles()}>
         <Document
           file={pdfUrl}
           onLoadSuccess={onLoadSuccess}
-          className='w-full h-full flex items-center justify-start space-y-5 flex-col'
+          className="w-full h-full flex items-center justify-start space-y-5 flex-col"
         >
           {Array.from({ length: numPages || 0 }, (_, i) => (
             <Page
@@ -98,7 +86,7 @@ const PDFViewer: FC<PDFViewerProps> = ({
               rotate={(pageRotations[i + 1] || 0) + userRotation}
               scale={scale}
               onLoadSuccess={(page) => handlePageLoadSuccess(page, i + 1)}
-              className='pdf-page'
+              className="pdf-page"
             />
           ))}
         </Document>

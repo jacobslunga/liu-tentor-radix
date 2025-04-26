@@ -9,7 +9,7 @@ interface LogoIconProps {
 export function LogoIcon({ className, width, height }: LogoIconProps) {
   const { effectiveTheme } = useTheme();
 
-  const isDark = effectiveTheme === "dark" || effectiveTheme === "paper-dark";
+  const isDark = effectiveTheme === "dark";
 
   const src = isDark ? "/liutentorrounddark.svg" : "/liutentorroundlight.svg";
 
