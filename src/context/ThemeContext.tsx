@@ -7,8 +7,8 @@ import React, {
 } from "react";
 import { Helmet } from "react-helmet-async";
 
-type BaseTheme = "light" | "dark" | "paper" | "system";
-type EffectiveTheme = "light" | "dark" | "paper-light" | "paper-dark";
+type BaseTheme = "light" | "dark" | "system";
+type EffectiveTheme = "light" | "dark";
 
 interface ThemeContextProps {
   theme: BaseTheme;
@@ -36,7 +36,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   });
 
   const [effectiveTheme, setEffectiveTheme] = useState<EffectiveTheme>("light");
-  const themes: BaseTheme[] = ["light", "dark", "system", "paper"];
+  const themes: BaseTheme[] = ["light", "dark", "system"];
 
   const getSystemTheme = () =>
     window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -56,14 +56,6 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
         appliedTheme = getSystemTheme();
         root.className = appliedTheme;
         body.className = appliedTheme;
-      } else if (baseTheme === "paper") {
-        root.classList.add("paper");
-        if (getSystemTheme() === "dark") {
-          root.classList.add("dark");
-          appliedTheme = "paper-dark";
-        } else {
-          appliedTheme = "paper-light";
-        }
       } else {
         appliedTheme = baseTheme;
         root.className = baseTheme;
@@ -76,7 +68,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     applyTheme(theme);
 
     const handleSystemThemeChange = (_: MediaQueryListEvent) => {
-      if (theme === "system" || theme === "paper") {
+      if (theme === "system") {
         applyTheme(theme);
       }
     };
@@ -97,13 +89,9 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   const getFaviconUrl = (theme: EffectiveTheme) => {
     switch (theme) {
       case "light":
-        return "/light-favicon.svg";
+        return "/liutentorroundlight.svg";
       case "dark":
-        return "/dark-favicon.svg";
-      case "paper-dark":
-        return "/paper-dark-favicon.svg";
-      case "paper-light":
-        return "/paper-light-favicon.svg";
+        return "/liutentorrounddark.svg";
       default:
         return "/light-favicon.svg";
     }
@@ -116,17 +104,7 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
       <Helmet>
         <link rel="icon" href={getFaviconUrl(effectiveTheme)} />
       </Helmet>
-      <div
-        className={
-          theme === "paper"
-            ? `paper ${effectiveTheme.includes("dark") ? "dark" : ""}`
-            : theme === "system"
-            ? getSystemTheme()
-            : theme
-        }
-      >
-        {children}
-      </div>
+      <div className={`theme-${effectiveTheme}`}>{children}</div>
     </ThemeContext.Provider>
   );
 };

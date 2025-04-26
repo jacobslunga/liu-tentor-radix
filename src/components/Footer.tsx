@@ -3,7 +3,7 @@ import translations from "@/util/translations";
 import { FC } from "react";
 import { Link } from "react-router-dom";
 import SettingsDialog from "@/components/SettingsDialog";
-import { SquareLibrary } from "lucide-react";
+import { LogoIcon } from "./LogoIcon";
 
 const Footer: FC = () => {
   const { language } = useLanguage();
@@ -78,8 +78,8 @@ const Footer: FC = () => {
           {getTranslation("allRightsReserved")}
         </p>
 
-        <p className="text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-2">
-          <SquareLibrary className="text-primary w-6 h-6" />
+        <p className="text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-1">
+          <LogoIcon className="w-7 h-7" />
           <span>{getTranslation("homeTitle")}</span>
         </p>
       </div>

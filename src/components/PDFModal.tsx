@@ -13,12 +13,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import Cookies from "js-cookie";
 import { Columns2, MousePointerClick, PanelRight } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import {
   FC,
   useCallback,
   useContext,
@@ -639,38 +633,26 @@ const PDFModal: FC<PDFModalProps> = ({
         }}
       >
         <Tabs defaultValue={layoutMode} className="w-auto">
-          <TabsList>
+          <TabsList className="bg-secondary rounded-full p-2 space-x-1 border">
             <TabsTrigger
               value="exam-with-facit"
               onClick={() => changeLayoutMode("exam-with-facit")}
-              className="transition-all duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              className="transition-all rounded-full text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild className="z-40">
-                    <Columns2 className="w-5 h-5" />
-                  </TooltipTrigger>
-                  <TooltipContent autoFocus={false}>
-                    <p>{getTranslation("examAndFacit")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="flex flex-row items-center justify-center space-x-1">
+                <Columns2 className="w-5 h-5" />
+                <p>{getTranslation("examAndFacit")}</p>
+              </div>
             </TabsTrigger>
             <TabsTrigger
               value="exam-only"
               onClick={() => changeLayoutMode("exam-only")}
-              className="transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+              className="transition-all rounded-full text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild className="z-40">
-                    <PanelRight className="w-5 h-5" />
-                  </TooltipTrigger>
-                  <TooltipContent autoFocus={false}>
-                    <p>{getTranslation("examOnly")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              <div className="flex flex-row items-center justify-center space-x-1">
+                <PanelRight className="w-5 h-5" />
+                <p>{getTranslation("examOnly")}</p>
+              </div>
             </TabsTrigger>
           </TabsList>
         </Tabs>

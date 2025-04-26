@@ -2,13 +2,14 @@ import MainInput from "@/components/MainInput";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import translations, { Language } from "@/util/translations";
-import { SquareLibrary, Upload } from "lucide-react";
+import { Upload } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
 import SettingsDialog from "@/components/SettingsDialog";
 import InlineRecentActivity from "@/components/InlineRecentActivity";
 import LoadingSpinner from "@/components/LoadingSpinnger";
+import { LogoIcon } from "@/components/LogoIcon";
 
 export default function HomePage() {
   const { language } = useLanguage();
@@ -49,7 +50,7 @@ export default function HomePage() {
           {/* Large Centered Logo */}
           <div className="flex flex-col items-center space-y-2 mb-10">
             <div className="flex flex-row items-center justify-center space-x-2">
-              <SquareLibrary className="text-primary w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16" />
+              <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-20 lg:h-20" />
               <h1 className="text-4xl lg:text-5xl font-logo text-foreground/80 tracking-tight">
                 {getTranslation("homeTitle")}
               </h1>
@@ -78,10 +79,7 @@ export default function HomePage() {
               {/* CTA Button */}
               <div className="flex flex-col md:flex-row items-center justify-center w-full">
                 <Link to="/upload-exams">
-                  <Button
-                    size="sm"
-                    className="hidden md:flex flex-row items-center justify-center"
-                  >
+                  <Button className="hidden md:flex flex-row items-center justify-center">
                     <Upload className="w-5 h-5" />
                     {getTranslation("uploadTitle")}
                   </Button>

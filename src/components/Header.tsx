@@ -1,10 +1,10 @@
 import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
-import { SquareLibrary } from "lucide-react";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SettingsDialog from "@/components/SettingsDialog";
 import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
+import { LogoIcon } from "./LogoIcon";
 
 const Header = () => {
   const [transparentBg, setTransparentBg] = useState<boolean>(true);
@@ -55,10 +55,10 @@ const Header = () => {
     >
       <Link
         to="/"
-        className="text-xl space-x-2 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
+        className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
         aria-label={getTranslation("homeTitle")}
       >
-        <SquareLibrary className="text-primary w-8 h-8 hover:scale-110 transition-transform duration-200" />
+        <LogoIcon className="w-10 h-10" />
         <h1 className="font-logo text-md text-foreground/80">LiU Tentor</h1>
       </Link>
 
