@@ -1,7 +1,7 @@
 import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import Cookies from "js-cookie";
-import { Clock, Book } from "lucide-react";
+import { ClockIcon, BookIcon } from "@primer/octicons-react";
 import React, { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
@@ -205,7 +205,7 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
                   value={course}
                   onSelect={() => handleSelect(course)}
                 >
-                  <Clock className="mr-2 h-4 w-4" />
+                  <ClockIcon className="mr-2 h-4 w-4" />
                   <span>{course}</span>
                 </CommandItem>
               ))}
@@ -221,7 +221,7 @@ const GlobalCourseSearch: React.FC<GlobalCourseSearchProps> = ({
               value={course}
               onSelect={() => handleSelect(course)}
             >
-              <Book className="mr-2 h-4 w-4" />
+              <BookIcon className="mr-2 h-4 w-4" />
               <span>{course}</span>
             </CommandItem>
           ))}

@@ -18,7 +18,7 @@ import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { z } from "zod";
 import { Helmet } from "react-helmet-async";
-import { AlertCircle, MessageCircle, CheckCircle } from "lucide-react";
+import { ChecklistIcon, AlertIcon, CheckIcon } from "@primer/octicons-react";
 import PageHeader from "@/components/PageHeader";
 
 const formSchema = z.object({
@@ -110,7 +110,7 @@ const FeedbackPage: FC = () => {
         <PageHeader />
         <div className="relative w-full flex flex-col items-center mb-5 mt-12">
           <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <MessageCircle className="text-primary h-10 w-10" />
+            <ChecklistIcon className="text-primary h-10 w-10" />
           </div>
 
           <h1 className="text-3xl text-foreground/80 font-semibold text-center mt-5 mb-4">
@@ -131,7 +131,7 @@ const FeedbackPage: FC = () => {
             {isSuccess ? (
               <div className="flex flex-col items-center gap-6 text-center">
                 <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                  <CheckCircle className="h-10 w-10 text-green-600" />
+                  <CheckIcon className="h-10 w-10 text-green-600" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-medium mb-2">
@@ -148,7 +148,7 @@ const FeedbackPage: FC = () => {
             ) : (
               <div className="flex flex-col items-center gap-6 text-center">
                 <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                  <AlertCircle className="h-10 w-10 text-red-600" />
+                  <AlertIcon className="h-10 w-10 text-red-600" />
                 </div>
                 <div>
                   <h2 className="text-2xl font-medium mb-2">

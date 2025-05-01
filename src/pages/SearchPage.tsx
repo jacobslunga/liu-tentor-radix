@@ -172,7 +172,7 @@ const SearchPage: React.FC = () => {
             : undefined;
 
         const includesFacit =
-          /(solutions|lösningar|svar|exam \+ solutions|exam and solutions)/.test(
+          /(sol|solutions?|lösningar|svar|exam \+ solutions|exam and solutions)/.test(
             e.tenta_namn.toLowerCase()
           );
         const facit = includesFacit ? e : findFacitForExam(e, exams);

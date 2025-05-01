@@ -1,24 +1,22 @@
-import { FC, useState, useEffect, useRef } from 'react';
+import { FC, useState, useEffect, useRef } from "react";
+import { RotateCcw, RotateCw, Square } from "lucide-react";
 import {
-  Plus,
-  Minus,
-  RotateCcw,
-  RotateCw,
-  Download,
-  Check,
-  Square,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Exam } from '@/components/data-table/columns';
-import { Separator } from '@/components/ui/separator';
+  DownloadIcon,
+  PlusIcon,
+  DashIcon,
+  CheckIcon,
+} from "@primer/octicons-react";
+import { Button } from "@/components/ui/button";
+import { Exam } from "@/components/data-table/columns";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import Cookies from 'js-cookie';
-import { motion } from 'framer-motion';
+} from "@/components/ui/tooltip";
+import Cookies from "js-cookie";
+import { motion } from "framer-motion";
 
 interface Props {
   selectedExam: Exam;
@@ -44,15 +42,15 @@ const ToolbarButton = ({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          variant='secondary'
-          size='icon'
+          variant="secondary"
+          size="icon"
           onClick={onClick}
           className={className}
         >
           <Icon size={17} />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side='right'>
+      <TooltipContent side="right">
         <p>{tooltip}</p>
       </TooltipContent>
     </Tooltip>
@@ -69,7 +67,7 @@ const TentaToolbar: FC<Props> = ({
 }) => {
   const [completedExams, setCompletedExams] = useState<Record<number, boolean>>(
     () => {
-      const stored = Cookies.get('completedExams');
+      const stored = Cookies.get("completedExams");
       return stored ? JSON.parse(stored) : {};
     }
   );
@@ -100,10 +98,10 @@ const TentaToolbar: FC<Props> = ({
 
     handleMouseMove();
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -116,13 +114,13 @@ const TentaToolbar: FC<Props> = ({
       const newCompleted = !prev[id];
       const updated = { ...prev, [id]: newCompleted };
 
-      Cookies.set('completedExams', JSON.stringify(updated), {
+      Cookies.set("completedExams", JSON.stringify(updated), {
         secure: true,
-        sameSite: 'Lax',
+        sameSite: "Lax",
         expires: 365 * 100,
         domain:
-          window.location.hostname === 'liutentor.se'
-            ? '.liutentor.se'
+          window.location.hostname === "liutentor.se"
+            ? ".liutentor.se"
             : undefined,
       });
 
@@ -132,7 +130,7 @@ const TentaToolbar: FC<Props> = ({
 
   return (
     <motion.div
-      className='fixed top-16 left-5 flex flex-col space-y-2 z-40'
+      className="fixed top-16 left-5 flex flex-col space-y-2 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
@@ -147,30 +145,30 @@ const TentaToolbar: FC<Props> = ({
       transition={{ duration: 0.3 }}
     >
       {/* Själva knapparna */}
-      <ToolbarButton icon={Plus} onClick={onZoomIn} tooltip='Zooma in' />
-      <ToolbarButton icon={Minus} onClick={onZoomOut} tooltip='Zooma ut' />
+      <ToolbarButton icon={PlusIcon} onClick={onZoomIn} tooltip="Zooma in" />
+      <ToolbarButton icon={DashIcon} onClick={onZoomOut} tooltip="Zooma ut" />
       <Separator />
       <ToolbarButton
         icon={RotateCcw}
         onClick={onRotateCounterClockwise}
-        tooltip='Rotera vänster'
+        tooltip="Rotera vänster"
       />
       <ToolbarButton
         icon={RotateCw}
         onClick={onRotateClockwise}
-        tooltip='Rotera höger'
+        tooltip="Rotera höger"
       />
       <Separator />
       <ToolbarButton
-        icon={Download}
-        onClick={() => window.open(pdfUrl || '#')}
-        tooltip='Ladda ner tenta'
+        icon={DownloadIcon}
+        onClick={() => window.open(pdfUrl || "#")}
+        tooltip="Ladda ner tenta"
       />
       <ToolbarButton
-        icon={completedExams[selectedExam.id] ? Check : Square}
+        icon={completedExams[selectedExam.id] ? CheckIcon : Square}
         onClick={toggleCompleted}
-        tooltip='Markera som klar'
-        className={completedExams[selectedExam.id] ? 'text-primary' : ''}
+        tooltip="Markera som klar"
+        className={completedExams[selectedExam.id] ? "text-primary" : ""}
       />
     </motion.div>
   );

@@ -8,7 +8,12 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, ArrowRight, ArrowUpDown } from "lucide-react";
+import {
+  CheckIcon,
+  XIcon,
+  ArrowRightIcon,
+  ArrowSwitchIcon,
+} from "@primer/octicons-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useLanguage } from "@/context/LanguageContext";
 import {
@@ -81,7 +86,7 @@ export function DataTable({
                   className="flex items-center gap-2 hover:bg-muted transition-colors duration-200"
                 >
                   <p>{getTranslation("uploadExamsOrFacit")}</p>
-                  <ArrowRight className="rotate-[-45deg] w-4 h-4" />
+                  <ArrowRightIcon className="rotate-[-45deg] w-4 h-4" />
                 </Badge>
               </Link>
             </div>
@@ -116,7 +121,7 @@ export function DataTable({
                           header.getContext()
                         )}
                         {header.id === "created_at" && (
-                          <ArrowUpDown className="h-4 w-4 text-muted-foreground" />
+                          <ArrowSwitchIcon className="h-4 w-4 rotate-90 text-muted-foreground" />
                         )}
                       </div>
                     </TableHead>
@@ -146,9 +151,9 @@ export function DataTable({
                               }
                             >
                               {row.original.hasFacit ? (
-                                <Check className="h-3 w-3" />
+                                <CheckIcon className="h-3 w-3" />
                               ) : (
-                                <X className="h-3 w-3 text-red-500" />
+                                <XIcon className="h-3 w-3 text-red-500" />
                               )}
                             </Badge>
                           </div>
@@ -160,7 +165,7 @@ export function DataTable({
                                 cell.getContext()
                               )}
                             </span>
-                            <ArrowRight className="h-4 w-4 ml-5 text-primary opacity-0 transition-all transform -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />
+                            <ArrowRightIcon className="h-4 w-4 ml-5 text-primary opacity-0 transition-all transform -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0" />
                           </div>
                         ) : (
                           flexRender(

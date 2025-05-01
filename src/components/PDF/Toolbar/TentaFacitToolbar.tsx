@@ -1,33 +1,31 @@
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useRef, useState } from "react";
+import { RotateCcw, RotateCw, BookOpenIcon } from "lucide-react";
 import {
-  Plus,
-  Minus,
-  RotateCcw,
-  RotateCw,
-  Download,
-  BookOpenIcon,
+  PlusIcon,
+  DashIcon,
+  DownloadIcon,
   EyeIcon,
-} from 'lucide-react';
-import { EyeClosedIcon } from '@radix-ui/react-icons';
-import { Button } from '@/components/ui/button';
-import { Exam } from '@/components/data-table/columns';
-import { Separator } from '@/components/ui/separator';
+  EyeClosedIcon,
+} from "@primer/octicons-react";
+import { Button } from "@/components/ui/button";
+import { Exam } from "@/components/data-table/columns";
+import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
+} from "@/components/ui/tooltip";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useLanguage } from '@/context/LanguageContext';
-import translations from '@/util/translations';
-import { filterExamsByDate, isFacit } from '@/components/PDF/utils';
-import { motion } from 'framer-motion';
+} from "@/components/ui/dropdown-menu";
+import { useLanguage } from "@/context/LanguageContext";
+import translations from "@/util/translations";
+import { filterExamsByDate, isFacit } from "@/components/PDF/utils";
+import { motion } from "framer-motion";
 
 interface Props {
   facitPdfUrl: string | null;
@@ -57,15 +55,15 @@ const ToolbarButton = ({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          variant='secondary'
-          size='icon'
+          variant="secondary"
+          size="icon"
           onClick={onClick}
           className={className}
         >
           <Icon size={17} />
         </Button>
       </TooltipTrigger>
-      <TooltipContent side='left'>
+      <TooltipContent side="left">
         <p>{tooltip}</p>
       </TooltipContent>
     </Tooltip>
@@ -110,10 +108,10 @@ const TentaFacitToolbar: FC<Props> = ({
 
     handleMouseMove();
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
@@ -130,7 +128,7 @@ const TentaFacitToolbar: FC<Props> = ({
 
   return (
     <motion.div
-      className='fixed top-16 right-5 flex flex-col space-y-2 z-40'
+      className="fixed top-16 right-5 flex flex-col space-y-2 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
@@ -145,41 +143,41 @@ const TentaFacitToolbar: FC<Props> = ({
       transition={{ duration: 0.3 }}
     >
       <ToolbarButton
-        icon={Plus}
+        icon={PlusIcon}
         onClick={onFacitZoomIn}
-        tooltip={getTranslation('zoomIn')}
+        tooltip={getTranslation("zoomIn")}
       />
       <ToolbarButton
-        icon={Minus}
+        icon={DashIcon}
         onClick={onFacitZoomOut}
-        tooltip={getTranslation('zoomOut')}
+        tooltip={getTranslation("zoomOut")}
       />
       <Separator />
       <ToolbarButton
         icon={RotateCcw}
         onClick={onRotateFacitCounterClockwise}
-        tooltip={getTranslation('rotateLeft')}
+        tooltip={getTranslation("rotateLeft")}
       />
       <ToolbarButton
         icon={RotateCw}
         onClick={onRotateFacitClockwise}
-        tooltip={getTranslation('rotateRight')}
+        tooltip={getTranslation("rotateRight")}
       />
       <Separator />
       <ToolbarButton
-        icon={Download}
-        onClick={() => window.open(facitPdfUrl || '#', '_blank')}
-        tooltip={getTranslation('downloadFacit')}
+        icon={DownloadIcon}
+        onClick={() => window.open(facitPdfUrl || "#", "_blank")}
+        tooltip={getTranslation("downloadFacit")}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant='secondary' size='icon'>
+          <Button variant="secondary" size="icon">
             <BookOpenIcon size={17} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
-          side='left'
-          className='max-h-60 overflow-y-auto z-50'
+          side="left"
+          className="max-h-60 overflow-y-auto z-50"
         >
           {filteredFacitExams.map((exam) => (
             <DropdownMenuItem
@@ -194,7 +192,7 @@ const TentaFacitToolbar: FC<Props> = ({
       <ToolbarButton
         icon={isBlurred ? EyeClosedIcon : EyeIcon}
         onClick={onToggleBlur}
-        tooltip={getTranslation(isBlurred ? 'showFacit' : 'hideFacit')}
+        tooltip={getTranslation(isBlurred ? "showFacit" : "hideFacit")}
       />
     </motion.div>
   );

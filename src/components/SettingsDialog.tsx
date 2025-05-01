@@ -19,7 +19,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import { FC, JSX, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { Moon, Sun, Monitor, Settings } from "lucide-react";
+import {
+  MoonIcon,
+  SunIcon,
+  GearIcon,
+  DeviceDesktopIcon,
+} from "@primer/octicons-react";
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
@@ -61,17 +66,17 @@ const SettingsDialog: FC = () => {
     {
       id: "light",
       label: "Light",
-      icon: <Sun className="w-5 h-5" />,
+      icon: <SunIcon className="w-5 h-5" />,
     },
     {
       id: "dark",
       label: "Dark",
-      icon: <Moon className="w-5 h-5" />,
+      icon: <MoonIcon className="w-5 h-5" />,
     },
     {
       id: "system",
       label: "System",
-      icon: <Monitor className="w-5 h-5" />,
+      icon: <DeviceDesktopIcon className="w-5 h-5" />,
     },
   ];
 
@@ -100,8 +105,8 @@ const SettingsDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline" size="icon">
-          <Settings />
+        <Button variant="secondary" size="icon">
+          <GearIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg">

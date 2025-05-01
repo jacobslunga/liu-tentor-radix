@@ -2,7 +2,7 @@ import MainInput from "@/components/MainInput";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
 import translations, { Language } from "@/util/translations";
-import { Upload } from "lucide-react";
+import { UploadIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
@@ -80,7 +80,7 @@ export default function HomePage() {
               <div className="flex flex-col md:flex-row items-center justify-center w-full">
                 <Link to="/upload-exams">
                   <Button className="hidden md:flex flex-row items-center justify-center">
-                    <Upload className="w-5 h-5" />
+                    <UploadIcon className="w-5 h-5" />
                     {getTranslation("uploadTitle")}
                   </Button>
                 </Link>

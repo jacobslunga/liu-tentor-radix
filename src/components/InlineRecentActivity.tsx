@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowTopRightIcon } from "@radix-ui/react-icons";
+import { ArrowUpRightIcon } from "@primer/octicons-react";
 import { Button } from "@/components/ui/button";
 
 interface RecentActivity {
@@ -70,7 +70,7 @@ const InlineRecentActivity = () => {
               <span className="text-foreground/80 hover:text-foreground transition-colors">
                 {activity.courseCode}
               </span>
-              <ArrowTopRightIcon className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:-translate-y-[2px] group-hover:translate-x-1 transition-all duration-200" />
+              <ArrowUpRightIcon className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:-translate-y-[2px] group-hover:translate-x-1 transition-all duration-200" />
             </Button>
             {index < visibleActivities.length - 1 && (
               <span className="mx-2 text-foreground/40">|</span>

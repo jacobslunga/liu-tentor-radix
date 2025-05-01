@@ -1,22 +1,26 @@
-import { Exam } from '@/components/data-table/columns';
-import { useLanguage } from '@/context/LanguageContext';
-import translations from '@/util/translations';
-import Cookies from 'js-cookie';
-import { ArrowDownNarrowWide, ArrowLeft, Check } from 'lucide-react';
-import { FC, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { findFacitForExam } from './PDF/utils';
-import { Button } from './ui/button';
+import { Exam } from "@/components/data-table/columns";
+import { useLanguage } from "@/context/LanguageContext";
+import translations from "@/util/translations";
+import Cookies from "js-cookie";
+import {
+  CheckIcon,
+  ArrowLeftIcon,
+  ChevronDownIcon,
+} from "@primer/octicons-react";
+import { FC, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { findFacitForExam } from "./PDF/utils";
+import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import SettingsDialog from '@/components/SettingsDialog';
+} from "@/components/ui/dropdown-menu";
+import SettingsDialog from "@/components/SettingsDialog";
 
 const normalizeName = (name: string): string => {
-  return name.toLowerCase().replace(/[^a-z0-9-_]/g, '');
+  return name.toLowerCase().replace(/[^a-z0-9-_]/g, "");
 };
 
 const extractDate = (name: string): string | null => {
@@ -25,7 +29,7 @@ const extractDate = (name: string): string | null => {
   if (!match) return null;
   const dateStr = match[0];
   let year, month, day;
-  if (dateStr.includes('-') || dateStr.includes('_')) {
+  if (dateStr.includes("-") || dateStr.includes("_")) {
     [year, month, day] = dateStr.split(/[-_]/);
   } else if (dateStr.length === 8) {
     year = dateStr.substring(0, 4);
@@ -46,7 +50,7 @@ const extractDate = (name: string): string | null => {
   ) {
     return null;
   }
-  return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+  return `${year}-${month.padStart(2, "0")}-${day.padStart(2, "0")}`;
 };
 
 interface ExamHeaderProps {
@@ -77,9 +81,9 @@ const ExamHeader: FC<ExamHeaderProps> = ({
   const { language } = useLanguage();
   const [selectedExamName, setSelectedExamName] = useState(tenta_namn);
   const [completedExams] = useState<Record<number, boolean>>(() => {
-    const cookieConsent = Cookies.get('cookieConsent');
-    if (cookieConsent === 'true') {
-      const stored = Cookies.get('completedExams');
+    const cookieConsent = Cookies.get("cookieConsent");
+    if (cookieConsent === "true") {
+      const stored = Cookies.get("completedExams");
       return stored ? JSON.parse(stored) : {};
     }
     return {};
@@ -115,73 +119,73 @@ const ExamHeader: FC<ExamHeaderProps> = ({
     window.location.reload();
   };
 
-  let displayName = selectedExamName.replace('.pdf', '');
+  let displayName = selectedExamName.replace(".pdf", "");
 
   return (
     <div
       className={`hidden md:flex z-[60] fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-16 bg-transparent`}
     >
-      <div className='flex flex-row items-center justify-center space-x-5'>
+      <div className="flex flex-row items-center justify-center space-x-5">
         <Button
-          size='icon'
-          variant='outline'
+          size="icon"
+          variant="outline"
           onClick={() => {
             navigate(`/search/${courseCode}`);
           }}
-          aria-label={getTranslation('goBack')}
+          aria-label={getTranslation("goBack")}
         >
-          <ArrowLeft className='w-5 h-5' />
+          <ArrowLeftIcon className="w-5 h-5" />
         </Button>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant='outline'
-              className='flex flex-row items-center justify-center space-x-1'
+              variant="secondary"
+              className="flex flex-row items-center justify-center space-x-1"
             >
-              <p className='flex-1 text-left'>
+              <p className="flex-1 text-left">
                 {displayName.length > 20
                   ? `${displayName.slice(0, 20)}...`
                   : displayName}
               </p>
-              <ArrowDownNarrowWide className='w-4 h-4' />
+              <ChevronDownIcon className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className='max-h-80 ml-20 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]'>
+          <DropdownMenuContent className="max-h-80 ml-20 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {sortedExams.map((exam) => (
               <DropdownMenuItem
                 key={exam.id}
                 onClick={() => handleExamChange(exam)}
                 className={`flex flex-col px-3 py-2 ${
                   exam.id.toString() === currentExamId.toString()
-                    ? 'bg-primary/10'
-                    : ''
+                    ? "bg-primary/10"
+                    : ""
                 }`}
               >
-                <div className='flex items-center w-full gap-2'>
+                <div className="flex items-center w-full gap-2">
                   {exam.id.toString() === currentExamId.toString() && (
-                    <div className='w-1.5 h-1.5 rounded-full bg-primary shrink-0' />
+                    <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
                   )}
                   <span
                     className={`flex-1 font-medium truncate ${
                       exam.id.toString() === currentExamId.toString()
-                        ? 'text-primary'
-                        : ''
+                        ? "text-primary"
+                        : ""
                     }`}
                   >
-                    {exam.tenta_namn.replace('.pdf', '')}
+                    {exam.tenta_namn.replace(".pdf", "")}
                   </span>
                   {completedExams[exam.id] && (
-                    <Check className='w-4 h-4 text-green-500 shrink-0' />
+                    <CheckIcon className="w-4 h-4 text-green-500 shrink-0" />
                   )}
                 </div>
-                <div className='flex items-start w-full space-x-2 text-xs text-muted-foreground'>
+                <div className="flex items-start w-full space-x-2 text-xs text-muted-foreground">
                   {exam.date && <span>{exam.date}</span>}
                   {findFacitForExam(exam, allExams) && (
                     <>
                       <span>•</span>
-                      <span className='text-green-500'>
-                        {getTranslation('withFacit')}
+                      <span className="text-green-500">
+                        {getTranslation("withFacit")}
                       </span>
                     </>
                   )}
@@ -192,7 +196,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
         </DropdownMenu>
       </div>
 
-      <div className='flex flex-row items-center justify-center space-x-3 min-w-fit'>
+      <div className="flex flex-row items-center justify-center space-x-3 min-w-fit">
         <SettingsDialog />
       </div>
     </div>
