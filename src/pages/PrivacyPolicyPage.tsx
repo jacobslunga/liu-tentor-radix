@@ -137,7 +137,7 @@ const PrivacyPolicy: FC = () => {
                 "If you have any questions about our privacy policy, please contact us."}
             </p>
             <Button
-              variant="default"
+              size="sm"
               className="mt-2"
               onClick={() =>
                 (window.location.href = "mailto:liutentor@gmail.com")

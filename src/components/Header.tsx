@@ -7,7 +7,6 @@ import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
 import { LogoIcon } from "./LogoIcon";
 
 const Header = () => {
-  const [transparentBg, setTransparentBg] = useState<boolean>(true);
   const { setShowGlobalSearch } = useContext(ShowGlobalSearchContext);
   const [isMac, setIsMac] = useState(false);
 
@@ -17,21 +16,6 @@ const Header = () => {
   }, []);
 
   const modifierKey = isMac ? "⌘" : "Ctrl";
-
-  useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setTransparentBg(false);
-      } else {
-        setTransparentBg(true);
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  });
 
   const { language } = useLanguage();
 
@@ -43,11 +27,7 @@ const Header = () => {
 
   return (
     <header
-      className={`sticky ${
-        transparentBg
-          ? "border-b-transparent"
-          : "border-b shadow-sm backdrop-blur-sm"
-      } transition-all bg-background/90 duration-200 top-0 z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
+      className={`sticky backdrop-blur-sm transition-all bg-background/90 duration-200 top-0 z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10`}
       role="banner"
       style={{
         maxWidth: "100vw",

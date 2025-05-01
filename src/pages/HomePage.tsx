@@ -79,7 +79,10 @@ export default function HomePage() {
               {/* CTA Button */}
               <div className="flex flex-col md:flex-row items-center justify-center w-full">
                 <Link to="/upload-exams">
-                  <Button className="hidden md:flex flex-row items-center justify-center">
+                  <Button
+                    size="sm"
+                    className="hidden md:flex flex-row items-center justify-center"
+                  >
                     <UploadIcon className="w-5 h-5" />
                     {getTranslation("uploadTitle")}
                   </Button>

@@ -637,12 +637,14 @@ const PDFModal: FC<PDFModalProps> = ({
             <TabsTrigger
               value="exam-with-facit"
               onClick={() => changeLayoutMode("exam-with-facit")}
+              className="transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <Columns2 className="w-5 h-5" />
             </TabsTrigger>
             <TabsTrigger
               value="exam-only"
               onClick={() => changeLayoutMode("exam-only")}
+              className="transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
               <PanelRight className="w-5 h-5" />
             </TabsTrigger>

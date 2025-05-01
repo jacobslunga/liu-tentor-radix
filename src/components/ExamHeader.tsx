@@ -140,7 +140,8 @@ const ExamHeader: FC<ExamHeaderProps> = ({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="secondary"
+              variant="outline"
+              size="sm"
               className="flex flex-row items-center justify-center space-x-1"
             >
               <p className="flex-1 text-left">
@@ -151,7 +152,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
               <ChevronDownIcon className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="max-h-80 ml-20 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <DropdownMenuContent className="max-h-80 ml-16 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
             {sortedExams.map((exam) => (
               <DropdownMenuItem
                 key={exam.id}

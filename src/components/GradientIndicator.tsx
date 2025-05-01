@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { motion, useSpring, useTransform } from 'framer-motion';
-import { ArrowLeftToLine, LoaderCircle } from 'lucide-react';
-import { Exam } from './data-table/columns';
+import React, { useEffect } from "react";
+import { motion, useSpring, useTransform } from "framer-motion";
+import { ArrowLeftToLine, LoaderCircle } from "lucide-react";
+import { Exam } from "./data-table/columns";
 
 interface GradientIndicatorProps {
   detectedFacit: Exam | null;
@@ -32,8 +32,8 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
       }
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [springOpacity]);
 
   const gradientOpacity = useTransform(springOpacity, (value) => value * 0.2);
@@ -41,7 +41,7 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
 
   return (
     <motion.div
-      className='absolute right-0 top-0 h-full w-40 flex items-center justify-end pointer-events-none'
+      className="absolute right-0 top-0 h-full w-40 flex items-center justify-end pointer-events-none"
       style={{
         background: useTransform(
           gradientOpacity,
@@ -51,21 +51,21 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
       }}
     >
       <motion.div
-        className='absolute right-0 flex items-center h-full pr-2'
+        className="absolute right-0 flex items-center h-full pr-2"
         style={{ opacity: iconOpacity }}
       >
-        <div className='flex items-center space-x-2'>
+        <div className="flex items-center space-x-2">
           {detectedFacit && !facitPdfUrl ? (
-            <LoaderCircle className='w-10 h-10 animate-spin text-primary' />
+            <LoaderCircle className="w-10 h-10 animate-spin text-primary" />
           ) : facitPdfUrl ? (
-            <div className='h-20 flex items-center justify-center'>
-              <div className='bg-primary/10 px-3 py-2 rounded-l-xl'>
-                <ArrowLeftToLine className='w-5 h-5 text-primary' />
+            <div className="h-20 flex items-center justify-center">
+              <div className="bg-primary/10 px-3 py-2 rounded-l-xl">
+                <ArrowLeftToLine className="w-5 h-5 text-primary" />
               </div>
             </div>
           ) : (
-            <p className='text-xs hidden md:flex text-muted-foreground'>
-              {getTranslation('facitNotAvailable')}
+            <p className="text-xs hidden md:flex text-muted-foreground">
+              {getTranslation("facitNotAvailable")}
             </p>
           )}
         </div>

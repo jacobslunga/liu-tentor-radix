@@ -8,17 +8,17 @@ import { useDropzone } from "react-dropzone";
 import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import translations from "@/util/translations";
+import { Loader2 } from "lucide-react";
 import {
-  ArrowLeft,
-  X,
-  FilePlus2,
-  Upload,
-  CheckCircle,
-  Loader2,
-  File,
-  XCircle,
-  Info,
-} from "lucide-react";
+  XCircleIcon,
+  UploadIcon,
+  CheckCircleIcon,
+  FileIcon,
+  InfoIcon,
+  XIcon,
+  ArrowLeftIcon,
+  FileAddedIcon,
+} from "@primer/octicons-react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -120,12 +120,12 @@ const UploadExamPage = () => {
             className="mr-5"
             size="sm"
           >
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeftIcon className="h-4 w-4" />
             {language === "sv" ? "Tillbaka" : "Back"}
           </Button>
         </div>
 
-        <Upload className="text-primary h-12 w-12 mx-auto" />
+        <UploadIcon className="text-primary h-12 w-12 mx-auto" />
         <h1 className="text-3xl text-foreground/80 font-semibold">
           {t.uploadTitle}
         </h1>
@@ -149,7 +149,7 @@ const UploadExamPage = () => {
             } ${loading ? "opacity-50" : ""}`}
           >
             <input {...getInputProps()} disabled={loading} />
-            <FilePlus2 className="h-12 w-12 text-muted-foreground mx-auto" />
+            <FileAddedIcon className="h-12 w-12 text-muted-foreground mx-auto" />
             <p className="text-sm text-muted-foreground mt-2">
               {t.dragAndDrop}
             </p>
@@ -163,11 +163,11 @@ const UploadExamPage = () => {
                   className="flex items-center justify-between p-2 bg-muted rounded-lg"
                 >
                   <div className="flex items-center gap-2">
-                    <File className="h-5 w-5 text-primary" />
+                    <FileIcon className="h-5 w-5 text-primary" />
                     <span className="truncate text-sm">{file.name}</span>
                   </div>
                   <button onClick={() => removeFile(index)}>
-                    <X className="h-5 w-5 text-muted-foreground hover:text-primary transition" />
+                    <XIcon className="h-5 w-5 text-muted-foreground hover:text-primary transition" />
                   </button>
                 </div>
               ))}
@@ -192,7 +192,7 @@ const UploadExamPage = () => {
               {loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
-                <Upload className="h-4 w-4" />
+                <UploadIcon className="h-4 w-4" />
               )}{" "}
               {t.uploadButton}
             </Button>
@@ -200,7 +200,7 @@ const UploadExamPage = () => {
         </Card>
 
         <div className="p-4 bg-muted border border-border rounded-lg flex flex-col items-center gap-3">
-          <Info className="h-5 w-5 text-primary" />
+          <InfoIcon className="h-5 w-5 text-primary" />
           <p className="text-sm text-muted-foreground text-center">
             {language === "sv"
               ? "Observera att uppladdade tentor granskas innan de blir tillgängliga. Därmed kan det ta en stund innan de syns på sidan."
@@ -227,9 +227,9 @@ const UploadExamPage = () => {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               {uploadStatus === "success" ? (
-                <CheckCircle className="text-green-500 h-5 w-5" />
+                <CheckCircleIcon className="text-green-500 h-5 w-5" />
               ) : (
-                <XCircle className="text-red-500 h-5 w-5" />
+                <XCircleIcon className="text-red-500 h-5 w-5" />
               )}
               {uploadStatus === "success" ? t.uploadSuccess : t.uploadError}
             </AlertDialogTitle>
