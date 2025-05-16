@@ -55,6 +55,7 @@ export const isFacit = (name: string) => {
     normalizedName.includes("lösnings") ||
     normalizedName.includes("lösning") ||
     normalizedName.includes("tenlsg") ||
+    normalizedName.includes("lf") ||
     normalizedName.includes("_l") ||
     (normalizedName.includes("svar") &&
       !normalizedName.includes("tenta_och_svar"));
@@ -177,7 +178,7 @@ export const fetcher = async (key: string) => {
 export const retryFetch = async (
   fetchFn: () => Promise<any>,
   retries = 3,
-  delay = 1000,
+  delay = 1000
 ) => {
   for (let i = 0; i < retries; i++) {
     try {
