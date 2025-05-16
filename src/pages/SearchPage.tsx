@@ -21,21 +21,20 @@ import { kurskodArray } from "@/data/kurskoder";
 
 export const extractDateFromName = (name: string) => {
   const patterns = [
-    /(\d{4})-(\d{2})-(\d{2})/, // YYYY-MM-DD
-    /(\d{4})(\d{2})(\d{2})/, // YYYYMMDD
-    /(\d{2})(\d{2})(\d{2})/, // YYMMDD
-    /(\d{2})_(\d{2})_(\d{2})/, // YY_MM_DD
-    /(\d{4})_(\d{2})_(\d{2})/, // YYYY_MM_DD
-    /(\d{1,2})[-/](\d{1,2})[-/](\d{4})/, // D-M-YYYY or D/M/YYYY
-    /(\d{4})[-/](\d{1,2})[-/](\d{1,2})/, // YYYY-M-D or YYYY/M/D
-    /(?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*[-_](\d{2,4})/, // month-YY[YY]
-    /(\d{2,4})[-_](?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*/, // YY[YY]-month
-    /T?(\d{1,2})[-_](\d{4})/, // T1-2024 or 1-2024 (term format)
-    /HT(\d{2})/, // HT23 (fall term)
-    /VT(\d{2})/, // VT24 (spring term)
+    /(\d{4})-(\d{2})-(\d{2})/,
+    /(\d{4})(\d{2})(\d{2})/,
+    /(\d{2})(\d{2})(\d{2})/,
+    /(\d{2})_(\d{2})_(\d{2})/,
+    /(\d{4})_(\d{2})_(\d{2})/,
+    /(\d{1,2})[-/](\d{1,2})[-/](\d{4})/,
+    /(\d{4})[-/](\d{1,2})[-/](\d{1,2})/,
+    /(?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*[-_](\d{2,4})/,
+    /(\d{2,4})[-_](?:jan|feb|mar|apr|maj|jun|jul|aug|sep|okt|nov|dec)[a-z]*/,
+    /T?(\d{1,2})[-_](\d{4})/,
+    /HT(\d{2})/,
+    /VT(\d{2})/,
   ];
-
-  const monthMap: Record<string, string> = {
+  const monthMap = {
     jan: "01",
     feb: "02",
     mar: "03",
@@ -53,10 +52,8 @@ export const extractDateFromName = (name: string) => {
   for (const pattern of patterns) {
     const match = name.toLowerCase().match(pattern);
     if (!match) continue;
-
     try {
       let year, month, day;
-
       if (match[0].startsWith("ht")) {
         year = `20${match[1]}`;
         month = "12";
@@ -74,22 +71,17 @@ export const extractDateFromName = (name: string) => {
         month = match[2];
         day = match[3];
         if (year.length === 2) year = `20${year}`;
-        if (monthMap[month]) month = monthMap[month];
+        if (month in monthMap) month = monthMap[month as keyof typeof monthMap];
       }
-
-      if (!year || !month || !day) continue;
-
       const monthNum = parseInt(month);
       const dayNum = parseInt(day);
       if (monthNum < 1 || monthNum > 12 || dayNum < 1 || dayNum > 31) continue;
-
       const date = new Date(parseInt(year), monthNum - 1, dayNum);
       if (!isNaN(date.getTime())) return date;
     } catch {
       continue;
     }
   }
-
   return null;
 };
 
@@ -106,58 +98,43 @@ const formatDate = (name: string) => {
 const SearchPage: React.FC = () => {
   const { courseCode } = useParams<{ courseCode: string }>();
   const { language } = useLanguage();
-  const { data: exams, error } = useSWR(courseCode, fetchExamsByCourseCode);
+  const {
+    data: exams,
+    error,
+    isLoading: isExamsLoading,
+  } = useSWR(courseCode, fetchExamsByCourseCode);
 
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [courseStats, setCourseStats] = useState<any>(null);
-  const [loadingStats, setLoadingStats] = useState(true);
 
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
 
   useEffect(() => {
-    const fetchStats = async () => {
-      if (!courseCode) return;
-      setLoadingStats(true);
-
-      try {
-        const res = await fetch(
-          `https://liutentor.lukasabbe.com/api/courses/${courseCode.toUpperCase()}`
-        );
-        if (!res.ok) throw new Error("Failed to fetch stats");
-        const data = await res.json();
-        setCourseStats(data);
-      } catch (err) {
-        console.error("Error fetching course stats:", err);
-      } finally {
-        setLoadingStats(false);
-      }
-    };
-
-    fetchStats();
+    if (!courseCode) return;
+    fetch(
+      `https://liutentor.lukasabbe.com/api/courses/${courseCode.toUpperCase()}`
+    )
+      .then((res) =>
+        res.ok ? res.json() : Promise.reject("Failed to fetch stats")
+      )
+      .then(setCourseStats)
+      .catch(console.error);
   }, [courseCode]);
 
   const formattedExams = useMemo(() => {
-    if (!exams || !courseStats) return [];
-
+    if (!exams) return [];
     return exams
       .map((e: Exam) => {
         const fallbackDate = new Date(e.created_at || Date.now());
         const parsedDate = extractDateFromName(e.tenta_namn) || fallbackDate;
-
-        const toIso = (date: Date) =>
-          `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-            2,
-            "0"
-          )}-${String(date.getDate()).padStart(2, "0")}`;
-
-        const isoDate = toIso(parsedDate);
-
-        const moduleStats = courseStats.modules?.find((m: any) =>
+        const isoDate = `${parsedDate.getFullYear()}-${String(
+          parsedDate.getMonth() + 1
+        ).padStart(2, "0")}-${String(parsedDate.getDate()).padStart(2, "0")}`;
+        const moduleStats = courseStats?.modules?.find((m: any) =>
           m.date?.startsWith(isoDate)
         );
-
         const grades = moduleStats?.grades || [];
         const total = grades.reduce(
           (acc: any, g: { quantity: any }) => acc + g.quantity,
@@ -170,13 +147,11 @@ const SearchPage: React.FC = () => {
           total > 0
             ? parseFloat(((approved / total) * 100).toFixed(1))
             : undefined;
-
         const includesFacit =
           /(sol|solutions?|lösningar|svar|exam \+ solutions|exam and solutions)/.test(
             e.tenta_namn.toLowerCase()
           );
         const facit = includesFacit ? e : findFacitForExam(e, exams);
-
         return {
           ...e,
           created_at: formatDate(e.tenta_namn),
@@ -195,12 +170,15 @@ const SearchPage: React.FC = () => {
         };
       })
       .filter((e) => !e.isFacit)
-      .sort((a, b) => {
-        if (a.hasFacit !== b.hasFacit) return a.hasFacit ? -1 : 1;
-        return sortOrder === "desc"
+      .sort((a, b) =>
+        a.hasFacit !== b.hasFacit
+          ? a.hasFacit
+            ? -1
+            : 1
+          : sortOrder === "desc"
           ? b.rawDate.getTime() - a.rawDate.getTime()
-          : a.rawDate.getTime() - b.rawDate.getTime();
-      });
+          : a.rawDate.getTime() - b.rawDate.getTime()
+      );
   }, [exams, courseStats, sortOrder]);
 
   const pageTitle = `${courseCode?.toUpperCase()} - ${getTranslation(
@@ -225,7 +203,7 @@ const SearchPage: React.FC = () => {
     );
   }
 
-  if (!exams || loadingStats) {
+  if (isExamsLoading || exams === undefined) {
     return (
       <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
         <LoadingSpinner />
@@ -233,7 +211,7 @@ const SearchPage: React.FC = () => {
     );
   }
 
-  if (formattedExams.length === 0) {
+  if (exams.length === 0) {
     const closest = getClosestCourseCodes(courseCode || "", kurskodArray);
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -271,7 +249,6 @@ const SearchPage: React.FC = () => {
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
       </Helmet>
-
       <div className="md:hidden w-full mt-6 mb-8 px-5">
         <MobileExamList
           exams={formattedExams}
@@ -281,7 +258,6 @@ const SearchPage: React.FC = () => {
           description={pageDescription}
         />
       </div>
-
       <div className="hidden md:block max-w-full min-w-[50%]">
         <DataTable
           data={formattedExams}
@@ -293,7 +269,6 @@ const SearchPage: React.FC = () => {
           }
         />
       </div>
-
       <div className="sticky bottom-0 mb-10 w-screen h-20 bg-gradient-to-t from-background to-transparent flex items-center justify-center"></div>
     </div>
   );

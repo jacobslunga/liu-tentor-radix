@@ -27,7 +27,7 @@ const FAQPage = () => {
 
       <PageHeader />
 
-      <h1 className="text-3xl font-semibold mb-8 text-foreground/90 mt-12">
+      <h1 className="text-3xl font-normal mb-8 text-foreground/90 mt-12">
         {language === "sv" ? "Vanliga frågor" : "Frequently Asked Questions"}
       </h1>
 

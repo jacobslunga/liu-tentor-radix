@@ -113,7 +113,7 @@ const FeedbackPage: FC = () => {
             <ChecklistIcon className="text-primary h-10 w-10" />
           </div>
 
-          <h1 className="text-3xl text-foreground/80 font-semibold text-center mt-5 mb-4">
+          <h1 className="text-3xl text-foreground/80 font-medium text-center mt-5 mb-4">
             {getTranslation("feedbackTitle")}
           </h1>
           <p className="text-lg text-muted-foreground text-center max-w-xl">
@@ -134,7 +134,7 @@ const FeedbackPage: FC = () => {
                   <CheckIcon className="h-10 w-10 text-green-600" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-medium mb-2">
+                  <h2 className="text-2xl font-normal mb-2">
                     {getTranslation("feedbackSuccessTitle") || "Thank you!"}
                   </h2>
                   <p className="text-foreground/80">
@@ -151,7 +151,7 @@ const FeedbackPage: FC = () => {
                   <AlertIcon className="h-10 w-10 text-red-600" />
                 </div>
                 <div>
-                  <h2 className="text-2xl font-medium mb-2">
+                  <h2 className="text-2xl font-normal mb-2">
                     {getTranslation("feedbackErrorTitle") ||
                       "Something went wrong"}
                   </h2>

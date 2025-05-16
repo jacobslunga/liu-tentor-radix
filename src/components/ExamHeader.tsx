@@ -141,7 +141,6 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
-              size="sm"
               className="flex flex-row items-center justify-center space-x-1"
             >
               <p className="flex-1 text-left">

@@ -78,73 +78,68 @@ textarea {
 
 @layer base {
   :root {
-    --background: 0 0% 98%;
-    --foreground: 240 5% 10%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 5% 12%;
+    --background: 0 0% 100%; /* Seasalt */
+    --foreground: 0 0% 10%; /* Nästan svart */
+    --card: 0 0% 98%;
+    --card-foreground: 0 0% 10%; /* Nästan svart */
     --popover: 0 0% 100%;
-    --popover-foreground: 240 5% 12%;
-
-    --primary: 138 64% 33%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 155 60% 40%;
     --primary-foreground: 0 0% 98%;
-
-    --secondary: 240 4% 90%;
-    --secondary-foreground: 240 5% 20%;
-
-    --muted: 240 4% 92%;
-    --muted-foreground: 240 4% 40%;
-
-    --accent: 240 5% 95%;
-    --accent-foreground: 240 5% 25%;
-
-    --destructive: 0 60% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 240 5% 85%;
-    --input: 240 5% 88%;
-    --ring: 240 5% 70%;
-
-    --chart-1: 240 5% 85%;
-    --chart-2: 240 5% 70%;
-    --chart-3: 240 5% 55%;
-    --chart-4: 240 5% 40%;
-    --chart-5: 240 5% 25%;
-
-    --radius: 0.7em;
+    --secondary: 0 0% 95%; /* Silver */
+    --secondary-foreground: 0 0% 10%;
+    --muted: 0 0% 90%; /* Silver */
+    --muted-foreground: 0 0% 35%;
+    --accent: 0 0% 90%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 90%;
+    --input: 0 0% 85%;
+    --ring: 0 0% 10%;
+    --chart-1: 155 50% 85%; /* Ljusast grön för U */
+    --chart-2: 155 55% 65%; /* 3 */
+    --chart-3: 155 60% 50%; /* 4 */
+    --chart-4: 155 65% 40%; /* 5 */
+    --chart-5: 155 70% 30%; /* Extra mörk om du behöver */
+    --radius: 0.7rem;
   }
 
   .dark {
-    --background: 240 6% 10%;
-    --foreground: 0 0% 95%;
-    --card: 240 6% 12%;
+    --background: 220 5% 12%; /* Davy's gray - Deep, calm background */
+    --foreground: 0 0% 95%; /* Light text for high contrast and readability */
+
+    --card: 220 5% 14%; /* Slightly darker than background for depth */
     --card-foreground: var(--foreground);
-    --popover: var(--card);
+
+    --popover: var(--card); /* Consistent with card for uniformity */
     --popover-foreground: var(--foreground);
 
-    --primary: 120 39% 75%;
-    --primary-foreground: 240 6% 10%;
+    --primary: 120 40% 75%; /* Soft green for primary actions */
+    --primary-foreground: 0 0% 10%; /* Dark text for contrast on primary */
 
-    --secondary: 240 4% 20%;
-    --secondary-foreground: 0 0% 90%;
+    --secondary: 220 5% 18%; /* Slightly lighter than background for secondary elements */
+    --secondary-foreground: var(--foreground);
 
-    --muted: 240 4% 18%;
-    --muted-foreground: 240 5% 60%;
+    --muted: 220 5% 20%; /* Muted tone for UI elements */
+    --muted-foreground: 0 0% 65%; /* Lighter gray for subtle text */
 
-    --accent: 240 5% 22%;
-    --accent-foreground: 0 0% 95%;
+    --accent: 220 5% 15%; /* Accent color for emphasis */
+    --accent-foreground: var(--foreground);
 
-    --destructive: 0 50% 45%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 55% 35%; /* Subdued red for a less aggressive look */
+    --destructive-foreground: 0 0% 98%; /* Light text for contrast */
 
-    --border: 240 4% 25%;
-    --input: 240 4% 20%;
-    --ring: 240 4% 30%;
+    --border: 220 5% 18%; /* Slightly lighter than background for subtle separation */
+    --input: var(--secondary); /* Consistent with secondary for inputs */
+    --ring: 220 5% 22%; /* Soft but noticeable ring effect */
 
-    --chart-1: 240 5% 70%;
-    --chart-2: 240 5% 60%;
-    --chart-3: 240 5% 50%;
-    --chart-4: 240 5% 40%;
-    --chart-5: 240 5% 30%;
+    /* Chart colors (Balanced around the main theme) */
+    --chart-1: 155 50% 85%; /* Ljusast grön för U */
+    --chart-2: 155 55% 65%; /* 3 */
+    --chart-3: 155 60% 50%; /* 4 */
+    --chart-4: 155 65% 40%; /* 5 */
+    --chart-5: 155 70% 30%; /* Extra mörk om du behöver */
   }
 }
 
