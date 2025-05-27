@@ -80,7 +80,7 @@ export default function HomePage() {
               <div className="flex flex-col md:flex-row items-center justify-center w-full">
                 <Link to="/upload-exams">
                   <Button
-                    size="sm"
+                    variant="secondary"
                     className="hidden md:flex flex-row items-center justify-center"
                   >
                     <UploadIcon className="w-5 h-5" />

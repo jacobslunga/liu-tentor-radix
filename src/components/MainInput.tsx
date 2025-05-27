@@ -211,10 +211,10 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
       <div className="w-full relative">
         <input
           placeholder={getTranslation("searchCoursePlaceholder")}
-          value={courseCode}
+          value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full p-5 border-none bg-transparent text-sm text-foreground/80 outline-none"
+          className="w-full font-medium p-5 border-none bg-transparent text-sm text-foreground/80 outline-none"
           autoFocus
           onFocus={() => setFocusInput(true)}
           onBlur={() => setFocusInput(false)}

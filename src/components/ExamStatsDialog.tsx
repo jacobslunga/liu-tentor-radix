@@ -139,12 +139,12 @@ export const ExamStatsDialog = ({
         <div className="mt-4 text-xs text-muted-foreground">
           <span>Data från: </span>
           <a
-            href="https://ysektionen.se/student/tentastatistik/"
+            href="https://liutentor.lukasabbe.com/"
             target="_blank"
             rel="noopener noreferrer"
             className="underline text-primary"
           >
-            Y-sektionen Tentastatistik
+            Linköpings universitet
           </a>
         </div>
 
