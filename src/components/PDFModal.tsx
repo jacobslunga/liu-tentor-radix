@@ -35,6 +35,7 @@ import GradientIndicator from "@/components/GradientIndicator";
 import MobilePDFView from "@/components/MobilePdfViewer";
 import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
 import TentaToolbar from "./PDF/Toolbar/TentaToolbar";
+import { LogoIcon } from "./LogoIcon";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -413,7 +414,7 @@ const PDFModal: FC<PDFModalProps> = ({
     <div className="w-full bg-background relative h-full flex flex-col items-center justify-center overflow-hidden">
       {error ? (
         <div className="flex flex-col items-center justify-center w-full h-full">
-          <h2 className="text-2xl font-bold">Error</h2> <p>{error}</p>
+          <h2 className="text-2xl font-medium">Error</h2> <p>{error}</p>
           <p>Please try refreshing the page or contact support.</p>
         </div>
       ) : (
@@ -651,6 +652,11 @@ const PDFModal: FC<PDFModalProps> = ({
           </TabsList>
         </Tabs>
       </motion.div>
+
+      <p className="text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-1 fixed z-40 bottom-10 right-5">
+        <LogoIcon className="w-7 h-7" />
+        <span>{getTranslation("homeTitle")}</span>
+      </p>
     </div>
   );
 };

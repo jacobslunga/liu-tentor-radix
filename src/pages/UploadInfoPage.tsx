@@ -51,7 +51,7 @@ const UploadInfoPage: React.FC = () => {
           <div className="flex flex-col items-center text-center space-y-4">
             <Upload className="text-primary h-12 w-12" />
 
-            <h1 className="text-3xl text-foreground/80 font-semibold">
+            <h1 className="text-3xl text-foreground/80 font-medium">
               {language === "sv"
                 ? "Hjälp oss göra tentaarkivet komplett"
                 : "Help us complete the exam archive"}

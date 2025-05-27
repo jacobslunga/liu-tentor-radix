@@ -185,7 +185,7 @@ const AddExamsPage = () => {
 
   return (
     <div className="w-full min-h-screen px-6 py-8 space-y-8">
-      <h1 className="text-2xl font-semibold">Ladda upp tentor</h1>
+      <h1 className="text-2xl font-medium">Ladda upp tentor</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="space-y-4">

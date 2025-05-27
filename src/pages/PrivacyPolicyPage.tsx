@@ -22,7 +22,7 @@ const PrivacyPolicy: FC = () => {
     items,
   }) => (
     <div className="mb-6">
-      <h2 className="text-lg font-normal mb-2 flex items-center gap-2">
+      <h2 className="text-lg font-medium mb-2 flex items-center gap-2">
         {title}
       </h2>
       <p className="text-sm text-foreground/80 leading-relaxed">{content}</p>

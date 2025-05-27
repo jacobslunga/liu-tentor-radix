@@ -130,7 +130,7 @@ const UsersAuthPage = () => {
       <motion.h1
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="text-2xl absolute top-10 lg:text-3xl font-logo tracking-tight text-center flex flex-row items-center justify-center space-x-2"
+        className="text-2xl absolute top-10 lg:text-3xl font-logo text-center flex flex-row items-center justify-center space-x-2"
       >
         <SquareLibrary className="text-primary" size={32} />
         <p>LiU Tentor</p>

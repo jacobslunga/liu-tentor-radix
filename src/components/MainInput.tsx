@@ -243,7 +243,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
             )}
             {recentSearches.length > 0 && (
               <>
-                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium tracking-tight">
+                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
                   {getTranslation("recentSearches")}
                 </div>
                 {recentSearches.map((suggestion, index) => (
@@ -268,7 +268,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
                 {recentSearches.length > 0 && (
                   <div className="border-t mx-2 my-1" />
                 )}
-                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium tracking-tight">
+                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
                   {getTranslation("allCourses")}
                 </div>
                 {suggestions.map((suggestion, index) => (

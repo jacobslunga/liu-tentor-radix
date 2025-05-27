@@ -131,7 +131,7 @@ const ManageExamsPage = () => {
       </Helmet>
 
       <div className="border-b border-border py-4 px-6 flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Hantera tentor</h1>
+        <h1 className="text-2xl font-medium">Hantera tentor</h1>
         <Button
           variant="outline"
           size="sm"

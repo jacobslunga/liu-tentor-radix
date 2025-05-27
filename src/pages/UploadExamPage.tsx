@@ -126,7 +126,7 @@ const UploadExamPage = () => {
         </div>
 
         <UploadIcon className="text-primary h-12 w-12 mx-auto" />
-        <h1 className="text-3xl text-foreground/80 font-semibold">
+        <h1 className="text-3xl text-foreground/80 font-medium">
           {t.uploadTitle}
         </h1>
         <p className="text-sm text-muted-foreground">{t.uploadDescription}</p>
@@ -209,7 +209,7 @@ const UploadExamPage = () => {
         </div>
 
         <div className="p-4 bg-background border border-border rounded-lg space-y-3 text-left">
-          <h2 className="text-base font-semibold text-foreground">
+          <h2 className="text-base font-medium text-foreground">
             {t.uploadGuidelinesTitle}
           </h2>
           <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1">
