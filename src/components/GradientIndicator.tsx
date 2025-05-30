@@ -14,61 +14,68 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
   facitPdfUrl,
   getTranslation,
 }) => {
-  const springOpacity = useSpring(0, {
+  // en vår-springa som tar värden 0→1
+  const spring = useSpring(0, {
     stiffness: 200,
     damping: 20,
     restDelta: 0.001,
   });
 
+  // trigga vår-springan baserat på musens X-position
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent): void => {
-      const windowWidth = window.innerWidth;
-      const triggerPoint = windowWidth * 0.7;
-      if (e.clientX > triggerPoint) {
-        const ratio = (e.clientX - triggerPoint) / (windowWidth - triggerPoint);
-        springOpacity.set(ratio);
+    const onMouseMove = (e: MouseEvent) => {
+      const w = window.innerWidth;
+      const trigger = w * 0.7;
+      if (e.clientX > trigger) {
+        // ratio ∈ [0,1]
+        const ratio = (e.clientX - trigger) / (w - trigger);
+        spring.set(Math.min(Math.max(ratio, 0), 1));
       } else {
-        springOpacity.set(0);
+        spring.set(0);
       }
     };
+    window.addEventListener("mousemove", onMouseMove);
+    return () => window.removeEventListener("mousemove", onMouseMove);
+  }, [spring]);
 
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [springOpacity]);
+  // gradient-opacity: 0→0.2
+  const gradientOpacity = useTransform(spring, (v) => v * 0.2);
+  // ikon-opacity med keyframes
+  const iconOpacity = useTransform(spring, [0, 0.3, 1], [0, 0.3, 1]);
 
-  const gradientOpacity = useTransform(springOpacity, (value) => value * 0.2);
-  const iconOpacity = useTransform(springOpacity, [0, 0.3, 1], [0, 0.3, 1]);
+  // skapa en MotionValue för CSS-gradienten
+  const backgroundImage = useTransform(
+    gradientOpacity,
+    (o) =>
+      // OBS: använder backgroundImage för att undvika vissa CSS-policies
+      `linear-gradient(to right, transparent, hsl(var(--primary)/${o}))`
+  );
 
   return (
     <motion.div
-      className="absolute right-0 top-0 h-full w-40 flex items-center justify-end pointer-events-none"
+      className="absolute right-0 top-0 h-full w-40 pointer-events-none"
       style={{
-        background: useTransform(
-          gradientOpacity,
-          (opacity) =>
-            `linear-gradient(to right, transparent, hsl(var(--primary) / ${opacity}))`
-        ),
+        // applicera den dynamiska gradienten
+        backgroundImage,
       }}
     >
       <motion.div
         className="absolute right-0 flex items-center h-full pr-2"
         style={{ opacity: iconOpacity }}
       >
-        <div className="flex items-center space-x-2">
-          {detectedFacit && !facitPdfUrl ? (
-            <LoaderCircle className="w-10 h-10 animate-spin text-primary" />
-          ) : facitPdfUrl ? (
-            <div className="h-20 flex items-center justify-center">
-              <div className="bg-primary/10 px-3 py-2 rounded-l-xl">
-                <ArrowLeftToLine className="w-5 h-5 text-primary" />
-              </div>
+        {detectedFacit && !facitPdfUrl ? (
+          <LoaderCircle className="w-10 h-10 animate-spin text-primary" />
+        ) : facitPdfUrl ? (
+          <div className="h-20 flex items-center justify-center">
+            <div className="bg-primary/10 px-3 py-2 rounded-l-xl">
+              <ArrowLeftToLine className="w-5 h-5 text-primary" />
             </div>
-          ) : (
-            <p className="text-xs hidden md:flex text-muted-foreground">
-              {getTranslation("facitNotAvailable")}
-            </p>
-          )}
-        </div>
+          </div>
+        ) : (
+          <p className="text-xs hidden md:flex text-muted-foreground">
+            {getTranslation("facitNotAvailable")}
+          </p>
+        )}
       </motion.div>
     </motion.div>
   );

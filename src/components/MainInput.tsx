@@ -5,6 +5,7 @@ import { CornerUpRight, X, Clock } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { SearchIcon } from "@primer/octicons-react";
 
 interface RecentActivity {
   courseCode: string;
@@ -208,13 +209,14 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
 
   return (
     <div className="relative w-full">
-      <div className="w-full relative">
+      <div className="w-full relative flex flex-row items-center justify-center">
+        <SearchIcon className="w-4 h-4 text-muted-foreground ml-5" />
         <input
           placeholder={getTranslation("searchCoursePlaceholder")}
           value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full font-medium p-5 border-none bg-transparent text-sm text-foreground/80 outline-none"
+          className="w-full font-normal p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
           autoFocus
           onFocus={() => setFocusInput(true)}
           onBlur={() => setFocusInput(false)}
@@ -234,7 +236,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className="absolute w-full mt-3 bg-background border shadow-xl z-[60] max-h-72 rounded-md overflow-y-auto text-sm"
+            className="absolute w-full left-0 mt-3 bg-background border shadow-xl z-[60] max-h-72 rounded-md overflow-y-auto text-sm"
           >
             {isLoading && (
               <div className="mt-2 absolute left-3 text-sm text-muted-foreground">
@@ -281,7 +283,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <span className="flex-1">{suggestion}</span>
+                    <span className="flex-1 font-medium">{suggestion}</span>
                     <CornerUpRight className="w-4 h-4 opacity-50" />
                   </div>
                 ))}

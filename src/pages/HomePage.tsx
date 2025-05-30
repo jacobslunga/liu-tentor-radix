@@ -68,7 +68,7 @@ export default function HomePage() {
                 focusInput
                   ? "border-primary ring-1 ring-primary"
                   : "hover:border-foreground/40"
-              } bg-background/5 dark:bg-foreground/5 rounded-full transition-all duration-200 text-sm text-foreground/80 outline-none`}
+              } bg-background/5 flex flex-row items-center justify-center dark:bg-foreground/5 rounded-full transition-all duration-200 text-sm text-foreground/80 outline-none`}
             >
               <MainInput setFocusInput={setFocusInput} />
             </div>
@@ -81,6 +81,7 @@ export default function HomePage() {
                 <Link to="/upload-exams">
                   <Button
                     variant="secondary"
+                    size="sm"
                     className="hidden md:flex flex-row items-center justify-center"
                   >
                     <UploadIcon className="w-5 h-5" />

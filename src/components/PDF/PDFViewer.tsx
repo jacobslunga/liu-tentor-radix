@@ -54,7 +54,7 @@ const PDFViewer: FC<PDFViewerProps> = ({
         return {
           backgroundColor: "var(--background)",
           color: "var(--foreground)",
-          filter: "invert(1) brightness(1) contrast(0.8)",
+          filter: "invert(1) brightness(1) contrast(0.78)",
         };
       default:
         return {

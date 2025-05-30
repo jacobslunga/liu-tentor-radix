@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import { AnimatePresence, motion } from "framer-motion";
 import Cookies from "js-cookie";
-import { Columns2, MousePointerClick, PanelRight } from "lucide-react";
+import { Columns2, Icon, MousePointerClick, PanelRight } from "lucide-react";
 import {
   FC,
   useCallback,
@@ -36,6 +36,13 @@ import MobilePDFView from "@/components/MobilePdfViewer";
 import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
 import TentaToolbar from "./PDF/Toolbar/TentaToolbar";
 import { LogoIcon } from "./LogoIcon";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { Button } from "./ui/button";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -69,7 +76,7 @@ const PDFModal: FC<PDFModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [numPages, setNumPages] = useState<number>();
   const [facitNumPages, setFacitNumPages] = useState<number>();
-  const [facitScale, setFacitScale] = useState<number>(1.2);
+  const [facitScale, setFacitScale] = useState<number>(1.3);
   const [rotation, setRotation] = useState<number>(0);
   const [facitRotation, setFacitRotation] = useState<number>(0);
   const [selectedFacit, setSelectedFacit] = useState<Exam | null>(null);
@@ -103,7 +110,8 @@ const PDFModal: FC<PDFModalProps> = ({
 
   useEffect(() => {
     const screenWidth = window.innerWidth;
-    let baseScale = 1.2;
+    console.log(screenWidth);
+    let baseScale = 1.3;
     if (screenWidth >= 1600) baseScale = 1.6;
     else if (screenWidth <= 1280) baseScale = 1.0;
     const newExamScale =
@@ -349,23 +357,46 @@ const PDFModal: FC<PDFModalProps> = ({
     fetchFacitData();
   }, [selectedFacit, setFacitPdfUrl]);
 
-  const handleFacitPanelMouseMove = (event: React.MouseEvent) => {
-    const facitPanel = facitPanelRef.current;
-    if (!facitPanel) return;
-    const rect = facitPanel.getBoundingClientRect();
-    const isOverFacit =
-      event.clientX >= rect.left &&
-      event.clientX <= rect.right &&
-      event.clientY >= rect.top &&
-      event.clientY <= rect.bottom;
-    if (isOverFacit || event.clientX > window.innerWidth * 0.95) {
-      setIsHoveringFacitPanel(true);
-      setIsMouseActive(true);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    } else {
-      setIsHoveringFacitPanel(false);
-    }
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const facitVariants = {
+    hidden: { x: "100%", opacity: 0, filter: "blur(8px)" },
+    visible: { x: "0%", opacity: 1, filter: "blur(0px)" },
   };
+  const shouldFacitPanelBeVisible = isHoveringFacitPanel || isToggled;
+  const facitPanelOpacity = shouldFacitPanelBeVisible ? 1 : 0;
+
+  const OPEN_THRESHOLD = 0.95;
+  const CLOSE_THRESHOLD = 0.5;
+
+  const isVisibleRef = useRef(false);
+
+  const handleFacitPanelMouseMove = useCallback((e: MouseEvent) => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const rect = container.getBoundingClientRect();
+    if (
+      e.clientX < rect.left ||
+      e.clientX > rect.right ||
+      e.clientY < rect.top ||
+      e.clientY > rect.bottom
+    ) {
+      setIsHoveringFacitPanel(false);
+      isVisibleRef.current = false;
+      return;
+    }
+
+    const pct = (e.clientX - rect.left) / rect.width;
+
+    if (!isVisibleRef.current && pct >= OPEN_THRESHOLD) {
+      setIsHoveringFacitPanel(true);
+      isVisibleRef.current = true;
+    } else if (isVisibleRef.current && pct <= CLOSE_THRESHOLD) {
+      setIsHoveringFacitPanel(false);
+      isVisibleRef.current = false;
+    }
+  }, []);
 
   useEffect(() => {
     if (showAIDrawer || layoutMode !== "exam-only" || showGlobalSearch) return;
@@ -392,26 +423,26 @@ const PDFModal: FC<PDFModalProps> = ({
     Cookies.set("layoutMode", mode, { expires: 365 });
   };
 
-  const facitVariants = { hidden: { x: "100%" }, visible: { x: "0%" } };
-  const shouldFacitPanelBeVisible = isHoveringFacitPanel || isToggled;
-  const facitPanelOpacity = shouldFacitPanelBeVisible ? 1 : 0;
-
   useEffect(() => {
     if (layoutMode === "exam-only") {
-      window.addEventListener("mousemove", handleFacitPanelMouseMove as any);
-    } else {
-      setIsHoveringFacitPanel(false);
-      setIsToggled(false);
+      window.addEventListener("mousemove", handleFacitPanelMouseMove);
+      return () =>
+        window.removeEventListener("mousemove", handleFacitPanelMouseMove);
     }
-    return () =>
-      window.removeEventListener("mousemove", handleFacitPanelMouseMove as any);
-  }, [layoutMode]);
+  }, [layoutMode, handleFacitPanelMouseMove]);
 
   if (fetchError) return <p>{fetchError.message}</p>;
   if (!selectedExam || isLoading) return null;
 
   return (
-    <div className="w-full bg-background relative h-full flex flex-col items-center justify-center overflow-hidden">
+    <div
+      ref={containerRef}
+      style={{
+        maxHeight: "calc(100vh - 4rem)",
+        marginTop: "4rem",
+      }}
+      className="w-full relative bg-background flex flex-col items-center justify-center overflow-hidden"
+    >
       {error ? (
         <div className="flex flex-col items-center justify-center w-full h-full">
           <h2 className="text-2xl font-medium">Error</h2> <p>{error}</p>
@@ -458,60 +489,61 @@ const PDFModal: FC<PDFModalProps> = ({
                       onLoadSuccess={onDocumentLoadSuccess}
                     />
                   </div>
-                  <AnimatePresence mode="wait">
-                    {facitPdfUrl && (
-                      <motion.div
-                        className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
-                        ref={facitPanelRef}
-                        variants={facitVariants}
-                        initial="hidden"
-                        animate={
-                          shouldFacitPanelBeVisible ? "visible" : "hidden"
-                        }
-                        exit="hidden"
-                        style={{
-                          opacity: facitPanelOpacity,
-                          pointerEvents:
-                            shouldFacitPanelBeVisible && facitPanelOpacity > 0
-                              ? "auto"
-                              : "none",
-                        }}
-                        transition={{
-                          x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-                          opacity: { duration: 0.3 },
-                        }}
-                        onHoverStart={() => setIsHoveringFacitPanel(true)}
-                        onHoverEnd={() => setIsHoveringFacitPanel(false)}
-                      >
-                        <FacitToolbar
-                          onRotateFacitClockwise={rotateFacitClockwise}
-                          onRotateFacitCounterClockwise={
-                            rotateFacitCounterClockwise
+                  <AnimatePresence>
+                    {facitPdfUrl &&
+                      (shouldFacitPanelBeVisible || isToggled) && (
+                        <motion.div
+                          className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
+                          ref={facitPanelRef}
+                          variants={facitVariants}
+                          initial="hidden"
+                          animate={
+                            shouldFacitPanelBeVisible ? "visible" : "hidden"
                           }
-                          onFacitZoomIn={zoomInFacit}
-                          onFacitZoomOut={zoomOutFacit}
-                          facitPdfUrl={facitPdfUrl}
-                          exams={exams as Exam[]}
-                          setSelectedFacit={setSelectedFacit}
-                          selectedExam={selectedExam}
-                        />
-                        <FacitViewer
-                          facitPdfUrl={facitPdfUrl}
-                          facitScale={facitScale}
-                          facitRotation={facitRotation}
-                          facitNumPages={facitNumPages}
-                          handleMouseEnter={handleMouseEnterFacitViewer}
-                          handleMouseLeave={handleMouseLeaveFacitViewer}
-                          onFacitDocumentLoadSuccess={
-                            onFacitDocumentLoadSuccess
-                          }
-                          selectedFacit={selectedFacit}
-                          loadingFacit={loadingFacit}
-                          getTranslation={getTranslation}
-                          setFacitScale={setFacitScale}
-                        />
-                      </motion.div>
-                    )}
+                          exit="hidden"
+                          style={{
+                            pointerEvents:
+                              shouldFacitPanelBeVisible && facitPanelOpacity > 0
+                                ? "auto"
+                                : "none",
+                          }}
+                          transition={{
+                            x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                            opacity: { duration: 0.3 },
+                            filter: { duration: 0.3 },
+                          }}
+                          onHoverStart={() => setIsHoveringFacitPanel(true)}
+                          onHoverEnd={() => setIsHoveringFacitPanel(false)}
+                        >
+                          <FacitToolbar
+                            onRotateFacitClockwise={rotateFacitClockwise}
+                            onRotateFacitCounterClockwise={
+                              rotateFacitCounterClockwise
+                            }
+                            onFacitZoomIn={zoomInFacit}
+                            onFacitZoomOut={zoomOutFacit}
+                            facitPdfUrl={facitPdfUrl}
+                            exams={exams as Exam[]}
+                            setSelectedFacit={setSelectedFacit}
+                            selectedExam={selectedExam}
+                          />
+                          <FacitViewer
+                            facitPdfUrl={facitPdfUrl}
+                            facitScale={facitScale}
+                            facitRotation={facitRotation}
+                            facitNumPages={facitNumPages}
+                            handleMouseEnter={handleMouseEnterFacitViewer}
+                            handleMouseLeave={handleMouseLeaveFacitViewer}
+                            onFacitDocumentLoadSuccess={
+                              onFacitDocumentLoadSuccess
+                            }
+                            selectedFacit={selectedFacit}
+                            loadingFacit={loadingFacit}
+                            getTranslation={getTranslation}
+                            setFacitScale={setFacitScale}
+                          />
+                        </motion.div>
+                      )}
                   </AnimatePresence>
                   {!isHoveringFacitPanel && !isToggled && (
                     <GradientIndicator
@@ -640,14 +672,32 @@ const PDFModal: FC<PDFModalProps> = ({
               onClick={() => changeLayoutMode("exam-with-facit")}
               className="transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <Columns2 className="w-5 h-5" />
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Columns2 className="w-5 h-5" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{getTranslation("examAndFacit")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </TabsTrigger>
             <TabsTrigger
               value="exam-only"
               onClick={() => changeLayoutMode("exam-only")}
               className="transition-all text-xs duration-200 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
             >
-              <PanelRight className="w-5 h-5" />
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <PanelRight className="w-5 h-5" />
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{getTranslation("examOnly")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
             </TabsTrigger>
           </TabsList>
         </Tabs>

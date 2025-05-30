@@ -3,20 +3,20 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from '@/components/ui/tooltip';
-import { useLanguage } from '@/context/LanguageContext';
-import translations from '@/util/translations';
-import { FC, useState } from 'react';
-import { Exam } from '../data-table/columns';
-import { Button } from '../ui/button';
-import { Separator } from '../ui/separator';
-import { filterExamsByDate, isFacit } from './utils';
+} from "@/components/ui/tooltip";
+import { useLanguage } from "@/context/LanguageContext";
+import translations from "@/util/translations";
+import { FC, useState } from "react";
+import { Exam } from "../data-table/columns";
+import { Button } from "../ui/button";
+import { Separator } from "../ui/separator";
+import { filterExamsByDate, isFacit } from "./utils";
 import {
   BookOpenIcon,
   ChevronDown,
@@ -26,7 +26,7 @@ import {
   Plus,
   RotateCcw,
   RotateCw,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface FacitToolbarProps {
   onFacitZoomIn: () => void;
@@ -72,20 +72,20 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
   }: any) => (
     <TooltipProvider delayDuration={0}>
       <Tooltip>
-        <TooltipTrigger asChild className='z-40'>
+        <TooltipTrigger asChild className="z-40">
           {href ? (
             <a href={href} download={download}>
-              <Button variant='secondary' size='icon' onClick={onClick}>
+              <Button variant="secondary" size="icon" onClick={onClick}>
                 <Icon size={17} />
               </Button>
             </a>
           ) : (
-            <Button variant='secondary' size='icon' onClick={onClick}>
+            <Button variant="secondary" size="icon" onClick={onClick}>
               <Icon size={17} />
             </Button>
           )}
         </TooltipTrigger>
-        <TooltipContent autoFocus={false} side='right'>
+        <TooltipContent autoFocus={false} side="right">
           <p>{tooltip}</p>
         </TooltipContent>
       </Tooltip>
@@ -93,27 +93,27 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
   );
 
   const FacitToolbar = () => (
-    <div className='flex flex-col items-end justify-end space-y-2'>
+    <div className="flex flex-col items-end justify-end space-y-2">
       <ToolbarButton
         icon={isFacitToolbarOpen ? ChevronDown : ChevronLeft}
         onClick={toggleFacitToolbar}
         tooltip={getTranslation(
-          isFacitToolbarOpen ? 'hideFacitToolbar' : 'showFacitToolbar'
+          isFacitToolbarOpen ? "hideFacitToolbar" : "showFacitToolbar"
         )}
       />
 
       {isFacitToolbarOpen && (
-        <div className='flex flex-col items-start space-y-2'>
+        <div className="flex flex-col items-start space-y-2">
           <ToolbarButton
             icon={Plus}
             onClick={onFacitZoomIn}
-            tooltip={getTranslation('zoomIn')}
+            tooltip={getTranslation("zoomIn")}
           />
 
           <ToolbarButton
             icon={Minus}
             onClick={onFacitZoomOut}
-            tooltip={getTranslation('zoomOut')}
+            tooltip={getTranslation("zoomOut")}
           />
 
           <Separator />
@@ -121,13 +121,13 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
           <ToolbarButton
             icon={RotateCcw}
             onClick={onRotateFacitCounterClockwise}
-            tooltip={getTranslation('rotateLeft')}
+            tooltip={getTranslation("rotateLeft")}
           />
 
           <ToolbarButton
             icon={RotateCw}
             onClick={onRotateFacitClockwise}
-            tooltip={getTranslation('rotateRight')}
+            tooltip={getTranslation("rotateRight")}
           />
 
           <Separator />
@@ -136,7 +136,7 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
             icon={Download}
             href={facitPdfUrl}
             download
-            tooltip={getTranslation('downloadFacit')}
+            tooltip={getTranslation("downloadFacit")}
           />
         </div>
       )}
@@ -144,23 +144,23 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
   );
 
   return (
-    <div className='flex absolute top-16 flex-col items-end right-0 justify-end bg-transparent px-5 py-2'>
-      <div className='flex flex-col items-end justify-end space-y-2'>
+    <div className="flex absolute top-2 flex-col items-end right-0 justify-end bg-transparent px-5 py-2">
+      <div className="flex flex-col items-end justify-end space-y-2">
         <FacitToolbar />
 
         {isFacitToolbarOpen && (
           <TooltipProvider delayDuration={0}>
             <Tooltip>
-              <TooltipTrigger asChild className='z-50'>
+              <TooltipTrigger asChild className="z-50">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild className='z-50'>
-                    <Button variant='secondary' size='icon'>
+                  <DropdownMenuTrigger asChild className="z-50">
+                    <Button variant="secondary" size="icon">
                       <BookOpenIcon size={17} />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent
-                    side='right'
-                    className='max-h-60 overflow-y-auto'
+                    side="right"
+                    className="max-h-60 overflow-y-auto"
                   >
                     {filteredFacitExams.map((exam) => (
                       <DropdownMenuItem
@@ -173,8 +173,8 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TooltipTrigger>
-              <TooltipContent autoFocus={false} side='right'>
-                <p>{getTranslation('chooseFacit')}</p>
+              <TooltipContent autoFocus={false} side="right">
+                <p>{getTranslation("chooseFacit")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>

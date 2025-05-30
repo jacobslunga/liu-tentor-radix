@@ -128,7 +128,7 @@ const TentaFacitToolbar: FC<Props> = ({
 
   return (
     <motion.div
-      className="fixed top-16 right-5 flex flex-col space-y-2 z-40"
+      className="fixed top-20 right-5 flex flex-col space-y-2 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
