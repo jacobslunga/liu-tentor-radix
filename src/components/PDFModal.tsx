@@ -110,7 +110,7 @@ const PDFModal: FC<PDFModalProps> = ({
   useEffect(() => {
     const screenWidth = window.innerWidth;
     console.log(screenWidth);
-    let baseScale = 1.3;
+    let baseScale = 1.2;
     if (screenWidth >= 1600) baseScale = 1.6;
     else if (screenWidth <= 1280) baseScale = 1.0;
     const newExamScale =
@@ -436,11 +436,7 @@ const PDFModal: FC<PDFModalProps> = ({
   return (
     <div
       ref={containerRef}
-      style={{
-        maxHeight: "calc(100vh - 4rem)",
-        marginTop: "4rem",
-      }}
-      className="w-full relative bg-background flex flex-col items-center justify-center overflow-hidden"
+      className="w-full mt-0 h-screen md:mt-[4rem] md:max-h-[calc(100vh - 4rem)] relative bg-background flex flex-col items-center justify-center overflow-hidden"
     >
       {error ? (
         <div className="flex flex-col items-center justify-center w-full h-full">

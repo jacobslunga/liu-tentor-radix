@@ -6,10 +6,10 @@ import { UploadIcon } from "@primer/octicons-react";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { Link } from "react-router-dom";
-import SettingsDialog from "@/components/SettingsDialog";
 import InlineRecentActivity from "@/components/InlineRecentActivity";
 import LoadingSpinner from "@/components/LoadingSpinnger";
 import { LogoIcon } from "@/components/LogoIcon";
+import HelpUploadBanner from "@/components/HelpUploadBanner";
 
 export default function HomePage() {
   const { language } = useLanguage();
@@ -26,22 +26,24 @@ export default function HomePage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  const quickLinks = [
-    {
-      text: getTranslation("feedbackLink"),
-      to: "/feedback",
-    },
-    {
-      text: getTranslation("privacyPolicyTitle"),
-      to: "/privacy-policy",
-    },
-  ];
+  // const quickLinks = [
+  //   {
+  //     text: getTranslation("feedbackLink"),
+  //     to: "/feedback",
+  //   },
+  //   {
+  //     text: getTranslation("privacyPolicyTitle"),
+  //     to: "/privacy-policy",
+  //   },
+  // ];
 
   return (
     <div className="relative flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background overflow-x-hidden">
       <Helmet>
         <title>LiU Tentor</title>
       </Helmet>
+
+      <HelpUploadBanner />
 
       {isLoading ? (
         <LoadingSpinner />
@@ -92,7 +94,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="fixed bg-gradient-to-b from-background to-background/0 space-x-5 w-full top-0 h-20 items-center justify-end px-5 flex">
+          {/* <div className="fixed bg-gradient-to-b from-background to-background/0 space-x-5 w-full top-0 h-20 items-center justify-end px-5 flex">
             <div className="flex flex-row items-center justify-center space-x-2">
               {quickLinks.map(({ text, to }) => (
                 <Link key={text} to={to} className="hidden md:flex">
@@ -104,7 +106,7 @@ export default function HomePage() {
             </div>
 
             <SettingsDialog />
-          </div>
+          </div> */}
         </>
       )}
     </div>

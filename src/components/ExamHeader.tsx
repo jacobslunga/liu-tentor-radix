@@ -7,7 +7,7 @@ import {
   ArrowLeftIcon,
   ChevronDownIcon,
 } from "@primer/octicons-react";
-import { FC, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { findFacitForExam } from "./PDF/utils";
 import { Button } from "./ui/button";
@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SettingsDialog from "@/components/SettingsDialog";
+import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
 
 const normalizeName = (name: string): string => {
   return name.toLowerCase().replace(/[^a-z0-9-_]/g, "");
@@ -89,6 +90,16 @@ const ExamHeader: FC<ExamHeaderProps> = ({
     return {};
   });
   const navigate = useNavigate();
+
+  const { setShowGlobalSearch } = useContext(ShowGlobalSearchContext);
+  const [isMac, setIsMac] = useState(false);
+
+  useEffect(() => {
+    const platform = window.navigator.platform.toLowerCase();
+    setIsMac(platform.includes("mac"));
+  }, []);
+
+  const modifierKey = isMac ? "⌘" : "Ctrl";
 
   // Sort exams by date
   const sortedExams = useMemo(() => {
@@ -197,6 +208,23 @@ const ExamHeader: FC<ExamHeaderProps> = ({
       </div>
 
       <div className="flex flex-row items-center justify-center space-x-3 min-w-fit">
+        <div className="relative hidden sm:flex items-center" role="search">
+          <div
+            className="w-auto font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 sm:min-w-[300px] md:w-60 pr-10 md:min-w-[350px] lg:min-w-[500px] bg-foreground/5 border p-2.5 rounded-2xl"
+            onClick={() => {
+              setShowGlobalSearch(true);
+            }}
+            aria-label={getTranslation("searchCoursePlaceholder")}
+          >
+            <p className="text-sm text-foreground/50">
+              {getTranslation("searchCoursePlaceholder")}
+            </p>
+          </div>
+          <kbd className="text-xs bg-foreground/10 px-2 py-1 rounded-sm text-foreground/50 absolute right-5">
+            {modifierKey} K
+          </kbd>
+        </div>
+
         <SettingsDialog />
       </div>
     </div>
