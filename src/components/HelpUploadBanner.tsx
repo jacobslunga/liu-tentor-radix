@@ -87,7 +87,7 @@ export default function HelpUploadBanner() {
                 className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-all duration-200"
               >
                 Ladda upp nu
-                <UploadIcon className="w-3 h-3 ml-2" />
+                <UploadIcon className="w-3 h-3" />
               </Button>
             </Link>
 
@@ -99,7 +99,7 @@ export default function HelpUploadBanner() {
                 className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground transition-colors duration-200"
               >
                 Läs mer
-                <ArrowRightIcon className="w-3 h-3 ml-1" />
+                <ArrowRightIcon className="w-3 h-3" />
               </Button>
             </Link>
 
