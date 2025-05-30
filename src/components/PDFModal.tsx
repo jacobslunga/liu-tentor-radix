@@ -11,7 +11,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import { AnimatePresence, motion } from "framer-motion";
 import Cookies from "js-cookie";
-import { Columns2, Icon, MousePointerClick, PanelRight } from "lucide-react";
+import { Columns2, MousePointerClick, PanelRight } from "lucide-react";
 import {
   FC,
   useCallback,
@@ -41,8 +41,7 @@ import {
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "./ui/tooltip";
-import { Button } from "./ui/button";
+} from "@/components/ui/tooltip";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
