@@ -1,4 +1,6 @@
 import { useEffect, useState, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,12 +14,9 @@ import {
   Heart,
   Users,
   TrendingUp,
-} from "lucide-react"; // Removed ChevronRight as numerical steps are clearer
-import { Link, useNavigate } from "react-router-dom";
-import { Helmet } from "react-helmet-async";
-import { LogoIcon } from "@/components/LogoIcon"; // Assuming this is correctly imported
+} from "lucide-react";
+import { LogoIcon } from "@/components/LogoIcon";
 
-// Type definition for translation keys
 type TranslationKeys =
   | "homeTitle"
   | "mainTitle"
@@ -138,11 +137,78 @@ const translations: Record<"sv" | "en", Record<TranslationKeys, string>> = {
   },
 };
 
+const statsData = (getTranslation: (key: TranslationKeys) => string) => [
+  {
+    value: "3.8k+",
+    label: getTranslation("statsActiveStudents"),
+    icon: Users,
+  },
+  {
+    value: "900+",
+    label: getTranslation("statsUploads"),
+    icon: Upload,
+  },
+  {
+    value: "350+",
+    label: getTranslation("statsCourses"),
+    icon: BookOpen,
+  },
+];
+
+const contributionItems = (
+  getTranslation: (key: TranslationKeys) => string
+) => [
+  {
+    title: getTranslation("contributionOldExams"),
+    description: getTranslation("contributionOldExamsDesc"),
+    icon: FileText,
+  },
+  {
+    title: getTranslation("contributionSolutions"),
+    description: getTranslation("contributionSolutionsDesc"),
+    icon: CheckCircle,
+  },
+  {
+    title: getTranslation("contributionStudyMaterial"),
+    description: getTranslation("contributionStudyMaterialDesc"),
+    icon: BookOpen,
+  },
+];
+
+const steps = (getTranslation: (key: TranslationKeys) => string) => [
+  {
+    title: getTranslation("step1Title"),
+    description: getTranslation("step1Desc"),
+    icon: Upload,
+  },
+  {
+    title: getTranslation("step2Title"),
+    description: getTranslation("step2Desc"),
+    icon: HelpCircle,
+  },
+  {
+    title: getTranslation("step3Title"),
+    description: getTranslation("step3Desc"),
+    icon: CheckCircle,
+  },
+  {
+    title: getTranslation("step4Title"),
+    description: getTranslation("step4Desc"),
+    icon: Rocket,
+  },
+];
+
+const sectionList = [
+  { id: "why" },
+  { id: "what" },
+  { id: "how" },
+  { id: "impact" },
+];
+
 const UploadInfoPage = () => {
   const [language, setLanguage] = useState<"sv" | "en">("sv");
   const navigate = useNavigate();
 
-  // Refs for each section to track scroll position
   const heroRef = useRef<HTMLElement>(null);
   const whyRef = useRef<HTMLElement>(null);
   const whatRef = useRef<HTMLElement>(null);
@@ -151,9 +217,15 @@ const UploadInfoPage = () => {
 
   const [currentSection, setCurrentSection] = useState("hero");
 
-  const getTranslation = (key: TranslationKeys) => {
-    return translations[language][key];
+  const refsMap: Record<string, React.RefObject<HTMLElement | null>> = {
+    hero: heroRef,
+    why: whyRef,
+    what: whatRef,
+    how: howRef,
+    impact: impactRef,
   };
+
+  const getTranslation = (key: TranslationKeys) => translations[language][key];
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
@@ -161,7 +233,7 @@ const UploadInfoPage = () => {
     const observerOptions = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.5, // Trigger when 50% of the section is visible
+      threshold: 0.5,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -172,15 +244,14 @@ const UploadInfoPage = () => {
       });
     }, observerOptions);
 
-    const sections = [heroRef, whyRef, whatRef, howRef, impactRef];
-    sections.forEach((sectionRef) => {
+    Object.values(refsMap).forEach((sectionRef) => {
       if (sectionRef.current) {
         observer.observe(sectionRef.current);
       }
     });
 
     return () => {
-      sections.forEach((sectionRef) => {
+      Object.values(refsMap).forEach((sectionRef) => {
         if (sectionRef.current) {
           observer.unobserve(sectionRef.current);
         }
@@ -188,47 +259,20 @@ const UploadInfoPage = () => {
     };
   }, []);
 
-  const stats = [
-    {
-      value: "3.8k+",
-      label: getTranslation("statsActiveStudents"),
-      icon: Users,
-    },
-    {
-      value: "900+",
-      label: getTranslation("statsUploads"),
-      icon: Upload,
-    },
-    {
-      value: "350+",
-      label: getTranslation("statsCourses"),
-      icon: BookOpen,
-    },
-  ];
-
-  const sectionsForIndicator = [
-    { id: "why", ref: whyRef },
-    { id: "what", ref: whatRef },
-    { id: "how", ref: howRef },
-    { id: "impact", ref: impactRef },
-  ];
-
   return (
     <div className="min-h-screen bg-background text-foreground relative">
-      {/* Subtle background overlay for the "cool background" effect */}
       <div className="absolute inset-0 bg-gradient-to-br from-background via-background/90 to-primary/5 opacity-80 z-0 pointer-events-none"></div>
 
       <Helmet>
         <title>LiU Tentor | {getTranslation("uploadExam")}</title>
       </Helmet>
 
-      {/* Section Indicator (Minimalist dots) */}
       <div className="fixed left-6 top-1/2 -translate-y-1/2 z-50 flex-col items-center space-y-8 hidden md:flex">
-        {sectionsForIndicator.map((sec) => (
+        {sectionList.map((sec) => (
           <div
             key={sec.id}
             onClick={() =>
-              sec.ref.current?.scrollIntoView({ behavior: "smooth" })
+              refsMap[sec.id]?.current?.scrollIntoView({ behavior: "smooth" })
             }
             className={`w-2.5 h-2.5 rounded-full cursor-pointer transition-colors duration-300 ${
               currentSection === sec.id
@@ -240,12 +284,11 @@ const UploadInfoPage = () => {
         ))}
       </div>
 
-      {/* Header */}
       <header className="bg-card/80 backdrop-blur-sm border-b border-border sticky top-0 z-40">
         <div className="container mx-auto px-4 py-4 max-w-4xl flex items-center justify-between relative">
           <Link
             to="/"
-            className="text-xl space-x-1 flex flex-row items-center justify-center font-bold"
+            className="text-xl flex items-center font-bold space-x-1"
             aria-label={getTranslation("homeTitle")}
           >
             <LogoIcon className="w-7 h-7 text-primary" />
@@ -279,21 +322,19 @@ const UploadInfoPage = () => {
                 EN
               </Button>
             </div>
-            {/* Back button with React Router's navigate(-1) */}
             <Button
               variant="outline"
               size="sm"
               onClick={() => navigate(-1)}
               className="border-border text-foreground hover:bg-muted"
             >
-              <ArrowLeft className="h-4 w-4 mr-2" />
+              <ArrowLeft className="h-4 w-4" />
               {getTranslation("back")}
             </Button>
           </div>
         </div>
       </header>
 
-      {/* Hero Section */}
       <section id="hero" ref={heroRef} className="relative py-24 md:py-32 z-10">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <div className="flex flex-col items-center gap-6">
@@ -308,11 +349,10 @@ const UploadInfoPage = () => {
               <p className="text-lg md:text-xl text-muted-foreground mb-8 leading-relaxed">
                 {getTranslation("subtitle")}
               </p>
-              {/* CTA button with Link to upload-exams */}
               <Link to="/upload-exams" className="inline-block">
                 <Button
-                  size="lg"
                   className="px-8 py-6 text-lg tracking-wide shadow-md hover:shadow-lg"
+                  size="lg"
                 >
                   <Rocket className="h-5 w-5 mr-3" />
                   {getTranslation("uploadExam")}
@@ -323,14 +363,12 @@ const UploadInfoPage = () => {
         </div>
       </section>
 
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-16 max-w-4xl space-y-20 z-10 relative">
-        {/* Why Section */}
         <section id="why" ref={whyRef}>
           <Card className="p-8 rounded-lg shadow-none border-none bg-card/70 backdrop-blur-sm">
-            <CardHeader className="p-0 mb-6 flex flex-row items-center gap-4">
+            <CardHeader className="p-0 mb-6 flex items-center gap-4">
               <div className="w-10 h-10 bg-secondary/20 rounded-md flex items-center justify-center">
-                <HelpCircle className="text-secondary w-5 h-5" />
+                <HelpCircle className="text-foreground w-5 h-5" />
               </div>
               <CardTitle className="text-2xl font-bold text-foreground">
                 {getTranslation("whyTitle")}
@@ -344,30 +382,13 @@ const UploadInfoPage = () => {
           </Card>
         </section>
 
-        {/* What Section */}
         <section id="what" ref={whatRef}>
           <h2 className="text-3xl font-bold text-foreground mb-10 text-center">
             {getTranslation("whatTitle")}
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                title: getTranslation("contributionOldExams"),
-                description: getTranslation("contributionOldExamsDesc"),
-                icon: FileText,
-              },
-              {
-                title: getTranslation("contributionSolutions"),
-                description: getTranslation("contributionSolutionsDesc"),
-                icon: CheckCircle,
-              },
-              {
-                title: getTranslation("contributionStudyMaterial"),
-                description: getTranslation("contributionStudyMaterialDesc"),
-                icon: BookOpen,
-              },
-            ].map((item, index) => (
+            {contributionItems(getTranslation).map((item, index) => (
               <Card
                 key={index}
                 className="p-6 rounded-lg shadow-none border-none bg-card/70 backdrop-blur-sm"
@@ -390,35 +411,13 @@ const UploadInfoPage = () => {
           </div>
         </section>
 
-        {/* How Section */}
         <section id="how" ref={howRef}>
           <h2 className="text-3xl font-bold text-foreground mb-10 text-center">
             {getTranslation("howTitle")}
           </h2>
 
           <div className="space-y-8">
-            {[
-              {
-                title: getTranslation("step1Title"),
-                description: getTranslation("step1Desc"),
-                icon: Upload,
-              },
-              {
-                title: getTranslation("step2Title"),
-                description: getTranslation("step2Desc"),
-                icon: HelpCircle,
-              },
-              {
-                title: getTranslation("step3Title"),
-                description: getTranslation("step3Desc"),
-                icon: CheckCircle,
-              },
-              {
-                title: getTranslation("step4Title"),
-                description: getTranslation("step4Desc"),
-                icon: Rocket, // Using Rocket as a final "launch" icon
-              },
-            ].map((step, index) => (
+            {steps(getTranslation).map((step, index) => (
               <div key={index} className="flex items-start gap-4">
                 <div className="relative z-10 w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary-foreground flex-shrink-0">
                   <span className="font-bold text-base text-primary">
@@ -442,7 +441,6 @@ const UploadInfoPage = () => {
           </div>
         </section>
 
-        {/* Stats Section */}
         <section id="impact" ref={impactRef}>
           <Card className="p-8 rounded-lg shadow-none border-none bg-card/70 backdrop-blur-sm">
             <CardHeader className="p-0 mb-10">
@@ -453,14 +451,14 @@ const UploadInfoPage = () => {
             </CardHeader>
             <CardContent className="p-0">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {stats.map((stat, index) => (
+                {statsData(getTranslation).map((stat, index) => (
                   <Card
                     key={index}
                     className="text-center p-6 rounded-lg shadow-none border-none bg-muted/20"
                   >
                     <CardContent className="p-0">
                       <div className="flex items-center justify-center mb-3">
-                        <stat.icon className={`w-7 h-7 text-primary`} />
+                        <stat.icon className="w-7 h-7 text-primary" />
                       </div>
                       <div className="text-4xl font-bold text-foreground mb-1">
                         {stat.value}
@@ -476,13 +474,11 @@ const UploadInfoPage = () => {
           </Card>
         </section>
 
-        {/* CTA Section */}
         <div className="text-center py-10">
-          {/* CTA button with Link to upload-exams */}
           <Link to="/upload-exams" className="inline-block">
             <Button
-              size="lg"
               className="text-lg px-10 py-6 rounded-full shadow-lg hover:shadow-xl transition-shadow"
+              size="lg"
             >
               <Upload className="h-5 w-5 mr-3" />
               {getTranslation("startUpload")}
@@ -494,8 +490,7 @@ const UploadInfoPage = () => {
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card/80 backdrop-blur-sm py-10 mt-12 z-10 relative">
+      <footer className="border-t border-border bg-card backdrop-blur-sm py-10 mt-12 z-10 relative">
         <div className="container mx-auto px-4 max-w-4xl text-center">
           <div className="flex items-center justify-center gap-2 text-foreground mb-3">
             <Heart className="h-5 w-5 text-red-500" />

@@ -134,7 +134,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
 
   return (
     <div
-      className={`hidden md:flex z-[60] fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-16 bg-background border-b`}
+      className={`hidden md:flex z-[60] fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-background border-b`}
     >
       <div className="flex flex-row items-center justify-center space-x-5">
         <Button
@@ -152,6 +152,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           <DropdownMenuTrigger asChild>
             <Button
               variant="outline"
+              size="sm"
               className="flex flex-row items-center justify-center space-x-1"
             >
               <p className="flex-1 text-left">
@@ -208,19 +209,22 @@ const ExamHeader: FC<ExamHeaderProps> = ({
       </div>
 
       <div className="flex flex-row items-center justify-center space-x-3 min-w-fit">
-        <div className="relative hidden sm:flex items-center" role="search">
+        <div
+          className="relative group hidden sm:flex items-center"
+          role="search"
+        >
           <div
-            className="w-auto font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 sm:min-w-[300px] md:w-60 pr-10 md:min-w-[350px] lg:min-w-[500px] bg-foreground/5 border p-2.5 rounded-2xl"
+            className="group font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-2xl"
             onClick={() => {
               setShowGlobalSearch(true);
             }}
             aria-label={getTranslation("searchCoursePlaceholder")}
           >
-            <p className="text-sm text-foreground/50">
+            <p className="text-xs text-foreground/50">
               {getTranslation("searchCoursePlaceholder")}
             </p>
           </div>
-          <kbd className="text-xs bg-foreground/10 px-2 py-1 rounded-sm text-foreground/50 absolute right-5">
+          <kbd className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-foreground/10 px-2 py-1 rounded-sm text-foreground/50 absolute right-5">
             {modifierKey} K
           </kbd>
         </div>

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/resizable";
 import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import { Columns2, MousePointerClick, PanelRight } from "lucide-react";
 import {
@@ -84,6 +84,7 @@ const PDFModal: FC<PDFModalProps> = ({
     useState<boolean>(false);
   const [isMiddleMouseDown, setIsMiddleMouseDown] = useState(false);
   const [loadingFacit, setLoadingFacit] = useState(true);
+
   const [layoutMode, setLayoutMode] = useState<string>(() => {
     const savedLayoutMode = Cookies.get("layoutMode");
     return savedLayoutMode || "exam-with-facit";
@@ -107,9 +108,14 @@ const PDFModal: FC<PDFModalProps> = ({
   const isHoveringFacitPanelRef = useRef(isHoveringFacitPanel);
   const isHoveringTabsRef = useRef(isHoveringTabs);
 
+  // Funktionen för att byta layout-läge
+  const changeLayoutMode = (mode: string) => {
+    setLayoutMode(mode);
+    Cookies.set("layoutMode", mode, { expires: 365 });
+  };
+
   useEffect(() => {
     const screenWidth = window.innerWidth;
-    console.log(screenWidth);
     let baseScale = 1.2;
     if (screenWidth >= 1600) baseScale = 1.6;
     else if (screenWidth <= 1280) baseScale = 1.0;
@@ -319,7 +325,7 @@ const PDFModal: FC<PDFModalProps> = ({
           );
           setPdfUrl(pdfData);
         }
-      } catch (error) {
+      } catch {
         setError("Failed to load the main PDF.");
       } finally {
         setLoadingFacit(false);
@@ -346,8 +352,7 @@ const PDFModal: FC<PDFModalProps> = ({
         } else {
           setFacitPdfUrl(null);
         }
-      } catch (error) {
-        console.error("Failed to load Facit PDF:", error);
+      } catch {
         setError("Failed to load the Facit PDF.");
       } finally {
         setLoadingFacit(false);
@@ -363,7 +368,6 @@ const PDFModal: FC<PDFModalProps> = ({
     visible: { x: "0%", opacity: 1, filter: "blur(0px)" },
   };
   const shouldFacitPanelBeVisible = isHoveringFacitPanel || isToggled;
-  const facitPanelOpacity = shouldFacitPanelBeVisible ? 1 : 0;
 
   const OPEN_THRESHOLD = 0.95;
   const CLOSE_THRESHOLD = 0.5;
@@ -417,11 +421,6 @@ const PDFModal: FC<PDFModalProps> = ({
     isHoveringFacitPanel,
   ]);
 
-  const changeLayoutMode = (mode: string) => {
-    setLayoutMode(mode);
-    Cookies.set("layoutMode", mode, { expires: 365 });
-  };
-
   useEffect(() => {
     if (layoutMode === "exam-only") {
       window.addEventListener("mousemove", handleFacitPanelMouseMove);
@@ -436,11 +435,12 @@ const PDFModal: FC<PDFModalProps> = ({
   return (
     <div
       ref={containerRef}
-      className="w-full mt-0 h-screen md:mt-[4rem] md:max-h-[calc(100vh - 4rem)] relative bg-background flex flex-col items-center justify-center overflow-hidden"
+      className="w-full mt-0 h-screen md:mt-[3.5rem] md:max-h-[calc(100vh - 3.5rem)] relative bg-background flex flex-col items-center justify-center overflow-hidden"
     >
       {error ? (
         <div className="flex flex-col items-center justify-center w-full h-full">
-          <h2 className="text-2xl font-medium">Error</h2> <p>{error}</p>
+          <h2 className="text-2xl font-medium">Error</h2>
+          <p>{error}</p>
           <p>Please try refreshing the page or contact support.</p>
         </div>
       ) : (
@@ -484,62 +484,51 @@ const PDFModal: FC<PDFModalProps> = ({
                       onLoadSuccess={onDocumentLoadSuccess}
                     />
                   </div>
-                  <AnimatePresence>
-                    {facitPdfUrl &&
-                      (shouldFacitPanelBeVisible || isToggled) && (
-                        <motion.div
-                          className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
-                          ref={facitPanelRef}
-                          variants={facitVariants}
-                          initial="hidden"
-                          animate={
-                            shouldFacitPanelBeVisible ? "visible" : "hidden"
-                          }
-                          exit="hidden"
-                          style={{
-                            pointerEvents:
-                              shouldFacitPanelBeVisible && facitPanelOpacity > 0
-                                ? "auto"
-                                : "none",
-                          }}
-                          transition={{
-                            x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-                            opacity: { duration: 0.3 },
-                            filter: { duration: 0.3 },
-                          }}
-                          onHoverStart={() => setIsHoveringFacitPanel(true)}
-                          onHoverEnd={() => setIsHoveringFacitPanel(false)}
-                        >
-                          <FacitToolbar
-                            onRotateFacitClockwise={rotateFacitClockwise}
-                            onRotateFacitCounterClockwise={
-                              rotateFacitCounterClockwise
-                            }
-                            onFacitZoomIn={zoomInFacit}
-                            onFacitZoomOut={zoomOutFacit}
-                            facitPdfUrl={facitPdfUrl}
-                            exams={exams as Exam[]}
-                            setSelectedFacit={setSelectedFacit}
-                            selectedExam={selectedExam}
-                          />
-                          <FacitViewer
-                            facitPdfUrl={facitPdfUrl}
-                            facitScale={facitScale}
-                            facitRotation={facitRotation}
-                            facitNumPages={facitNumPages}
-                            handleMouseEnter={handleMouseEnterFacitViewer}
-                            handleMouseLeave={handleMouseLeaveFacitViewer}
-                            onFacitDocumentLoadSuccess={
-                              onFacitDocumentLoadSuccess
-                            }
-                            selectedFacit={selectedFacit}
-                            loadingFacit={loadingFacit}
-                            getTranslation={getTranslation}
-                            setFacitScale={setFacitScale}
-                          />
-                        </motion.div>
-                      )}
-                  </AnimatePresence>
+                  <motion.div
+                    className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
+                    ref={facitPanelRef}
+                    variants={facitVariants}
+                    initial="hidden"
+                    animate={shouldFacitPanelBeVisible ? "visible" : "hidden"}
+                    style={{
+                      pointerEvents: shouldFacitPanelBeVisible
+                        ? "auto"
+                        : "none",
+                    }}
+                    transition={{
+                      x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                      opacity: { duration: 0.3 },
+                      filter: { duration: 0.3 },
+                    }}
+                    onHoverStart={() => setIsHoveringFacitPanel(true)}
+                    onHoverEnd={() => setIsHoveringFacitPanel(false)}
+                  >
+                    <FacitToolbar
+                      onRotateFacitClockwise={rotateFacitClockwise}
+                      onRotateFacitCounterClockwise={
+                        rotateFacitCounterClockwise
+                      }
+                      onFacitZoomIn={zoomInFacit}
+                      onFacitZoomOut={zoomOutFacit}
+                      facitPdfUrl={facitPdfUrl}
+                      exams={exams as Exam[]}
+                      setSelectedFacit={setSelectedFacit}
+                      selectedExam={selectedExam}
+                    />
+                    <FacitViewer
+                      facitPdfUrl={facitPdfUrl}
+                      facitScale={facitScale}
+                      facitRotation={facitRotation}
+                      facitNumPages={facitNumPages}
+                      handleMouseEnter={handleMouseEnterFacitViewer}
+                      handleMouseLeave={handleMouseLeaveFacitViewer}
+                      onFacitDocumentLoadSuccess={onFacitDocumentLoadSuccess}
+                      selectedFacit={selectedFacit}
+                      loadingFacit={loadingFacit}
+                      getTranslation={getTranslation}
+                      setFacitScale={setFacitScale}
+                    />
+                  </motion.div>
                   {!isHoveringFacitPanel && !isToggled && (
                     <GradientIndicator
                       detectedFacit={detectedFacit}
