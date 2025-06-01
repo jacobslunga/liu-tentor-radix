@@ -38,7 +38,7 @@ export default function HelpUploadBanner() {
     <div
       className={`absolute top-0 left-0 right-0 z-30
                   overflow-hidden transition-all duration-500
-                  rounded-bl-xl rounded-br-xl shadow-lg
+                  shadow-lg dark:shadow-2xl
                   ${
                     animateExit // If exit animation is active, slide up and fade out
                       ? "-translate-y-full opacity-0"
@@ -47,19 +47,7 @@ export default function HelpUploadBanner() {
                       : "-translate-y-full opacity-0" // Initial state before enter animation
                   }`}
     >
-      <div className="relative py-3 px-4 bg-primary text-primary-foreground">
-        {/* Subtle background circles for visual interest */}
-        <div className="absolute inset-0 overflow-hidden opacity-20">
-          <div
-            className="absolute top-0 right-0 w-24 h-24 rounded-full transform translate-x-1/2 -translate-y-1/2"
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
-          ></div>
-          <div
-            className="absolute bottom-0 left-0 w-20 h-20 rounded-full transform -translate-x-1/2 translate-y-1/2"
-            style={{ backgroundColor: "rgba(255, 255, 255, 0.08)" }}
-          ></div>
-        </div>
-
+      <div className="relative py-3 px-4 bg-secondary text-secondary-foreground">
         <div className="relative max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-sm">
           <div className="flex items-center gap-3 flex-1">
             <div
@@ -71,7 +59,7 @@ export default function HelpUploadBanner() {
 
             <p className="text-center sm:text-left leading-tight">
               <span className="font-semibold">
-                🤓 Har du tentor som saknas?
+                📚 Har du tentor som saknas?
               </span>
               <br className="sm:hidden" /> Varje bidrag hjälper andra studenter!
               ✨
@@ -81,11 +69,7 @@ export default function HelpUploadBanner() {
           <div className="flex items-center gap-2 flex-shrink-0">
             {/* CTA: Upload Now */}
             <Link to="/upload-exams">
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 transition-all duration-200"
-              >
+              <Button size="sm">
                 Ladda upp nu
                 <UploadIcon className="w-3 h-3" />
               </Button>
@@ -93,11 +77,7 @@ export default function HelpUploadBanner() {
 
             {/* CTA: Read More */}
             <Link to="/upload-info">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground transition-colors duration-200"
-              >
+              <Button variant="outline" size="sm">
                 Läs mer
                 <ArrowRightIcon className="w-3 h-3" />
               </Button>
