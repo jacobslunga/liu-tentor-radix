@@ -38,7 +38,7 @@ export default function HelpUploadBanner() {
     <div
       className={`absolute top-0 left-0 right-0 z-30
                   overflow-hidden transition-all duration-500
-                  shadow-lg dark:shadow-2xl
+                  border-b
                   ${
                     animateExit // If exit animation is active, slide up and fade out
                       ? "-translate-y-full opacity-0"

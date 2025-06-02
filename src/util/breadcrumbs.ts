@@ -1,6 +1,6 @@
 export const breadcrumbMap = {
   "/": { sv: "Hem", en: "Home" },
-  "/upload-info": { sv: "Ladda upp info", en: "Upload Info" },
+  "/upload-info": { sv: "Uppladdningsinfo", en: "Upload Info" },
   "/kontakt": { sv: "Kontakt", en: "Contact" },
   "/feedback": { sv: "Feedback", en: "Feedback" },
   "/privacy-policy": { sv: "Integritetspolicy", en: "Privacy Policy" },

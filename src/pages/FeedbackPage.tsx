@@ -20,6 +20,7 @@ import { z } from "zod";
 import { Helmet } from "react-helmet-async";
 import { ChecklistIcon, AlertIcon, CheckIcon } from "@primer/octicons-react";
 import PageHeader from "@/components/PageHeader";
+import CustomPagesHeader from "./CustomPagesHeader";
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
@@ -105,6 +106,8 @@ const FeedbackPage: FC = () => {
         <title>LiU Tentor | {getTranslation("feedbackTitle")}</title>
       </Helmet>
 
+      <CustomPagesHeader />
+
       <div className="container max-w-2xl mx-auto px-4 py-16 flex-grow">
         {/* Page Title */}
         <PageHeader />
@@ -113,7 +116,7 @@ const FeedbackPage: FC = () => {
             <ChecklistIcon className="text-primary h-10 w-10" />
           </div>
 
-          <h1 className="text-3xl text-foreground/80 font-medium text-center mt-5 mb-4">
+          <h1 className="text-3xl text-foreground font-medium text-center mt-5 mb-4">
             {getTranslation("feedbackTitle")}
           </h1>
           <p className="text-lg text-muted-foreground text-center max-w-xl">

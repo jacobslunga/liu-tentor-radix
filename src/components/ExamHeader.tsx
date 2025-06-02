@@ -214,7 +214,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           role="search"
         >
           <div
-            className="group font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-2xl"
+            className="group font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-full"
             onClick={() => {
               setShowGlobalSearch(true);
             }}

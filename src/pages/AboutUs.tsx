@@ -2,6 +2,7 @@ import { FC, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/context/LanguageContext";
 import PageHeader from "@/components/PageHeader";
+import CustomPagesHeader from "./CustomPagesHeader";
 
 const OmOss: FC = () => {
   const { language } = useLanguage();
@@ -15,6 +16,8 @@ const OmOss: FC = () => {
       <Helmet>
         <title>LiU Tentor | Om oss</title>
       </Helmet>
+
+      <CustomPagesHeader />
 
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         <PageHeader />

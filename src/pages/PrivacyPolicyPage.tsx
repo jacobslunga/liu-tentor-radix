@@ -6,6 +6,7 @@ import { Helmet } from "react-helmet-async";
 import { Separator } from "@/components/ui/separator";
 import { Mailbox } from "lucide-react";
 import PageHeader from "@/components/PageHeader";
+import CustomPagesHeader from "./CustomPagesHeader";
 
 const PrivacyPolicy: FC = () => {
   const { language } = useLanguage();
@@ -42,7 +43,7 @@ const PrivacyPolicy: FC = () => {
         <title>LiU Tentor | Privacy Policy</title>
       </Helmet>
 
-      {/* Header */}
+      <CustomPagesHeader />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12">
