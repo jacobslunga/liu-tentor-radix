@@ -101,7 +101,7 @@ const FeedbackPage: FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background/50 flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col">
       <Helmet>
         <title>LiU Tentor | {getTranslation("feedbackTitle")}</title>
       </Helmet>
