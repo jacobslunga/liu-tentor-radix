@@ -71,7 +71,7 @@ LiU Tentor is a modern, student-driven platform that provides easy access to his
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/your-username/liu-tentor-radix.git
+   git clone https://github.com/jacobslunga/liu-tentor-radix.git
    cd liu-tentor-radix
    ```
 
@@ -132,7 +132,8 @@ public/
 ├── fonts/              # Custom fonts (Playfair Display)
 ├── courseCodes.json    # Course code data
 ├── liutentorround*.svg # Logo files
-└── favicons/           # Favicon variants
+├── favicon*.png        # Favicon variants
+└── *.svg               # Additional icon variants
 ```
 
 ## 🎨 Design System

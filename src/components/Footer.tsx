@@ -4,6 +4,7 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 import SettingsDialog from "@/components/SettingsDialog";
 import { LogoIcon } from "./LogoIcon";
+import packageJson from "../../package.json";
 
 const Footer: FC = () => {
   const { language } = useLanguage();
@@ -75,7 +76,7 @@ const Footer: FC = () => {
 
         <p className="text-xs text-muted-foreground text-center">
           &copy; {new Date().getFullYear()}{" "}
-          {getTranslation("allRightsReserved")}
+          {getTranslation("allRightsReserved")} • v{packageJson.version}
         </p>
 
         <p className="text-lg text-foreground/50 font-logo select-none tracking-tight flex items-center space-x-1">
