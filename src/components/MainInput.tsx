@@ -2,7 +2,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import Cookies from "js-cookie";
 import { CornerUpRight, X, Clock } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "@primer/octicons-react";
@@ -78,7 +78,6 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
     }
 
     if (storedVersion !== COOKIE_VERSION || isInvalidFormat) {
-      console.log("Invalid or old cookies detected. Clearing...");
       Cookies.remove("popularSearches");
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
       return;

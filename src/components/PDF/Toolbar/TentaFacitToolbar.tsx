@@ -1,15 +1,13 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { RotateCcw, RotateCw, BookOpenIcon } from "lucide-react";
+import { RotateCcw, RotateCw, BookOpen, Download } from "lucide-react";
 import {
   PlusIcon,
   DashIcon,
-  DownloadIcon,
   EyeIcon,
   EyeClosedIcon,
 } from "@primer/octicons-react";
 import { Button } from "@/components/ui/button";
 import { Exam } from "@/components/data-table/columns";
-import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
@@ -23,7 +21,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useLanguage } from "@/context/LanguageContext";
-import translations from "@/util/translations";
 import { filterExamsByDate, isFacit } from "@/components/PDF/utils";
 import { motion } from "framer-motion";
 
@@ -45,22 +42,27 @@ const ToolbarButton = ({
   onClick,
   tooltip,
   className,
+  variant = "secondary",
+  disabled = false,
 }: {
   icon: any;
   onClick: () => void;
   tooltip: string;
   className?: string;
+  variant?: "secondary" | "outline" | "ghost";
+  disabled?: boolean;
 }) => (
-  <TooltipProvider delayDuration={0}>
+  <TooltipProvider delayDuration={300}>
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          variant="secondary"
+          variant={variant}
           size="icon"
           onClick={onClick}
-          className={className}
+          className={`transition-all duration-200 ${className}`}
+          disabled={disabled}
         >
-          <Icon size={17} />
+          <Icon size={16} />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="left">
@@ -68,6 +70,10 @@ const ToolbarButton = ({
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>
+);
+
+const ToolbarGroup = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col space-y-1">{children}</div>
 );
 
 const TentaFacitToolbar: FC<Props> = ({
@@ -103,7 +109,7 @@ const TentaFacitToolbar: FC<Props> = ({
         if (!isHoveringRef.current) {
           setIsMouseActive(false);
         }
-      }, 1000);
+      }, 1500);
     };
 
     handleMouseMove();
@@ -120,15 +126,31 @@ const TentaFacitToolbar: FC<Props> = ({
 
   const { language } = useLanguage();
 
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
+  const getTooltip = (key: string) => {
+    const tooltips = {
+      zoomIn: language === "sv" ? "Zooma in (+)" : "Zoom In (+)",
+      zoomOut: language === "sv" ? "Zooma ut (-)" : "Zoom Out (-)",
+      rotateLeft: language === "sv" ? "Rotera vänster (R)" : "Rotate Left (R)",
+      rotateRight: language === "sv" ? "Rotera höger (L)" : "Rotate Right (L)",
+      download: language === "sv" ? "Ladda ner facit" : "Download Solution",
+      selectFacit: language === "sv" ? "Välj facit" : "Select Solution",
+      toggleBlur: isBlurred
+        ? language === "sv"
+          ? "Visa facit (T)"
+          : "Show Solution (T)"
+        : language === "sv"
+        ? "Dölj facit (T)"
+        : "Hide Solution (T)",
+    };
+    return tooltips[key as keyof typeof tooltips] || "";
+  };
 
   const facitExams = exams?.filter((exam) => isFacit(exam.tenta_namn));
   const filteredFacitExams = filterExamsByDate(selectedExam, facitExams);
 
   return (
     <motion.div
-      className="fixed top-16 right-5 flex flex-col space-y-2 z-40"
+      className="fixed top-16 right-6 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
@@ -138,62 +160,137 @@ const TentaFacitToolbar: FC<Props> = ({
       onMouseLeave={() => {
         setIsHovering(false);
       }}
-      initial={{ opacity: 1 }}
-      animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ x: 10 }}
+      animate={{
+        x: isMouseActive || isHovering ? 0 : 10,
+      }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
-      <ToolbarButton
-        icon={PlusIcon}
-        onClick={onFacitZoomIn}
-        tooltip={getTranslation("zoomIn")}
-      />
-      <ToolbarButton
-        icon={DashIcon}
-        onClick={onFacitZoomOut}
-        tooltip={getTranslation("zoomOut")}
-      />
-      <Separator />
-      <ToolbarButton
-        icon={RotateCcw}
-        onClick={onRotateFacitCounterClockwise}
-        tooltip={getTranslation("rotateLeft")}
-      />
-      <ToolbarButton
-        icon={RotateCw}
-        onClick={onRotateFacitClockwise}
-        tooltip={getTranslation("rotateRight")}
-      />
-      <Separator />
-      <ToolbarButton
-        icon={DownloadIcon}
-        onClick={() => window.open(facitPdfUrl || "#", "_blank")}
-        tooltip={getTranslation("downloadFacit")}
-      />
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="icon">
-            <BookOpenIcon size={17} />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          side="left"
-          className="max-h-60 overflow-y-auto z-50"
-        >
-          {filteredFacitExams.map((exam) => (
-            <DropdownMenuItem
-              key={exam.tenta_namn}
-              onClick={() => setSelectedFacit(exam)}
+      <div className="flex flex-col space-y-2">
+        {/* Zoom Controls */}
+        <ToolbarGroup>
+          <ToolbarButton
+            icon={PlusIcon}
+            onClick={onFacitZoomIn}
+            tooltip={getTooltip("zoomIn")}
+            className="bg-background border border-border hover:bg-accent hover:text-primary shadow-sm"
+            variant="outline"
+          />
+          <ToolbarButton
+            icon={DashIcon}
+            onClick={onFacitZoomOut}
+            tooltip={getTooltip("zoomOut")}
+            className="bg-background border border-border hover:bg-accent hover:text-primary shadow-sm"
+            variant="outline"
+          />
+        </ToolbarGroup>
+
+        {/* Rotation Controls */}
+        <ToolbarGroup>
+          <ToolbarButton
+            icon={RotateCcw}
+            onClick={onRotateFacitCounterClockwise}
+            tooltip={getTooltip("rotateLeft")}
+            className="bg-background border border-border hover:bg-accent hover:text-blue-600 shadow-sm"
+            variant="outline"
+          />
+          <ToolbarButton
+            icon={RotateCw}
+            onClick={onRotateFacitClockwise}
+            tooltip={getTooltip("rotateRight")}
+            className="bg-background border border-border hover:bg-accent hover:text-blue-600 shadow-sm"
+            variant="outline"
+          />
+        </ToolbarGroup>
+
+        {/* Actions */}
+        <ToolbarGroup>
+          <ToolbarButton
+            icon={Download}
+            onClick={() => {
+              if (facitPdfUrl) {
+                const link = document.createElement("a");
+                link.href = facitPdfUrl;
+                // Extract filename from selectedExam and add "_facit" suffix
+                const examName = selectedExam.tenta_namn.replace(".pdf", "");
+                link.download = `${examName}_facit.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }
+            }}
+            tooltip={getTooltip("download")}
+            disabled={!facitPdfUrl}
+            className={`shadow-sm ${
+              !facitPdfUrl
+                ? "opacity-50 cursor-not-allowed bg-background border border-border"
+                : "bg-background border border-border hover:bg-accent hover:text-green-600"
+            }`}
+            variant="outline"
+          />
+
+          {/* Facit Selector */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <TooltipProvider delayDuration={300}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-background border border-border hover:bg-accent hover:text-purple-600 shadow-sm transition-all duration-200"
+                    >
+                      <BookOpen size={16} />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">
+                    <p>{getTooltip("selectFacit")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="left"
+              className="w-64 max-h-60 overflow-y-auto"
             >
-              {exam.tenta_namn}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
-      <ToolbarButton
-        icon={isBlurred ? EyeClosedIcon : EyeIcon}
-        onClick={onToggleBlur}
-        tooltip={getTranslation(isBlurred ? "showFacit" : "hideFacit")}
-      />
+              <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b mb-1">
+                {language === "sv" ? "Välj facit" : "Select Solution"} (
+                {filteredFacitExams.length})
+              </div>
+              {filteredFacitExams.map((exam) => (
+                <DropdownMenuItem
+                  key={exam.tenta_namn}
+                  onClick={() => setSelectedFacit(exam)}
+                  className="cursor-pointer"
+                >
+                  <span className="truncate">
+                    {exam.tenta_namn.replace(".pdf", "")}
+                  </span>
+                </DropdownMenuItem>
+              ))}
+              {filteredFacitExams.length === 0 && (
+                <div className="px-2 py-3 text-xs text-muted-foreground text-center">
+                  {language === "sv"
+                    ? "Inga facit tillgängliga"
+                    : "No solutions available"}
+                </div>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <ToolbarButton
+            icon={isBlurred ? EyeClosedIcon : EyeIcon}
+            onClick={onToggleBlur}
+            tooltip={getTooltip("toggleBlur")}
+            className={`shadow-sm ${
+              !isBlurred
+                ? "bg-orange-50 text-orange-600 border border-orange-200 dark:bg-orange-900/50 dark:text-orange-400 dark:border-orange-700"
+                : "bg-background border border-border hover:bg-accent hover:text-orange-600"
+            }`}
+            variant="outline"
+          />
+        </ToolbarGroup>
+      </div>
     </motion.div>
   );
 };

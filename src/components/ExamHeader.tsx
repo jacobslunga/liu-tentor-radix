@@ -7,7 +7,7 @@ import {
   ArrowLeftIcon,
   ChevronDownIcon,
 } from "@primer/octicons-react";
-import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { findFacitForExam } from "./PDF/utils";
 import { Button } from "./ui/button";
@@ -18,7 +18,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import SettingsDialog from "@/components/SettingsDialog";
-import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
+import CourseSearchDropdown from "@/components/CourseSearchDropdown";
+import { Badge } from "@/components/ui/badge";
 
 const normalizeName = (name: string): string => {
   return name.toLowerCase().replace(/[^a-z0-9-_]/g, "");
@@ -91,16 +92,6 @@ const ExamHeader: FC<ExamHeaderProps> = ({
   });
   const navigate = useNavigate();
 
-  const { setShowGlobalSearch } = useContext(ShowGlobalSearchContext);
-  const [isMac, setIsMac] = useState(false);
-
-  useEffect(() => {
-    const platform = window.navigator.platform.toLowerCase();
-    setIsMac(platform.includes("mac"));
-  }, []);
-
-  const modifierKey = isMac ? "⌘" : "Ctrl";
-
   // Sort exams by date
   const sortedExams = useMemo(() => {
     if (!exams) return [];
@@ -132,102 +123,130 @@ const ExamHeader: FC<ExamHeaderProps> = ({
 
   let displayName = selectedExamName.replace(".pdf", "");
 
+  // Format date for better display
+  const formatDisplayDate = (dateStr: string | null) => {
+    if (!dateStr) return null;
+    try {
+      return new Date(dateStr).toLocaleDateString(
+        language === "sv" ? "sv-SE" : "en-US",
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }
+      );
+    } catch {
+      return dateStr;
+    }
+  };
+
   return (
-    <div
-      className={`hidden md:flex z-[60] fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-background border-b`}
-    >
-      <div className="flex flex-row items-center justify-center space-x-5">
+    <div className="hidden md:flex z-[60] fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-6 h-14 bg-background/95 backdrop-blur-lg border-b border-border/40">
+      {/* Left section */}
+      <div className="flex flex-row items-center space-x-3.5">
         <Button
           size="icon"
-          variant="outline"
+          variant="ghost"
           onClick={() => {
             navigate(`/search/${courseCode}`);
           }}
+          className="hover:bg-muted transition-colors"
           aria-label={getTranslation("goBack")}
         >
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
 
+        {/* Course code badge */}
+        <Badge
+          variant="secondary"
+          className="font-mono text-sm px-3 py-1 font-medium"
+        >
+          {courseCode}
+        </Badge>
+
+        <div className="h-6 w-px bg-border" />
+
+        {/* Exam selector */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="outline"
-              size="sm"
-              className="flex flex-row items-center justify-center space-x-1"
+              variant="ghost"
+              className="flex flex-row items-center space-x-2 h-9 hover:bg-muted transition-colors max-w-[300px]"
             >
-              <p className="flex-1 text-left">
-                {displayName.length > 20
-                  ? `${displayName.slice(0, 20)}...`
+              <span className="font-medium truncate">
+                {displayName.length > 25
+                  ? `${displayName.slice(0, 25)}...`
                   : displayName}
-              </p>
-              <ChevronDownIcon className="w-4 h-4" />
+              </span>
+              <ChevronDownIcon className="w-4 h-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="max-h-80 ml-16 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+          <DropdownMenuContent
+            className="w-80 max-h-96 overflow-y-auto"
+            align="start"
+          >
+            <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground border-b mb-1">
+              {language === "sv" ? "Välj tenta" : "Select Exam"} (
+              {sortedExams.length})
+            </div>
             {sortedExams.map((exam) => (
               <DropdownMenuItem
                 key={exam.id}
                 onClick={() => handleExamChange(exam)}
-                className={`flex flex-col px-3 py-2 ${
+                className={`flex flex-col items-start px-3 py-3 cursor-pointer ${
                   exam.id.toString() === currentExamId.toString()
-                    ? "bg-primary/10"
+                    ? "bg-primary/10 border-l-2 border-l-primary"
                     : ""
                 }`}
               >
-                <div className="flex items-center w-full gap-2">
-                  {exam.id.toString() === currentExamId.toString() && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                  )}
-                  <span
-                    className={`flex-1 font-medium truncate ${
-                      exam.id.toString() === currentExamId.toString()
-                        ? "text-primary"
-                        : ""
-                    }`}
-                  >
-                    {exam.tenta_namn.replace(".pdf", "")}
-                  </span>
-                  {completedExams[exam.id] && (
-                    <CheckIcon className="w-4 h-4 text-green-500 shrink-0" />
-                  )}
-                </div>
-                <div className="flex items-start w-full space-x-2 text-xs text-muted-foreground">
-                  {exam.date && <span>{exam.date}</span>}
-                  {findFacitForExam(exam, allExams) && (
-                    <>
-                      <span>•</span>
-                      <span className="text-green-500">
+                <div className="flex items-center w-full gap-3">
+                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                    <span
+                      className={`font-medium truncate ${
+                        exam.id.toString() === currentExamId.toString()
+                          ? "text-primary"
+                          : "text-foreground"
+                      }`}
+                    >
+                      {exam.tenta_namn.replace(".pdf", "")}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {findFacitForExam(exam, allExams) && (
+                      <Badge
+                        variant="outline"
+                        className="text-xs bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
+                      >
                         {getTranslation("withFacit")}
-                      </span>
-                    </>
-                  )}
+                      </Badge>
+                    )}
+                    {completedExams[exam.id] && (
+                      <CheckIcon className="w-4 h-4 text-green-500" />
+                    )}
+                  </div>
                 </div>
+
+                {exam.date && (
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {formatDisplayDate(exam.date)}
+                  </div>
+                )}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
-      <div className="flex flex-row items-center justify-center space-x-3 min-w-fit">
-        <div
-          className="relative group hidden sm:flex items-center"
-          role="search"
-        >
-          <div
-            className="group font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-full"
-            onClick={() => {
-              setShowGlobalSearch(true);
-            }}
-            aria-label={getTranslation("searchCoursePlaceholder")}
-          >
-            <p className="text-xs text-foreground/50">
-              {getTranslation("searchCoursePlaceholder")}
-            </p>
-          </div>
-          <kbd className="text-xs opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-foreground/10 px-2 py-1 rounded-sm text-foreground/50 absolute right-5">
-            {modifierKey} K
-          </kbd>
-        </div>
+      {/* Right section */}
+      <div className="flex flex-row items-center space-x-3.5">
+        {/* Course search dropdown */}
+        <CourseSearchDropdown
+          className="w-60"
+          placeholder={getTranslation("searchCoursePlaceholder")}
+        />
+
+        <div className="h-6 w-px bg-border" />
 
         <SettingsDialog />
       </div>

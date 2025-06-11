@@ -214,6 +214,10 @@ export interface Translations {
     uploadGuidelineQuality: string;
     passedCount: string;
     examStatisticsDescription: string;
+    courseRemovedTitle: string;
+    courseRemovedMessage: string;
+    studentUploadedTitle: string;
+    studentUploadedMessage: string;
   };
 }
 
@@ -464,6 +468,12 @@ const translations: Translations = {
     passedCount: "Godkända",
     examStatisticsDescription:
       "Vi har precis introducerat tentastatistik, klicka på procenten för att få en mer detaljerad vy",
+    courseRemovedTitle: "Kurs borttagen på begäran",
+    courseRemovedMessage:
+      "Denna kurs har tagits bort på begäran av examinatorn. Tentor kanske inte längre är tillgängliga.",
+    studentUploadedTitle: "Studentuppladdade tentor och lösningar",
+    studentUploadedMessage:
+      "Vissa av dessa tentor och lösningar har laddats upp av studenter. Innehållet kan variera i kvalitet och riktighet.",
   },
   en: {
     homeTitle: "LiU Exams",
@@ -712,6 +722,12 @@ const translations: Translations = {
     passedCount: "Passed",
     examStatisticsDescription:
       "We have just introduced exam statistics, click on the percentage to get a more detailed view",
+    courseRemovedTitle: "Course Removed by Request",
+    courseRemovedMessage:
+      "This course has been removed at the request of the examiner. Exams may no longer be available.",
+    studentUploadedTitle: "Student-Uploaded Exams and Solutions",
+    studentUploadedMessage:
+      "Some of these exams and solutions have been uploaded by students. Content quality and accuracy may vary.",
   },
 };
 

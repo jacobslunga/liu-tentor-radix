@@ -42,6 +42,7 @@ export const fetchPdfData = async (documentId: number) => {
 };
 
 export const isFacit = (name: string) => {
+  if (!name || typeof name !== "string") return false;
   const normalizedName = name.normalize("NFC").toLowerCase();
 
   const isFacitPattern = /^l\d|^l_\d{8}/;

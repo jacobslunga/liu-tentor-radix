@@ -2,7 +2,6 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowUpRightIcon } from "@primer/octicons-react";
-import { Button } from "@/components/ui/button";
 
 interface RecentActivity {
   courseCode: string;
@@ -63,20 +62,26 @@ const InlineRecentActivity = () => {
 
   return (
     <div className="w-full max-w-md">
-      <div className="flex items-center justify-center w-full overflow-x-auto space-x-3 text-sm">
-        {visibleActivities.map((activity, index) => (
-          <Link key={activity.path} to={activity.path}>
-            <Button variant="ghost" size="sm" className="group">
-              <span className="text-foreground/80 hover:text-foreground transition-colors">
-                {activity.courseCode}
-              </span>
-              <ArrowUpRightIcon className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:-translate-y-[2px] group-hover:translate-x-1 transition-all duration-200" />
-            </Button>
-            {index < visibleActivities.length - 1 && (
-              <span className="mx-2 text-foreground/40">|</span>
-            )}
-          </Link>
-        ))}
+      {/* Simple background container */}
+      <div className="bg-muted/10 rounded-2xl px-4 py-3">
+        <div className="flex items-center justify-center w-full overflow-x-auto gap-3">
+          {visibleActivities.map((activity, index) => (
+            <div key={activity.path} className="flex items-center">
+              <Link to={activity.path} className="group">
+                <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/50 hover:bg-background transition-colors">
+                  <span className="text-sm font-medium text-foreground/80 group-hover:text-foreground transition-colors">
+                    {activity.courseCode}
+                  </span>
+                  <ArrowUpRightIcon className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:-translate-y-[1px] group-hover:translate-x-[1px] transition-all duration-200" />
+                </div>
+              </Link>
+
+              {index < visibleActivities.length - 1 && (
+                <div className="w-1 h-1 rounded-full bg-muted-foreground/20 mx-2" />
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

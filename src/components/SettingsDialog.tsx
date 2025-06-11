@@ -1,7 +1,6 @@
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -105,37 +104,50 @@ const SettingsDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="icon">
-          <GearIcon />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hover:bg-muted/50 transition-colors"
+        >
+          <GearIcon className="h-5 w-5" />
         </Button>
       </DialogTrigger>
-      <DialogContent className="w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg">
-        <DialogHeader>
-          <DialogTitle className="text-2xl">
-            {getTranslation("settings")}
+      <DialogContent className="w-[95vw] max-w-2xl max-h-[90vh] overflow-y-auto border-border/50 bg-background/95 backdrop-blur-sm">
+        <DialogHeader className="space-y-4 pb-6 border-b border-border/50">
+          <DialogTitle className="text-2xl font-semibold flex items-center gap-3">
+            <div className="bg-primary/10 rounded-lg p-2">
+              <GearIcon className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-foreground">{getTranslation("settings")}</h2>
+              <p className="text-sm text-muted-foreground font-normal">
+                {getTranslation("settingsDescription")}
+              </p>
+            </div>
           </DialogTitle>
-          <DialogDescription>
-            {getTranslation("settingsDescription")}
-          </DialogDescription>
         </DialogHeader>
 
         {/* Theme Selector */}
-        <div className="space-y-3">
-          <h3 className="font-medium">{getTranslation("theme")}</h3>
-          <p className="text-sm text-muted-foreground">
-            {getTranslation("themeDescription")}
-          </p>
-          <div className="flex gap-2">
+        <div className="space-y-4 bg-muted/20 rounded-xl p-6">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-foreground">
+              {getTranslation("theme")}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {getTranslation("themeDescription")}
+            </p>
+          </div>
+          <div className="grid grid-cols-3 gap-3">
             {themeOptions.map(({ id, label, icon }) => (
               <div
                 key={id}
                 onClick={() => setTheme(id)}
                 className={cn(
-                  "flex-1 cursor-pointer rounded-md border border-border transition-all",
-                  "flex flex-col items-center justify-center gap-2 py-4 hover:bg-primary/5 hover:border-primary",
+                  "cursor-pointer rounded-lg border transition-all duration-200",
+                  "flex flex-col items-center justify-center gap-3 py-4 px-3",
                   theme === id
-                    ? "bg-primary/10 border-primary hover:bg-primary/10"
-                    : "bg-card"
+                    ? "bg-primary/10 border-primary text-primary"
+                    : "bg-background border-border/50 hover:bg-muted/30 hover:border-border"
                 )}
               >
                 {icon}
@@ -146,10 +158,19 @@ const SettingsDialog: FC = () => {
         </div>
 
         {/* Language Selector */}
-        <div className="space-y-4">
-          <h3 className="font-medium">{getTranslation("settingsLanguage")}</h3>
+        <div className="space-y-4 bg-muted/20 rounded-xl p-6">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-foreground">
+              {getTranslation("settingsLanguage")}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {language === "sv"
+                ? "Välj ditt föredragna språk"
+                : "Choose your preferred language"}
+            </p>
+          </div>
           <Select onValueChange={changeLanguage} value={language}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full bg-background border-border/50 h-12">
               <SelectValue>{languages[language]}</SelectValue>
             </SelectTrigger>
             <SelectContent>
@@ -163,11 +184,18 @@ const SettingsDialog: FC = () => {
         </div>
 
         {/* Keyboard Shortcuts */}
-        <div className="space-y-4">
-          <h3 className="font-medium">
-            {getTranslation("settingsKeyboardShortcuts")}
-          </h3>
-          <div className="space-y-4">
+        <div className="space-y-4 bg-muted/20 rounded-xl p-6">
+          <div className="space-y-2">
+            <h3 className="font-semibold text-foreground">
+              {getTranslation("settingsKeyboardShortcuts")}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {language === "sv"
+                ? "Tangentbordskombinationer för snabbare navigation"
+                : "Keyboard combinations for faster navigation"}
+            </p>
+          </div>
+          <div className="space-y-6">
             {Object.keys(categoryTranslations).map((category) => {
               const categoryShortcuts = shortcuts.filter(
                 (s) => s.category === category
@@ -175,26 +203,30 @@ const SettingsDialog: FC = () => {
               if (categoryShortcuts.length === 0) return null;
 
               return (
-                <div key={category} className="space-y-2">
-                  <h4 className="text-sm font-medium text-muted-foreground first-letter:uppercase">
+                <div key={category} className="space-y-3">
+                  <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                    <div className="h-1 w-4 bg-primary/30 rounded-full"></div>
                     {
                       categoryTranslations[
                         category as keyof typeof categoryTranslations
                       ][language as "en" | "sv"]
                     }
                   </h4>
-                  <div className="rounded-lg border bg-card">
+                  <div className="rounded-lg border border-border/50 bg-background overflow-hidden">
                     <table className="w-full">
-                      <tbody className="divide-y">
+                      <tbody className="divide-y divide-border/30">
                         {categoryShortcuts.map((shortcut) => (
-                          <tr key={shortcut.action} className="text-sm">
-                            <td className="px-4 py-3">
+                          <tr
+                            key={shortcut.action}
+                            className="text-sm hover:bg-muted/20 transition-colors"
+                          >
+                            <td className="px-4 py-3 font-medium text-foreground">
                               {getTranslation(
                                 shortcut.action as keyof (typeof translations)[typeof language]
                               )}
                             </td>
                             <td className="px-4 py-3 text-right">
-                              <kbd className="pointer-events-none inline-flex h-7 select-none items-center gap-1 rounded border bg-muted px-2 font-mono text-sm font-medium">
+                              <kbd className="inline-flex h-8 select-none items-center gap-1 rounded-lg border border-border/50 bg-muted/50 px-3 font-mono text-xs font-medium text-muted-foreground">
                                 {shortcut.key}
                               </kbd>
                             </td>

@@ -22,13 +22,15 @@ const PrivacyPolicy: FC = () => {
     content,
     items,
   }) => (
-    <div className="mb-6">
-      <h2 className="text-lg font-medium mb-2 flex items-center gap-2">
+    <div className="mb-6 md:mb-8">
+      <h2 className="text-lg md:text-xl font-semibold mb-2 md:mb-3 text-foreground">
         {title}
       </h2>
-      <p className="text-sm text-foreground/80 leading-relaxed">{content}</p>
+      <p className="text-sm md:text-base text-foreground/80 leading-relaxed mb-3 md:mb-4">
+        {content}
+      </p>
       {items && (
-        <ul className="mt-3 list-disc pl-5 space-y-1 text-sm text-foreground/70">
+        <ul className="mt-3 md:mt-4 list-disc pl-4 md:pl-6 space-y-1 md:space-y-2 text-sm md:text-base text-foreground/70">
           {items.map((item, i) => (
             <li key={i}>{item}</li>
           ))}
@@ -40,30 +42,44 @@ const PrivacyPolicy: FC = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Helmet>
-        <title>LiU Tentor | Privacy Policy</title>
+        <title>LiU Tentor | {getTranslation("privacyPolicyTitle")}</title>
       </Helmet>
 
       <CustomPagesHeader />
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-2xl mx-auto">
+      <div className="container mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-3xl mx-auto">
           <PageHeader />
-          <div className="mb-6 mt-12">
-            <h1 className="text-2xl font-medium flex items-center gap-2">
+
+          {/* Professional Header */}
+          <div className="mb-6 md:mb-8 mt-8 md:mt-12 text-center">
+            <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 text-foreground px-4">
               {getTranslation("privacyPolicyTitle")}
             </h1>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-base md:text-lg text-foreground/70 mb-3 md:mb-4 px-4">
+              {language === "sv"
+                ? "Vi värnar om din integritet och är engagerade i att skydda dina personuppgifter"
+                : "We care about your privacy and are committed to protecting your personal data"}
+            </p>
+            <p className="text-xs md:text-sm text-muted-foreground">
               {getTranslation("privacyPolicyLastUpdated")} 2025/03/18
             </p>
           </div>
-          {/* Intro */}
-          <div className="mb-8 text-sm leading-relaxed">
-            <p>{getTranslation("privacyPolicyIntro")}</p>
+
+          {/* Professional Introduction */}
+          <div className="mb-6 md:mb-10 p-4 md:p-6 bg-muted/20 rounded-xl border border-border/30">
+            <p className="text-sm md:text-base text-foreground/80 leading-relaxed">
+              {language === "sv"
+                ? "LiU Tentor respekterar din integritet och följer gällande dataskyddslagstiftning. Denna integritetspolicy förklarar hur vi samlar in, använder och skyddar information när du använder vår tjänst."
+                : "LiU Tentor respects your privacy and complies with applicable data protection legislation. This privacy policy explains how we collect, use, and protect information when you use our service."}
+            </p>
           </div>
-          <Separator />
-          {/* Sections */}
-          <div className="space-y-6 mt-8">
+
+          <Separator className="mb-8" />
+
+          {/* Enhanced Sections */}
+          <div className="space-y-6 md:space-y-8">
             <Section
               title={getTranslation("privacyPolicySection1Title")}
               content={getTranslation("privacyPolicySection1Content")}
@@ -111,40 +127,55 @@ const PrivacyPolicy: FC = () => {
             <Section
               title={
                 getTranslation("privacyPolicyGDPRTitle") ||
-                "Hantering av personuppgifter och GDPR"
+                (language === "sv"
+                  ? "GDPR och personuppgifter"
+                  : "GDPR and Personal Data")
               }
               content={
                 getTranslation("privacyPolicyGDPRContent") ||
-                "Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss."
+                (language === "sv"
+                  ? "Vi följer GDPR-regleringen och respekterar dina rättigheter gällande personuppgifter. Vi publicerar endast offentligt tillgängliga tentamina från universitetet."
+                  : "We comply with GDPR regulations and respect your rights regarding personal data. We only publish publicly available exams from the university.")
               }
               items={[
                 getTranslation("privacyPolicyGDPRItem1") ||
-                  "Vi publicerar endast tentor som är offentligt tillgängliga.",
+                  (language === "sv"
+                    ? "Vi publicerar endast offentligt tillgängliga dokument"
+                    : "We only publish publicly available documents"),
                 getTranslation("privacyPolicyGDPRItem2") ||
-                  "Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.",
+                  (language === "sv"
+                    ? "Personuppgifter visas endast om de ingår i originalhandlingen"
+                    : "Personal data is only shown if included in the original document"),
                 getTranslation("privacyPolicyGDPRItem3") ||
-                  "Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.",
+                  (language === "sv"
+                    ? "Kontakta oss för att begära borttagning av data"
+                    : "Contact us to request data removal"),
               ]}
             />
-          </div>{" "}
-          {/* Contact Section */}
-          <div className="mt-10 pt-6 border-t flex flex-col items-center text-center space-y-3">
-            <Mailbox className="h-10 w-10 text-primary" />
-            <h3 className="text-md font-medium">
-              {getTranslation("contactUs") || "Contact Us"}
+          </div>
+
+          {/* Professional Contact Section */}
+          <div className="mt-8 md:mt-12 text-center bg-muted/10 rounded-xl p-6 md:p-8 border border-border/30">
+            <Mailbox className="h-10 w-10 md:h-12 md:w-12 mx-auto mb-3 md:mb-4 text-primary" />
+            <h3 className="text-lg md:text-xl font-semibold mb-2 md:mb-3 text-foreground">
+              {getTranslation("contactUs") ||
+                (language === "sv" ? "Kontakta oss" : "Contact Us")}
             </h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm md:text-base text-foreground/70 mb-4 md:mb-6 max-w-lg mx-auto px-4">
               {getTranslation("privacyPolicyContactText") ||
-                "If you have any questions about our privacy policy, please contact us."}
+                (language === "sv"
+                  ? "Har du frågor om vår integritetspolicy? Vi hjälper dig gärna."
+                  : "Do you have questions about our privacy policy? We're happy to help.")}
             </p>
             <Button
-              size="sm"
-              className="mt-2"
+              size="lg"
               onClick={() =>
                 (window.location.href = "mailto:liutentor@gmail.com")
               }
+              className="font-medium"
             >
-              {getTranslation("contactEmail") || "Contact Email"}
+              {getTranslation("contactEmail") ||
+                (language === "sv" ? "Kontakta oss" : "Contact Us")}
             </Button>
           </div>
         </div>

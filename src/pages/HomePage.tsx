@@ -48,22 +48,19 @@ export default function HomePage() {
       {isLoading ? (
         <LoadingSpinner />
       ) : (
-        <>
+        <div className="flex flex-col items-center justify-center flex-1 w-full">
           {/* Large Centered Logo */}
-          <div className="flex flex-col items-center space-y-2 mb-10">
+          <div className="flex flex-col items-center space-y-2 mb-12">
             <div className="flex flex-row items-center justify-center space-x-2">
               <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-20 lg:h-20" />
-              <h1 className="text-4xl lg:text-5xl font-logo text-foreground/80 tracking-tight">
+              <h1 className="text-4xl lg:text-5xl font-logo text-foreground tracking-tight">
                 {getTranslation("homeTitle")}
               </h1>
             </div>
-            {/* <p className="text-xs text-foreground/70 max-w-[350px] text-center mb-4">
-              {getTranslation("homeDescription")}
-            </p> */}
           </div>
 
           {/* Main Content */}
-          <div className="w-full max-w-[600px] flex flex-col items-center space-y-6 mb-20">
+          <div className="w-full max-w-[600px] flex flex-col items-center space-y-8">
             {/* Search Section */}
             <div
               className={`w-full shadow-md dark:shadow-lg border border-foreground/20 ${
@@ -77,7 +74,7 @@ export default function HomePage() {
 
             <InlineRecentActivity />
 
-            <div className="flex flex-col items-center justify-center w-full space-y-6">
+            <div className="flex flex-col items-center justify-center w-full space-y-6 pt-4">
               {/* CTA Button */}
               <div className="flex flex-col md:flex-row items-center justify-center w-full">
                 <Link to="/upload-exams">
@@ -93,21 +90,7 @@ export default function HomePage() {
               </div>
             </div>
           </div>
-
-          {/* <div className="fixed bg-gradient-to-b from-background to-background/0 space-x-5 w-full top-0 h-20 items-center justify-end px-5 flex">
-            <div className="flex flex-row items-center justify-center space-x-2">
-              {quickLinks.map(({ text, to }) => (
-                <Link key={text} to={to} className="hidden md:flex">
-                  <Button variant="link" className="text-[12px]">
-                    {text}
-                  </Button>
-                </Link>
-              ))}
-            </div>
-
-            <SettingsDialog />
-          </div> */}
-        </>
+        </div>
       )}
     </div>
   );

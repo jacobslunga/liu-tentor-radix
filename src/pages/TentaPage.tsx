@@ -162,21 +162,7 @@ const TentaPage: FC = () => {
   const description = `Tentor för kursen ${formattedCourseCode} med tenta ID ${tenta_id} från Linköpings universitet.`;
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <ExamHeader
-        tenta_namn={
-          selectedExam?.tenta_namn.replace(".pdf", "") || "Unknown Exam"
-        }
-        currentExamId={tenta_id}
-        exams={exams?.filter((e) => !isFacit(e.tenta_namn))}
-        allExams={exams as Exam[]}
-        setSelectedExam={setSelectedExam}
-        courseCode={courseCode}
-        showAIDrawer={showAIDrawer}
-        setShowAIDrawer={setShowAIDrawer}
-        pdfUrl={pdfUrl}
-        facitPdfUrl={facitPdfUrl}
-      />
+    <div className="relative h-screen w-screen overflow-hidden bg-background">
       <Helmet>
         <title>{title}</title>
         <meta name="description" content={description} />
@@ -187,22 +173,43 @@ const TentaPage: FC = () => {
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
       </Helmet>
-      {error && <div>Error loading exams: {error.message}</div>}
+
+      <ExamHeader
+        tenta_namn={
+          selectedExam?.tenta_namn.replace(".pdf", "") || "Unknown Exam"
+        }
+        currentExamId={tenta_id}
+        exams={exams?.filter((e) => e.tenta_namn && !isFacit(e.tenta_namn))}
+        allExams={exams as Exam[]}
+        setSelectedExam={setSelectedExam}
+        courseCode={courseCode}
+        showAIDrawer={showAIDrawer}
+        setShowAIDrawer={setShowAIDrawer}
+        pdfUrl={pdfUrl}
+        facitPdfUrl={facitPdfUrl}
+      />
+
+      {error && (
+        <div className="flex items-center justify-center h-full">
+          <div>Error loading exams: {error.message}</div>
+        </div>
+      )}
+
       {!exams ? (
-        <div>Loading...</div>
+        <div className="flex items-center justify-center h-full">
+          <div>Loading...</div>
+        </div>
       ) : (
-        <>
-          <PDFModal
-            exams={exams}
-            tenta_id={tenta_id}
-            setShowAIDrawer={setShowAIDrawer}
-            showAIDrawer={showAIDrawer}
-            pdfUrl={pdfUrl}
-            setPdfUrl={setPdfUrl}
-            facitPdfUrl={facitPdfUrl}
-            setFacitPdfUrl={setFacitPdfUrl}
-          />
-        </>
+        <PDFModal
+          exams={exams}
+          tenta_id={tenta_id}
+          setShowAIDrawer={setShowAIDrawer}
+          showAIDrawer={showAIDrawer}
+          pdfUrl={pdfUrl}
+          setPdfUrl={setPdfUrl}
+          facitPdfUrl={facitPdfUrl}
+          setFacitPdfUrl={setFacitPdfUrl}
+        />
       )}
     </div>
   );

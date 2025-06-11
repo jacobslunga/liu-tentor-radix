@@ -3,9 +3,10 @@ import { supabase } from "@/supabase/supabaseClient";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/context/LanguageContext";
 import translations, { Language } from "@/util/translations";
-import { SquareLibrary, ArrowLeft, Link2Icon } from "lucide-react";
+import { ArrowLeft, Link2Icon } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { LogoIcon } from "@/components/LogoIcon";
 import { Separator } from "@/components/ui/separator";
 
 type Company = {
@@ -60,7 +61,7 @@ const Partners = () => {
             to="/"
             className="flex items-center gap-2 hover:opacity-90 transition-opacity"
           >
-            <SquareLibrary className="text-primary h-7 w-7" />
+            <LogoIcon className="h-7 w-7" />
             <h1 className="text-xl text-foreground/80 font-logo">
               {getTranslation("homeTitle")}
             </h1>

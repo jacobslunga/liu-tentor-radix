@@ -1,7 +1,7 @@
 import { AuthProvider } from "@/context/AuthContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import { ShowGlobalSearchProvider } from "@/context/ShowGlobalSearchContext";
-import { TextSizeProvider } from "@/context/TextSizeContext";
+import { FontSizeProvider } from "@/context/FontSizeContext";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from "react-helmet-async";
@@ -14,11 +14,11 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       <HelmetProvider>
         <AuthProvider>
           <ThemeProvider>
-            <TextSizeProvider>
+            <FontSizeProvider>
               <LanguageProvider>
                 <ShowGlobalSearchProvider>{children}</ShowGlobalSearchProvider>
               </LanguageProvider>
-            </TextSizeProvider>
+            </FontSizeProvider>
           </ThemeProvider>
         </AuthProvider>
       </HelmetProvider>

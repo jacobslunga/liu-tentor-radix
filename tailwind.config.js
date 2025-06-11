@@ -6,8 +6,13 @@ export default {
     extend: {
       borderRadius: {
         lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        md: "calc(var(--radius) - 4px)",
+        sm: "calc(var(--radius) - 8px)",
+        xl: "1.5rem",
+        "2xl": "2rem",
+        "3xl": "2.5rem",
+        "4xl": "3rem",
+        pill: "50rem", // For fully rounded pill buttons
       },
       colors: {
         background: "hsl(var(--background))",
@@ -53,7 +58,21 @@ export default {
         },
       },
       fontFamily: {
-        logo: "Logo",
+        sans: [
+          "Plus Jakarta Sans",
+          "system-ui",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "Segoe UI",
+          "Roboto",
+          "Oxygen",
+          "Ubuntu",
+          "Cantarell",
+          "Open Sans",
+          "Helvetica Neue",
+          "sans-serif",
+        ],
+        logo: ["Playfair Display", "serif"],
       },
       keyframes: {
         "accordion-down": {
@@ -73,6 +92,14 @@ export default {
           "50%": { transform: "rotate(180deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        "bounce-subtle": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-2px)" },
+        },
+        "scale-up": {
+          "0%": { transform: "scale(1)" },
+          "100%": { transform: "scale(1.02)" },
+        },
       },
       animation: {
         spinEase: "spinEase 1.2s ease-in-out infinite",
@@ -80,6 +107,8 @@ export default {
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-in": "fadeIn 0.8s ease-out forwards",
         "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        "bounce-subtle": "bounce-subtle 0.3s ease-in-out",
+        "scale-up": "scale-up 0.2s ease-out forwards",
       },
     },
   },

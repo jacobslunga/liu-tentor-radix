@@ -63,27 +63,18 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
   const facitExams = exams?.filter((exam) => isFacit(exam.tenta_namn));
   const filteredFacitExams = filterExamsByDate(selectedExam, facitExams);
 
-  const ToolbarButton = ({
-    icon: Icon,
-    onClick,
-    tooltip,
-    href,
-    download,
-  }: any) => (
-    <TooltipProvider delayDuration={0}>
+  const ToolbarButton = ({ icon: Icon, onClick, tooltip }: any) => (
+    <TooltipProvider delayDuration={300}>
       <Tooltip>
         <TooltipTrigger asChild className="z-40">
-          {href ? (
-            <a href={href} download={download}>
-              <Button variant="secondary" size="icon" onClick={onClick}>
-                <Icon size={17} />
-              </Button>
-            </a>
-          ) : (
-            <Button variant="secondary" size="icon" onClick={onClick}>
-              <Icon size={17} />
-            </Button>
-          )}
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onClick}
+            className="bg-background border border-border hover:bg-accent shadow-sm"
+          >
+            <Icon size={17} />
+          </Button>
         </TooltipTrigger>
         <TooltipContent autoFocus={false} side="right">
           <p>{tooltip}</p>
@@ -134,8 +125,17 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
 
           <ToolbarButton
             icon={Download}
-            href={facitPdfUrl}
-            download
+            onClick={() => {
+              if (facitPdfUrl) {
+                const link = document.createElement("a");
+                link.href = facitPdfUrl;
+                const examName = selectedExam.tenta_namn.replace(".pdf", "");
+                link.download = `${examName}_facit.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+              }
+            }}
             tooltip={getTranslation("downloadFacit")}
           />
         </div>
@@ -149,12 +149,16 @@ const FacitToolbar: FC<FacitToolbarProps> = ({
         <FacitToolbar />
 
         {isFacitToolbarOpen && (
-          <TooltipProvider delayDuration={0}>
+          <TooltipProvider delayDuration={300}>
             <Tooltip>
               <TooltipTrigger asChild className="z-50">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild className="z-50">
-                    <Button variant="secondary" size="icon">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      className="bg-background border border-border hover:bg-accent shadow-sm"
+                    >
                       <BookOpenIcon size={17} />
                     </Button>
                   </DropdownMenuTrigger>

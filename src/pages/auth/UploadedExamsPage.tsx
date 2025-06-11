@@ -1,10 +1,39 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { supabase } from "@/supabase/supabaseClient";
 import { Helmet } from "react-helmet-async";
-import { ArrowLeft, Download, Loader2, Trash } from "lucide-react";
+import {
+  Download,
+  Loader2,
+  Trash2,
+  FolderOpen,
+  Search,
+  FileText,
+  Package,
+  Filter,
+  AlertCircle,
+  CheckCircle,
+  MoreHorizontal,
+} from "lucide-react";
 import JSZip from "jszip";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 type DocumentMeta = {
   id: number;
@@ -23,6 +52,12 @@ const ManageExamsPage = () => {
   );
   const [removingCourse, setRemovingCourse] = useState<string | null>(null);
   const [removingId, setRemovingId] = useState<number | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{
+    type: "course" | "document";
+    id: string | number;
+    name: string;
+  } | null>(null);
 
   const fetchDocuments = async () => {
     setLoading(true);
@@ -46,6 +81,10 @@ const ManageExamsPage = () => {
       return acc;
     },
     {}
+  );
+
+  const filteredGroups = Object.entries(groupedDocuments).filter(([code]) =>
+    code.includes(filter.toUpperCase())
   );
 
   const fetchAndDownload = async (id: number, namn: string) => {
@@ -107,136 +146,369 @@ const ManageExamsPage = () => {
     setDownloadingCourse(null);
   };
 
-  const handleRemoveDocument = async (id: number) => {
-    setRemovingId(id);
-    await supabase.from("uploaded_documents").delete().eq("id", id);
-    await fetchDocuments();
-    setRemovingId(null);
-  };
+  const handleRemoveDocument = async () => {
+    if (!deleteTarget || deleteTarget.type !== "document") return;
 
-  const handleRemoveCourse = async (courseCode: string) => {
-    setRemovingCourse(courseCode);
+    setRemovingId(deleteTarget.id as number);
+    setShowDeleteDialog(false);
+
     await supabase
       .from("uploaded_documents")
       .delete()
-      .eq("kurskod", courseCode);
+      .eq("id", deleteTarget.id);
     await fetchDocuments();
-    setRemovingCourse(null);
+
+    setRemovingId(null);
+    setDeleteTarget(null);
   };
 
+  const handleRemoveCourse = async () => {
+    if (!deleteTarget || deleteTarget.type !== "course") return;
+
+    setRemovingCourse(deleteTarget.id as string);
+    setShowDeleteDialog(false);
+
+    await supabase
+      .from("uploaded_documents")
+      .delete()
+      .eq("kurskod", deleteTarget.id);
+    await fetchDocuments();
+
+    setRemovingCourse(null);
+    setDeleteTarget(null);
+  };
+
+  const openDeleteDialog = (
+    type: "course" | "document",
+    id: string | number,
+    name: string
+  ) => {
+    setDeleteTarget({ type, id, name });
+    setShowDeleteDialog(true);
+  };
+
+  const totalDocuments = documents.length;
+  const totalCourses = Object.keys(groupedDocuments).length;
+
   return (
-    <div className="min-h-screen bg-background flex flex-col w-[80%]">
+    <div className="h-full overflow-auto">
       <Helmet>
-        <title>Manage Exams | LiU Tentor</title>
+        <title>Hantera tentor | Admin - LiU Tentor</title>
       </Helmet>
 
-      <div className="border-b border-border py-4 px-6 flex justify-between items-center">
-        <h1 className="text-2xl font-medium">Hantera tentor</h1>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => window.history.back()}
-        >
-          <ArrowLeft className="h-4 w-4 mr-1" />
-          Tillbaka
-        </Button>
+      {/* Header */}
+      <div className="bg-card/50 backdrop-blur-sm border-b border-border/30 p-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+              <FolderOpen className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-semibold text-foreground">
+                Hantera tentor
+              </h1>
+              <p className="text-sm text-muted-foreground">
+                Granska, ladda ner och hantera uppladdade tentor
+              </p>
+            </div>
+          </div>
+
+          {/* Stats Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <FileText className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {totalDocuments}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Dokument</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <Package className="h-4 w-4 text-green-600 dark:text-green-400" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {totalCourses}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Kurser</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+                  <Filter className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {filteredGroups.length}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Filtrerade</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-4">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center">
+                  <CheckCircle className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-foreground">
+                    {documents.filter((d) => d.status === "approved").length}
+                  </p>
+                  <p className="text-xs text-muted-foreground">Godkända</p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        </div>
       </div>
 
-      <div className="px-6 py-8 space-y-8">
-        <input
-          type="text"
-          placeholder="Filtrera efter kurskod..."
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="w-full p-2 border border-border rounded-md text-sm"
-        />
+      {/* Main Content */}
+      <div className="max-w-6xl mx-auto p-6 space-y-6">
+        {/* Search and Filters */}
+        <Card className="p-4">
+          <div className="flex items-center gap-4">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Filtrera efter kurskod..."
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="pl-10 h-10"
+              />
+            </div>
+            <Button variant="outline" size="sm">
+              <Filter className="h-4 w-4 mr-2" />
+              Filter
+            </Button>
+          </div>
+        </Card>
 
         {loading ? (
-          <div className="text-center text-sm mt-10 flex justify-center items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            Laddar tentor...
-          </div>
+          <Card className="p-12">
+            <div className="text-center flex flex-col items-center gap-3">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">Laddar tentor...</p>
+            </div>
+          </Card>
+        ) : filteredGroups.length === 0 ? (
+          <Card className="p-12">
+            <div className="text-center text-muted-foreground">
+              {filter ? (
+                <>
+                  <Search className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">Inga kurser hittades för "{filter}"</p>
+                  <p className="text-xs">Prova en annan sökning</p>
+                </>
+              ) : (
+                <>
+                  <FolderOpen className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                  <p className="text-sm">Inga tentor finns i systemet</p>
+                  <p className="text-xs">Ladda upp tentor för att se dem här</p>
+                </>
+              )}
+            </div>
+          </Card>
         ) : (
-          Object.entries(groupedDocuments)
-            .filter(([code]) => code.includes(filter.toUpperCase()))
-            .map(([courseCode, files]) => (
-              <Card key={courseCode} className="p-4 space-y-4">
-                <div className="flex justify-between items-center border-b pb-2">
-                  <div className="flex items-center gap-4">
-                    <h2 className="text-lg font-medium">{courseCode}</h2>
-                    <span className="text-xs text-muted-foreground">
-                      {files.length} dokument
-                    </span>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleDownloadAll(courseCode, files)}
-                      disabled={downloadingCourse === courseCode}
-                    >
-                      {downloadingCourse === courseCode ? (
-                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                      ) : (
-                        <Download className="h-4 w-4 mr-1" />
-                      )}
-                      Ladda ner alla
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => handleRemoveCourse(courseCode)}
-                      disabled={removingCourse === courseCode}
-                    >
-                      {removingCourse === courseCode ? (
-                        <Loader2 className="h-4 w-4 mr-1 animate-spin" />
-                      ) : (
-                        <Trash className="h-4 w-4 mr-1" />
-                      )}
-                      Ta bort kurs
-                    </Button>
+          <div className="space-y-6">
+            {filteredGroups.map(([courseCode, files]) => (
+              <Card key={courseCode} className="overflow-hidden">
+                {/* Course Header */}
+                <div className="bg-muted/30 p-4 border-b border-border/30">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                        <Package className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-semibold">{courseCode}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {files.length} dokument
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDownloadAll(courseCode, files)}
+                        disabled={downloadingCourse === courseCode}
+                        className="h-9"
+                      >
+                        {downloadingCourse === courseCode ? (
+                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        ) : (
+                          <Download className="h-4 w-4 mr-2" />
+                        )}
+                        Ladda ner alla
+                      </Button>
+
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            disabled={removingCourse === courseCode}
+                            className="h-9 w-9 p-0"
+                          >
+                            {removingCourse === courseCode ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <MoreHorizontal className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            onClick={() =>
+                              openDeleteDialog("course", courseCode, courseCode)
+                            }
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Ta bort kurs
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  {files.map((doc) => (
-                    <div
-                      key={doc.id}
-                      className="flex justify-between items-center px-3 py-2 bg-muted rounded-md"
-                    >
-                      <span className="text-sm truncate">{doc.namn}</span>
-                      <div className="flex gap-2">
-                        <Button
-                          size="icon"
-                          onClick={() => fetchAndDownload(doc.id, doc.namn)}
-                          disabled={downloadingId === doc.id}
-                        >
-                          {downloadingId === doc.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Download className="h-4 w-4" />
-                          )}
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="destructive"
-                          onClick={() => handleRemoveDocument(doc.id)}
-                          disabled={removingId === doc.id}
-                        >
-                          {removingId === doc.id ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
-                          ) : (
-                            <Trash className="h-4 w-4" />
-                          )}
-                        </Button>
+                {/* Documents List */}
+                <div className="p-4">
+                  <div className="space-y-2">
+                    {files.map((doc) => (
+                      <div
+                        key={doc.id}
+                        className="flex items-center justify-between p-3 bg-muted/20 rounded-lg border border-border/30 hover:bg-muted/40 transition-colors"
+                      >
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <FileText className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate">
+                              {doc.namn}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span
+                                className={`
+                                text-xs px-2 py-1 rounded-full border
+                                ${
+                                  doc.status === "approved"
+                                    ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200"
+                                    : "bg-yellow-50 border-yellow-200 text-yellow-800 dark:bg-yellow-900/20 dark:border-yellow-800 dark:text-yellow-200"
+                                }
+                              `}
+                              >
+                                {doc.status === "approved"
+                                  ? "Godkänd"
+                                  : "Väntar"}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => fetchAndDownload(doc.id, doc.namn)}
+                            disabled={downloadingId === doc.id}
+                            className="h-8"
+                          >
+                            {downloadingId === doc.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Download className="h-4 w-4" />
+                            )}
+                          </Button>
+
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() =>
+                              openDeleteDialog("document", doc.id, doc.namn)
+                            }
+                            disabled={removingId === doc.id}
+                            className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                          >
+                            {removingId === doc.id ? (
+                              <Loader2 className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4" />
+                            )}
+                          </Button>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </Card>
-            ))
+            ))}
+          </div>
         )}
       </div>
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="flex items-center gap-2">
+              <AlertCircle className="h-5 w-5 text-destructive" />
+              Bekräfta borttagning
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {deleteTarget?.type === "course" ? (
+                <>
+                  Är du säker på att du vill ta bort{" "}
+                  <strong>{deleteTarget.name}</strong> och alla tillhörande
+                  dokument?
+                  <br />
+                  <br />
+                  <span className="text-destructive font-medium">
+                    Denna åtgärd kan inte ångras.
+                  </span>
+                </>
+              ) : (
+                <>
+                  Är du säker på att du vill ta bort dokumentet{" "}
+                  <strong>{deleteTarget?.name}</strong>?
+                  <br />
+                  <br />
+                  <span className="text-destructive font-medium">
+                    Denna åtgärd kan inte ångras.
+                  </span>
+                </>
+              )}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Avbryt</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={
+                deleteTarget?.type === "course"
+                  ? handleRemoveCourse
+                  : handleRemoveDocument
+              }
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Ta bort
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
