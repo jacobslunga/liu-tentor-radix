@@ -470,7 +470,7 @@ const translations: Translations = {
       "Vi har precis introducerat tentastatistik, klicka på procenten för att få en mer detaljerad vy",
     courseRemovedTitle: "Kurs borttagen på begäran",
     courseRemovedMessage:
-      "Denna kurs har tagits bort på begäran av examinatorn. Tentor kanske inte längre är tillgängliga.",
+      "Denna kurs har tagits bort på begäran av examinatorn. Tentor är inte längre tillgängliga.",
     studentUploadedTitle: "Studentuppladdade tentor och lösningar",
     studentUploadedMessage:
       "Vissa av dessa tentor och lösningar har laddats upp av studenter. Innehållet kan variera i kvalitet och riktighet.",
@@ -724,7 +724,7 @@ const translations: Translations = {
       "We have just introduced exam statistics, click on the percentage to get a more detailed view",
     courseRemovedTitle: "Course Removed by Request",
     courseRemovedMessage:
-      "This course has been removed at the request of the examiner. Exams may no longer be available.",
+      "This course has been removed at the request of the examiner. Exams are no longer available.",
     studentUploadedTitle: "Student-Uploaded Exams and Solutions",
     studentUploadedMessage:
       "Some of these exams and solutions have been uploaded by students. Content quality and accuracy may vary.",

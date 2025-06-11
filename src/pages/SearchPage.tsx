@@ -19,6 +19,8 @@ import LoadingSpinner from "@/components/LoadingSpinnger";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import FontSizeSelector from "@/components/FontSizeSelector";
+import { Button } from "@/components/ui/button";
+import { AlertCircle, FileText, AlertTriangle, Plus } from "lucide-react";
 
 // Array of courses that examiners have requested to be removed
 // When a course code matches any of these (case-insensitive),
@@ -266,17 +268,7 @@ const SearchPage: React.FC = () => {
             <div className="text-center max-w-2xl space-y-6">
               <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-6">
                 <div className="flex items-center justify-center mb-4">
-                  <svg
-                    className="h-8 w-8 text-orange-600 dark:text-orange-400"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+                  <AlertCircle className="h-8 w-8 text-orange-600 dark:text-orange-400" />
                 </div>
                 <h2 className="text-xl font-semibold text-orange-800 dark:text-orange-200 mb-2">
                   {getTranslation("courseRemovedTitle")}
@@ -287,43 +279,8 @@ const SearchPage: React.FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link
-                  to="/"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-primary hover:bg-primary/90 transition-colors"
-                >
-                  <svg
-                    className="mr-2 h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                  {getTranslation("backToHome")}
-                </Link>
-                <Link
-                  to="/upload-exams"
-                  className="inline-flex items-center justify-center px-6 py-3 border border-border text-base font-medium rounded-md text-foreground bg-background hover:bg-muted transition-colors"
-                >
-                  <svg
-                    className="mr-2 h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                    />
-                  </svg>
-                  {language === "sv" ? "Ladda upp tentor" : "Upload Exams"}
+                <Link to="/">
+                  <Button>{getTranslation("backToHome")}</Button>
                 </Link>
               </div>
             </div>
@@ -331,19 +288,7 @@ const SearchPage: React.FC = () => {
             // Show normal "not found" content for regular courses
             <>
               <div className="text-center mb-8">
-                <svg
-                  className="mx-auto h-16 w-16 text-gray-400 mb-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M9.172 16.172a4 4 0 005.656 0M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
+                <FileText className="mx-auto h-16 w-16 text-gray-400 mb-4" />
                 <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                   {getTranslation("notFound")}: {courseCode}
                 </h2>
@@ -396,17 +341,7 @@ const SearchPage: React.FC = () => {
           <Card className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20">
             <CardHeader>
               <CardTitle className="text-orange-800 dark:text-orange-200 flex items-center gap-2">
-                <svg
-                  className="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                <AlertTriangle className="h-5 w-5" />
                 {getTranslation("courseRemovedTitle")}
               </CardTitle>
               <CardDescription className="text-orange-700 dark:text-orange-300">
@@ -423,19 +358,7 @@ const SearchPage: React.FC = () => {
           <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
               <div className="bg-blue-100 dark:bg-blue-900/40 rounded-lg p-2">
-                <svg
-                  className="h-5 w-5 text-blue-600 dark:text-blue-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-                  />
-                </svg>
+                <AlertTriangle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="flex-1">
                 <h4 className="text-blue-800 dark:text-blue-200 font-semibold text-sm mb-1">
@@ -463,19 +386,7 @@ const SearchPage: React.FC = () => {
         {hasStudentUploads && (
           <div className="mt-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
             <div className="flex items-center gap-2">
-              <svg
-                className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z"
-                />
-              </svg>
+              <AlertTriangle className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0" />
               <div>
                 <p className="text-blue-800 dark:text-blue-200 font-medium text-sm">
                   {getTranslation("studentUploadedTitle")}
@@ -573,19 +484,7 @@ const SearchPage: React.FC = () => {
                     <FontSizeSelector />
                     <Link to="/upload-exams" className="group block">
                       <div className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/30 rounded-md px-3 py-2 transition-all duration-200">
-                        <svg
-                          className="h-4 w-4 text-primary"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 4v16m8-8H4"
-                          />
-                        </svg>
+                        <Plus className="h-4 w-4 text-primary" />
                         <span className="text-sm font-medium text-primary">
                           {getTranslation("uploadExamsOrFacit")}
                         </span>
