@@ -29,7 +29,7 @@ const Header = () => {
     <header
       className={`sticky ${
         isScrolled
-          ? "border-border/50 bg-background/80 backdrop-blur-md shadow-sm"
+          ? "border-border/50 bg-background/85 backdrop-blur-md shadow-sm"
           : "border-transparent bg-background"
       } border-b transition-all duration-300 top-0 z-50 h-20 w-full flex flex-row items-center justify-between md:justify-center px-6 md:px-12`}
       role="banner"
@@ -43,9 +43,6 @@ const Header = () => {
         aria-label={getTranslation("homeTitle")}
       >
         <LogoIcon className="w-10 h-10" />
-        <h1 className="font-logo text-xl text-foreground/80">
-          {getTranslation("homeTitle")}
-        </h1>
       </Link>
 
       <div className="relative hidden sm:flex items-center" role="search">

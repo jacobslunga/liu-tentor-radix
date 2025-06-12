@@ -121,11 +121,11 @@ export function DataTable({ data, courseCode, onSortChange }: Props) {
                     <TableCell className={`${getTablePaddingClasses()} px-6`}>
                       <div className="flex items-center justify-between">
                         <div className="flex-1 min-w-0">
-                          <h3
+                          <p
                             className={`font-bold text-foreground group-hover:text-primary transition-colors duration-200 ${getFontSizeClasses()} truncate`}
                           >
                             {row.original.tenta_namn}
-                          </h3>
+                          </p>
                           <p
                             className={`text-muted-foreground font-mono mt-1 ${getFontSizeClasses()}`}
                           >

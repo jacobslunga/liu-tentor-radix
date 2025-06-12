@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap");
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,9 +26,8 @@
 
 /* Main body font - IBM Plex Sans for a more professional, technical look */
 body {
-  font-family: "Roboto", system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 * {
@@ -154,6 +151,15 @@ textarea {
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Make heading letters wider using font-stretch */
+  h1 {
+    font-stretch: expanded;
+  }
+
+  h2 {
+    font-stretch: expanded;
+  }
 }
 
 /* Custom button styling for more rounded, distinctive look */
@@ -174,6 +180,27 @@ textarea {
     @apply rounded-3xl border border-border/50 bg-card/60 backdrop-blur-sm shadow-sm hover:shadow-md transition-all duration-200;
   }
 
+  /* Enhanced glassmorphism effects */
+  .glass-card {
+    @apply rounded-2xl bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-lg;
+  }
+
+  .glass-card-strong {
+    @apply rounded-2xl bg-white/20 dark:bg-white/10 backdrop-blur-lg border border-white/30 dark:border-white/20 shadow-xl;
+  }
+
+  .glass-surface {
+    @apply bg-white/5 dark:bg-white/[0.02] backdrop-blur-sm border border-white/10 dark:border-white/5;
+  }
+
+  .glass-button {
+    @apply bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10 hover:bg-white/20 dark:hover:bg-white/10 transition-all duration-200;
+  }
+
+  .glass-input {
+    @apply bg-white/5 dark:bg-white/[0.02] backdrop-blur-sm border border-white/20 dark:border-white/10 focus:border-white/40 dark:focus:border-white/20 focus:bg-white/10 dark:focus:bg-white/5;
+  }
+
   .input-custom {
     @apply rounded-2xl border border-border/50 bg-background/50 backdrop-blur-sm px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all duration-200;
   }
@@ -184,5 +211,14 @@ textarea {
 
   .table-custom {
     @apply rounded-2xl overflow-hidden border border-border/50;
+  }
+
+  /* Simplified card variants */
+  .card-minimal {
+    @apply rounded-xl bg-card/30 backdrop-blur-md border border-border/30 p-4 hover:bg-card/40 transition-all duration-200;
+  }
+
+  .card-clean {
+    @apply rounded-lg bg-card/50 backdrop-blur-sm border-0 shadow-sm;
   }
 }

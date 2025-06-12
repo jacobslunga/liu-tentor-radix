@@ -55,7 +55,7 @@ export default function CustomPagesHeader() {
     <header
       className={`sticky top-0 z-50 w-full transition-all duration-300 ${
         isScrolled
-          ? "border-border/50 bg-background/95 backdrop-blur-md shadow-sm"
+          ? "border-border/50 bg-background/85 backdrop-blur-md shadow-sm"
           : "border-transparent bg-background"
       } border-b`}
       role="banner"
@@ -69,9 +69,6 @@ export default function CustomPagesHeader() {
           aria-label={getTranslation("homeTitle")}
         >
           <LogoIcon className="w-10 h-10" />
-          <h1 className="font-logo text-xl text-foreground/80">
-            {getTranslation("homeTitle")}
-          </h1>
         </Link>
 
         {/* Desktop Navigation */}
@@ -117,9 +114,6 @@ export default function CustomPagesHeader() {
                     className="flex items-center gap-3"
                   >
                     <LogoIcon className="w-8 h-8" />
-                    <span className="font-logo text-lg text-foreground/80">
-                      {getTranslation("homeTitle")}
-                    </span>
                   </Link>
                 </div>
 

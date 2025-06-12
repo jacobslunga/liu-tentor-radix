@@ -202,7 +202,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
   const inputClass =
     variant === "main-input"
-      ? "w-full font-medium p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
+      ? "w-full font-normal p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
       : "flex-1 bg-transparent border-none outline-none text-sm text-foreground placeholder:text-muted-foreground";
 
   const iconClass =
@@ -299,9 +299,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                       )}
                     >
                       <Clock className="h-4 w-4 text-muted-foreground" />
-                      <span className="font-mono font-medium">
-                        {courseCode}
-                      </span>
+                      <span className="font-medium">{courseCode}</span>
                     </button>
                   ))}
                 </div>
@@ -335,9 +333,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                           )}
                         >
                           <Search className="h-4 w-4 text-muted-foreground" />
-                          <span className="font-mono font-medium">
-                            {courseCode}
-                          </span>
+                          <span className="font-medium">{courseCode}</span>
                         </button>
                       ))}
                     </>

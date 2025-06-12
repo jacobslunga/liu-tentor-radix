@@ -1,19 +1,9 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/context/LanguageContext";
 import { supabase } from "@/supabase/supabaseClient";
 import { useDropzone } from "react-dropzone";
-import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import translations from "@/util/translations";
 import {
@@ -22,12 +12,10 @@ import {
   FileText,
   X,
   Check,
-  ArrowLeft,
   Info,
-  CheckCircle,
-  Clock,
   Users,
-  BookOpen,
+  Clock,
+  CheckCircle,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -39,9 +27,15 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 import CustomPagesHeader from "./CustomPagesHeader";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
 
 const UploadExamPage = () => {
-  const navigate = useNavigate();
   const { language } = useLanguage();
   const t = translations[language];
 
@@ -198,27 +192,25 @@ const UploadExamPage = () => {
         </div>
 
         {/* Main Upload Card */}
-        <Card className="mb-5 overflow-hidden border-0 shadow-lg bg-card/50 backdrop-blur-sm">
-          <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-b py-4">
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Upload className="h-4 w-4 text-primary" />
+        <Card className="border-0 shadow-lg bg-card/50 backdrop-blur-sm mb-5">
+          <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-b rounded-t-lg">
+            <CardTitle className="flex items-center gap-2">
+              <Upload className="h-5 w-5 text-primary" />
               {language === "sv" ? "Ladda upp tentor" : "Upload exams"}
             </CardTitle>
-            <CardDescription className="text-sm">
+            <CardDescription>
               {language === "sv"
-                ? "Fyll i kurskoden och välj dina PDF-filer nedan"
-                : "Enter the course code and select your PDF files below"}
+                ? "Fyll i kurskoden och välj dina PDF-filer"
+                : "Enter the course code and select your PDF files"}
             </CardDescription>
           </CardHeader>
-          <CardContent className="p-5">
-            <div className="space-y-4">
+          <CardContent className="p-6">
+            <div className="space-y-6">
               {/* Course Code Input */}
               <div>
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   {t.courseCodePlaceholder}
-                  <Badge variant="destructive" className="ml-2 text-xs">
-                    {language === "sv" ? "Obligatorisk" : "Required"}
-                  </Badge>
+                  <span className="text-destructive ml-1">*</span>
                 </label>
                 <Input
                   type="text"
@@ -226,28 +218,20 @@ const UploadExamPage = () => {
                   value={kurskod}
                   onChange={(e) => setKurskod(e.target.value.toUpperCase())}
                   disabled={loading}
-                  className="h-10 text-sm border-2 focus:border-primary/50 font-mono"
+                  className="font-mono"
                 />
-                <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                  <Info className="h-3 w-3" />
+                <p className="text-xs text-muted-foreground mt-1">
                   {language === "sv"
                     ? "Ange kurskoden exakt som den visas på LiU"
                     : "Enter the course code exactly as shown on LiU"}
                 </p>
               </div>
 
-              <Separator />
-
               {/* File Upload Area */}
               <div>
                 <label className="block text-sm font-medium mb-2 text-foreground">
                   {language === "sv" ? "Ladda upp filer" : "Upload files"}
-                  <Badge variant="destructive" className="ml-2 text-xs">
-                    {language === "sv" ? "Obligatorisk" : "Required"}
-                  </Badge>
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    PDF
-                  </Badge>
+                  <span className="text-destructive ml-1">*</span>
                 </label>
                 <div
                   {...getRootProps()}
@@ -285,21 +269,17 @@ const UploadExamPage = () => {
               {/* Selected Files */}
               {files.length > 0 && (
                 <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <label className="text-sm font-medium text-foreground">
-                      {language === "sv" ? "Valda filer" : "Selected files"}
-                    </label>
-                    <Badge variant="secondary" className="text-xs">
-                      {files.length}
-                    </Badge>
-                  </div>
+                  <label className="block text-sm font-medium mb-2 text-foreground">
+                    {language === "sv" ? "Valda filer" : "Selected files"} (
+                    {files.length})
+                  </label>
                   <div className="space-y-2">
                     {files.map((file, index) => (
                       <div
                         key={index}
                         className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50 group hover:bg-muted/50 transition-colors"
                       >
-                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
                           <div className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                             <FileText className="h-4 w-4 text-red-600 dark:text-red-400" />
                           </div>
@@ -307,14 +287,9 @@ const UploadExamPage = () => {
                             <p className="text-sm font-medium truncate text-foreground">
                               {file.name}
                             </p>
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <Badge variant="outline" className="text-xs">
-                                {(file.size / 1024 / 1024).toFixed(1)} MB
-                              </Badge>
-                              <Badge variant="outline" className="text-xs">
-                                PDF
-                              </Badge>
-                            </div>
+                            <p className="text-xs text-muted-foreground">
+                              {(file.size / 1024 / 1024).toFixed(1)} MB • PDF
+                            </p>
                           </div>
                         </div>
                         <Button
@@ -322,9 +297,9 @@ const UploadExamPage = () => {
                           variant="ghost"
                           onClick={() => removeFile(index)}
                           disabled={loading}
-                          className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+                          className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                         >
-                          <X className="h-3 w-3" />
+                          <X className="h-4 w-4" />
                         </Button>
                       </div>
                     ))}
@@ -332,10 +307,8 @@ const UploadExamPage = () => {
                 </div>
               )}
 
-              <Separator />
-
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-2 pt-2">
+              <div className="flex gap-3 pt-4">
                 <Button
                   variant="outline"
                   onClick={() => {
@@ -343,23 +316,22 @@ const UploadExamPage = () => {
                     setKurskod("");
                   }}
                   disabled={loading || (!files.length && !kurskod)}
-                  className="flex-1 sm:flex-none text-sm"
                 >
                   {t.reset}
                 </Button>
                 <Button
                   onClick={handleUpload}
                   disabled={files.length === 0 || !kurskod || loading}
-                  className="flex-1 h-10 text-sm font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg"
+                  className="flex-1 bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg"
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="h-3 w-3 animate-spin mr-2" />
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
                       {language === "sv" ? "Laddar upp..." : "Uploading..."}
                     </>
                   ) : (
                     <>
-                      <Upload className="h-3 w-3 mr-2" />
+                      <Upload className="h-4 w-4 mr-2" />
                       {t.uploadButton}
                     </>
                   )}
@@ -369,61 +341,24 @@ const UploadExamPage = () => {
           </CardContent>
         </Card>
 
-        {/* Information Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-          <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20 p-3">
-            <div className="flex items-start gap-2">
-              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
-              <div className="text-blue-800 dark:text-blue-200">
-                <span className="text-sm font-medium">
+        {/* Information Note */}
+        <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20 mb-5">
+          <CardContent className="p-4">
+            <div className="flex items-start gap-3">
+              <Info className="h-5 w-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
                   {language === "sv" ? "Granskning:" : "Review process:"}
-                </span>{" "}
-                <span className="text-xs">
+                </p>
+                <p className="text-sm text-blue-700 dark:text-blue-300">
                   {language === "sv"
                     ? "Uppladdade tentor granskas innan de blir tillgängliga. Detta kan ta någon dag."
                     : "Uploaded exams are reviewed before they become available. This may take a day or two."}
-                </span>
+                </p>
               </div>
             </div>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-card to-card/50 border">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <BookOpen className="h-3 w-3 text-primary" />
-                {t.uploadGuidelinesTitle}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <ul className="space-y-1 text-xs text-muted-foreground">
-                <li className="flex items-start gap-1">
-                  <div className="w-1 h-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-                  {t.uploadGuidelineCourseCode}
-                </li>
-                <li className="flex items-start gap-1">
-                  <div className="w-1 h-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-                  {t.uploadGuidelineNaming}
-                </li>
-                <li className="flex items-start gap-1">
-                  <div className="w-1 h-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
-                  {t.uploadGuidelineDate}
-                </li>
-              </ul>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Back Button */}
-        <div className="flex justify-center">
-          <Button
-            variant="outline"
-            onClick={() => navigate(-1)}
-            className="w-full max-w-xs group text-sm"
-          >
-            <ArrowLeft className="h-3 w-3 mr-2 group-hover:-translate-x-1 transition-transform" />
-            {language === "sv" ? "Tillbaka" : "Back"}
-          </Button>
-        </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Success/Error Dialog */}
