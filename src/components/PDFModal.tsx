@@ -201,7 +201,7 @@ const PDFModal: FC<PDFModalProps> = ({
               setSelectedFacit={setSelectedFacit}
             />
           )}
-          <div className="flex flex-col w-full h-full overflow-hidden pt-14">
+          <div className="flex flex-col w-full h-full overflow-hidden md:pt-16">
             <div className="flex-grow hidden md:flex w-full h-full overflow-hidden">
               {layoutMode === "exam-only" ? (
                 <>
@@ -219,7 +219,7 @@ const PDFModal: FC<PDFModalProps> = ({
                     />
                   </div>
                   <motion.div
-                    className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
+                    className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 md:top-16 w-[50%] h-full md:h-[calc(100%-4rem)] z-40 facit-panel"
                     variants={facitVariants}
                     initial="hidden"
                     animate={shouldFacitPanelBeVisible ? "visible" : "hidden"}

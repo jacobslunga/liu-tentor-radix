@@ -27,7 +27,7 @@ const ToolbarButton = ({
   onClick,
   tooltip,
   className,
-  variant = "secondary",
+  variant = "ghost",
   size = "icon",
   disabled = false,
 }: {
@@ -39,7 +39,7 @@ const ToolbarButton = ({
   size?: "icon" | "sm";
   disabled?: boolean;
 }) => (
-  <TooltipProvider delayDuration={300}>
+  <TooltipProvider delayDuration={500}>
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
@@ -49,11 +49,11 @@ const ToolbarButton = ({
           className={`transition-all duration-200 ${className}`}
           disabled={disabled}
         >
-          <Icon size={16} />
+          <Icon size={14} />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="right">
-        <p>{tooltip}</p>
+        <p className="text-xs">{tooltip}</p>
       </TooltipContent>
     </Tooltip>
   </TooltipProvider>
@@ -115,7 +115,7 @@ const TentaToolbar: FC<Props> = ({
         if (!isHoveringRef.current) {
           setIsMouseActive(false);
         }
-      }, 1500); // Slightly longer delay
+      }, 1000); // Faster hide after 1 second
     };
 
     handleMouseMove();
@@ -172,7 +172,7 @@ const TentaToolbar: FC<Props> = ({
 
   return (
     <motion.div
-      className="fixed top-16 left-6 z-40"
+      className="fixed top-20 left-4 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
@@ -182,30 +182,32 @@ const TentaToolbar: FC<Props> = ({
       onMouseLeave={() => {
         setIsHovering(false);
       }}
-      initial={{ x: -10 }}
+      initial={{ opacity: 0, x: -20 }}
       animate={{
-        x: isMouseActive || isHovering ? 0 : -10,
+        opacity: isMouseActive || isHovering ? 1 : 0,
+        x: isMouseActive || isHovering ? 0 : -20,
       }}
-      transition={{ duration: 0.3, ease: "easeOut" }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
     >
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col space-y-1 bg-background/80 backdrop-blur-sm border border-border/50 rounded-lg p-2 shadow-lg">
         {/* Zoom Controls */}
         <ToolbarGroup>
           <ToolbarButton
             icon={PlusIcon}
             onClick={onZoomIn}
             tooltip={getTooltip("zoomIn")}
-            className="bg-background border border-border hover:bg-accent hover:text-primary shadow-sm"
-            variant="outline"
+            className="h-8 w-8 hover:bg-muted/80"
           />
           <ToolbarButton
             icon={DashIcon}
             onClick={onZoomOut}
             tooltip={getTooltip("zoomOut")}
-            className="bg-background border border-border hover:bg-accent hover:text-primary shadow-sm"
-            variant="outline"
+            className="h-8 w-8 hover:bg-muted/80"
           />
         </ToolbarGroup>
+
+        {/* Separator */}
+        <div className="h-px bg-border/50 my-1" />
 
         {/* Rotation Controls */}
         <ToolbarGroup>
@@ -213,17 +215,18 @@ const TentaToolbar: FC<Props> = ({
             icon={RotateCcw}
             onClick={onRotateCounterClockwise}
             tooltip={getTooltip("rotateLeft")}
-            className="bg-background border border-border hover:bg-accent hover:text-blue-600 shadow-sm"
-            variant="outline"
+            className="h-8 w-8 hover:bg-muted/80"
           />
           <ToolbarButton
             icon={RotateCw}
             onClick={onRotateClockwise}
             tooltip={getTooltip("rotateRight")}
-            className="bg-background border border-border hover:bg-accent hover:text-blue-600 shadow-sm"
-            variant="outline"
+            className="h-8 w-8 hover:bg-muted/80"
           />
         </ToolbarGroup>
+
+        {/* Separator */}
+        <div className="h-px bg-border/50 my-1" />
 
         {/* Actions */}
         <ToolbarGroup>
@@ -244,23 +247,19 @@ const TentaToolbar: FC<Props> = ({
             }}
             tooltip={getTooltip("download")}
             disabled={!pdfUrl}
-            className={`shadow-sm ${
-              !pdfUrl
-                ? "opacity-50 cursor-not-allowed bg-background border border-border"
-                : "bg-background border border-border hover:bg-accent hover:text-green-600"
+            className={`h-8 w-8 ${
+              !pdfUrl ? "opacity-50 cursor-not-allowed" : "hover:bg-muted/80"
             }`}
-            variant="outline"
           />
           <ToolbarButton
             icon={isCompleted ? CheckIcon : Square}
             onClick={toggleCompleted}
             tooltip={getTooltip("toggleComplete")}
-            className={`shadow-sm ${
+            className={`h-8 w-8 ${
               isCompleted
-                ? "bg-green-50 text-green-600 border border-green-200 dark:bg-green-900/50 dark:text-green-400 dark:border-green-700"
-                : "bg-background border border-border hover:bg-accent hover:text-green-600"
+                ? "text-green-600 bg-green-50 dark:bg-green-900/30 dark:text-green-400"
+                : "hover:bg-muted/80"
             }`}
-            variant="outline"
           />
         </ToolbarGroup>
       </div>

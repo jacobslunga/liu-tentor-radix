@@ -53,7 +53,7 @@ export default function HomePage() {
           <div className="flex flex-col items-center space-y-2 mb-12">
             <div className="flex flex-row items-center justify-center space-x-2">
               <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-20 lg:h-20" />
-              <h1 className="text-4xl lg:text-5xl font-logo text-foreground tracking-tight">
+              <h1 className="text-4xl lg:text-5xl font-logo text-foreground/80 tracking-tight">
                 {getTranslation("homeTitle")}
               </h1>
             </div>

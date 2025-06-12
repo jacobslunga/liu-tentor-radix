@@ -59,7 +59,7 @@ export default {
       },
       fontFamily: {
         sans: [
-          "Plus Jakarta Sans",
+          "Space Grotesk",
           "system-ui",
           "-apple-system",
           "BlinkMacSystemFont",
@@ -71,6 +71,18 @@ export default {
           "Open Sans",
           "Helvetica Neue",
           "sans-serif",
+        ],
+        mono: [
+          "JetBrains Mono",
+          "SF Mono",
+          "Monaco",
+          "Inconsolata",
+          "Roboto Mono",
+          "Source Code Pro",
+          "Menlo",
+          "Consolas",
+          "DejaVu Sans Mono",
+          "monospace",
         ],
         logo: ["Playfair Display", "serif"],
       },

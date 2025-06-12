@@ -39,11 +39,11 @@ const Header = () => {
     >
       <Link
         to="/"
-        className="static md:absolute md:left-12 lg:left-16 flex flex-row items-center gap-1"
+        className="static text-foreground/80 md:absolute md:left-12 lg:left-16 flex flex-row items-center gap-1"
         aria-label={getTranslation("homeTitle")}
       >
         <LogoIcon className="w-10 h-10" />
-        <h1 className="font-logo text-xl text-foreground">
+        <h1 className="font-logo text-xl text-foreground/80">
           {getTranslation("homeTitle")}
         </h1>
       </Link>

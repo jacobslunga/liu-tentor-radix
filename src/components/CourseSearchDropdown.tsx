@@ -202,7 +202,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
   const inputClass =
     variant === "main-input"
-      ? "w-full font-normal p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
+      ? "w-full font-medium p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
       : "flex-1 bg-transparent border-none outline-none text-sm text-foreground placeholder:text-muted-foreground";
 
   const iconClass =
@@ -230,7 +230,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                 placeholder || getTranslation("searchCoursePlaceholder")
               }
               className={inputClass}
-              autoFocus={variant === "main-input"}
+              autoFocus={false}
               onFocus={onFocus}
               onBlur={onBlur}
               onKeyDown={handleKeyDown}
@@ -310,7 +310,13 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
               {/* Search results */}
               {searchTerm.trim() && (
                 <div className="p-2">
-                  {filteredCourses.length > 0 ? (
+                  {isLoading && variant === "main-input" ? (
+                    <div className="p-4 text-center text-muted-foreground text-sm">
+                      {language === "sv"
+                        ? "Laddar kurser..."
+                        : "Loading courses..."}
+                    </div>
+                  ) : filteredCourses.length > 0 ? (
                     <>
                       <div className="flex items-center gap-2 px-2 py-1 text-xs font-medium text-muted-foreground">
                         <Search className="h-3 w-3" />
@@ -336,23 +342,29 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                       ))}
                     </>
                   ) : (
-                    <div className="p-4 text-center text-muted-foreground text-sm">
-                      {language === "sv"
-                        ? "Inga kurser hittades"
-                        : "No courses found"}
-                    </div>
+                    // Only show "no courses found" if we have loaded course codes and still found nothing
+                    courseCodes.length > 0 &&
+                    !isLoading && (
+                      <div className="p-4 text-center text-muted-foreground text-sm">
+                        {language === "sv"
+                          ? "Inga kurser hittades"
+                          : "No courses found"}
+                      </div>
+                    )
                   )}
                 </div>
               )}
 
               {/* Empty state */}
-              {!searchTerm.trim() && recentSearches.length === 0 && (
-                <div className="p-4 text-center text-muted-foreground text-sm">
-                  {language === "sv"
-                    ? "Börja skriv för att söka kurser"
-                    : "Start typing to search courses"}
-                </div>
-              )}
+              {!searchTerm.trim() &&
+                recentSearches.length === 0 &&
+                variant !== "main-input" && (
+                  <div className="p-4 text-center text-muted-foreground text-sm">
+                    {language === "sv"
+                      ? "Börja skriv för att söka kurser"
+                      : "Start typing to search courses"}
+                  </div>
+                )}
             </>
           )}
         </div>

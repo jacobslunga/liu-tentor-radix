@@ -1,7 +1,15 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/context/LanguageContext";
 import { supabase } from "@/supabase/supabaseClient";
 import { useDropzone } from "react-dropzone";
@@ -16,10 +24,10 @@ import {
   Check,
   ArrowLeft,
   Info,
-  BookOpen,
+  CheckCircle,
+  Clock,
   Users,
-  Zap,
-  Shield,
+  BookOpen,
 } from "lucide-react";
 import {
   AlertDialog,
@@ -111,293 +119,332 @@ const UploadExamPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20 flex flex-col">
       <Helmet>
         <title>{t.uploadTitle} | LiU Tentor</title>
       </Helmet>
 
       <CustomPagesHeader />
 
-      <div className="container max-w-5xl mx-auto px-4 py-8 md:py-12 flex-grow">
+      <div className="container max-w-3xl mx-auto px-4 py-4 md:py-6 flex-grow">
         {/* Hero Section */}
-        <div className="text-center mb-8 md:mb-12 mt-4 md:mt-8">
-          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 md:mb-6 rounded-full bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
-            <Upload className="h-8 w-8 md:h-10 md:w-10 text-primary" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-3 md:mb-4 text-foreground px-4">
-            {t.uploadTitle}
-          </h1>
-          <p className="text-base md:text-lg text-foreground/70 max-w-2xl mx-auto px-4 leading-relaxed">
-            {t.uploadDescription}
-          </p>
-        </div>
-
-        {/* Why Upload Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8 md:mb-12">
-          <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800 rounded-xl p-4 text-center">
-            <Users className="h-6 w-6 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
-            <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-1">
-              {language === "sv"
-                ? "Hjälp andra studenter"
-                : "Help other students"}
-            </p>
-            <p className="text-xs text-blue-700 dark:text-blue-300">
-              {language === "sv"
-                ? "Din tenta kan hjälpa tusentals"
-                : "Your exam can help thousands"}
-            </p>
-          </div>
-          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 border border-green-200 dark:border-green-800 rounded-xl p-4 text-center">
-            <Zap className="h-6 w-6 text-green-600 dark:text-green-400 mx-auto mb-2" />
-            <p className="text-sm font-medium text-green-900 dark:text-green-100 mb-1">
-              {language === "sv" ? "Snabbt & enkelt" : "Quick & easy"}
-            </p>
-            <p className="text-xs text-green-700 dark:text-green-300">
-              {language === "sv"
-                ? "Tar bara några minuter"
-                : "Takes just a few minutes"}
-            </p>
-          </div>
-          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/20 dark:to-purple-800/20 border border-purple-200 dark:border-purple-800 rounded-xl p-4 text-center">
-            <Shield className="h-6 w-6 text-purple-600 dark:text-purple-400 mx-auto mb-2" />
-            <p className="text-sm font-medium text-purple-900 dark:text-purple-100 mb-1">
-              {language === "sv" ? "Säker granskning" : "Safe review"}
-            </p>
-            <p className="text-xs text-purple-700 dark:text-purple-300">
-              {language === "sv"
-                ? "Vi granskar allt materialet"
-                : "We review all materials"}
+        <div className="text-center mb-5 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5 rounded-2xl -z-10" />
+          <div className="relative py-5">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary/10 rounded-full mb-4">
+              <Upload className="h-3 w-3 text-primary" />
+              <span className="text-xs font-medium text-primary">
+                {language === "sv"
+                  ? "Bidra till gemenskapen"
+                  : "Contribute to the community"}
+              </span>
+            </div>
+            <h1 className="text-2xl md:text-3xl font-bold mb-3 text-foreground">
+              {t.uploadTitle}
+            </h1>
+            <p className="text-sm text-muted-foreground max-w-lg mx-auto leading-relaxed">
+              {t.uploadDescription}
             </p>
           </div>
         </div>
 
-        {/* Main Upload Form */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left: Upload Form */}
-          <div className="lg:col-span-2">
-            <Card className="p-6 md:p-8 bg-card/50 backdrop-blur-sm border border-border/50">
-              <div className="space-y-6">
-                {/* Course Code Input */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
-                    {t.courseCodePlaceholder}
-                    <span className="text-destructive ml-1">*</span>
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="TDDC17, TANA09, etc."
-                    value={kurskod}
-                    onChange={(e) => setKurskod(e.target.value.toUpperCase())}
-                    disabled={loading}
-                    className="h-12 text-base"
-                  />
-                  <p className="text-xs text-muted-foreground mt-1">
-                    {language === "sv"
-                      ? "Ange kurskoden exakt som den visas på LiU"
-                      : "Enter the course code exactly as shown on LiU"}
-                  </p>
-                </div>
+        {/* Quick Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-5">
+          <div className="flex items-center gap-2 p-3 bg-card/50 backdrop-blur-sm border rounded-lg">
+            <div className="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+              <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                {language === "sv" ? "Hjälp tusentals" : "Help thousands"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {language === "sv"
+                  ? "studenter att lyckas"
+                  : "students succeed"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 p-3 bg-card/50 backdrop-blur-sm border rounded-lg">
+            <div className="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+              <Clock className="h-4 w-4 text-green-600 dark:text-green-400" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                {language === "sv" ? "Snabb process" : "Quick process"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {language === "sv"
+                  ? "bara några minuter"
+                  : "just a few minutes"}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 p-3 bg-card/50 backdrop-blur-sm border rounded-lg">
+            <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+              <CheckCircle className="h-4 w-4 text-purple-600 dark:text-purple-400" />
+            </div>
+            <div>
+              <p className="text-sm font-medium text-foreground">
+                {language === "sv" ? "Säker granskning" : "Safe review"}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {language === "sv"
+                  ? "vi kontrollerar allt"
+                  : "we check everything"}
+              </p>
+            </div>
+          </div>
+        </div>
 
-                {/* File Upload Area */}
-                <div>
-                  <label className="block text-sm font-medium mb-2 text-foreground">
-                    {language === "sv" ? "Ladda upp filer" : "Upload files"}
-                    <span className="text-destructive ml-1">*</span>
-                  </label>
-                  <div
-                    {...getRootProps()}
-                    className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-200 ${
-                      isDragActive
-                        ? "border-primary bg-primary/5 scale-[1.02]"
-                        : "border-border hover:border-primary/50 hover:bg-muted/30"
-                    } ${loading ? "opacity-50 pointer-events-none" : ""}`}
-                  >
-                    <input {...getInputProps()} disabled={loading} />
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                        <Upload className="h-6 w-6 text-primary" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">
-                          {isDragActive
-                            ? language === "sv"
-                              ? "Släpp filerna här"
-                              : "Drop files here"
-                            : language === "sv"
-                            ? "Dra filer hit eller klicka för att välja"
-                            : "Drag files here or click to select"}
-                        </p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          {language === "sv"
-                            ? "Endast PDF-filer"
-                            : "PDF files only"}
-                        </p>
-                      </div>
+        {/* Main Upload Card */}
+        <Card className="mb-5 overflow-hidden border-0 shadow-lg bg-card/50 backdrop-blur-sm">
+          <CardHeader className="bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 border-b py-4">
+            <CardTitle className="flex items-center gap-2 text-lg">
+              <Upload className="h-4 w-4 text-primary" />
+              {language === "sv" ? "Ladda upp tentor" : "Upload exams"}
+            </CardTitle>
+            <CardDescription className="text-sm">
+              {language === "sv"
+                ? "Fyll i kurskoden och välj dina PDF-filer nedan"
+                : "Enter the course code and select your PDF files below"}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="p-5">
+            <div className="space-y-4">
+              {/* Course Code Input */}
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  {t.courseCodePlaceholder}
+                  <Badge variant="destructive" className="ml-2 text-xs">
+                    {language === "sv" ? "Obligatorisk" : "Required"}
+                  </Badge>
+                </label>
+                <Input
+                  type="text"
+                  placeholder="TDDC17, TANA09, etc."
+                  value={kurskod}
+                  onChange={(e) => setKurskod(e.target.value.toUpperCase())}
+                  disabled={loading}
+                  className="h-10 text-sm border-2 focus:border-primary/50 font-mono"
+                />
+                <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                  <Info className="h-3 w-3" />
+                  {language === "sv"
+                    ? "Ange kurskoden exakt som den visas på LiU"
+                    : "Enter the course code exactly as shown on LiU"}
+                </p>
+              </div>
+
+              <Separator />
+
+              {/* File Upload Area */}
+              <div>
+                <label className="block text-sm font-medium mb-2 text-foreground">
+                  {language === "sv" ? "Ladda upp filer" : "Upload files"}
+                  <Badge variant="destructive" className="ml-2 text-xs">
+                    {language === "sv" ? "Obligatorisk" : "Required"}
+                  </Badge>
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    PDF
+                  </Badge>
+                </label>
+                <div
+                  {...getRootProps()}
+                  className={`border-2 border-dashed rounded-xl p-8 text-center cursor-pointer transition-all duration-300 ${
+                    isDragActive
+                      ? "border-primary bg-primary/5 scale-[1.02] shadow-lg"
+                      : "border-border hover:border-primary/50 hover:bg-muted/30"
+                  } ${loading ? "opacity-50 pointer-events-none" : ""}`}
+                >
+                  <input {...getInputProps()} disabled={loading} />
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                      <Upload className="h-6 w-6 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-medium text-foreground">
+                        {isDragActive
+                          ? language === "sv"
+                            ? "Släpp filerna här"
+                            : "Drop files here"
+                          : language === "sv"
+                          ? "Dra filer hit eller klicka för att välja"
+                          : "Drag files here or click to select"}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {language === "sv"
+                          ? "Endast PDF-filer • Flera filer tillåtna"
+                          : "PDF files only • Multiple files allowed"}
+                      </p>
                     </div>
                   </div>
                 </div>
+              </div>
 
-                {/* Selected Files */}
-                {files.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-medium mb-2 text-foreground">
-                      {language === "sv" ? "Valda filer" : "Selected files"} (
-                      {files.length})
+              {/* Selected Files */}
+              {files.length > 0 && (
+                <div>
+                  <div className="flex items-center gap-2 mb-2">
+                    <label className="text-sm font-medium text-foreground">
+                      {language === "sv" ? "Valda filer" : "Selected files"}
                     </label>
-                    <div className="space-y-2">
-                      {files.map((file, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg border border-border/30"
-                        >
-                          <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                              <FileText className="h-4 w-4 text-primary" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="text-sm font-medium truncate">
-                                {file.name}
-                              </p>
-                              <p className="text-xs text-muted-foreground">
+                    <Badge variant="secondary" className="text-xs">
+                      {files.length}
+                    </Badge>
+                  </div>
+                  <div className="space-y-2">
+                    {files.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 bg-muted/30 rounded-lg border border-border/50 group hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 flex-1 min-w-0">
+                          <div className="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                            <FileText className="h-4 w-4 text-red-600 dark:text-red-400" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate text-foreground">
+                              {file.name}
+                            </p>
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <Badge variant="outline" className="text-xs">
                                 {(file.size / 1024 / 1024).toFixed(1)} MB
-                              </p>
+                              </Badge>
+                              <Badge variant="outline" className="text-xs">
+                                PDF
+                              </Badge>
                             </div>
                           </div>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            onClick={() => removeFile(index)}
-                            disabled={loading}
-                            className="text-muted-foreground hover:text-destructive flex-shrink-0"
-                          >
-                            <X className="h-4 w-4" />
-                          </Button>
                         </div>
-                      ))}
-                    </div>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => removeFile(index)}
+                          disabled={loading}
+                          className="text-muted-foreground hover:text-destructive opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    ))}
                   </div>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border/30">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setFiles([]);
-                      setKurskod("");
-                    }}
-                    disabled={loading || (!files.length && !kurskod)}
-                    className="flex-1 sm:flex-none"
-                  >
-                    {t.reset}
-                  </Button>
-                  <Button
-                    onClick={handleUpload}
-                    disabled={files.length === 0 || !kurskod || loading}
-                    className="flex-1 h-12 text-base font-medium"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                        {language === "sv" ? "Laddar upp..." : "Uploading..."}
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-4 w-4 mr-2" />
-                        {t.uploadButton}
-                      </>
-                    )}
-                  </Button>
                 </div>
-              </div>
-            </Card>
-          </div>
+              )}
 
-          {/* Right: Guidelines & Info */}
-          <div className="space-y-6">
-            {/* Review Notice */}
-            <Card className="p-4 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 border border-blue-200 dark:border-blue-800">
-              <div className="flex items-start gap-3">
-                <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-800/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <Info className="h-4 w-4 text-blue-600 dark:text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
-                    {language === "sv" ? "Granskning" : "Review process"}
-                  </h3>
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
-                    {language === "sv"
-                      ? "Uppladdade tentor granskas innan de blir tillgängliga. Detta kan ta någon dag."
-                      : "Uploaded exams are reviewed before they become available. This may take a day or two."}
-                  </p>
-                </div>
-              </div>
-            </Card>
+              <Separator />
 
-            {/* Guidelines */}
-            <Card className="p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <BookOpen className="h-5 w-5 text-primary" />
-                <h3 className="font-medium text-foreground">
-                  {t.uploadGuidelinesTitle}
-                </h3>
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 pt-2">
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setFiles([]);
+                    setKurskod("");
+                  }}
+                  disabled={loading || (!files.length && !kurskod)}
+                  className="flex-1 sm:flex-none text-sm"
+                >
+                  {t.reset}
+                </Button>
+                <Button
+                  onClick={handleUpload}
+                  disabled={files.length === 0 || !kurskod || loading}
+                  className="flex-1 h-10 text-sm font-medium bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary shadow-lg"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="h-3 w-3 animate-spin mr-2" />
+                      {language === "sv" ? "Laddar upp..." : "Uploading..."}
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-3 w-3 mr-2" />
+                      {t.uploadButton}
+                    </>
+                  )}
+                </Button>
               </div>
-              <ul className="space-y-2 text-sm text-foreground/80">
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Information Section */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+          <Card className="border-blue-200 dark:border-blue-800 bg-blue-50/50 dark:bg-blue-900/20 p-3">
+            <div className="flex items-start gap-2">
+              <Info className="h-4 w-4 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+              <div className="text-blue-800 dark:text-blue-200">
+                <span className="text-sm font-medium">
+                  {language === "sv" ? "Granskning:" : "Review process:"}
+                </span>{" "}
+                <span className="text-xs">
+                  {language === "sv"
+                    ? "Uppladdade tentor granskas innan de blir tillgängliga. Detta kan ta någon dag."
+                    : "Uploaded exams are reviewed before they become available. This may take a day or two."}
+                </span>
+              </div>
+            </div>
+          </Card>
+
+          <Card className="bg-gradient-to-br from-card to-card/50 border">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <BookOpen className="h-3 w-3 text-primary" />
+                {t.uploadGuidelinesTitle}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <ul className="space-y-1 text-xs text-muted-foreground">
+                <li className="flex items-start gap-1">
+                  <div className="w-1 h-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
                   {t.uploadGuidelineCourseCode}
                 </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-1">
+                  <div className="w-1 h-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
                   {t.uploadGuidelineNaming}
                 </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
+                <li className="flex items-start gap-1">
+                  <div className="w-1 h-1 rounded-full bg-primary mt-1.5 flex-shrink-0" />
                   {t.uploadGuidelineDate}
                 </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                  {t.uploadGuidelineDuplicateCheck}
-                </li>
-                <li className="flex items-start gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-                  {t.uploadGuidelineQuality}
-                </li>
               </ul>
-            </Card>
+            </CardContent>
+          </Card>
+        </div>
 
-            {/* Back Button */}
-            <Button
-              variant="outline"
-              onClick={() => navigate(-1)}
-              className="w-full"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              {language === "sv" ? "Tillbaka" : "Back"}
-            </Button>
-          </div>
+        {/* Back Button */}
+        <div className="flex justify-center">
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="w-full max-w-xs group text-sm"
+          >
+            <ArrowLeft className="h-3 w-3 mr-2 group-hover:-translate-x-1 transition-transform" />
+            {language === "sv" ? "Tillbaka" : "Back"}
+          </Button>
         </div>
       </div>
 
       {/* Success/Error Dialog */}
       <AlertDialog open={uploadStatus !== null}>
-        <AlertDialogContent className="max-w-md">
+        <AlertDialogContent className="max-w-sm">
           <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-3">
+            <AlertDialogTitle className="flex items-center gap-2 text-base">
               {uploadStatus === "success" ? (
-                <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                  <Check className="text-green-600 dark:text-green-400 h-5 w-5" />
+                <div className="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                  <Check className="text-green-600 dark:text-green-400 h-4 w-4" />
                 </div>
               ) : (
-                <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                  <X className="text-red-600 dark:text-red-400 h-5 w-5" />
+                <div className="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                  <X className="text-red-600 dark:text-red-400 h-4 w-4" />
                 </div>
               )}
               <span>
                 {uploadStatus === "success" ? t.uploadSuccess : t.uploadError}
               </span>
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-base leading-relaxed">
+            <AlertDialogDescription className="text-sm leading-relaxed">
               {uploadStatus === "success"
                 ? language === "sv"
                   ? "Tack för ditt bidrag! Dina filer har laddats upp och kommer granskas innan de publiceras. Du hjälper andra studenter att lyckas bättre."
@@ -408,7 +455,10 @@ const UploadExamPage = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setUploadStatus(null)}>
+            <AlertDialogAction
+              onClick={() => setUploadStatus(null)}
+              className="text-sm"
+            >
               {language === "sv" ? "Stäng" : "Close"}
             </AlertDialogAction>
           </AlertDialogFooter>

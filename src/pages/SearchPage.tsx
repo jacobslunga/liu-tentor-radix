@@ -15,12 +15,12 @@ import { Helmet } from "react-helmet-async";
 import { Link, useParams } from "react-router-dom";
 import useSWR from "swr";
 import MobileExamList from "@/components/MobileExamList";
-import LoadingSpinner from "@/components/LoadingSpinnger";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import FontSizeSelector from "@/components/FontSizeSelector";
 import { Button } from "@/components/ui/button";
 import { AlertCircle, FileText, AlertTriangle, Plus } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Array of courses that examiners have requested to be removed
 // When a course code matches any of these (case-insensitive),
@@ -131,6 +131,9 @@ const SearchPage: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [hoveredLink, setHoveredLink] = useState<string | null>(null);
   const [courseStats, setCourseStats] = useState<any>(null);
+  const [isStatsLoading, setIsStatsLoading] = useState(false);
+  const [, setStatsError] = useState<string | null>(null);
+  const [statsAttempted, setStatsAttempted] = useState(false);
 
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
@@ -145,17 +148,53 @@ const SearchPage: React.FC = () => {
     courseCode?.toUpperCase() &&
     STUDENT_UPLOADED_COURSES.includes(courseCode.toUpperCase());
 
+  // Fetch course stats with better error handling and loading states
   useEffect(() => {
-    if (!courseCode) return;
+    if (!courseCode || !exams || exams.length === 0) return;
+
+    setIsStatsLoading(true);
+    setStatsError(null);
+    setStatsAttempted(false);
+
+    const abortController = new AbortController();
+
     fetch(
-      `https://liutentor.lukasabbe.com/api/courses/${courseCode.toUpperCase()}`
+      `https://liutentor.lukasabbe.com/api/courses/${courseCode.toUpperCase()}`,
+      { signal: abortController.signal }
     )
-      .then((res) =>
-        res.ok ? res.json() : Promise.reject("Failed to fetch stats")
-      )
-      .then(setCourseStats)
-      .catch(console.error);
-  }, [courseCode]);
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status === 404) {
+            // Course stats not available, but that's okay
+            setCourseStats(null);
+            setStatsError(null);
+          } else {
+            throw new Error(`Failed to fetch stats: ${res.status}`);
+          }
+        } else {
+          return res.json();
+        }
+      })
+      .then((data) => {
+        if (data) setCourseStats(data);
+      })
+      .catch((err) => {
+        if (err.name !== "AbortError") {
+          console.error("Error fetching course stats:", err);
+          setStatsError(err.message);
+          setCourseStats(null);
+        }
+      })
+      .finally(() => {
+        setIsStatsLoading(false);
+        setStatsAttempted(true);
+      });
+
+    return () => abortController.abort();
+  }, [courseCode, exams]);
+
+  // Show initial loading only when exams are loading
+  const isInitialLoading = isExamsLoading || exams === undefined;
 
   const formattedExams = useMemo(() => {
     if (!exams) return [];
@@ -231,6 +270,7 @@ const SearchPage: React.FC = () => {
         formattedExams.length || 0,
   };
 
+  // Loading states with skeleton UI
   if (error) {
     return (
       <div className="min-h-[calc(100vh-5rem)] flex items-center justify-center p-4">
@@ -246,10 +286,88 @@ const SearchPage: React.FC = () => {
     );
   }
 
-  if (isExamsLoading || exams === undefined) {
+  if (isInitialLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[calc(100vh-5rem)]">
-        <LoadingSpinner />
+      <div className="w-full min-h-screen px-4 md:px-8 lg:px-12 py-3 md:py-6">
+        <Helmet>
+          <title>Loading... | LiU Tentor</title>
+        </Helmet>
+
+        {/* Mobile loading */}
+        <div className="md:hidden w-full mb-4 space-y-4">
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+          <div className="space-y-3">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="p-4 border rounded-lg space-y-3">
+                <div className="flex items-start gap-4">
+                  <Skeleton className="h-12 w-12 rounded-lg" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                    <div className="flex gap-2">
+                      <Skeleton className="h-5 w-16" />
+                      <Skeleton className="h-5 w-12" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Desktop loading */}
+        <div className="hidden md:block">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex gap-6">
+              {/* Sidebar skeleton */}
+              <aside className="w-80 flex-shrink-0">
+                <div className="sticky top-28 bg-background/60 backdrop-blur-sm border border-border/50 rounded-lg p-6 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-8 w-20" />
+                    <div className="text-right space-y-1">
+                      <Skeleton className="h-3 w-16" />
+                      <Skeleton className="h-4 w-12" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-full" />
+                    <Skeleton className="h-4 w-3/4" />
+                  </div>
+                  <div className="space-y-2">
+                    {[...Array(3)].map((_, i) => (
+                      <Skeleton key={i} className="h-8 w-full" />
+                    ))}
+                  </div>
+                </div>
+              </aside>
+
+              {/* Table skeleton */}
+              <main className="flex-1 min-w-0">
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Skeleton className="h-8 w-32" />
+                    <Skeleton className="h-8 w-24" />
+                  </div>
+                  <div className="border rounded-lg overflow-hidden">
+                    {[...Array(8)].map((_, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-4 p-4 border-b last:border-b-0"
+                      >
+                        <Skeleton className="h-4 w-8" />
+                        <Skeleton className="h-4 flex-1" />
+                        <Skeleton className="h-4 w-24" />
+                        <Skeleton className="h-4 w-16" />
+                        <Skeleton className="h-8 w-20" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </main>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -329,7 +447,7 @@ const SearchPage: React.FC = () => {
   }
 
   return (
-    <div className="w-full min-h-screen px-4 md:px-8 lg:px-12 py-6">
+    <div className="w-full min-h-screen px-4 md:px-8 lg:px-12 py-3 md:py-6">
       <Helmet>
         <title>{pageTitle}</title>
         <meta name="description" content={pageDescription} />
@@ -337,7 +455,7 @@ const SearchPage: React.FC = () => {
 
       {/* Removed Course Banner */}
       {isCourseRemoved && (
-        <div className="max-w-7xl mx-auto mt-6">
+        <div className="max-w-7xl mx-auto mt-3 md:mt-6">
           <Card className="border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20">
             <CardHeader>
               <CardTitle className="text-orange-800 dark:text-orange-200 flex items-center gap-2">
@@ -354,8 +472,8 @@ const SearchPage: React.FC = () => {
 
       {/* Student Upload Warning Banner */}
       {hasStudentUploads && (
-        <div className="max-w-7xl mx-auto mt-6">
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-6">
+        <div className="max-w-7xl mx-auto mt-3 md:mt-6">
+          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4 mb-3 md:mb-6">
             <div className="flex items-start gap-3">
               <div className="bg-blue-100 dark:bg-blue-900/40 rounded-lg p-2">
                 <AlertTriangle className="h-5 w-5 text-blue-600 dark:text-blue-400" />
@@ -374,7 +492,7 @@ const SearchPage: React.FC = () => {
       )}
 
       {/* Mobile Exam List */}
-      <div className="md:hidden w-full mb-8 px-1">
+      <div className="md:hidden w-full mb-4 md:mb-8 px-1">
         <MobileExamList
           exams={formattedExams}
           title={`${courseCode?.toUpperCase()} - ${getTranslation(
@@ -420,9 +538,13 @@ const SearchPage: React.FC = () => {
                         <div className="text-xs text-muted-foreground">
                           {language === "sv" ? "Genomsnitt" : "Avg Pass Rate"}
                         </div>
-                        <div className="text-sm font-bold text-foreground">
-                          {examStats.passRateAvg.toFixed(0)}%
-                        </div>
+                        {isStatsLoading && !statsAttempted ? (
+                          <Skeleton className="h-4 w-12" />
+                        ) : (
+                          <div className="text-sm font-bold text-foreground">
+                            {examStats.passRateAvg.toFixed(0)}%
+                          </div>
+                        )}
                       </div>
                     </div>
 
@@ -469,9 +591,13 @@ const SearchPage: React.FC = () => {
                         <span className="text-sm text-muted-foreground">
                           {language === "sv" ? "Genomsnitt" : "Avg Pass Rate"}
                         </span>
-                        <span className="text-sm font-semibold text-foreground">
-                          {examStats.passRateAvg.toFixed(0)}%
-                        </span>
+                        {isStatsLoading && !statsAttempted ? (
+                          <Skeleton className="h-4 w-12" />
+                        ) : (
+                          <span className="text-sm font-semibold text-foreground">
+                            {examStats.passRateAvg.toFixed(0)}%
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -483,12 +609,10 @@ const SearchPage: React.FC = () => {
                     </h3>
                     <FontSizeSelector />
                     <Link to="/upload-exams" className="group block">
-                      <div className="flex items-center gap-2 bg-primary/10 hover:bg-primary/20 border border-primary/20 hover:border-primary/30 rounded-md px-3 py-2 transition-all duration-200">
-                        <Plus className="h-4 w-4 text-primary" />
-                        <span className="text-sm font-medium text-primary">
-                          {getTranslation("uploadExamsOrFacit")}
-                        </span>
-                      </div>
+                      <Button className="w-full">
+                        <Plus className="h-4 w-4" />
+                        <span>{getTranslation("uploadExamsOrFacit")}</span>
+                      </Button>
                     </Link>
                   </div>
                 </div>

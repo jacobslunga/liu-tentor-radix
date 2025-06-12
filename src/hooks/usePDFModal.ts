@@ -3,6 +3,7 @@ import { Exam } from "@/components/data-table/columns";
 import { fetcher, findFacitForExam, retryFetch } from "@/components/PDF/utils";
 import Cookies from "js-cookie";
 import useSWR from "swr";
+import { calculateResponsiveZoom, debounce } from "@/utils/pdfUtils";
 
 interface UsePDFModalProps {
   tenta_id: string;
@@ -149,16 +150,29 @@ export const usePDFModal = ({
     []
   );
 
-  // Scale adjustment based on layout
+  // Responsive scale adjustment based on layout and screen size
   useEffect(() => {
-    const screenWidth = window.innerWidth;
-    let baseScale = 1.2;
-    if (screenWidth >= 1600) baseScale = 1.6;
-    else if (screenWidth <= 1280) baseScale = 1.0;
-    const newExamScale =
-      layoutMode === "exam-only" ? baseScale + 0.2 : baseScale;
-    setScale(newExamScale);
-    setFacitScale(baseScale);
+    const updateScale = () => {
+      const isMobile = window.innerWidth < 768;
+      const { examScale, facitScale } = calculateResponsiveZoom(
+        layoutMode,
+        window.innerWidth,
+        window.innerHeight,
+        isMobile
+      );
+
+      setScale(examScale);
+      setFacitScale(facitScale);
+    };
+
+    // Initial scale calculation
+    updateScale();
+
+    // Debounced resize handler
+    const debouncedUpdateScale = debounce(updateScale, 250);
+
+    window.addEventListener("resize", debouncedUpdateScale);
+    return () => window.removeEventListener("resize", debouncedUpdateScale);
   }, [layoutMode]);
 
   // Panel resize handler

@@ -69,7 +69,7 @@ export default function CustomPagesHeader() {
           aria-label={getTranslation("homeTitle")}
         >
           <LogoIcon className="w-10 h-10" />
-          <h1 className="font-logo text-xl text-foreground">
+          <h1 className="font-logo text-xl text-foreground/80">
             {getTranslation("homeTitle")}
           </h1>
         </Link>
@@ -117,7 +117,7 @@ export default function CustomPagesHeader() {
                     className="flex items-center gap-3"
                   >
                     <LogoIcon className="w-8 h-8" />
-                    <span className="font-logo text-lg text-foreground/90">
+                    <span className="font-logo text-lg text-foreground/80">
                       {getTranslation("homeTitle")}
                     </span>
                   </Link>
