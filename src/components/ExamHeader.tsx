@@ -7,7 +7,7 @@ import {
   ArrowLeftIcon,
   ChevronDownIcon,
 } from "@primer/octicons-react";
-import { FC, useContext, useEffect, useMemo, useState } from "react";
+import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { findFacitForExam } from "./PDF/utils";
 import { Button } from "./ui/button";
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import SettingsDialog from "@/components/SettingsDialog";
 import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
+import { Badge } from "./ui/badge";
 
 const normalizeName = (name: string): string => {
   return name.toLowerCase().replace(/[^a-z0-9-_]/g, "");
@@ -81,6 +82,8 @@ const ExamHeader: FC<ExamHeaderProps> = ({
 }) => {
   const { language } = useLanguage();
   const [selectedExamName, setSelectedExamName] = useState(tenta_namn);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [completedExams] = useState<Record<number, boolean>>(() => {
     const cookieConsent = Cookies.get("cookieConsent");
     if (cookieConsent === "true") {
@@ -117,6 +120,27 @@ const ExamHeader: FC<ExamHeaderProps> = ({
       });
   }, [exams]);
 
+  // Scroll to center the selected exam when dropdown opens
+  useEffect(() => {
+    if (isDropdownOpen && scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const selectedIndex = sortedExams.findIndex(
+        (exam) => exam.id.toString() === currentExamId.toString()
+      );
+
+      if (selectedIndex !== -1) {
+        const itemHeight = 60; // Approximate height of each item
+        const containerHeight = container.clientHeight;
+        const scrollTop =
+          selectedIndex * itemHeight - containerHeight / 2 + itemHeight / 2;
+
+        container.scrollTo({
+          top: Math.max(0, scrollTop),
+        });
+      }
+    }
+  }, [isDropdownOpen, sortedExams, currentExamId]);
+
   const getTranslation = (
     key: keyof (typeof translations)[typeof language]
   ) => {
@@ -131,6 +155,22 @@ const ExamHeader: FC<ExamHeaderProps> = ({
   };
 
   let displayName = selectedExamName.replace(".pdf", "");
+
+  const formatDisplayDate = (dateStr: string | null) => {
+    if (!dateStr) return null;
+    try {
+      return new Date(dateStr).toLocaleDateString(
+        language === "sv" ? "sv-SE" : "en-US",
+        {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        }
+      );
+    } catch {
+      return dateStr;
+    }
+  };
 
   return (
     <div
@@ -148,62 +188,90 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
 
-        <DropdownMenu>
+        {/* Exam selector */}
+        <DropdownMenu onOpenChange={setIsDropdownOpen}>
           <DropdownMenuTrigger asChild>
             <Button
-              variant="outline"
-              size="sm"
-              className="flex flex-row items-center justify-center space-x-1"
+              variant="ghost"
+              className="flex flex-row items-center space-x-2 h-9 px-3 hover:bg-muted transition-colors max-w-[300px]"
             >
-              <p className="flex-1 text-left">
-                {displayName.length > 20
-                  ? `${displayName.slice(0, 20)}...`
+              <span className="font-medium truncate text-sm">
+                {displayName.length > 25
+                  ? `${displayName.slice(0, 25)}...`
                   : displayName}
-              </p>
-              <ChevronDownIcon className="w-4 h-4" />
+              </span>
+              <ChevronDownIcon className="w-4 h-4 text-muted-foreground" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="max-h-80 ml-16 space-y-1 overflow-y-auto w-[280px] self-end [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-            {sortedExams.map((exam) => (
-              <DropdownMenuItem
-                key={exam.id}
-                onClick={() => handleExamChange(exam)}
-                className={`flex flex-col px-3 py-2 ${
-                  exam.id.toString() === currentExamId.toString()
-                    ? "bg-primary/10"
-                    : ""
-                }`}
-              >
-                <div className="flex items-center w-full gap-2">
-                  {exam.id.toString() === currentExamId.toString() && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-primary shrink-0" />
-                  )}
-                  <span
-                    className={`flex-1 font-medium truncate ${
-                      exam.id.toString() === currentExamId.toString()
-                        ? "text-primary"
-                        : ""
-                    }`}
+          <DropdownMenuContent
+            className="w-80 max-h-96 overflow-hidden"
+            align="start"
+            sideOffset={4}
+          >
+            {/* Simple header */}
+            <div className="px-3 py-2 text-xs font-medium text-muted-foreground border-b">
+              {language === "sv" ? "Välj tenta" : "Select Exam"} (
+              {sortedExams.length})
+            </div>
+
+            {/* Scrollable content */}
+            <div ref={scrollContainerRef} className="max-h-80 overflow-y-auto">
+              {sortedExams.map((exam) => {
+                const isSelected =
+                  exam.id.toString() === currentExamId.toString();
+                const hasFacit = findFacitForExam(exam, allExams);
+                const isCompleted = completedExams[exam.id];
+
+                return (
+                  <DropdownMenuItem
+                    key={exam.id}
+                    onClick={() => handleExamChange(exam)}
+                    className={`
+                      flex items-center justify-between px-3 py-3 cursor-pointer text-sm
+                      ${
+                        isSelected
+                          ? "bg-primary/10 text-primary"
+                          : "hover:bg-muted/50"
+                      }
+                    `}
                   >
-                    {exam.tenta_namn.replace(".pdf", "")}
-                  </span>
-                  {completedExams[exam.id] && (
-                    <CheckIcon className="w-4 h-4 text-green-500 shrink-0" />
-                  )}
-                </div>
-                <div className="flex items-start w-full space-x-2 text-xs text-muted-foreground">
-                  {exam.date && <span>{exam.date}</span>}
-                  {findFacitForExam(exam, allExams) && (
-                    <>
-                      <span>•</span>
-                      <span className="text-green-500">
-                        {getTranslation("withFacit")}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </DropdownMenuItem>
-            ))}
+                    <div className="flex-1 min-w-0 pr-3">
+                      <div className="font-medium truncate">
+                        {exam.tenta_namn.replace(".pdf", "").replace(/_/g, " ")}
+                      </div>
+                      {exam.date && (
+                        <div className="text-xs text-muted-foreground mt-0.5">
+                          {formatDisplayDate(exam.date)}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {hasFacit && (
+                        <Badge
+                          variant="outline"
+                          className="text-xs px-1.5 py-0 bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
+                        >
+                          {language === "sv" ? "Facit" : "Sol"}
+                        </Badge>
+                      )}
+                      {isCompleted && (
+                        <CheckIcon className="w-4 h-4 text-green-500" />
+                      )}
+                    </div>
+                  </DropdownMenuItem>
+                );
+              })}
+            </div>
+
+            {/* Empty state */}
+            {sortedExams.length === 0 && (
+              <div className="p-4 text-center text-muted-foreground text-sm">
+                {language === "sv"
+                  ? "Inga tentor tillgängliga"
+                  : "No exams available"}
+              </div>
+            )}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

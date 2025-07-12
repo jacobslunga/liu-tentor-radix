@@ -22,7 +22,7 @@ const OmOss: FC = () => {
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         <PageHeader />
 
-        <h1 className="text-2xl font-medium text-foreground/90 mb-4 mt-12">
+        <h1 className="text-2xl font-medium text-foreground/80 mb-4 mt-12">
           {language === "sv" ? "Om oss" : "About Us"}
         </h1>
         <div className="text-sm text-foreground/80 leading-relaxed space-y-4">

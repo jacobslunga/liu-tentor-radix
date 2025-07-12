@@ -96,7 +96,7 @@ export function DataTable({
                 (courseNameSwe?.length ?? 0) > 40
                   ? "text-2xl"
                   : "text-3xl"
-              } font-semibold`}
+              } font-medium text-foreground/80`}
             >
               {language === "sv" ? courseNameSwe : courseNameEng}
             </CardTitle>

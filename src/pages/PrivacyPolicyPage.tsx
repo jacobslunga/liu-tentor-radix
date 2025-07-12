@@ -23,7 +23,7 @@ const PrivacyPolicy: FC = () => {
     items,
   }) => (
     <div className="mb-6">
-      <h2 className="text-lg font-medium mb-2 flex items-center gap-2">
+      <h2 className="text-lg font-medium text-foreground/80 mb-2 flex items-center gap-2">
         {title}
       </h2>
       <p className="text-sm text-foreground/80 leading-relaxed">{content}</p>
@@ -50,7 +50,7 @@ const PrivacyPolicy: FC = () => {
         <div className="max-w-2xl mx-auto">
           <PageHeader />
           <div className="mb-6 mt-12">
-            <h1 className="text-2xl font-medium flex items-center gap-2">
+            <h1 className="text-2xl text-foreground/80 font-medium flex items-center gap-2">
               {getTranslation("privacyPolicyTitle")}
             </h1>
             <p className="text-xs text-muted-foreground mt-2">

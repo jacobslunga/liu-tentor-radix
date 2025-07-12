@@ -1,8 +1,7 @@
 import { Checkbox } from "@/components/ui/checkbox";
-import { Language, Translations } from "@/util/translations";
 import { ColumnDef } from "@tanstack/react-table";
-import { useState } from "react";
 import { ExamStatsDialog } from "../ExamStatsDialog";
+import { Language, Translations } from "@/util/translations";
 
 export type Exam = {
   document_id: string;
@@ -66,42 +65,29 @@ export const getColumns = (
     id: "approvalRate",
     header: translations[language].passedCount || "Godkända",
     cell: ({ row }) => {
-      const dist = row.original.gradeDistribution;
-      const approvalRate = row.original.passedCount;
+      const { gradeDistribution, passedCount } = row.original;
 
-      if (!dist || approvalRate === undefined) return "–";
+      if (!gradeDistribution || passedCount === undefined) {
+        return <span>–</span>;
+      }
 
       let color = "text-orange-500 dark:text-orange-400";
-      if (approvalRate >= 70)
+      if (passedCount >= 70)
         color = "text-green-600 dark:text-green-400 font-semibold";
-      else if (approvalRate < 30)
+      else if (passedCount < 30)
         color = "text-red-600 dark:text-red-400 font-semibold";
 
-      const [hovered, setHovered] = useState(false);
-
       return (
-        <div
-          onClick={(e) => e.stopPropagation()}
-          onMouseEnter={() => setHovered(true)}
-          onMouseLeave={() => setHovered(false)}
-        >
-          {hovered && dist ? (
-            <ExamStatsDialog
-              gradeDistribution={dist}
-              date={row.original.created_at}
-              trigger={
-                <span
-                  className={`${color} font-medium underline cursor-pointer`}
-                >
-                  {approvalRate.toFixed(1)}%
-                </span>
-              }
-            />
-          ) : (
-            <span className={`${color} font-medium underline cursor-pointer`}>
-              {approvalRate.toFixed(1)}%
-            </span>
-          )}
+        <div onClick={(e) => e.stopPropagation()}>
+          <ExamStatsDialog
+            gradeDistribution={gradeDistribution}
+            date={row.original.created_at}
+            trigger={
+              <span className={`${color} font-medium underline cursor-pointer`}>
+                {passedCount.toFixed(1)}%
+              </span>
+            }
+          />
         </div>
       );
     },

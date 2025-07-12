@@ -88,9 +88,9 @@ textarea {
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 95%; /* Silver */
     --secondary-foreground: 0 0% 10%;
-    --muted: 0 0% 95%; /* Silver */
+    --muted: 0 0% 90%; /* Silver */
     --muted-foreground: 0 0% 35%;
-    --accent: 0 0% 95%;
+    --accent: 0 0% 90%;
     --accent-foreground: 0 0% 10%;
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 98%;
@@ -106,39 +106,40 @@ textarea {
   }
 
   .dark {
-    --background: 0 0% 12%; /* Mörk neutral bakgrund */
-    --foreground: 0 0% 95%; /* Ljus text för kontrast */
+    --background: 220 5% 12%; /* Davy's gray - Deep, calm background */
+    --foreground: 0 0% 95%; /* Light text for high contrast and readability */
 
-    --card: 0 0% 14%; /* Diskret kortfärg för neutralt djup */
+    --card: 220 5% 14%; /* Slightly darker than background for depth */
     --card-foreground: var(--foreground);
 
-    --popover: var(--card);
+    --popover: var(--card); /* Consistent with card for uniformity */
     --popover-foreground: var(--foreground);
 
-    --primary: 120 40% 75%; /* Behåller soft green */
-    --primary-foreground: 0 0% 10%;
+    --primary: 120 40% 75%; /* Soft green for primary actions */
+    --primary-foreground: 0 0% 10%; /* Dark text for contrast on primary */
 
-    --secondary: 0 0% 16%; /* Neutralt mörkgrå för secondary */
+    --secondary: 220 5% 18%; /* Slightly lighter than background for secondary elements */
     --secondary-foreground: var(--foreground);
 
-    --muted: 0 0% 20%; /* Mörk neutralt grå för UI-element */
-    --muted-foreground: 0 0% 65%; /* Ljusare grå för subtil text */
+    --muted: 220 5% 20%; /* Muted tone for UI elements */
+    --muted-foreground: 0 0% 65%; /* Lighter gray for subtle text */
 
-    --accent: 0 0% 18%; /* Neutralt mörk accentfärg */
+    --accent: 220 5% 15%; /* Accent color for emphasis */
     --accent-foreground: var(--foreground);
 
-    --destructive: 0 55% 35%; /* Behåller subtil rödton */
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 55% 35%; /* Subdued red for a less aggressive look */
+    --destructive-foreground: 0 0% 98%; /* Light text for contrast */
 
-    --border: 0 0% 20%; /* Neutralt mörk för subtil separation */
-    --input: var(--secondary);
-    --ring: 0 0% 22%;
+    --border: 220 5% 18%; /* Slightly lighter than background for subtle separation */
+    --input: var(--secondary); /* Consistent with secondary for inputs */
+    --ring: 220 5% 22%; /* Soft but noticeable ring effect */
 
-    --chart-1: 155 50% 85%;
-    --chart-2: 155 55% 65%;
-    --chart-3: 155 60% 50%;
-    --chart-4: 155 65% 40%;
-    --chart-5: 155 70% 30%;
+    /* Chart colors (Balanced around the main theme) */
+    --chart-1: 155 50% 85%; /* Ljusast grön för U */
+    --chart-2: 155 55% 65%; /* 3 */
+    --chart-3: 155 60% 50%; /* 4 */
+    --chart-4: 155 65% 40%; /* 5 */
+    --chart-5: 155 70% 30%; /* Extra mörk om du behöver */
   }
 }
 

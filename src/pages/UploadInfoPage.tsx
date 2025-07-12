@@ -112,7 +112,7 @@ const UploadInfoPage = () => {
           <PageHeader />
           <div className="mb-6 text-center">
             <Upload className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h1 className="text-4xl font-medium">
+            <h1 className="text-4xl text-foreground/80 font-medium">
               {getTranslation("mainTitle")}
             </h1>
             <p className="text-sm text-muted-foreground mt-2">
