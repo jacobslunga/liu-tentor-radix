@@ -1,6 +1,4 @@
-# React + TypeScript + Vite
-
-This te# LiU Tentor 🎓
+# LiU Tentor
 
 A modern exam archive web application for Linköping University (LiU) students, making it easy to find and access previous exams and solutions.
 
