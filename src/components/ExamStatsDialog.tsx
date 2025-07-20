@@ -55,7 +55,7 @@ export const ExamStatsDialog = ({
       </DialogTrigger>
       <DialogContent className="w-full max-w-md bg-background border-border">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-foreground">
+          <DialogTitle className="text-lg font-medium text-foreground">
             Tentastatistik
             <span className="block text-sm font-normal text-muted-foreground">
               Betygsfördelning {date}

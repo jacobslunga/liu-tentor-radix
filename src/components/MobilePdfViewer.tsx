@@ -92,7 +92,7 @@ const MobilePDFView: FC<{
         return {
           backgroundColor: "var(--background)",
           color: "var(--foreground)",
-          filter: "invert(1) brightness(1) contrast(0.8)",
+          filter: "invert(1) brightness(1.2) contrast(0.8)",
         };
       default:
         return {

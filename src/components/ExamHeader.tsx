@@ -9,7 +9,7 @@ import {
 } from "@primer/octicons-react";
 import { FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { findFacitForExam } from "./PDF/utils";
+import { findFacitForExam, isFacit } from "./PDF/utils";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -112,6 +112,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
         ...exam,
         date: extractDate(exam.tenta_namn),
       }))
+      .filter((exam) => !isFacit(exam.tenta_namn))
       .sort((a, b) => {
         if (!a.date && !b.date) return 0;
         if (!a.date) return 1;
@@ -282,7 +283,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           role="search"
         >
           <div
-            className="group font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-full"
+            className="group font-medium hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-md"
             onClick={() => {
               setShowGlobalSearch(true);
             }}
