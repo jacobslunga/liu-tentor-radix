@@ -90,11 +90,11 @@ textarea {
     --secondary-foreground: 0 0% 10%;
     --muted: 0 0% 90%; /* Silver */
     --muted-foreground: 0 0% 35%;
-    --accent: 0 0% 90%;
+    --accent: 0 0% 95%;
     --accent-foreground: 0 0% 10%;
     --destructive: 0 84% 50%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
+    --border: 0 0% 95%;
     --input: 0 0% 85%;
     --ring: 0 0% 10%;
     --chart-1: 155 50% 85%; /* Ljusast grön för U */
