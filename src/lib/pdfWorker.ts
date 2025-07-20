@@ -1,14 +1,10 @@
 import { pdfjs } from "react-pdf";
 
-// Configure PDF.js worker using local file to avoid CORS issues
+// Configure PDF.js worker with local file for both dev and production
 export const configurePdfWorker = () => {
-  if (import.meta.env.DEV) {
-    // For development, use local worker file served from public directory
-    pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
-  } else {
-    // For production, use CDN with CORS support
-    pdfjs.GlobalWorkerOptions.workerSrc = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`;
-  }
+  // Use local worker file served from public directory for better reliability
+  // This avoids CORS issues and external CDN failures
+  pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
 };
 
 // Initialize worker configuration

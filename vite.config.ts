@@ -9,28 +9,4 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  optimizeDeps: {
-    include: ["pdfjs-dist"],
-  },
-  assetsInclude: ["**/*.pdf"],
-  worker: {
-    format: "es",
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: (id) => {
-          if (id.includes("node_modules")) {
-            if (id.includes("pdfjs-dist")) {
-              return "pdfjs";
-            }
-            if (id.includes("react") || id.includes("react-dom")) {
-              return "react";
-            }
-            return "vendor";
-          }
-        },
-      },
-    },
-  },
 });

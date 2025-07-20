@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Session, User } from '@supabase/supabase-js';
-import { supabase } from '@/supabase/supabaseClient';
+import React, { createContext, useContext, useEffect, useState } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/supabase/supabaseClient";
 
 interface AuthContextType {
   user: User | null;
@@ -21,7 +21,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState<any>(null);
+  const [profile] = useState<any>(null); // Profile disabled - users table not configured
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         error,
       } = await supabase.auth.getSession();
       if (error) {
-        console.error('Error fetching session:', error);
+        console.error("Error fetching session:", error);
         setLoading(false);
         return;
       }
@@ -45,28 +45,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     };
 
-    const fetchUserProfile = async (userId: string) => {
-      try {
-        const { data, error } = await supabase
-          .from('users')
-          .select('*')
-          .eq('id', userId)
-          .single();
-
-        if (error) {
-          // If users table doesn't exist, just skip profile fetching
-          if (error.code === 'PGRST116' || error.message.includes('does not exist')) {
-            console.log('Users table not found, skipping profile fetch');
-            return;
-          }
-          console.error('Error fetching user profile:', error);
-          return;
-        }
-
-        setProfile(data);
-      } catch (err) {
-        console.log('Profile fetch failed, continuing without profile data');
-      }
+    const fetchUserProfile = async (_userId: string) => {
+      // Skip profile fetching since users table doesn't exist in this project
+      // This prevents unnecessary 404 requests
+      console.log("Profile fetching disabled - no users table configured");
+      return;
     };
 
     fetchSession();
