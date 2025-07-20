@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "@/context/LanguageContext";
 import PageHeader from "@/components/PageHeader";
-import CustomPagesHeader from "./CustomPagesHeader";
+import CustomPagesLayout from "@/layouts/CustomPagesLayout";
 
 const OmOss: FC = () => {
   const { language } = useLanguage();
@@ -12,12 +12,10 @@ const OmOss: FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <CustomPagesLayout>
       <Helmet>
         <title>LiU Tentor | Om oss</title>
       </Helmet>
-
-      <CustomPagesHeader />
 
       <div className="container mx-auto px-4 py-12 max-w-2xl">
         <PageHeader />
@@ -84,7 +82,7 @@ const OmOss: FC = () => {
           )}
         </div>
       </div>
-    </div>
+    </CustomPagesLayout>
   );
 };
 

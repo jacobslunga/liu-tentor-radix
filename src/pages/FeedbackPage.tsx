@@ -20,7 +20,7 @@ import { z } from "zod";
 import { Helmet } from "react-helmet-async";
 import { ChecklistIcon, AlertIcon, CheckIcon } from "@primer/octicons-react";
 import PageHeader from "@/components/PageHeader";
-import CustomPagesHeader from "./CustomPagesHeader";
+import CustomPagesLayout from "@/layouts/CustomPagesLayout";
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
@@ -101,12 +101,10 @@ const FeedbackPage: FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-background/50 flex flex-col">
+    <CustomPagesLayout>
       <Helmet>
         <title>LiU Tentor | {getTranslation("feedbackTitle")}</title>
       </Helmet>
-
-      <CustomPagesHeader />
 
       <div className="container max-w-2xl mx-auto px-4 py-16 flex-grow">
         {/* Page Title */}
@@ -275,7 +273,7 @@ const FeedbackPage: FC = () => {
           </div>
         )}
       </div>
-    </div>
+    </CustomPagesLayout>
   );
 };
 

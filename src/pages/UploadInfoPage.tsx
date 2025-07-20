@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import PageHeader from "@/components/PageHeader";
 import { useLanguage } from "@/context/LanguageContext";
-import CustomPagesHeader from "./CustomPagesHeader";
+import CustomPagesLayout from "@/layouts/CustomPagesLayout";
 
 const UploadInfoPage = () => {
   const { language } = useLanguage();
@@ -100,12 +100,10 @@ const UploadInfoPage = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <CustomPagesLayout>
       <Helmet>
         <title>LiU Tentor | {getTranslation("mainTitle")}</title>
       </Helmet>
-
-      <CustomPagesHeader />
 
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto">
@@ -181,7 +179,7 @@ const UploadInfoPage = () => {
           </div>
         </div>
       </main>
-    </div>
+    </CustomPagesLayout>
   );
 };
 

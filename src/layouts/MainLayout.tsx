@@ -9,6 +9,7 @@ import { ShowGlobalSearchContext } from '@/context/ShowGlobalSearchContext';
 const MainLayout: React.FC = () => {
   const { pathname } = useLocation();
   const [isExam, setIsExam] = useState(false);
+  const [isCustomPage, setIsCustomPage] = useState(false);
   const { setShowGlobalSearch, showGlobalSearch } = useContext(
     ShowGlobalSearchContext
   );
@@ -16,6 +17,10 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     const examPattern = /^\/search\/[A-Z0-9]+\/[0-9]+$/;
     setIsExam(examPattern.test(pathname));
+    
+    // Check if current page uses CustomPagesLayout
+    const customPagePaths = ['/faq', '/om-oss', '/feedback', '/privacy-policy', '/upload-info'];
+    setIsCustomPage(customPagePaths.some(path => pathname.startsWith(path)));
   }, [pathname]);
 
   return (
@@ -26,7 +31,7 @@ const MainLayout: React.FC = () => {
       </main>
 
       {/* Footer alltid synlig */}
-      {!isExam && (
+      {!isExam && !isCustomPage && (
         <div className='mt-auto'>
           <Footer />
         </div>

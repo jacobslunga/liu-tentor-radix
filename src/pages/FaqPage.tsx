@@ -8,7 +8,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { Helmet } from "react-helmet-async";
 import PageHeader from "@/components/PageHeader";
 import { useEffect } from "react";
-import CustomPagesHeader from "./CustomPagesHeader";
+import CustomPagesLayout from "@/layouts/CustomPagesLayout";
 
 const FAQPage = () => {
   const { language } = useLanguage();
@@ -18,17 +18,14 @@ const FAQPage = () => {
   }, []);
 
   return (
-    <>
-      {/* HEADERN */}
-      <CustomPagesHeader />
+    <CustomPagesLayout>
+      <Helmet>
+        <title>LiU Tentor | FAQ</title>
+      </Helmet>
 
       {/* HUVUDINNEHÅLLET, SAMMA CONTAINER-UPPLÄGG SOM UploadInfoPage */}
       <main className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto">
-          <Helmet>
-            <title>LiU Tentor | FAQ</title>
-          </Helmet>
-
           {/* PageHeader (kan innehålla ev. brödsmulor etc) */}
           <PageHeader />
 
@@ -134,7 +131,7 @@ const FAQPage = () => {
           </Accordion>
         </div>
       </main>
-    </>
+    </CustomPagesLayout>
   );
 };
 
