@@ -21,7 +21,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { pdfjs } from "react-pdf";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import useSWR from "swr";
 
@@ -43,10 +42,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+// Import PDF worker configuration
+import "@/lib/pdfWorker";
 
 interface PDFModalProps {
   exams?: Exam[];
