@@ -91,7 +91,9 @@ const LockInModeOverlay: React.FC = () => {
                   </Button>
 
                   <div className="pr-10">
-                    <h2 className="text-xl font-semibold mb-1">{t.title}</h2>
+                    <h2 className="text-xl font-semibold mb-1">
+                      {language === "sv" ? "Nyhet: " : "News: "} {t.title}
+                    </h2>
                     <p className="text-sm text-muted-foreground">
                       {t.subtitle}
                     </p>
