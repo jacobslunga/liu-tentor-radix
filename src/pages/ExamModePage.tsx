@@ -277,7 +277,7 @@ const ExamModePage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center"
           >
             <div className="text-center text-white">
               <h2 className="text-4xl font-bold mb-4">{t.paused}</h2>
@@ -308,7 +308,7 @@ const ExamModePage: React.FC = () => {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2 text-white">
                   <Timer className="w-5 h-5" />
-                  <span className="font-mono text-lg font-medium">
+                  <span className="ibm-plex-mono text-lg font-medium">
                     {formatTime(timeRemaining)}
                   </span>
                 </div>
