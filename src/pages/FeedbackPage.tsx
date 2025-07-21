@@ -80,7 +80,7 @@ const FeedbackPage: FC = () => {
   useEffect(() => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: "auto",
     });
   }, []);
 

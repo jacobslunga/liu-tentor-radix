@@ -14,7 +14,7 @@ const PrivacyPolicy: FC = () => {
     translations[language][key] || key;
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
   const Section: FC<{ title: string; content: string; items?: string[] }> = ({

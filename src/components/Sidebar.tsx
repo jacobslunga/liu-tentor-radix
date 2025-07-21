@@ -9,6 +9,7 @@ import {
   Upload,
   Home,
   Users,
+  History,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 
@@ -23,6 +24,11 @@ export default function Sidebar() {
       to: "/",
       label: language === "sv" ? "Hem" : "Home",
       icon: Home,
+    },
+    {
+      to: "/exam-history",
+      label: language === "sv" ? "Tentahistorik" : "Exam History",
+      icon: History,
     },
     {
       to: "/faq",

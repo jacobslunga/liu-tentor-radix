@@ -14,4 +14,5 @@ export const breadcrumbMap = {
   "/search/:courseCode": { sv: "Sökresultat", en: "Search Results" },
   "/search/:courseCode/:tenta_id": { sv: "Tenta", en: "Exam" },
   "/faq": { sv: "Vanliga Frågor", en: "FAQ" },
+  "/exam-history": { sv: "Tentahistorik", en: "Exam History" },
 };

@@ -20,6 +20,8 @@ import {
 import SettingsDialog from "@/components/SettingsDialog";
 import { ShowGlobalSearchContext } from "@/context/ShowGlobalSearchContext";
 import { Badge } from "./ui/badge";
+import { ExamModeDialog } from "./ExamModeDialog";
+import { ExamModeManager } from "@/lib/examMode";
 
 const normalizeName = (name: string): string => {
   return name.toLowerCase().replace(/[^a-z0-9-_]/g, "");
@@ -155,6 +157,18 @@ const ExamHeader: FC<ExamHeaderProps> = ({
     window.location.reload();
   };
 
+  const handleStartExamMode = (duration: string) => {
+    // Find the current exam
+    const currentExam = allExams.find(
+      (exam) => exam.id.toString() === currentExamId
+    );
+    if (currentExam) {
+      const durationMinutes = parseFloat(duration); // Use parseFloat to handle decimals
+      ExamModeManager.startExamSession(currentExam, durationMinutes);
+      navigate(`/exam-mode/${currentExamId}`);
+    }
+  };
+
   let displayName = selectedExamName.replace(".pdf", "");
 
   const formatDisplayDate = (dateStr: string | null) => {
@@ -275,6 +289,15 @@ const ExamHeader: FC<ExamHeaderProps> = ({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <ExamModeDialog
+          trigger={
+            <Button className="bg-black text-white hover:opacity-80 hover:text-white hover:bg-black">
+              <span className="text-xs">Lock in</span>
+            </Button>
+          }
+          onStartExam={handleStartExamMode}
+        />
       </div>
 
       <div className="flex flex-row items-center justify-center space-x-3 min-w-fit">
