@@ -41,13 +41,11 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamModeManager } from "@/lib/examMode";
 import { fetcher, retryFetch } from "@/components/PDF/utils";
-import { useTheme } from "@/context/ThemeContext";
 
 const ExamModePage: React.FC = () => {
   const { examId } = useParams<{ examId: string }>();
   const navigate = useNavigate();
   const { language } = useLanguage();
-  const { theme } = useTheme();
 
   // Session state
   const [session] = useState(ExamModeManager.getCurrentSession());
