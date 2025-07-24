@@ -397,9 +397,7 @@ const ExamModePage: React.FC = () => {
       {/* Main Content Area */}
       <div className="flex-1 flex items-center justify-center p-8 pt-24 overflow-hidden">
         <div
-          className={`w-full max-w-5xl h-full rounded-t-2xl ${
-            theme === "dark" ? "bg-black" : "bg-white"
-          } shadow-2xl overflow-hidden border border-white/10`}
+          className={`w-full max-w-5xl h-full rounded-t-2xl overflow-hidden`}
         >
           <div className="h-full p-4 overflow-auto">
             {pdfUrl ? (
