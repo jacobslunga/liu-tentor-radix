@@ -292,7 +292,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
 
         <ExamModeDialog
           trigger={
-            <Button className="bg-black text-white hover:opacity-80 hover:text-white hover:bg-black">
+            <Button className="bg-gradient-to-tr from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 text-white dark:text-black hover:opacity-80 transition-opacity duration-200">
               <span className="text-xs">Lock in</span>
             </Button>
           }
@@ -306,7 +306,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           role="search"
         >
           <div
-            className="group font-medium hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-md"
+            className="group font-medium hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-full"
             onClick={() => {
               setShowGlobalSearch(true);
             }}

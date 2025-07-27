@@ -151,7 +151,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
               </Button>
             </DialogClose>
             <Button
-              className="bg-black text-white hover:opacity-80 hover:text-white hover:bg-black flex-1"
+              className="bg-gradient-to-tr flex-1 from-gray-900 to-gray-700 dark:from-gray-100 dark:to-gray-300 text-white dark:text-black hover:opacity-80 transition-opacity duration-200"
               onClick={handleStartExam}
               disabled={!selectedDuration}
             >
