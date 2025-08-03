@@ -39,7 +39,7 @@ const Footer: FC = () => {
       <div className="flex flex-col sm:flex-row justify-center items-center md:items-start gap-12 sm:gap-24 text-sm text-foreground/70">
         {groupedLinks.map((section) => (
           <div key={section.title} className="text-center sm:text-left">
-            <h4 className="text-foreground/80 font-medium mb-2">
+            <h4 className="text-foreground font-medium mb-2">
               {section.title}
             </h4>
             <ul className="space-y-1">

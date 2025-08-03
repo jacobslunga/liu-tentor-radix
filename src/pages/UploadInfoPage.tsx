@@ -77,7 +77,7 @@ const UploadInfoPage = () => {
   }> = ({ title, content, items, icons }) => (
     <div className="space-y-4">
       <h2 className="text-lg font-medium">{title}</h2>
-      <p className="text-sm text-foreground/80 leading-relaxed">{content}</p>
+      <p className="text-sm text-foreground leading-relaxed">{content}</p>
       {items && (
         <ul className="mt-3 space-y-2 text-sm text-foreground/70">
           {items.map((item, i) => (
@@ -110,7 +110,7 @@ const UploadInfoPage = () => {
           <PageHeader />
           <div className="mb-6 text-center">
             <Upload className="h-12 w-12 text-primary mx-auto mb-4" />
-            <h1 className="text-4xl text-foreground/80 font-medium">
+            <h1 className="text-4xl text-foreground font-medium">
               {getTranslation("mainTitle")}
             </h1>
             <p className="text-sm text-muted-foreground mt-2">

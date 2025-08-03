@@ -216,7 +216,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
           value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full font-medium p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
+          className="w-full font-normal p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
           autoFocus
           onFocus={() => setFocusInput(true)}
           onBlur={() => setFocusInput(false)}
@@ -283,7 +283,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <span className="flex-1 font-medium">{suggestion}</span>
+                    <span className="flex-1 font-normal">{suggestion}</span>
                     <CornerUpRight className="w-4 h-4 opacity-50" />
                   </div>
                 ))}

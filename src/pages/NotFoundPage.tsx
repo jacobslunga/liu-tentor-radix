@@ -12,7 +12,7 @@ const NotFoundPage: React.FC = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-6">
       <h1 className="text-6xl font-medium mb-4">404</h1>
-      <p className="text-lg mb-8 text-foreground/80">
+      <p className="text-lg mb-8 text-foreground">
         {getTranslation("lostMessage") ||
           "It looks like you're lost in the academic void..."}
       </p>

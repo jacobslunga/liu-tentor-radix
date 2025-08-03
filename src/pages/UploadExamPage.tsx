@@ -126,7 +126,7 @@ const UploadExamPage = () => {
         </div>
 
         <UploadIcon className="text-primary h-12 w-12 mx-auto" />
-        <h1 className="text-3xl text-foreground/80 font-medium">
+        <h1 className="text-3xl text-foreground font-medium">
           {t.uploadTitle}
         </h1>
         <p className="text-sm text-muted-foreground">{t.uploadDescription}</p>

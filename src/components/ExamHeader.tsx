@@ -206,7 +206,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
               variant="ghost"
               className="flex flex-row items-center space-x-2 h-9 px-3 hover:bg-muted transition-colors max-w-[300px]"
             >
-              <span className="font-medium truncate text-sm">
+              <span className="font-normal truncate text-sm">
                 {displayName.length > 25
                   ? `${displayName.slice(0, 25)}...`
                   : displayName}
@@ -220,7 +220,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
             sideOffset={4}
           >
             {/* Simple header */}
-            <div className="px-3 py-2 text-xs font-medium text-muted-foreground border-b">
+            <div className="px-3 py-2 text-xs font-normal text-muted-foreground border-b">
               {language === "sv" ? "Välj tenta" : "Select Exam"} (
               {sortedExams.length})
             </div>
@@ -302,7 +302,7 @@ const ExamHeader: FC<ExamHeaderProps> = ({
           role="search"
         >
           <div
-            className="group font-medium hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-full"
+            className="group font-normal hover:cursor-text hover:border-primary/70 transition-all duration-200 w-[300px] bg-foreground/5 border py-2 px-3 rounded-full"
             onClick={() => {
               setShowGlobalSearch(true);
             }}

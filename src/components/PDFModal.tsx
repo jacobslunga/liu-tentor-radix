@@ -576,7 +576,7 @@ const PDFModal: FC<PDFModalProps> = ({
                         onMouseEnter={handleMouseEnterFacitViewer}
                         onMouseLeave={handleMouseLeaveFacitViewer}
                       >
-                        <p className="font-medium">
+                        <p className="font-normal">
                           {getTranslation("mouseOverDescription")}
                         </p>
                         <MousePointerClick

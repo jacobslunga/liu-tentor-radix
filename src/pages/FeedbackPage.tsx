@@ -114,7 +114,7 @@ const FeedbackPage: FC = () => {
             <ChecklistIcon className="text-primary h-10 w-10" />
           </div>
 
-          <h1 className="text-3xl text-foreground/80 font-medium text-center mt-5 mb-4">
+          <h1 className="text-3xl text-foreground font-medium text-center mt-5 mb-4">
             {getTranslation("feedbackTitle")}
           </h1>
           <p className="text-lg text-muted-foreground text-center max-w-xl">
