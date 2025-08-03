@@ -51,6 +51,7 @@ export const isFacit = (name: string) => {
     normalizedName.includes("facit") ||
     normalizedName.includes("solution") ||
     normalizedName.includes("losning") ||
+    normalizedName.includes("lsn") ||
     normalizedName.includes("losnings") ||
     normalizedName.includes("lösnings") ||
     normalizedName.includes("lösning") ||
