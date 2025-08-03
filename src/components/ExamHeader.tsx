@@ -77,10 +77,6 @@ const ExamHeader: FC<ExamHeaderProps> = ({
   setSelectedExam,
   courseCode,
   currentExamId,
-  // setShowAIDrawer,
-  // showAIDrawer,
-  // pdfUrl,
-  // facitPdfUrl,
 }) => {
   const { language } = useLanguage();
   const [selectedExamName, setSelectedExamName] = useState(tenta_namn);

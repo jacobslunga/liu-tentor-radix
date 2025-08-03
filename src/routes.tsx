@@ -10,7 +10,6 @@ import SearchLayout from "@/layouts/SearchLayout";
 import SearchPage from "@/pages/SearchPage";
 import TentaPage from "@/pages/TentaPage";
 import ExamModePage from "@/pages/ExamModePage";
-import ExamHistoryPage from "@/pages/ExamHistoryPage";
 import OmOss from "@/pages/AboutUs";
 import LoginPage from "./pages/auth/LoginPage";
 import AdminLayout from "./layouts/AdminLayout";
@@ -32,7 +31,6 @@ const routes: RouteObject[] = [
       { path: "upload-exams", element: <UploadExamPage /> },
       { path: "faq", element: <FAQPage /> },
       { path: "exam-mode/:examId", element: <ExamModePage /> },
-      { path: "exam-history", element: <ExamHistoryPage /> },
       // { path: 'partners', element: <Partners /> },
       { path: "om-oss", element: <OmOss /> },
       { path: "*", element: <NotFoundPage /> },
