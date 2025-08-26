@@ -7,9 +7,35 @@ import {
 
 import { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 
 const FAQPage = () => {
   const { language } = useLanguage();
+
+  useMetadata({
+    title: `LiU Tentor | ${language === "sv" ? "Vanliga frågor" : "FAQ"}`,
+    description:
+      language === "sv"
+        ? "Hitta svar på de vanligaste frågorna om LiU Tentor, hur du använder tjänsten och var du hittar gamla tentor och facit."
+        : "Find answers to the most common questions about LiU Tentor, how to use the service and where to find old exams and solutions.",
+    keywords:
+      "faq, vanliga frågor, frequently asked questions, hjälp, support, Linköpings Universitet, LiU, tentor",
+    ogTitle: `LiU Tentor | ${language === "sv" ? "Vanliga frågor" : "FAQ"}`,
+    ogDescription:
+      language === "sv"
+        ? "Hitta svar på de vanligaste frågorna om LiU Tentor, hur du använder tjänsten och var du hittar gamla tentor och facit."
+        : "Find answers to the most common questions about LiU Tentor, how to use the service and where to find old exams and solutions.",
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${
+      language === "sv" ? "Vanliga frågor" : "FAQ"
+    }`,
+    twitterDescription:
+      language === "sv"
+        ? "Hitta svar på de vanligaste frågorna om LiU Tentor, hur du använder tjänsten och var du hittar gamla tentor och facit."
+        : "Find answers to the most common questions about LiU Tentor, how to use the service and where to find old exams and solutions.",
+    robots: "index, follow",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });

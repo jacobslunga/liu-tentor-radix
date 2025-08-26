@@ -34,6 +34,7 @@ import PDFViewer from "@/components/PDF/PDFViewer";
 import { pdfjs } from "react-pdf";
 import { useExamDetails } from "@/hooks/useExamDetail";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -64,6 +65,35 @@ const ExamModePage: React.FC = () => {
     isLoading: detailLoading,
     isError: detailError,
   } = useExamDetails(Number(examId));
+
+  useMetadata({
+    title: `LiU Tentor | ${language === "sv" ? "Tentamode" : "Exam Mode"}${
+      examDetail ? ` - ${examDetail.exam.course_code}` : ""
+    }`,
+    description:
+      language === "sv"
+        ? "Genomför tentamode med tidtagning och riktiga tentaförhållanden för att testa dina kunskaper."
+        : "Take exam mode with timing and real exam conditions to test your knowledge.",
+    keywords:
+      "tentamode, exam mode, timed exam, practice exam, Linköpings Universitet, LiU, tenta",
+    ogTitle: `LiU Tentor | ${language === "sv" ? "Tentamode" : "Exam Mode"}${
+      examDetail ? ` - ${examDetail.exam.course_code}` : ""
+    }`,
+    ogDescription:
+      language === "sv"
+        ? "Genomför tentamode med tidtagning och riktiga tentaförhållanden för att testa dina kunskaper."
+        : "Take exam mode with timing and real exam conditions to test your knowledge.",
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${
+      language === "sv" ? "Tentamode" : "Exam Mode"
+    }${examDetail ? ` - ${examDetail.exam.course_code}` : ""}`,
+    twitterDescription:
+      language === "sv"
+        ? "Genomför tentamode med tidtagning och riktiga tentaförhållanden för att testa dina kunskaper."
+        : "Take exam mode with timing and real exam conditions to test your knowledge.",
+    robots: "noindex, nofollow",
+  });
 
   useEffect(() => {
     if (!session || session.examId !== examId) {

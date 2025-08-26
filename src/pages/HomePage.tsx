@@ -9,6 +9,7 @@ import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
 import { UploadIcon } from "@primer/octicons-react";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 
 export default function HomePage() {
   const { language } = useLanguage();
@@ -16,6 +17,20 @@ export default function HomePage() {
     translations[language][key] || key;
   const [isLoading, setIsLoading] = useState(true);
   const [focusInput, setFocusInput] = useState(false);
+
+  useMetadata({
+    title: `LiU Tentor | ${getTranslation("homeTitle")}`,
+    description: getTranslation("homeDescription"),
+    keywords:
+      "tentaarkiv, tenta, tentamen, facit, Linköpings Universitet, LiU, gamla tentor, exam archive",
+    ogTitle: `LiU Tentor | ${getTranslation("homeTitle")}`,
+    ogDescription: getTranslation("homeDescription"),
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${getTranslation("homeTitle")}`,
+    twitterDescription: getTranslation("homeDescription"),
+    robots: "index, follow",
+  });
 
   useEffect(() => {
     setIsLoading(false);

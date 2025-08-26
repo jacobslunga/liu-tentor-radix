@@ -23,6 +23,7 @@ import { supabase } from "@/supabase/supabaseClient";
 import translations from "@/util/translations";
 import { useDropzone } from "react-dropzone";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 
 const parseDateFromFilename = (name: string): string | null => {
   const fullDateMatch = name.match(/(\d{4})[-_]?(\d{2})[-_]?(\d{2})/);
@@ -84,6 +85,22 @@ const isSolution = (name: string): boolean => {
 const UploadExamPage = () => {
   const { language } = useLanguage();
   const t = translations[language];
+
+  const getTranslation = (key: keyof typeof t) => t[key];
+
+  useMetadata({
+    title: `LiU Tentor | ${getTranslation("uploadTitle")}`,
+    description: getTranslation("uploadDescription"),
+    keywords:
+      "ladda upp, tenta, tentamen, Linköpings Universitet, LiU, upload, exam",
+    ogTitle: `LiU Tentor | ${getTranslation("uploadTitle")}`,
+    ogDescription: getTranslation("uploadDescription"),
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${getTranslation("uploadTitle")}`,
+    twitterDescription: getTranslation("uploadDescription"),
+    robots: "index, follow",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });

@@ -17,6 +17,7 @@ import { supabase } from "@/supabase/supabaseClient";
 import translations from "@/util/translations";
 import { useForm } from "react-hook-form";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -45,6 +46,20 @@ const FeedbackPage: FC = () => {
   ) => {
     return translations[language][key];
   };
+
+  useMetadata({
+    title: `LiU Tentor | ${getTranslation("feedbackTitle")}`,
+    description: getTranslation("feedbackDescription"),
+    keywords:
+      "feedback, återkoppling, kontakt, support, Linköpings Universitet, LiU, hjälp",
+    ogTitle: `LiU Tentor | ${getTranslation("feedbackTitle")}`,
+    ogDescription: getTranslation("feedbackDescription"),
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${getTranslation("feedbackTitle")}`,
+    twitterDescription: getTranslation("feedbackDescription"),
+    robots: "index, follow",
+  });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

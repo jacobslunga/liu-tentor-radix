@@ -5,11 +5,26 @@ import { Button } from "@/components/ui/button";
 import { Mailbox } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 
 const PrivacyPolicy: FC = () => {
   const { language } = useLanguage();
   const getTranslation = (key: keyof (typeof translations)[Language]) =>
     translations[language][key] || key;
+
+  useMetadata({
+    title: `LiU Tentor | ${getTranslation("privacyPolicyTitle")}`,
+    description: getTranslation("privacyPolicyIntro"),
+    keywords:
+      "integritetspolicy, privacy policy, GDPR, personuppgifter, data, Linköpings Universitet, LiU",
+    ogTitle: `LiU Tentor | ${getTranslation("privacyPolicyTitle")}`,
+    ogDescription: getTranslation("privacyPolicyIntro"),
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${getTranslation("privacyPolicyTitle")}`,
+    twitterDescription: getTranslation("privacyPolicyIntro"),
+    robots: "index, follow",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });

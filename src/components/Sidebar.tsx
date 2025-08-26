@@ -71,7 +71,7 @@ export default function Sidebar() {
         className="absolute top-5 left-4 flex flex-row items-center justify-center gap-1"
       >
         <LogoIcon className="w-12 h-12" />
-        <h1 className="font-semibold text-2xl font-logo tracking-tight">
+        <h1 className="font-semibold text-2xl font-logo text-foreground/80 tracking-tight">
           LiU Tentor
         </h1>
       </Link>

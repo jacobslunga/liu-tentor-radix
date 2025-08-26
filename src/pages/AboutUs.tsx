@@ -1,9 +1,33 @@
 import { FC, useEffect } from "react";
 
 import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetaData";
 
 const OmOss: FC = () => {
   const { language } = useLanguage();
+
+  useMetadata({
+    title: `LiU Tentor | ${language === "sv" ? "Om oss" : "About Us"}`,
+    description:
+      language === "sv"
+        ? "Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet."
+        : "Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.",
+    keywords:
+      "om oss, about us, team, Linköpings Universitet, LiU, studenter, mission",
+    ogTitle: `LiU Tentor | ${language === "sv" ? "Om oss" : "About Us"}`,
+    ogDescription:
+      language === "sv"
+        ? "Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet."
+        : "Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.",
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${language === "sv" ? "Om oss" : "About Us"}`,
+    twitterDescription:
+      language === "sv"
+        ? "Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet."
+        : "Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.",
+    robots: "index, follow",
+  });
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });

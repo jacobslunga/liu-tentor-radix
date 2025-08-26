@@ -26,7 +26,6 @@ import { Badge } from "../ui/badge";
 import { Exam } from "@/types/exam";
 import { getColumns } from "./columns";
 import translations from "@/util/translations";
-import { useCompletedExams } from "@/hooks/useCompletedExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 
@@ -49,17 +48,11 @@ export function DataTable({
   const { language } = useLanguage();
   const [filter, setFilter] = useState("");
   const [selectedExamType, setSelectedExamType] = useState<String | null>("");
-  const { completedExams, toggleCompleted } = useCompletedExams();
 
   const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
     translations[language][key];
 
-  const columns = getColumns(
-    language,
-    translations,
-    completedExams,
-    toggleCompleted
-  );
+  const columns = getColumns(language, translations);
   const examTypes = useMemo(
     () => new Set(data.map((exam) => exam.exam_name.split(" ")[0])),
     [data]
@@ -157,7 +150,7 @@ export function DataTable({
       </div>
 
       {/* Table */}
-      <div className="border border-border rounded-3xl bg-background overflow-hidden">
+      <div className="border border-border rounded-md bg-background overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-[#FAFAFA] dark:bg-secondary">
             {table.getHeaderGroups().map((headerGroup) => (
