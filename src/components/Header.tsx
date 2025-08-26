@@ -1,0 +1,55 @@
+import CourseSearchDropdown from "./CourseSearchDropdown";
+import { Link } from "react-router-dom";
+import { LogoIcon } from "./LogoIcon";
+import SettingsDialog from "@/components/SettingsDialog";
+import translations from "@/util/translations";
+import { useLanguage } from "@/context/LanguageContext";
+
+const Header = () => {
+  const { language } = useLanguage();
+
+  const getTranslation = (
+    key: keyof (typeof translations)[typeof language]
+  ) => {
+    return translations[language][key];
+  };
+
+  return (
+    <header
+      className="bg-background z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
+      role="banner"
+      style={{
+        maxWidth: "100vw",
+      }}
+    >
+      <Link
+        to="/"
+        className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
+        aria-label={getTranslation("homeTitle")}
+      >
+        <LogoIcon className="w-10 h-10" />
+      </Link>
+
+      <div
+        className="relative hidden sm:flex items-center flex-1 max-w-md mx-4"
+        role="search"
+      >
+        <CourseSearchDropdown
+          placeholder={getTranslation("searchCoursePlaceholder")}
+          className="w-full"
+          size="md"
+        />
+      </div>
+
+      <div
+        className="flex flex-row items-center justify-center static md:absolute md:right-20 lg:right-32 space-x-2"
+        role="navigation"
+        aria-label="secondary"
+      >
+        <SettingsDialog />
+      </div>
+    </header>
+  );
+};
+
+export default Header;
