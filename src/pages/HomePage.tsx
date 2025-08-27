@@ -9,7 +9,7 @@ import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
 import { UploadIcon } from "@primer/octicons-react";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 export default function HomePage() {
   const { language } = useLanguage();

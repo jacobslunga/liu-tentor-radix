@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const OmOss: FC = () => {
   const { language } = useLanguage();

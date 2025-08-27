@@ -23,7 +23,7 @@ import { supabase } from "@/supabase/supabaseClient";
 import translations from "@/util/translations";
 import { useDropzone } from "react-dropzone";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const parseDateFromFilename = (name: string): string | null => {
   const fullDateMatch = name.match(/(\d{4})[-_]?(\d{2})[-_]?(\d{2})/);

@@ -34,7 +34,7 @@ import PDFViewer from "@/components/PDF/PDFViewer";
 import { pdfjs } from "react-pdf";
 import { useExamDetails } from "@/hooks/useExamDetail";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",

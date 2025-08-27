@@ -17,7 +17,7 @@ import { supabase } from "@/supabase/supabaseClient";
 import translations from "@/util/translations";
 import { useForm } from "react-hook-form";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

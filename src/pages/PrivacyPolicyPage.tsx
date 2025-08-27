@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Mailbox } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const PrivacyPolicy: FC = () => {
   const { language } = useLanguage();

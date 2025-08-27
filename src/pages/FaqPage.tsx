@@ -7,7 +7,7 @@ import {
 
 import { useEffect } from "react";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const FAQPage = () => {
   const { language } = useLanguage();

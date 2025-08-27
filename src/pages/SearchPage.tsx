@@ -15,7 +15,7 @@ import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const LoadingSpinner = ({ language }: { language: any }) => (
   <div className="flex flex-col items-center justify-center min-h-[400px]">

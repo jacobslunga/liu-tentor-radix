@@ -109,7 +109,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
                   variant="ghost"
                   className="flex flex-row items-center px-3 transition-colors group"
                 >
-                  <span>
+                  <span className="tracking-tight">
                     <span className="font-semibold">
                       {selectedExam.exam_name.length > 20
                         ? `${selectedExam.exam_name

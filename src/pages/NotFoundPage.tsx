@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import React from "react";
 import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const NotFoundPage: React.FC = () => {
   const { language } = useLanguage();
