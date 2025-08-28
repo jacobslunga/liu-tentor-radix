@@ -1,6 +1,6 @@
-import useSWR from "swr";
 import { API_ENDPOINTS } from "../api/endpoints";
 import { fetcher } from "../api/fetchers";
+import useSWR from "swr";
 
 export interface CourseExam {
   id: number;
@@ -14,6 +14,7 @@ export interface CourseExam {
     "4"?: number;
     "5"?: number;
     U?: number;
+    G?: number;
   };
   pass_rate: number;
 }

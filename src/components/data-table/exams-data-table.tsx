@@ -1,3 +1,4 @@
+import { Link, useNavigate } from "react-router-dom";
 import {
   Select,
   SelectContent,
@@ -22,12 +23,13 @@ import {
 import { useMemo, useState } from "react";
 
 import { ArrowSwitchIcon } from "@primer/octicons-react";
-import { Badge } from "../ui/badge";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ChartColumnIncreasing } from "lucide-react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "./columns";
 import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
   data: Exam[];
@@ -102,7 +104,7 @@ export function DataTable({
 
         {/* Course title */}
         <h2
-          className={`font-medium text-foreground ${
+          className={`font-normal text-foreground ${
             (courseNameEng?.length ?? 0) > 40 ||
             (courseNameSwe?.length ?? 0) > 40
               ? "text-2xl"
@@ -128,25 +130,34 @@ export function DataTable({
           </div>
         </div>
 
-        <Select
-          onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
-        >
-          <SelectTrigger className="ring-0 focus:ring-0 rounded-full">
-            <SelectValue
-              placeholder={language === "sv" ? "Examenstyp" : "Exam type"}
-            />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">
-              {language === "sv" ? "Visa allt" : "Show all"}
-            </SelectItem>
-            {[...examTypes].map((examType) => (
-              <SelectItem key={examType} value={examType}>
-                {examType}
+        <div className="flex flex-row items-center justify-between w-full">
+          <Select
+            onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
+          >
+            <SelectTrigger className="ring-0 focus:ring-0 rounded-full">
+              <SelectValue
+                placeholder={language === "sv" ? "Examenstyp" : "Exam type"}
+              />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                {language === "sv" ? "Visa allt" : "Show all"}
               </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+              {[...examTypes].map((examType) => (
+                <SelectItem key={examType} value={examType}>
+                  {examType}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Link to={`/search/${courseCode}/stats`}>
+            <Button variant="secondary" size="sm">
+              <ChartColumnIncreasing />
+              {language === "sv" ? "Statistik" : "Statistics"}
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {/* Table */}

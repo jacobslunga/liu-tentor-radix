@@ -5,7 +5,7 @@ import LoadingSpinner from "@/components/LoadingSpinnger";
 import PDFView from "@/components/PDFView";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useExamDetails } from "@/hooks/useExamDetail";
-import { useMetadata } from "@/hooks/useMetaData";
+import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 
 const TentaPage: FC = () => {

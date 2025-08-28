@@ -1,5 +1,12 @@
 import { Clock, CornerUpRight, X } from "lucide-react";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  startTransition,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   Select,
   SelectContent,
@@ -9,10 +16,12 @@ import {
 } from "@/components/ui/select";
 
 import Cookies from "js-cookie";
+import { kurskodArray } from "@/data/kurskoder";
 import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
+import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface RecentActivity {
   courseCode: string;
@@ -37,6 +46,7 @@ const fetchCourseCodes = async (): Promise<string[]> => {
 const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const { language } = useLanguage();
   const navigate = useNavigate();
+
   const [courseCode, setCourseCode] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -44,8 +54,16 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [searchMethod, setSearchMethod] = useState("tentor");
 
+  const [typed, setTyped] = useState("");
+  const [exIndex, setExIndex] = useState(() =>
+    Math.floor(Math.random() * kurskodArray.length)
+  );
+  const [charIndex, setCharIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const listParentRef = useRef<HTMLDivElement>(null);
 
   const { data: courseCodes = [], isLoading } = useSWR(
     "courseCodes",
@@ -62,16 +80,13 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const loadRecentSearches = useCallback(() => {
     const cookieConsent = Cookies.get("cookieConsent");
     if (cookieConsent !== "true") return;
-
     const storedVersion = Cookies.get("cookieVersion");
     const searches = Cookies.get("popularSearches");
-
     if (!searches || storedVersion !== COOKIE_VERSION) {
       Cookies.remove("popularSearches");
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
       return;
     }
-
     try {
       const parsedSearches = JSON.parse(decodeURIComponent(searches));
       const uniqueCourses = Array.from(
@@ -82,32 +97,68 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
         )
       ).slice(0, 4);
       setRecentSearches(uniqueCourses as string[]);
-    } catch (error) {
-      console.error("Error processing popular searches:", error);
+    } catch {
+      return;
     }
+  }, []);
+
+  const shuffledExamples = useMemo(() => {
+    return [...kurskodArray].sort(() => Math.random() - 0.5);
   }, []);
 
   useEffect(() => {
     loadRecentSearches();
   }, [loadRecentSearches]);
 
+  useEffect(() => {
+    const showTypewriter = !courseCode;
+    if (!showTypewriter) return;
+    const current = shuffledExamples[exIndex % shuffledExamples.length] || "";
+    const doneTyping = charIndex === current.length && !deleting;
+    const doneDeleting = charIndex === 0 && deleting;
+    const speed = deleting ? 30 : 55;
+    const pause = doneTyping ? 1200 : doneDeleting ? 500 : 0;
+    const timer = setTimeout(() => {
+      if (doneTyping) {
+        setDeleting(true);
+      } else if (doneDeleting) {
+        setDeleting(false);
+        setExIndex((prev) => {
+          let next = prev;
+          while (next === prev) {
+            next = Math.floor(Math.random() * shuffledExamples.length);
+          }
+          return next;
+        });
+      } else {
+        setCharIndex((c) => c + (deleting ? -1 : 1));
+        setTyped(current.slice(0, deleting ? charIndex - 1 : charIndex + 1));
+      }
+    }, pause || speed);
+    return () => clearTimeout(timer);
+  }, [courseCode, shuffledExamples, exIndex, charIndex, deleting]);
+
+  useEffect(() => {
+    if (!courseCode) {
+      const current = shuffledExamples[exIndex % shuffledExamples.length] || "";
+      setTyped(current.slice(0, charIndex));
+    }
+  }, [courseCode, exIndex, charIndex, shuffledExamples]);
+
   const updateSearchCount = (course: string) => {
     const cookieConsent = Cookies.get("cookieConsent");
     if (cookieConsent !== "true") return;
-
     let searchesArray: RecentActivity[] = [];
     try {
       searchesArray = Cookies.get(COOKIE_NAME)
         ? JSON.parse(decodeURIComponent(Cookies.get(COOKIE_NAME)!))
         : [];
-    } catch (error) {
-      console.error("Failed to parse recent activities cookie", error);
+    } catch {
+      searchesArray = [];
     }
-
     const existingIndex = searchesArray.findIndex(
       (item) => item.courseCode === course
     );
-
     if (existingIndex !== -1) {
       searchesArray[existingIndex].timestamp = Date.now();
     } else {
@@ -118,9 +169,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
         timestamp: Date.now(),
       });
     }
-
     searchesArray.sort((a, b) => b.timestamp - a.timestamp);
-
     Cookies.set(COOKIE_NAME, JSON.stringify(searchesArray), {
       expires: 365,
       domain: window.location.hostname.includes("liutentor.se")
@@ -131,31 +180,35 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
     });
   };
 
+  const upperCourseCodes = useMemo(
+    () => courseCodes.map((c) => c.toUpperCase()),
+    [courseCodes]
+  );
+
   useEffect(() => {
-    if (courseCode.trim()) {
-      setSuggestions(
-        courseCodes.filter((code) =>
-          code.toUpperCase().includes(courseCode.toUpperCase())
-        )
-      );
-      setShowSuggestions(true);
-      setSelectedIndex(-1);
-    } else {
+    const q = courseCode.toUpperCase().trim();
+    if (!q) {
       setShowSuggestions(false);
+      return;
     }
-  }, [courseCode, courseCodes]);
+    setShowSuggestions(true);
+    startTransition(() => {
+      const next = upperCourseCodes
+        .filter((code) => code.includes(q))
+        .slice(0, 60);
+      setSuggestions(next);
+      setSelectedIndex(-1);
+    });
+  }, [courseCode, upperCourseCodes]);
 
   const scrollToSuggestion = (index: number) => {
-    if (suggestionsRef.current) {
-      const suggestionElements = suggestionsRef.current.children;
-      if (suggestionElements && suggestionElements[index]) {
-        const selectedElement = suggestionElements[index] as HTMLElement;
-        selectedElement.scrollIntoView({
-          behavior: "instant",
-          block: "nearest",
-        });
-      }
-    }
+    if (!suggestionsRef.current) return;
+    const els = suggestionsRef.current.children;
+    if (!els || !els[index]) return;
+    (els[index] as HTMLElement).scrollIntoView({
+      behavior: "instant",
+      block: "nearest",
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -186,27 +239,38 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const handleSelectCourse = (course: string) => {
     const searchCode = course.toUpperCase();
     if (!searchCode) return;
-
     updateSearchCount(searchCode);
     setCourseCode("");
     setShowSuggestions(false);
-    navigate(`/search/${searchCode}`);
+    navigate(
+      searchMethod === "stats"
+        ? `/search/${searchCode}/stats`
+        : `/search/${searchCode}`
+    );
   };
+
+  const rowVirtualizer = useVirtualizer({
+    count: suggestions.length,
+    getScrollElement: () => listParentRef.current,
+    estimateSize: () => 36,
+    overscan: 6,
+  });
 
   return (
     <div className="relative w-full">
       <div className="w-full relative flex flex-row items-center justify-center px-2">
         <Select
           defaultValue="tentor"
+          onOpenChange={(open) => {
+            if (!open) requestAnimationFrame(() => inputRef.current?.focus());
+          }}
           onValueChange={(value) => {
             setSearchMethod(value);
-            if (inputRef.current) {
-              setFocusInput(true);
-              inputRef.current.focus();
-            }
+            setFocusInput(true);
+            setTimeout(() => inputRef.current?.focus(), 0);
           }}
         >
-          <SelectTrigger className="w-[120px] ring-0 focus-visible:ring-0 border-0 shadow-none rounded-full text-foreground/60 hover:text-foreground">
+          <SelectTrigger className="shrink-0 w-[120px] transition-colors duration-200 ring-0 focus-visible:ring-0 shadow-none rounded-full text-foreground/60 hover:text-foreground">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -215,23 +279,17 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
           </SelectContent>
         </Select>
 
-        <div className="h-[25px] w-[1px] bg-foreground/10" />
+        <div className="shrink-0 h-[25px] w-[1px] bg-foreground/10 ml-4" />
 
         <input
           placeholder={
-            searchMethod === "tentor"
-              ? language === "sv"
-                ? "Sök efter tentor..."
-                : "Search for exams..."
-              : language === "sv"
-              ? "Sök efter statistik..."
-              : "Search for statistics..."
+            language === "sv" ? `Sök efter ${typed}` : `Search for ${typed}`
           }
           ref={inputRef}
           value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
-          className="w-full font-normal p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
+          className="min-w-0 w-full font-normal p-4 border-none bg-transparent text-sm text-foreground/80 outline-none"
           autoFocus
           onFocus={() => setFocusInput(true)}
           onBlur={() => setFocusInput(false)}
@@ -249,61 +307,89 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
 
       {showSuggestions &&
         (recentSearches.length > 0 || suggestions.length > 0) && (
-          <div
-            ref={suggestionsRef}
-            className="absolute w-full left-0 mt-3 bg-background border shadow-xl z-40 max-h-72 rounded-md overflow-y-auto text-sm"
-          >
-            {isLoading && (
-              <div className="mt-2 absolute left-3 text-sm text-muted-foreground">
-                Laddar kurser...
-              </div>
-            )}
-            {recentSearches.length > 0 && (
-              <>
-                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
-                  {getTranslation("recentSearches")}
+          <div className="absolute w-full left-0 mt-3 bg-background border shadow-md z-40 max-h-72 rounded-md overflow-hidden text-sm will-change-transform">
+            <div
+              className="relative"
+              style={{ paddingTop: recentSearches.length > 0 ? 0 : 0 }}
+            >
+              {isLoading && (
+                <div className="mt-2 absolute left-3 text-sm text-muted-foreground">
+                  Laddar kurser...
                 </div>
-                {recentSearches.map((suggestion, index) => (
-                  <div
-                    key={`recent-${suggestion}`}
-                    className={`flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 ${
-                      index === selectedIndex
-                        ? "bg-muted text-foreground"
-                        : "hover:bg-muted/50"
-                    }`}
-                    onMouseDown={() => handleSelectCourse(suggestion)}
-                  >
-                    <Clock className="w-4 h-4 mr-2 opacity-70" />
-                    <span className="flex-1">{suggestion}</span>
-                    <CornerUpRight className="w-4 h-4 opacity-50" />
+              )}
+
+              {recentSearches.length > 0 && (
+                <div ref={suggestionsRef}>
+                  <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
+                    {getTranslation("recentSearches")}
                   </div>
-                ))}
-              </>
-            )}
-            {suggestions.length > 0 && (
-              <>
-                {recentSearches.length > 0 && (
-                  <div className="border-t mx-2 my-1" />
-                )}
-                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
-                  {getTranslation("allCourses")}
+                  {recentSearches.map((suggestion, index) => (
+                    <div
+                      key={`recent-${suggestion}`}
+                      className={`flex items-center px-3 py-2 cursor-pointer ${
+                        index === selectedIndex
+                          ? "bg-muted text-foreground"
+                          : "hover:bg-muted/50"
+                      } transition-colors`}
+                      onMouseDown={() => handleSelectCourse(suggestion)}
+                    >
+                      <Clock className="w-4 h-4 mr-2 opacity-70" />
+                      <span className="flex-1">{suggestion}</span>
+                      <CornerUpRight className="w-4 h-4 opacity-50" />
+                    </div>
+                  ))}
                 </div>
-                {suggestions.map((suggestion, index) => (
-                  <div
-                    key={suggestion}
-                    className={`flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 ${
-                      index + recentSearches.length === selectedIndex
-                        ? "bg-muted text-foreground"
-                        : "hover:bg-muted/50"
-                    }`}
-                    onMouseDown={() => handleSelectCourse(suggestion)}
-                  >
-                    <span className="flex-1 font-normal">{suggestion}</span>
-                    <CornerUpRight className="w-4 h-4 opacity-50" />
+              )}
+
+              {suggestions.length > 0 && (
+                <>
+                  {recentSearches.length > 0 && (
+                    <div className="border-t mx-2 my-1" />
+                  )}
+                  <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
+                    {getTranslation("allCourses")}
                   </div>
-                ))}
-              </>
-            )}
+                  <div ref={listParentRef} className="overflow-y-auto max-h-56">
+                    <div
+                      style={{
+                        height: rowVirtualizer.getTotalSize(),
+                        position: "relative",
+                      }}
+                    >
+                      {rowVirtualizer.getVirtualItems().map((v) => {
+                        const suggestion = suggestions[v.index];
+                        const isSelected =
+                          v.index + recentSearches.length === selectedIndex;
+                        return (
+                          <div
+                            key={suggestion}
+                            className={`flex items-center px-3 py-2 cursor-pointer ${
+                              isSelected
+                                ? "bg-muted text-foreground"
+                                : "hover:bg-muted/50"
+                            } transition-colors`}
+                            onMouseDown={() => handleSelectCourse(suggestion)}
+                            style={{
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: v.size,
+                              transform: `translateY(${v.start}px)`,
+                            }}
+                          >
+                            <span className="flex-1 font-normal">
+                              {suggestion}
+                            </span>
+                            <CornerUpRight className="w-4 h-4 opacity-50" />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         )}
     </div>
