@@ -16,7 +16,7 @@ const Header = () => {
 
   return (
     <header
-      className="bg-background z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
+      className="bg-background top-0 z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
       role="banner"
       style={{
         maxWidth: "100vw",
@@ -31,7 +31,7 @@ const Header = () => {
       </Link>
 
       <div
-        className="relative hidden sm:flex items-center flex-1 max-w-md mx-4"
+        className="relative hidden sm:flex items-center flex-1 max-w-md mx-4 min-w-0"
         role="search"
       >
         <CourseSearchDropdown

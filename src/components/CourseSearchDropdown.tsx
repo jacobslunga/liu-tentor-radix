@@ -1,11 +1,11 @@
 import { ClockFillIcon, SearchIcon, XIcon } from "@primer/octicons-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
 import { CornerUpRight } from "lucide-react";
 import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
-import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 
 interface RecentActivity {
@@ -24,7 +24,6 @@ interface CourseSearchDropdownProps {
 const COOKIE_VERSION = "1.2";
 const COOKIE_NAME = "recentActivities_v3";
 
-// Fetcher for courseCodes.json
 const fetchCourseCodes = async (): Promise<string[]> => {
   const res = await fetch("/courseCodes.json");
   if (!res.ok) throw new Error("Failed to load course codes");
@@ -38,6 +37,8 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 }) => {
   const { language } = useLanguage();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+
   const [courseCode, setCourseCode] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
@@ -145,14 +146,6 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     }
   }, [courseCode, courseCodes]);
 
-  useEffect(() => {
-    if (showSuggestions) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-  }, [showSuggestions]);
-
   const scrollToSuggestion = (index: number) => {
     if (suggestionsRef.current) {
       const suggestionElements = suggestionsRef.current.children;
@@ -201,7 +194,11 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     setShowSuggestions(false);
     setIsFocused(false);
     inputRef.current?.blur();
-    navigate(`/search/${searchCode}`);
+    if (pathname.includes("stats")) {
+      navigate(`/search/${searchCode}/stats`);
+    } else {
+      navigate(`/search/${searchCode}`);
+    }
   };
 
   const handleFocus = () => {

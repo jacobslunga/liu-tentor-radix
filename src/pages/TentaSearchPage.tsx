@@ -57,7 +57,7 @@ const ErrorCard: React.FC<{
   </Card>
 );
 
-const SearchPage: React.FC = () => {
+const TentaSearchPage: React.FC = () => {
   const { courseCode } = useParams<{ courseCode: string }>();
   const { language } = useLanguage();
   const { courseData, isLoading, isError } = useCourseExams(courseCode || "");
@@ -105,6 +105,9 @@ const SearchPage: React.FC = () => {
     twitterDescription: pageDescription,
     canonical: `${window.location.origin}/course/${courseCode}`,
   });
+
+  console.log(courseData?.exams.map((e) => e.statistics));
+  console.log(courseData?.exams.map((e) => e.pass_rate));
 
   return (
     <div className="min-h-screen bg-background">
@@ -185,4 +188,4 @@ const SearchPage: React.FC = () => {
   );
 };
 
-export default SearchPage;
+export default TentaSearchPage;

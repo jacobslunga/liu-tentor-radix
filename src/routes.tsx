@@ -9,8 +9,9 @@ import OmOss from "@/pages/AboutUs";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import { RouteObject } from "react-router-dom";
 import SearchLayout from "@/layouts/SearchLayout";
-import SearchPage from "@/pages/SearchPage";
+import StatsSearchPage from "@/pages/StatsSearchPage";
 import TentaPage from "@/pages/TentaPage";
+import TentaSearchPage from "@/pages/TentaSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 
 const routes: RouteObject[] = [
@@ -25,11 +26,11 @@ const routes: RouteObject[] = [
         path: "search",
         element: <SearchLayout />,
         children: [
-          { path: ":courseCode", element: <SearchPage /> },
+          { path: ":courseCode", element: <TentaSearchPage /> },
+          { path: ":courseCode/stats", element: <StatsSearchPage /> },
           { path: ":courseCode/:examId", element: <TentaPage /> },
         ],
       },
-
       {
         element: <InfoPageLayout />,
         children: [

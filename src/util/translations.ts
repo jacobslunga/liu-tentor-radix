@@ -224,7 +224,7 @@ const translations: Translations = {
     homeTitle: "LiU Tentor",
     homeDescription:
       "Äntligen kan du hitta tentor från Linköpings universitet på ett och samma ställe... Främst TekFak",
-    searchPlaceholder: "Sök efter tentor...",
+    searchPlaceholder: "Sök efter",
     popularSearches: "Populära sökningar",
     courseCodePlaceholder: "Kurskod",
     searchButton: "Sök tentor",
@@ -473,7 +473,7 @@ const translations: Translations = {
     homeTitle: "LiU Exams",
     homeDescription:
       "Finally, you can find exams from Linköping University all in one place... Mostly TekFak",
-    searchPlaceholder: "Search for exams...",
+    searchPlaceholder: "Search for",
     popularSearches: "Popular Searches",
     courseCodePlaceholder: "Course Code",
     searchButton: "Search Exams",
