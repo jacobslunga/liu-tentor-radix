@@ -67,7 +67,7 @@ const InlineRecentActivity = () => {
       <div className="flex items-center justify-center w-full overflow-x-auto space-x-3 text-sm">
         {visibleActivities.map((activity, index) => (
           <Link key={activity.path} to={activity.path}>
-            <Button variant="link" size="sm" className="group">
+            <Button variant="ghost" size="sm" className="group">
               <span className="text-foreground hover:text-foreground transition-colors">
                 {activity.courseCode}
               </span>

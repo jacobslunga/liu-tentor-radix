@@ -131,7 +131,7 @@ export function DataTable({
         <Select
           onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
         >
-          <SelectTrigger className="w-[180px] ring-0 focus:ring-0">
+          <SelectTrigger className="ring-0 focus:ring-0 rounded-full">
             <SelectValue
               placeholder={language === "sv" ? "Examenstyp" : "Exam type"}
             />

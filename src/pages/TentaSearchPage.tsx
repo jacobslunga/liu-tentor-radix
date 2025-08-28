@@ -57,7 +57,7 @@ const ErrorCard: React.FC<{
   </Card>
 );
 
-const SearchPage: React.FC = () => {
+const TentaSearchPage: React.FC = () => {
   const { courseCode } = useParams<{ courseCode: string }>();
   const { language } = useLanguage();
   const { courseData, isLoading, isError } = useCourseExams(courseCode || "");
@@ -185,4 +185,4 @@ const SearchPage: React.FC = () => {
   );
 };
 
-export default SearchPage;
+export default TentaSearchPage;

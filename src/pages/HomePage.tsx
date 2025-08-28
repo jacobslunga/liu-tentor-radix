@@ -19,7 +19,7 @@ export default function HomePage() {
   const [focusInput, setFocusInput] = useState(false);
 
   useMetadata({
-    title: `LiU Tentor | ${getTranslation("homeTitle")}`,
+    title: `${getTranslation("homeTitle")}`,
     description: getTranslation("homeDescription"),
     keywords:
       "tentaarkiv, tenta, tentamen, facit, Linköpings Universitet, LiU, gamla tentor, exam archive",

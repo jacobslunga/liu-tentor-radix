@@ -1,11 +1,18 @@
-import { useLanguage } from "@/context/LanguageContext";
-import translations from "@/util/translations";
+import { Clock, CornerUpRight, X } from "lucide-react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import Cookies from "js-cookie";
-import { CornerUpRight, X, Clock } from "lucide-react";
-import React, { useEffect, useRef, useState, useCallback } from "react";
+import translations from "@/util/translations";
+import { useLanguage } from "@/context/LanguageContext";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
-import { SearchIcon } from "@primer/octicons-react";
 
 interface RecentActivity {
   courseCode: string;
@@ -21,7 +28,6 @@ interface MainInputProps {
 const COOKIE_VERSION = "1.2";
 const COOKIE_NAME = "recentActivities_v3";
 
-// ✅ Fetcher for courseCodes.json
 const fetchCourseCodes = async (): Promise<string[]> => {
   const res = await fetch("/courseCodes.json");
   if (!res.ok) throw new Error("Failed to load course codes");
@@ -36,13 +42,16 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [searchMethod, setSearchMethod] = useState("tentor");
+
+  const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
 
   const { data: courseCodes = [], isLoading } = useSWR(
     "courseCodes",
     fetchCourseCodes,
     {
-      dedupingInterval: 1000 * 60 * 60 * 24, // cache 24h
+      dedupingInterval: 1000 * 60 * 60 * 24,
       revalidateOnFocus: false,
     }
   );
@@ -186,10 +195,39 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
 
   return (
     <div className="relative w-full">
-      <div className="w-full relative flex flex-row items-center justify-center">
-        <SearchIcon className="w-4 h-4 text-muted-foreground ml-5" />
+      <div className="w-full relative flex flex-row items-center justify-center px-2">
+        <Select
+          defaultValue="tentor"
+          onValueChange={(value) => {
+            setSearchMethod(value);
+            if (inputRef.current) {
+              setFocusInput(true);
+              inputRef.current.focus();
+            }
+          }}
+        >
+          <SelectTrigger className="w-[120px] ring-0 focus-visible:ring-0 border-0 shadow-none rounded-full text-foreground/60 hover:text-foreground">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="tentor">Tentor</SelectItem>
+            <SelectItem value="stats">Statistik</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <div className="h-[25px] w-[1px] bg-foreground/10" />
+
         <input
-          placeholder={getTranslation("searchCoursePlaceholder")}
+          placeholder={
+            searchMethod === "tentor"
+              ? language === "sv"
+                ? "Sök efter tentor..."
+                : "Search for exams..."
+              : language === "sv"
+              ? "Sök efter statistik..."
+              : "Search for statistics..."
+          }
+          ref={inputRef}
           value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -213,7 +251,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className="absolute w-full left-0 mt-3 bg-background border shadow-xl z-60 max-h-72 rounded-md overflow-y-auto text-sm"
+            className="absolute w-full left-0 mt-3 bg-background border shadow-xl z-40 max-h-72 rounded-md overflow-y-auto text-sm"
           >
             {isLoading && (
               <div className="mt-2 absolute left-3 text-sm text-muted-foreground">
