@@ -104,7 +104,7 @@ export function DataTable({
 
         {/* Course title */}
         <h2
-          className={`font-normal text-foreground ${
+          className={`font-medium text-foreground ${
             (courseNameEng?.length ?? 0) > 40 ||
             (courseNameSwe?.length ?? 0) > 40
               ? "text-2xl"

@@ -186,7 +186,7 @@ export default function StatsSearchPage() {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6 sm:mb-8">
         <div className="flex flex-col items-start justify-start">
           <p className="text-[12px] text-foreground/60">{courseCode}</p>
-          <h1 className="text-2xl sm:text-3xl font-normal tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-medium tracking-tight">
             {language === "sv" ? "Statistik för" : "Statistics for"}{" "}
             {language === "sv"
               ? courseData?.course_name_swe

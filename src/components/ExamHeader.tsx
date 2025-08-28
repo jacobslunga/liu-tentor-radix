@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, CheckIcon } from "@primer/octicons-react";
-import { ChevronRight, Coffee } from "lucide-react";
+import { ChartColumnIncreasing, ChevronRight, Coffee } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import { Exam } from "@/types/exam";
 import { ExamModeDialog } from "@/components/ExamModeDialog";
 import { ExamModeManager } from "@/lib/examMode";
+import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
 import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
@@ -109,8 +110,8 @@ const ExamHeader: FC<Props> = ({ exams }) => {
                   variant="ghost"
                   className="flex flex-row items-center px-3 transition-colors group"
                 >
-                  <span className="tracking-tight">
-                    <span className="font-semibold">
+                  <span>
+                    <span className="font-medium">
                       {selectedExam.exam_name.length > 20
                         ? `${selectedExam.exam_name
                             .slice(0, 20)
@@ -157,7 +158,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
                     `}
                       >
                         <div className="flex-1 min-w-0 pr-3">
-                          <div className="font-semibold truncate">
+                          <div className="font-medium truncate">
                             {e.exam_name.replace(e.exam_date, "")}{" "}
                             <span className="font-normal">{e.exam_date}</span>
                           </div>
@@ -195,12 +196,29 @@ const ExamHeader: FC<Props> = ({ exams }) => {
         </div>
       </div>
       <div className="flex items-center space-x-3">
+        {selectedExam && (
+          <ExamStatsDialog
+            statistics={{
+              "3": selectedExam.statistics["3"] || 0,
+              "4": selectedExam.statistics["4"] || 0,
+              "5": selectedExam.statistics["5"] || 0,
+              U: selectedExam.statistics.U || 0,
+              G: selectedExam.statistics.G || 0,
+              pass_rate: selectedExam.pass_rate,
+            }}
+            date={selectedExam.exam_date}
+            trigger={
+              <Button size="sm" variant="ghost">
+                <ChartColumnIncreasing />
+                {language === "sv" ? "Statistik" : "Statistics"}
+              </Button>
+            }
+          />
+        )}
+
         <ExamModeDialog
           trigger={
-            <Button
-              variant="secondary"
-              className="flex flex-row items-center justify-center"
-            >
+            <Button variant="secondary" size="sm">
               <Coffee />
               Lock in
             </Button>
