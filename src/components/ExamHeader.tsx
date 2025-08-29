@@ -24,9 +24,16 @@ import { useLanguage } from "@/context/LanguageContext";
 interface Props {
   exams: Exam[];
   exam: ExamWithSolutions;
+  showAISheet: boolean;
+  setShowAISheet: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ExamHeader: FC<Props> = ({ exams, exam }) => {
+const ExamHeader: FC<Props> = ({
+  exams,
+  exam,
+  showAISheet,
+  setShowAISheet,
+}) => {
   const { language } = useLanguage();
   const { courseCode = "", examId = "" } = useParams<{
     courseCode: string;
@@ -198,8 +205,6 @@ const ExamHeader: FC<Props> = ({ exams, exam }) => {
         </div>
       </div>
       <div className="flex items-center space-x-3">
-        <ChatSheet exam={exam} />
-
         {selectedExam && (
           <ExamStatsDialog
             statistics={{
@@ -219,6 +224,12 @@ const ExamHeader: FC<Props> = ({ exams, exam }) => {
             }
           />
         )}
+
+        <ChatSheet
+          exam={exam}
+          open={showAISheet}
+          onOpenChange={setShowAISheet}
+        />
 
         <ExamModeDialog
           trigger={

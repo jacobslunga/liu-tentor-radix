@@ -32,9 +32,10 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 interface PDFViewProps {
   examDetail: ExamWithSolutions | null;
+  showAISheet: boolean;
 }
 
-const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
+const PDFView: FC<PDFViewProps> = ({ examDetail, showAISheet }) => {
   const pdfUrls = useMemo(
     () => ({
       examPdfUrl: examDetail?.exam.pdf_url || null,
@@ -267,6 +268,8 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
   // as it's already handled by the panel resize events
 
   const handleArrowKeyPress = useCallback((e: KeyboardEvent) => {
+    if (showAISheet) return;
+
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       const leftPanel = leftPanelRef.current;
       const rightPanel = rightPanelRef.current;
@@ -283,7 +286,7 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
   useEffect(() => {
     window.addEventListener("keydown", handleArrowKeyPress);
     return () => window.removeEventListener("keydown", handleArrowKeyPress);
-  }, [handleArrowKeyPress]);
+  }, [handleArrowKeyPress, showAISheet]);
 
   // Optimized keyboard handler with memoized actions
   const keyboardActions = useMemo(
@@ -320,13 +323,14 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
   );
 
   useEffect(() => {
+    if (showAISheet) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       const action = keyboardActions[e.key as keyof typeof keyboardActions];
       if (action) action();
     };
     window.addEventListener("keydown", handleKeyDown, { passive: true });
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [keyboardActions]);
+  }, [keyboardActions, showAISheet]);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -383,7 +387,7 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
   );
 
   useEffect(() => {
-    if (layoutMode !== "exam-only") return;
+    if (layoutMode !== "exam-only" || showAISheet) return;
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "e") {
         setIsToggled((prev) => {
@@ -394,11 +398,10 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [setIsToggled, layoutMode, isHoveringFacitPanel]);
+  }, [setIsToggled, layoutMode, isHoveringFacitPanel, showAISheet]);
 
-  // Add throttling to the mouse move event for better performance
   useEffect(() => {
-    if (layoutMode !== "exam-only") return;
+    if (layoutMode !== "exam-only" || showAISheet) return;
 
     let rafId: number | null = null;
     const throttledMouseMove = (e: MouseEvent) => {
@@ -414,7 +417,7 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
       window.removeEventListener("mousemove", throttledMouseMove);
       if (rafId) cancelAnimationFrame(rafId);
     };
-  }, [layoutMode, handleFacitPanelMouseMove]);
+  }, [layoutMode, handleFacitPanelMouseMove, showAISheet]);
 
   if (!examDetail) return null;
 

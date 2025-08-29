@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 
 import ExamHeader from "@/components/ExamHeader";
 import LoadingSpinner from "@/components/LoadingSpinnger";
@@ -9,6 +9,8 @@ import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 
 const TentaPage: FC = () => {
+  const [showAISheet, setShowAISheet] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -78,8 +80,13 @@ const TentaPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <ExamHeader exams={courseData.exams} exam={examDetail} />
-      <PDFView examDetail={examDetail} />
+      <ExamHeader
+        exams={courseData.exams}
+        exam={examDetail}
+        showAISheet={showAISheet}
+        setShowAISheet={setShowAISheet}
+      />
+      <PDFView examDetail={examDetail} showAISheet={showAISheet} />
     </div>
   );
 };
