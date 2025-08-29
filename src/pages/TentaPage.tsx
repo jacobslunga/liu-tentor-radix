@@ -2,7 +2,7 @@ import { FC, useEffect } from "react";
 
 import ExamHeader from "@/components/ExamHeader";
 import LoadingSpinner from "@/components/LoadingSpinnger";
-import PDFView from "@/components/PDFView";
+import PDFView from "@/components/PDF/PDFView";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useExamDetails } from "@/hooks/useExamDetail";
 import { useMetadata } from "@/hooks/useMetadata";
@@ -78,7 +78,7 @@ const TentaPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <ExamHeader exams={courseData.exams} />
+      <ExamHeader exams={courseData.exams} exam={examDetail} />
       <PDFView examDetail={examDetail} />
     </div>
   );

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { ApiResponse } from "@/types/api";
 import { Exam } from "@/types/exam";
+import axios from "axios";
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || "https://api.liutentor.se/api",

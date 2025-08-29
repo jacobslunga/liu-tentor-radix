@@ -12,14 +12,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import Cookies from "js-cookie";
 import { ExamWithSolutions } from "@/types/exam";
-import FacitToolbar from "./PDF/FacitToolbar";
+import FacitToolbar from "./FacitToolbar";
 import FacitViewer from "@/components/PDF/FacitViewer";
 import GradientIndicator from "@/components/GradientIndicator";
 import { ImperativePanelHandle } from "react-resizable-panels";
-import MobilePDFView from "@/components/MobilePdfViewer";
+import MobilePDFView from "./MobilePdfViewer";
 import PDFViewer from "@/components/PDF/PDFViewer";
-import TentaFacitToolbar from "./PDF/Toolbar/TentaFacitToolbar";
-import TentaToolbar from "./PDF/Toolbar/TentaToolbar";
+import TentaFacitToolbar from "./Toolbar/TentaFacitToolbar";
+import TentaToolbar from "./Toolbar/TentaToolbar";
 import { motion } from "framer-motion";
 import { pdfjs } from "react-pdf";
 import translations from "@/util/translations";

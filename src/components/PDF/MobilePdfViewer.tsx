@@ -2,7 +2,7 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { FC, useState } from "react";
 
 import { LoaderCircle } from "lucide-react";
-import MobilePDFControls from "./PDF/MobilePDFControls";
+import MobilePDFControls from "./MobilePDFControls";
 import { useTheme } from "@/context/ThemeContext";
 
 const MobilePDFView: FC<{

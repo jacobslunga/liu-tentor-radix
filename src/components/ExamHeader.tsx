@@ -6,13 +6,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Exam, ExamWithSolutions } from "@/types/exam";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import ChatSheet from "@/components/AI/ChatSheet";
 import Cookies from "js-cookie";
-import { Exam } from "@/types/exam";
 import { ExamModeDialog } from "@/components/ExamModeDialog";
 import { ExamModeManager } from "@/lib/examMode";
 import { ExamStatsDialog } from "./ExamStatsDialog";
@@ -22,9 +23,10 @@ import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   exams: Exam[];
+  exam: ExamWithSolutions;
 }
 
-const ExamHeader: FC<Props> = ({ exams }) => {
+const ExamHeader: FC<Props> = ({ exams, exam }) => {
   const { language } = useLanguage();
   const { courseCode = "", examId = "" } = useParams<{
     courseCode: string;
@@ -196,6 +198,8 @@ const ExamHeader: FC<Props> = ({ exams }) => {
         </div>
       </div>
       <div className="flex items-center space-x-3">
+        <ChatSheet exam={exam} />
+
         {selectedExam && (
           <ExamStatsDialog
             statistics={{

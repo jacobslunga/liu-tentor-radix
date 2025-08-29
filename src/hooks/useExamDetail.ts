@@ -1,9 +1,9 @@
-import useSWR from "swr";
 import { API_ENDPOINTS } from "../api/endpoints";
-import { fetcher } from "../api/fetchers";
 import { ExamWithSolutions } from "@/types/exam";
+import { fetcher } from "../api/fetchers";
+import useSWR from "swr";
 
-interface ExamDetail {
+export interface ExamDetail {
   examDetail: ExamWithSolutions;
   isLoading: any;
   isError: any;

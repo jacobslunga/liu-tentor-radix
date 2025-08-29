@@ -1,4 +1,5 @@
 import "./index.css";
+import "katex/dist/katex.min.css";
 
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
