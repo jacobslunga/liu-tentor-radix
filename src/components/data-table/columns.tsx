@@ -3,7 +3,7 @@ import { Language, Translations } from "@/util/translations";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Exam } from "@/types/exam";
-import { ExamStatsDialog } from "../ExamStatsDialog";
+import { ExamStatsDialog } from "@/components/ExamStatsDialog";
 
 export const getColumns = (
   language: Language,

@@ -27,7 +27,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChartColumnIncreasing } from "lucide-react";
 import { Exam } from "@/types/exam";
-import { getColumns } from "./columns";
+import { getColumns } from "@/components/data-table/columns";
 import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
 

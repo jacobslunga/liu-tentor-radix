@@ -1,4 +1,4 @@
-import CourseSearchDropdown from "./CourseSearchDropdown";
+import CourseSearchDropdown from "@/components/CourseSearchDropdown";
 import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
