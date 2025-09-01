@@ -106,9 +106,6 @@ const TentaSearchPage: React.FC = () => {
     canonical: `${window.location.origin}/course/${courseCode}`,
   });
 
-  console.log(courseData?.exams.map((e) => e.statistics));
-  console.log(courseData?.exams.map((e) => e.pass_rate));
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
