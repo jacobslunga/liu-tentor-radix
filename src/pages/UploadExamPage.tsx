@@ -210,7 +210,7 @@ const UploadExamPage = () => {
             value={kurskod}
             onChange={(e) => setKurskod(e.target.value.toUpperCase())}
             disabled={loading}
-            className="w-full bg-transparent font-medium outline-none border-0 border-b-2 border-foreground/20 text-center text-5xl focus:ring-0 focus:border-primary transition-colors p-2 tracking-widest"
+            className="w-full bg-transparent font-medium outline-none border-0 border-b-2 border-foreground/20 text-center text-5xl focus:ring-0 focus:border-primary transition-colors p-2"
           />
         </div>
 

@@ -9,6 +9,7 @@ export type Exam = {
     "3"?: number;
     "4"?: number;
     "5"?: number;
+    VG?: number;
     U?: number;
     G?: number;
   };

@@ -10,12 +10,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { FileText, Loader2 } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
-import { ExamStatsDialog } from "@/components/ExamStatsDialog";
-import { FileText } from "lucide-react";
-import LoadingSpinner from "@/components/LoadingSpinnger";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMemo } from "react";
@@ -141,17 +139,6 @@ export default function StatsSearchPage() {
     return { entries: withPct, grand };
   }, [sorted, c.chart1, c.chart2, c.chart3, c.chart4, c.destructive]);
 
-  const trend = useMemo(() => {
-    if (passSeries.length === 0)
-      return { delta5: 0, latest: 0, prev: 0, direction: "flat" as const };
-    const latest = passSeries[passSeries.length - 1].passRate;
-    const idx = Math.max(0, passSeries.length - 6);
-    const prev = passSeries[idx].passRate;
-    const delta5 = latest - prev;
-    const direction = delta5 > 1 ? "up" : delta5 < -1 ? "down" : "flat";
-    return { delta5, latest, prev, direction };
-  }, [passSeries]);
-
   const nf = useMemo(
     () => new Intl.NumberFormat(language === "sv" ? "sv-SE" : "en-US"),
     [language]
@@ -159,9 +146,11 @@ export default function StatsSearchPage() {
 
   if (isLoading)
     return (
-      <div className="flex items-center justify-center w-screen min-h-screen text-sm text-muted-foreground">
-        <LoadingSpinner />
-        {language === "sv" ? "Laddar statistik..." : "Loading stats..."}
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+        <p className="text-sm text-muted-foreground">
+          {language === "sv" ? "Laddar statistik..." : "Loading statistics..."}
+        </p>
       </div>
     );
 
@@ -186,7 +175,7 @@ export default function StatsSearchPage() {
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6 sm:mb-8">
         <div className="flex flex-col items-start justify-start">
           <p className="text-[12px] text-foreground/60">{courseCode}</p>
-          <h1 className="text-2xl sm:text-3xl font-medium tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-medium">
             {language === "sv" ? "Statistik för" : "Statistics for"}{" "}
             {language === "sv"
               ? courseData?.course_name_swe
@@ -261,42 +250,6 @@ export default function StatsSearchPage() {
               </div>
             ))}
           </div>
-
-          <div className="mt-3 grid grid-cols-3 gap-2 sm:gap-3">
-            <div className="rounded-lg border p-2 sm:p-3">
-              <div className="text-[10px] sm:text-xs text-muted-foreground">
-                {language === "sv" ? "Senaste passrate" : "Latest pass rate"}
-              </div>
-              <div className="text-base sm:text-lg font-semibold">
-                {trend.latest.toFixed(1)}%
-              </div>
-            </div>
-            <div className="rounded-lg border p-2 sm:p-3">
-              <div className="text-[10px] sm:text-xs text-muted-foreground">
-                {language === "sv" ? "För 5 tentor sedan" : "Five exams ago"}
-              </div>
-              <div className="text-base sm:text-lg font-semibold">
-                {trend.prev.toFixed(1)}%
-              </div>
-            </div>
-            <div className="rounded-lg border p-2 sm:p-3">
-              <div className="text-[10px] sm:text-xs text-muted-foreground">
-                Trend (Δ5)
-              </div>
-              <div
-                className={`text-base sm:text-lg font-semibold ${
-                  trend.direction === "up"
-                    ? "text-green-600 dark:text-green-400"
-                    : trend.direction === "down"
-                    ? "text-red-600 dark:text-red-400"
-                    : "text-foreground"
-                }`}
-              >
-                {trend.delta5 >= 0 ? "+" : ""}
-                {trend.delta5.toFixed(1)} pp
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="xl:col-span-2 rounded-xl border p-3 sm:p-4">
@@ -359,70 +312,6 @@ export default function StatsSearchPage() {
             {language === "sv" ? "Totalt antal" : "Total count"}:{" "}
             {aggregate.grand}
           </div>
-        </div>
-      </div>
-
-      <div className="mt-8 sm:mt-10">
-        <h2 className="text-lg sm:text-xl font-semibold mb-3">
-          {language === "sv" ? "Per tenta" : "Per exam"}
-        </h2>
-        <div className="rounded-xl border divide-y">
-          {sorted.map((e) => {
-            const s: any = e.statistics || {};
-            const stats = {
-              U: Number(s.U || 0),
-              G: Number(s.G || 0),
-              "3": Number(s["3"] || 0),
-              "4": Number(s["4"] || 0),
-              "5": Number(s["5"] || 0),
-              pass_rate: Number(e.pass_rate ?? 0),
-            };
-            const date = new Date(e.exam_date).toISOString().slice(0, 10);
-            const pr = stats.pass_rate;
-            let chip = "text-orange-500 dark:text-orange-400";
-            if (pr >= 70)
-              chip = "text-green-600 dark:text-green-400 font-semibold";
-            else if (pr < 30)
-              chip = "text-red-600 dark:text-red-400 font-semibold";
-            return (
-              <div
-                key={e.id}
-                className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 px-3 sm:px-4 py-3"
-              >
-                <div className="min-w-0">
-                  <div className="font-medium truncate">{e.exam_name}</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">
-                    {date}
-                  </div>
-                </div>
-                <div className="flex w-full sm:w-auto items-center gap-2 sm:gap-3">
-                  <ExamStatsDialog
-                    statistics={stats}
-                    date={date}
-                    trigger={
-                      <span
-                        className={`${chip} w-full sm:w-auto text-center font-medium px-3 py-2 hover:bg-secondary cursor-pointer rounded-md`}
-                      >
-                        {pr ? `${pr.toFixed(1)}%` : "–"}
-                      </span>
-                    }
-                  />
-                  <Link
-                    className="w-full sm:w-auto"
-                    to={`/search/${courseCode}/${e.id}`}
-                  >
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="w-full sm:w-auto"
-                    >
-                      {language === "sv" ? "Visa tenta" : "Open exam"}
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
     </div>

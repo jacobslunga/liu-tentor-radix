@@ -1,15 +1,14 @@
-import React, { useState } from "react";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
-  DialogDescription,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/context/LanguageContext";
+import { Lock, Timer } from "lucide-react";
+import React, { useState } from "react";
 import {
   Select,
   SelectContent,
@@ -17,7 +16,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Timer, Lock } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ExamModeDialogProps {
   trigger: React.ReactNode;
@@ -93,7 +94,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
         <div className="space-y-6">
           {/* Features list */}
           <div className="space-y-3">
-            <h4 className="text-sm font-medium text-foreground">
+            <h4 className="text-sm text-foreground">
               {language === "sv" ? "Vad ingår:" : "What's included:"}
             </h4>
             <div className="space-y-2">
@@ -110,8 +111,8 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
           </div>
 
           {/* Time selection */}
-          <div className="space-y-3">
-            <label className="text-sm font-medium">
+          <div className="gap-3 flex flex-col">
+            <label className="text-sm">
               {language === "sv" ? "Välj tentatid:" : "Select exam duration:"}
             </label>
             <Select

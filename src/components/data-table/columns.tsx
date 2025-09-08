@@ -79,6 +79,7 @@ export const getColumns = (
             "3": row.original.statistics["3"] || 0,
             "4": row.original.statistics["4"] || 0,
             "5": row.original.statistics["5"] || 0,
+            VG: row.original.statistics["VG"] || 0,
             U: row.original.statistics.U || 0,
             G: row.original.statistics.G || 0,
             pass_rate: passedCount,

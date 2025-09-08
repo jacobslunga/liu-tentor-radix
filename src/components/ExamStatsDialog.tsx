@@ -21,6 +21,7 @@ import { Button } from "@/components/ui/button";
 export const gradeChartConfig = {
   U: { label: "U", color: "var(--chart-1)" },
   G: { label: "G", color: "var(--chart-2)" },
+  VG: { label: "VG", color: "var(--chart-5)" },
   "3": { label: "3", color: "var(--chart-3)" },
   "4": { label: "4", color: "var(--chart-4)" },
   "5": { label: "5", color: "var(--chart-5)" },
@@ -33,6 +34,7 @@ interface ExamStatsDialogProps {
     "3"?: number;
     "4"?: number;
     "5"?: number;
+    VG?: number;
     pass_rate?: number;
   };
   trigger: React.ReactNode;
@@ -47,6 +49,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
   const total =
     (statistics.U || 0) +
     (statistics.G || 0) +
+    (statistics["VG"] || 0) +
     (statistics["3"] || 0) +
     (statistics["4"] || 0) +
     (statistics["5"] || 0);
@@ -54,6 +57,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
   const passRate =
     total > 0
       ? (((statistics.G || 0) +
+          (statistics["VG"] || 0) +
           (statistics["3"] || 0) +
           (statistics["4"] || 0) +
           (statistics["5"] || 0)) /
@@ -61,7 +65,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
         100
       : 0;
 
-  const chartData = ["U", "G", "3", "4", "5"]
+  const chartData = ["U", "G", "VG", "3", "4", "5"]
     .filter((grade) => (statistics[grade as keyof typeof statistics] || 0) > 0)
     .map((grade) => ({
       grade,
@@ -189,12 +193,12 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
           <span>
             Data från{" "}
             <a
-              href="https://liutentor.lukasabbe.com/"
+              href="https://ysektionen.se/student/tentastatistik/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              Linköpings universitet
+              Y-Sektionen
             </a>
           </span>
           <DialogClose asChild>

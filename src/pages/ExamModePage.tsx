@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { AnimatePresence, motion } from "framer-motion";
 import {
+  Loader2,
   Maximize,
   Minimize,
   Pause,
@@ -28,7 +29,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { ExamModeManager } from "@/lib/examMode";
-import LoadingSpinner from "@/components/LoadingSpinnger";
 import PDFViewer from "@/components/PDF/PDFViewer";
 import { pdfjs } from "react-pdf";
 import { useExamDetails } from "@/hooks/useExamDetail";
@@ -237,8 +237,11 @@ const ExamModePage: React.FC = () => {
 
   if (!session || detailLoading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <LoadingSpinner />
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+        <p className="text-sm text-muted-foreground">
+          {language === "sv" ? "Laddar tenta..." : "Loading exam..."}
+        </p>
       </div>
     );
   }
