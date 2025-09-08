@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InlineRecentActivity from "@/components/InlineRecentActivity";
 import { Link } from "react-router-dom";
-import LoadingSpinner from "@/components/LoadingSpinnger";
+import { Loader2 } from "lucide-react";
 import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
 import { UploadIcon } from "@primer/octicons-react";
@@ -43,7 +43,9 @@ export default function HomePage() {
   return (
     <div className="relative flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background overflow-x-hidden">
       {isLoading ? (
-        <LoadingSpinner />
+        <div className="flex flex-col items-center justify-center min-h-[400px]">
+          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+        </div>
       ) : (
         <>
           <div className="flex flex-col items-center space-y-2 mb-10">
