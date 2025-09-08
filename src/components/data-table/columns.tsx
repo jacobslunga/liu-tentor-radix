@@ -60,8 +60,12 @@ export const getColumns = (
     cell: ({ row }) => {
       const passedCount = row.original.pass_rate;
 
+      if (row.original.statistics === null) {
+        return <span>-</span>;
+      }
+
       if (passedCount === undefined || passedCount === null)
-        return <span>–</span>;
+        return <span>-</span>;
 
       let color = "text-orange-500 dark:text-orange-400";
       if (passedCount >= 70)
