@@ -1,4 +1,4 @@
-import { BadgeCheck, X } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Language, Translations } from "@/util/translations";
 
 import { ColumnDef } from "@tanstack/react-table";
@@ -45,11 +45,7 @@ export const getColumns = (
               : "text-red-500"
           }`}
         >
-          {row.original.has_solution ? (
-            <BadgeCheck size={20} />
-          ) : (
-            <X size={20} />
-          )}
+          {row.original.has_solution ? <Check size={20} /> : <X size={20} />}
         </span>
       </div>
     ),
