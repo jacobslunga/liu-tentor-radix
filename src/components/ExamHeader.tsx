@@ -195,8 +195,8 @@ const ExamHeader: FC<Props> = ({ exams }) => {
           )}
         </div>
       </div>
-      <div className="flex items-center space-x-3">
-        {selectedExam && (
+      <div className="flex items-center gap-3">
+        {selectedExam && selectedExam.statistics ? (
           <ExamStatsDialog
             statistics={{
               "3": selectedExam.statistics["3"] || 0,
@@ -214,6 +214,10 @@ const ExamHeader: FC<Props> = ({ exams }) => {
               </Button>
             }
           />
+        ) : (
+          <p className="text-xs">
+            {language === "sv" ? "Ingen statistik" : "No statistics"}
+          </p>
         )}
 
         <ExamModeDialog
