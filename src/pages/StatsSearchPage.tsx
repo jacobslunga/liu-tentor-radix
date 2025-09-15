@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMemo } from "react";
+import { useMetadata } from "@/hooks/useMetadata";
 
 type StatsSearchPageParams = { courseCode: string };
 
@@ -143,6 +144,37 @@ export default function StatsSearchPage() {
     () => new Intl.NumberFormat(language === "sv" ? "sv-SE" : "en-US"),
     [language]
   );
+
+  const pageTitle = courseData
+    ? `Statistik för ${courseCode} - ${
+        language === "sv"
+          ? courseData.course_name_swe
+          : courseData.course_name_eng
+      }`
+    : `${courseCode}`;
+
+  const pageDescription = courseData
+    ? `Statistik för ${courseCode} - ${
+        language === "sv"
+          ? courseData.course_name_swe
+          : courseData.course_name_eng
+      }`
+    : `Search for exams in course ${courseCode}`;
+
+  useMetadata({
+    title: pageTitle,
+    description: pageDescription,
+    keywords: `${courseCode}, tentor, tenta, Linköpings Universitet, LiU, liu, ${
+      courseData?.course_name_eng || ""
+    }`,
+    ogTitle: pageTitle,
+    ogDescription: pageDescription,
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: pageTitle,
+    twitterDescription: pageDescription,
+    canonical: `${window.location.origin}/course/${courseCode}`,
+  });
 
   if (isLoading)
     return (

@@ -467,7 +467,7 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
                     />
                   </div>
                   <motion.div
-                    className="absolute bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
+                    className="absolute overflow-auto bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
                     ref={facitPanelRef}
                     variants={facitVariants}
                     initial="hidden"
