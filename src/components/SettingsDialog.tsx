@@ -1,4 +1,10 @@
 import {
+  DeviceDesktopIcon,
+  GearIcon,
+  MoonIcon,
+  SunIcon,
+} from "@primer/octicons-react";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -6,6 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { FC, JSX, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -13,18 +20,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+
 import { Button } from "@/components/ui/button";
-import { useTheme } from "@/context/ThemeContext";
-import { useLanguage } from "@/context/LanguageContext";
-import translations from "@/util/translations";
-import { FC, JSX, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  MoonIcon,
-  SunIcon,
-  GearIcon,
-  DeviceDesktopIcon,
-} from "@primer/octicons-react";
+import translations from "@/util/translations";
+import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 
 const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
