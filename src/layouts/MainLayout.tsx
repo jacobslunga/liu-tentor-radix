@@ -111,7 +111,7 @@ const MainLayout: React.FC = () => {
   }, [isExamMode]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-background">
+    <div className="flex flex-col w-screen min-h-screen bg-background">
       <main className="grow">
         <Outlet />
       </main>

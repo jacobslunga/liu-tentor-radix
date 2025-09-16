@@ -152,7 +152,7 @@ export function DataTable({
           </Select>
 
           <Link to={`/search/${courseCode}/stats`}>
-            <Button variant="secondary" size="sm">
+            <Button variant="secondary">
               <ChartColumnIncreasing />
               {language === "sv" ? "Statistik" : "Statistics"}
             </Button>

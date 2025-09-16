@@ -214,8 +214,8 @@ export default function StatsSearchPage() {
               : courseData?.course_name_eng}
           </h1>
         </div>
-        <Link className="w-full sm:w-auto" to={`/search/${courseCode}`}>
-          <Button variant="secondary" className="w-full sm:w-auto">
+        <Link to={`/search/${courseCode}`}>
+          <Button variant="secondary">
             <FileText />
             {language === "sv" ? "Till kursens tentor" : "Back to exams"}
           </Button>

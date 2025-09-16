@@ -12,9 +12,9 @@ const SearchLayout = () => {
   const shouldShowHeader = !isSearchUrl(location.pathname);
 
   return (
-    <div className="flex flex-col items-center min-h-screen max-w-full">
+    <div className="flex flex-col items-center min-h-screen w-screen">
       {shouldShowHeader && <Header />}
-      <main className="grow flex flex-col overflow-x-hidden max-w-full">
+      <main className="flex flex-col w-full">
         <Outlet />
       </main>
     </div>
