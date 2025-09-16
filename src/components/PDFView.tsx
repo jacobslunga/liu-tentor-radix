@@ -449,15 +449,77 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
               isBlurred={isBlurred}
             />
           )}
-          <div className="flex flex-col w-full h-full overflow-hidden">
-            <div className="grow hidden md:flex w-full h-full overflow-hidden">
-              {layoutMode === "exam-only" ? (
-                <>
-                  <div
-                    className={`w-full h-full pdf-container ${
-                      isToggled ? "overflow-hidden" : "overflow-auto"
-                    } flex items-center justify-center`}
-                  >
+
+          {/** Desktop view */}
+          <div className="grow hidden md:flex w-full relative h-full">
+            {layoutMode === "exam-only" ? (
+              <>
+                <div
+                  className={`w-full h-full pdf-container ${
+                    isToggled ? "" : "overflow-auto"
+                  } flex items-center justify-center`}
+                >
+                  <PDFViewer
+                    pdfUrl={examDetail.exam.pdf_url}
+                    scale={scale}
+                    rotation={rotation}
+                    numPages={numPages}
+                    onLoadSuccess={onDocumentLoadSuccess}
+                  />
+                </div>
+                <motion.div
+                  className="absolute overflow-auto bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
+                  ref={facitPanelRef}
+                  variants={facitVariants}
+                  initial="hidden"
+                  animate={shouldFacitPanelBeVisible ? "visible" : "hidden"}
+                  style={{
+                    pointerEvents: shouldFacitPanelBeVisible ? "auto" : "none",
+                  }}
+                  transition={{
+                    x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
+                    opacity: { duration: 0.3 },
+                    filter: { duration: 0.3 },
+                  }}
+                  onHoverStart={() => setIsHoveringFacitPanel(true)}
+                  onHoverEnd={() => setIsHoveringFacitPanel(false)}
+                >
+                  <FacitToolbar
+                    onRotateFacitClockwise={rotateFacitClockwise}
+                    onRotateFacitCounterClockwise={rotateFacitCounterClockwise}
+                    onFacitZoomIn={zoomInFacit}
+                    onFacitZoomOut={zoomOutFacit}
+                    facitPdfUrl={examDetail.solutions[0]?.pdf_url || null}
+                  />
+                  <FacitViewer
+                    facitPdfUrl={examDetail.solutions[0]?.pdf_url || null}
+                    facitScale={facitScale}
+                    facitRotation={facitRotation}
+                    facitNumPages={facitNumPages}
+                    handleMouseEnter={handleMouseEnterFacitViewer}
+                    handleMouseLeave={handleMouseLeaveFacitViewer}
+                    onFacitDocumentLoadSuccess={onFacitDocumentLoadSuccess}
+                  />
+                </motion.div>
+                {!isHoveringFacitPanel && !isToggled && (
+                  <GradientIndicator
+                    facitPdfUrl={examDetail.solutions[0]?.pdf_url || null}
+                    getTranslation={getTranslation}
+                  />
+                )}
+              </>
+            ) : (
+              <ResizablePanelGroup
+                direction="horizontal"
+                className="w-full h-full"
+              >
+                <ResizablePanel
+                  defaultSize={55}
+                  minSize={20}
+                  ref={leftPanelRef}
+                  onResize={handlePanelResize}
+                >
+                  <div className="w-full h-full pdf-container overflow-auto z-50 flex items-start justify-start">
                     <PDFViewer
                       pdfUrl={examDetail.exam.pdf_url}
                       scale={scale}
@@ -466,36 +528,41 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
                       onLoadSuccess={onDocumentLoadSuccess}
                     />
                   </div>
-                  <motion.div
-                    className="absolute overflow-auto bg-background/80 backdrop-blur-sm border-l right-0 top-0 w-[50%] h-full z-40 facit-panel"
-                    ref={facitPanelRef}
-                    variants={facitVariants}
-                    initial="hidden"
-                    animate={shouldFacitPanelBeVisible ? "visible" : "hidden"}
-                    style={{
-                      pointerEvents: shouldFacitPanelBeVisible
-                        ? "auto"
-                        : "none",
-                    }}
-                    transition={{
-                      x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-                      opacity: { duration: 0.3 },
-                      filter: { duration: 0.3 },
-                    }}
-                    onHoverStart={() => setIsHoveringFacitPanel(true)}
-                    onHoverEnd={() => setIsHoveringFacitPanel(false)}
-                  >
-                    <FacitToolbar
-                      onRotateFacitClockwise={rotateFacitClockwise}
-                      onRotateFacitCounterClockwise={
-                        rotateFacitCounterClockwise
-                      }
-                      onFacitZoomIn={zoomInFacit}
-                      onFacitZoomOut={zoomOutFacit}
-                      facitPdfUrl={examDetail.solutions[0]?.pdf_url || null}
-                    />
+                </ResizablePanel>
+                <ResizableHandle withHandle />
+                <ResizablePanel
+                  defaultSize={45}
+                  minSize={20}
+                  ref={rightPanelRef}
+                  className="relative"
+                  onResize={handlePanelResize}
+                >
+                  {examDetail.exam.pdf_url && (
+                    <div
+                      className={`flex h-full w-full top-0 absolute flex-col items-center justify-center transition-all duration-300 ${
+                        isBlurred && !isMouseOverFacitViewer
+                          ? "backdrop-blur-md bg-background/20 z-30"
+                          : "bg-transparent z-[-10]"
+                      }`}
+                      onMouseEnter={handleMouseEnterFacitViewer}
+                      onMouseLeave={handleMouseLeaveFacitViewer}
+                    >
+                      <p className="font-normal">
+                        {getTranslation("mouseOverDescription")}
+                      </p>
+                      <MousePointerClick
+                        className="w-7 h-7 mt-2"
+                        onClick={() => setIsBlurred(false)}
+                      />
+                    </div>
+                  )}
+                  <div className="w-full h-full pdf-container flex flex-col items-center justify-start z-20">
                     <FacitViewer
-                      facitPdfUrl={examDetail.solutions[0]?.pdf_url || null}
+                      facitPdfUrl={
+                        examDetail.solutions.length > 0
+                          ? examDetail.solutions[0].pdf_url
+                          : null
+                      }
                       facitScale={facitScale}
                       facitRotation={facitRotation}
                       facitNumPages={facitNumPages}
@@ -503,108 +570,39 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
                       handleMouseLeave={handleMouseLeaveFacitViewer}
                       onFacitDocumentLoadSuccess={onFacitDocumentLoadSuccess}
                     />
-                  </motion.div>
-                  {!isHoveringFacitPanel && !isToggled && (
-                    <GradientIndicator
-                      facitPdfUrl={examDetail.solutions[0]?.pdf_url || null}
-                      getTranslation={getTranslation}
-                    />
-                  )}
-                </>
-              ) : (
-                <ResizablePanelGroup
-                  direction="horizontal"
-                  className="w-full h-full"
-                >
-                  <ResizablePanel
-                    defaultSize={55}
-                    minSize={20}
-                    ref={leftPanelRef}
-                    onResize={handlePanelResize}
-                  >
-                    <div className="w-full h-full pdf-container overflow-auto z-50 flex items-start justify-start">
-                      <PDFViewer
-                        pdfUrl={examDetail.exam.pdf_url}
-                        scale={scale}
-                        rotation={rotation}
-                        numPages={numPages}
-                        onLoadSuccess={onDocumentLoadSuccess}
-                      />
-                    </div>
-                  </ResizablePanel>
-                  <ResizableHandle withHandle />
-                  <ResizablePanel
-                    defaultSize={45}
-                    minSize={20}
-                    ref={rightPanelRef}
-                    className="relative"
-                    onResize={handlePanelResize}
-                  >
-                    {examDetail.exam.pdf_url && (
-                      <div
-                        className={`flex h-full w-full top-0 absolute flex-col items-center justify-center transition-all duration-300 ${
-                          isBlurred && !isMouseOverFacitViewer
-                            ? "backdrop-blur-md bg-background/20 z-30"
-                            : "bg-transparent z-[-10]"
-                        }`}
-                        onMouseEnter={handleMouseEnterFacitViewer}
-                        onMouseLeave={handleMouseLeaveFacitViewer}
-                      >
-                        <p className="font-normal">
-                          {getTranslation("mouseOverDescription")}
-                        </p>
-                        <MousePointerClick
-                          className="w-7 h-7 mt-2"
-                          onClick={() => setIsBlurred(false)}
-                        />
-                      </div>
-                    )}
-                    <div className="w-full h-full pdf-container flex flex-col items-center justify-start overflow-auto z-20">
-                      <FacitViewer
-                        facitPdfUrl={
-                          examDetail.solutions.length > 0
-                            ? examDetail.solutions[0].pdf_url
-                            : null
-                        }
-                        facitScale={facitScale}
-                        facitRotation={facitRotation}
-                        facitNumPages={facitNumPages}
-                        handleMouseEnter={handleMouseEnterFacitViewer}
-                        handleMouseLeave={handleMouseLeaveFacitViewer}
-                        onFacitDocumentLoadSuccess={onFacitDocumentLoadSuccess}
-                      />
-                    </div>
-                  </ResizablePanel>
-                </ResizablePanelGroup>
-              )}
-            </div>
-            <div className="overflow-x-auto flex md:hidden h-full">
-              <MobilePDFView
-                facitPdfUrl={
-                  examDetail.solutions.length > 0
-                    ? examDetail.solutions[0].pdf_url
-                    : null
-                }
-                facitRotation={facitRotation}
-                onFacitLoadSuccess={onFacitDocumentLoadSuccess}
-                onLoadSuccess={onDocumentLoadSuccess}
-                pdfUrl={examDetail.exam.pdf_url}
-                rotation={rotation}
-                scale={scale}
-                facitScale={facitScale}
-                facitNumPages={facitNumPages}
-                numPages={numPages}
-                getTranslation={getTranslation}
-                onFacitZoomIn={zoomInFacit}
-                onFacitZoomOut={zoomOutFacit}
-                onRotateClockwise={rotateClockwise}
-                onRotateCounterClockwise={rotateCounterClockwise}
-                onRotateFacitClockwise={rotateFacitClockwise}
-                onRotateFacitCounterClockwise={rotateFacitCounterClockwise}
-                onZoomIn={zoomIn}
-                onZoomOut={zoomOut}
-              />
-            </div>
+                  </div>
+                </ResizablePanel>
+              </ResizablePanelGroup>
+            )}
+          </div>
+
+          {/** Mobile View */}
+          <div className="overflow-x-auto flex md:hidden h-full">
+            <MobilePDFView
+              facitPdfUrl={
+                examDetail.solutions.length > 0
+                  ? examDetail.solutions[0].pdf_url
+                  : null
+              }
+              facitRotation={facitRotation}
+              onFacitLoadSuccess={onFacitDocumentLoadSuccess}
+              onLoadSuccess={onDocumentLoadSuccess}
+              pdfUrl={examDetail.exam.pdf_url}
+              rotation={rotation}
+              scale={scale}
+              facitScale={facitScale}
+              facitNumPages={facitNumPages}
+              numPages={numPages}
+              getTranslation={getTranslation}
+              onFacitZoomIn={zoomInFacit}
+              onFacitZoomOut={zoomOutFacit}
+              onRotateClockwise={rotateClockwise}
+              onRotateCounterClockwise={rotateCounterClockwise}
+              onRotateFacitClockwise={rotateFacitClockwise}
+              onRotateFacitCounterClockwise={rotateFacitCounterClockwise}
+              onZoomIn={zoomIn}
+              onZoomOut={zoomOut}
+            />
           </div>
         </>
       )}

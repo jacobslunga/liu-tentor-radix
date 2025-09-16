@@ -85,7 +85,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
       <DialogTrigger asChild onClick={(e) => e.stopPropagation()}>
         {trigger}
       </DialogTrigger>
-      <DialogContent className="w-full max-w-lg">
+      <DialogContent className="w-full">
         <DialogHeader className="space-y-3">
           <DialogTitle>{t.title}</DialogTitle>
           <DialogDescription>{t.description}</DialogDescription>
