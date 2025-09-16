@@ -111,16 +111,12 @@ const MainLayout: React.FC = () => {
   }, [isExamMode]);
 
   return (
-    <div className="flex flex-col w-screen min-h-screen bg-background">
+    <div className="flex flex-col w-full max-w-full min-h-screen bg-yellow overflow-x-hidden">
       <main className="grow">
         <Outlet />
       </main>
 
-      {!isExamPage && !isCustomPage && !isExamMode && (
-        <div className="mt-auto">
-          <Footer />
-        </div>
-      )}
+      {!isExamPage && !isCustomPage && !isExamMode && <Footer />}
 
       {!isExamMode && <SystemUpdateBanner />}
       {!isExamMode && <CookieBanner />}

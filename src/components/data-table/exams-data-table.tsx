@@ -92,7 +92,7 @@ export function DataTable({
   }, [data]);
 
   return (
-    <div className="w-full space-y-6 mt-10 max-w-(--breakpoint-lg) relative">
+    <div className="w-full space-y-6 mt-10 mx-auto relative">
       {/* Header */}
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">

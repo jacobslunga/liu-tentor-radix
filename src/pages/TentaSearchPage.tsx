@@ -107,8 +107,8 @@ const TentaSearchPage: React.FC = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+    <div className="min-h-screen bg-background w-full overflow-x-hidden">
+      <div className="container mx-auto flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {isLoading && (
           <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
             <LoadingSpinner language={language} />
@@ -160,24 +160,22 @@ const TentaSearchPage: React.FC = () => {
         )}
 
         {!isLoading && !isError && formattedExams.length > 0 && (
-          <div className="w-full max-w-none">
-            <div className="overflow-x-auto">
-              <DataTable
-                data={formattedExams}
-                courseCode={courseCode?.toUpperCase() ?? ""}
-                courseNameSwe={courseData?.course_name_swe || ""}
-                courseNameEng={courseData?.course_name_eng || ""}
-                onSortChange={() =>
-                  setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
-                }
-              />
+          <div className="w-full lg:w-auto flex items-center justify-center flex-col">
+            <DataTable
+              data={formattedExams}
+              courseCode={courseCode?.toUpperCase() ?? ""}
+              courseNameSwe={courseData?.course_name_swe || ""}
+              courseNameEng={courseData?.course_name_eng || ""}
+              onSortChange={() =>
+                setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+              }
+            />
 
-              <Link to="/upload-exams">
-                <Button className="w-full z-50">
-                  {language === "sv" ? "Ladda upp mer" : "Upload more"}
-                </Button>
-              </Link>
-            </div>
+            <Link to="/upload-exams">
+              <Button className="w-full z-50">
+                {language === "sv" ? "Ladda upp mer" : "Upload more"}
+              </Button>
+            </Link>
           </div>
         )}
       </div>
