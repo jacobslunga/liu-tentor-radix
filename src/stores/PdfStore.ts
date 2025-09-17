@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { getResponsiveScale } from "@/hooks/usePanelScaling";
 
 type PdfKey = "exam" | "solution";
 
@@ -18,30 +19,22 @@ type PdfStore = {
   rotateRight: (key: PdfKey) => void;
 };
 
-const getInitialScale = (key: PdfKey) => {
+const getInitialScale = () => {
   const screenWidth = window.innerWidth;
-  const fraction = key === "solution" ? 0.5 : 1;
-  const panelWidth = screenWidth * fraction;
+  const panelWidth = screenWidth;
 
-  return Math.min(Math.max(panelWidth / 800, 0.8), 2);
+  return getResponsiveScale(panelWidth);
 };
-
-const initialExamState: PdfState = {
-  scale: getInitialScale("exam"),
-  numPages: 0,
-  rotation: 0,
-};
-
-const initialSolutionState: PdfState = {
-  scale: getInitialScale("solution"),
+const initialState: PdfState = {
+  scale: getInitialScale(),
   numPages: 0,
   rotation: 0,
 };
 
 const usePdfStore = create<PdfStore>((set) => ({
   pdfs: {
-    exam: initialExamState,
-    solution: initialSolutionState,
+    exam: initialState,
+    solution: initialState,
   },
   setScale: (key, scale) =>
     set((s) => ({

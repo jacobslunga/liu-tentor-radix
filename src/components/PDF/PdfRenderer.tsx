@@ -5,7 +5,6 @@ import { Document, Page, pdfjs } from "react-pdf";
 import { useState, type FC } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { Loader2 } from "lucide-react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface PdfRendererProps {
   pdfUrl: string | null;
@@ -56,8 +55,8 @@ const PdfRenderer: FC<PdfRendererProps> = ({
   const isDark = effectiveTheme === "dark";
 
   return (
-    <ScrollArea
-      className="w-full h-full"
+    <div
+      className="w-full h-full overflow-auto"
       style={{
         backgroundColor: "var(--background)",
         color: "var(--foreground)",
@@ -92,7 +91,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
           />
         ))}
       </Document>
-    </ScrollArea>
+    </div>
   );
 };
 

@@ -1,15 +1,16 @@
+import { FC, useRef, useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { FC, useRef, useState } from "react";
-import { ImperativePanelHandle } from "react-resizable-panels";
+
 import ExamPdf from "../ExamPdf";
+import { ExamWithSolutions } from "@/types/exam";
+import { ImperativePanelHandle } from "react-resizable-panels";
+import SolutionOverlay from "../SolutionOverlay";
 import SolutionPdf from "../SolutionPdf";
 import { usePanelScaling } from "@/hooks/usePanelScaling";
-import { ExamWithSolutions } from "@/types/exam";
-import SolutionOverlay from "../SolutionOverlay";
 import { useResizeHotkeys } from "@/hooks/useResizeHotkeys";
 
 interface Props {
@@ -21,8 +22,8 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
 
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
-  const updateExamScale = usePanelScaling("exam", 800);
-  const updateSolutionScale = usePanelScaling("solution", 700);
+  const updateExamScale = usePanelScaling("exam");
+  const updateSolutionScale = usePanelScaling("solution");
 
   useResizeHotkeys(leftPanelRef);
 

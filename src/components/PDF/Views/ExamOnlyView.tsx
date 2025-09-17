@@ -1,11 +1,14 @@
-import { motion } from "framer-motion";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 import ExamPdf from "@/components/PDF/ExamPdf";
-import SolutionPdf from "@/components/PDF/SolutionPdf";
 import GradientIndicator from "@/components/GradientIndicator";
+import SolutionPdf from "@/components/PDF/SolutionPdf";
+import { motion } from "framer-motion";
+import { useHotkeys } from "react-hotkeys-hook";
 
 const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
   const [isFacitVisible, setIsFacitVisible] = useState(false);
+  const [isManual, setIsManual] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const facitVariants = {
@@ -17,7 +20,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!hasFacit) return;
+      if (!hasFacit || isManual) return;
 
       const w = window.innerWidth;
       const threshold = w * 0.9;
@@ -41,7 +44,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
       setIsFacitVisible(false);
     },
-    [hasFacit]
+    [hasFacit, isManual]
   );
 
   useEffect(() => {
@@ -49,9 +52,25 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
 
+  // Press E -> toggle visibility and lock/unlock
+  useHotkeys("e", () => {
+    setIsFacitVisible((prev) => !prev);
+    setIsManual((prev) => !prev);
+  });
+
   return (
-    <div className="w-full h-full relative max-w-screen">
-      <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
+    <div className="w-full h-full relative max-w-full">
+      <div
+        className={`w-full h-full ${
+          isFacitVisible ? "overflow-auto" : "overflow-hidden"
+        }`}
+        style={{
+          width: isFacitVisible ? "50%" : "100%",
+          transition: "width 0.3s ease-in-out",
+        }}
+      >
+        <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
+      </div>
 
       {hasFacit && (
         <motion.div
