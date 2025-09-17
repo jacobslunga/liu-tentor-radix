@@ -3,21 +3,19 @@ import { useParams } from "react-router-dom";
 
 import useLayoutMode from "@/stores/LayoutModeStore";
 import ExamHeader from "@/components/ExamHeader";
-import LoadingState from "@/components/PDF/LoadingState";
-import ErrorState from "@/components/PDF/ErrorState";
 import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
 
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useExamDetails } from "@/hooks/useExamDetail";
-import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
 import { formatExamDate } from "@/util/formatExamDate";
 
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const ExamPage: FC = () => {
-  const { language } = useLanguage();
   const { layoutMode } = useLayoutMode();
 
   useEffect(() => {
@@ -71,11 +69,7 @@ const ExamPage: FC = () => {
   });
 
   if (examsLoading || detailLoading) {
-    return (
-      <LoadingState
-        message={language === "sv" ? "Laddar tenta..." : "Loading exam..."}
-      />
-    );
+    return <LoadingState />;
   }
 
   if (!courseData || !examDetail || examsError || detailError) {
@@ -98,3 +92,27 @@ const ExamPage: FC = () => {
 };
 
 export default ExamPage;
+
+const LoadingState = () => {
+  return (
+    <div className="w-screen h-screen flex flex-col items-center justify-center gap-2">
+      <Loader2 className="w-10 h-10 animate-spin" />
+      <p className="font-medium text-foreground/70">Laddar tenta...</p>
+    </div>
+  );
+};
+
+const ErrorState = () => {
+  return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center gap-2">
+      <p className="text-4xl text-foreground/80">Något gick fel!</p>
+      <p className="text-sm text-foreground/50">
+        Ibland fungerar det att bara ladda om sidan :)
+      </p>
+
+      <Button onClick={() => window.location.reload()} variant="secondary">
+        Ladda om
+      </Button>
+    </div>
+  );
+};
