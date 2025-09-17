@@ -14,6 +14,7 @@ import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
 import { Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
@@ -79,14 +80,19 @@ const ExamPage: FC = () => {
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <ExamHeader exams={courseData.exams} />
-      <div className="w-full mt-0 h-screen md:mt-14 md:max-h-[calc(100vh-3.5rem)] relative bg-background flex flex-row items-center justify-center overflow-hidden">
+
+      {/** Desktop/Laptop view */}
+      <div className="w-full mt-0 h-screen md:mt-14 md:max-h-[calc(100vh-3.5rem)] relative bg-background hidden lg:flex flex-row items-center justify-center overflow-hidden">
         {layoutMode === "exam-only" ? (
           <ExamOnlyView examDetail={examDetail} />
         ) : (
           <ExamWithFacitView examDetail={examDetail} />
         )}
+        <LayoutSwitcher />
       </div>
-      <LayoutSwitcher />
+
+      {/** Mobile view */}
+      <MobilePdfView examDetail={examDetail} />
     </div>
   );
 };

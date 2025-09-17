@@ -90,7 +90,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
   };
 
   return (
-    <div className="hidden md:flex z-20 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-background border-b">
+    <div className="flex z-20 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-background border-b">
       <div className="flex items-center space-x-5">
         <Button
           size="icon"
