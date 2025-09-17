@@ -18,16 +18,30 @@ type PdfStore = {
   rotateRight: (key: PdfKey) => void;
 };
 
-const initialState: PdfState = {
-  scale: 1.3,
+const getInitialScale = (key: PdfKey) => {
+  const screenWidth = window.innerWidth;
+  const fraction = key === "solution" ? 0.5 : 1;
+  const panelWidth = screenWidth * fraction;
+
+  return Math.min(Math.max(panelWidth / 800, 0.8), 2);
+};
+
+const initialExamState: PdfState = {
+  scale: getInitialScale("exam"),
+  numPages: 0,
+  rotation: 0,
+};
+
+const initialSolutionState: PdfState = {
+  scale: getInitialScale("solution"),
   numPages: 0,
   rotation: 0,
 };
 
 const usePdfStore = create<PdfStore>((set) => ({
   pdfs: {
-    exam: initialState,
-    solution: initialState,
+    exam: initialExamState,
+    solution: initialSolutionState,
   },
   setScale: (key, scale) =>
     set((s) => ({
