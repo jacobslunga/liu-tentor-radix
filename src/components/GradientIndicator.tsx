@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
-
 import { ArrowLeftToLine } from "lucide-react";
 
 interface GradientIndicatorProps {
   facitPdfUrl: string | null;
-  getTranslation: any;
+  label?: string;
 }
 
 const GradientIndicator: React.FC<GradientIndicatorProps> = ({
   facitPdfUrl,
-  getTranslation,
+  label = "Facit",
 }) => {
   const spring = useSpring(0, {
     stiffness: 200,
-    damping: 20,
+    damping: 25,
     restDelta: 0.001,
   });
 
@@ -23,7 +22,6 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
       const w = window.innerWidth;
       const trigger = w * 0.7;
       if (e.clientX > trigger) {
-        // ratio ∈ [0,1]
         const ratio = (e.clientX - trigger) / (w - trigger);
         spring.set(Math.min(Math.max(ratio, 0), 1));
       } else {
@@ -34,8 +32,9 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [spring]);
 
-  const gradientOpacity = useTransform(spring, (v) => v * 0.2);
-  const iconOpacity = useTransform(spring, [0, 0.3, 1], [0, 0.3, 1]);
+  const gradientOpacity = useTransform(spring, (v) => 0.1 + v * 0.25);
+  const iconOpacity = useTransform(spring, (v) => 0.5 + v * 0.5);
+  const arrowX = useTransform(spring, (v) => `${-10 + v * -20}px`);
 
   const backgroundImage = useTransform(
     gradientOpacity,
@@ -45,24 +44,23 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
 
   return (
     <motion.div
-      className="absolute right-0 top-0 h-full w-40 pointer-events-none"
-      style={{
-        backgroundImage,
-      }}
+      className="absolute right-0 top-0 h-full w-28 pointer-events-none"
+      style={{ backgroundImage }}
     >
       <motion.div
         className="absolute right-0 flex items-center h-full pr-2"
-        style={{ opacity: iconOpacity }}
+        style={{ opacity: iconOpacity, x: arrowX }}
       >
         {facitPdfUrl ? (
-          <div className="h-20 flex items-center justify-center">
-            <div className="bg-primary/10 px-3 py-2 rounded-l-xl">
-              <ArrowLeftToLine className="w-5 h-5 text-primary" />
-            </div>
+          <div className="flex items-center gap-2">
+            <ArrowLeftToLine className="w-5 h-5 text-primary" />
+            <span className="text-xs font-medium text-primary hidden md:block">
+              {label}
+            </span>
           </div>
         ) : (
           <p className="text-xs hidden md:flex text-muted-foreground">
-            {getTranslation("facitNotAvailable")}
+            Not available
           </p>
         )}
       </motion.div>

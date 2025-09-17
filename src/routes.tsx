@@ -10,7 +10,7 @@ import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import { RouteObject } from "react-router-dom";
 import SearchLayout from "@/layouts/SearchLayout";
 import StatsSearchPage from "@/pages/StatsSearchPage";
-import TentaPage from "@/pages/TentaPage";
+import TentaPage from "@/pages/ExamPage";
 import TentaSearchPage from "@/pages/TentaSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 

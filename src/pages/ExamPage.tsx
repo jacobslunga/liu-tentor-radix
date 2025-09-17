@@ -1,16 +1,24 @@
 import { FC, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
+import useLayoutMode from "@/stores/LayoutModeStore";
 import ExamHeader from "@/components/ExamHeader";
-import { Loader2 } from "lucide-react";
-import PDFView from "@/components/PDFView";
+import LoadingState from "@/components/PDF/LoadingState";
+import ErrorState from "@/components/PDF/ErrorState";
+import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
+
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useExamDetails } from "@/hooks/useExamDetail";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
-import { useParams } from "react-router-dom";
+import { formatExamDate } from "@/util/formatExamDate";
 
-const TentaPage: FC = () => {
+import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
+import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
+
+const ExamPage: FC = () => {
   const { language } = useLanguage();
+  const { layoutMode } = useLayoutMode();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,20 +34,11 @@ const TentaPage: FC = () => {
     isLoading: examsLoading,
     isError: examsError,
   } = useCourseExams(courseCode);
-
   const {
     examDetail,
     isLoading: detailLoading,
     isError: detailError,
   } = useExamDetails(Number(examId));
-
-  const formatExamDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("sv-SE", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   const pageTitle =
     examDetail && courseData
@@ -73,25 +72,29 @@ const TentaPage: FC = () => {
 
   if (examsLoading || detailLoading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">
-          {language === "sv" ? "Laddar tenta..." : "Loading exam..."}
-        </p>
-      </div>
+      <LoadingState
+        message={language === "sv" ? "Laddar tenta..." : "Loading exam..."}
+      />
     );
   }
 
   if (!courseData || !examDetail || examsError || detailError) {
-    return <div>Error loading data</div>;
+    return <ErrorState />;
   }
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <ExamHeader exams={courseData.exams} />
-      <PDFView examDetail={examDetail} />
+      <div className="w-full mt-0 h-screen md:mt-14 md:max-h-[calc(100vh-3.5rem)] relative bg-background flex flex-row items-center justify-center overflow-hidden">
+        {layoutMode === "exam-only" ? (
+          <ExamOnlyView examDetail={examDetail} />
+        ) : (
+          <ExamWithFacitView examDetail={examDetail} />
+        )}
+      </div>
+      <LayoutSwitcher />
     </div>
   );
 };
 
-export default TentaPage;
+export default ExamPage;

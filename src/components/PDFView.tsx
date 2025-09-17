@@ -18,8 +18,8 @@ import GradientIndicator from "@/components/GradientIndicator";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import MobilePDFView from "@/components/MobilePdfViewer";
 import PDFViewer from "@/components/PDF/PDFViewer";
-import TentaFacitToolbar from "./PDF/Toolbar/TentaFacitToolbar";
-import TentaToolbar from "./PDF/Toolbar/TentaToolbar";
+import TentaFacitToolbar from "./PDF/Toolbar/SolutionToolbar";
+import TentaToolbar from "./PDF/Toolbar/ExamToolbar";
 import { motion } from "framer-motion";
 import { pdfjs } from "react-pdf";
 import translations from "@/util/translations";
@@ -436,7 +436,6 @@ const PDFView: FC<PDFViewProps> = ({ examDetail }) => {
             onZoomOut={zoomOut}
             onRotateClockwise={rotateClockwise}
             onRotateCounterClockwise={rotateCounterClockwise}
-            selectedExam={examDetail.exam}
           />
           {layoutMode !== "exam-only" && (
             <TentaFacitToolbar

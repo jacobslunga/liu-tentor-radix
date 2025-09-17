@@ -1,12 +1,6 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { RotateCcw, RotateCw } from "lucide-react";
-import {
-  PlusIcon,
-  DashIcon,
-  DownloadIcon,
-  EyeIcon,
-  EyeClosedIcon,
-} from "@primer/octicons-react";
+import { PlusIcon, DashIcon, DownloadIcon } from "@primer/octicons-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -19,15 +13,10 @@ import {
 import { useLanguage } from "@/context/LanguageContext";
 import translations from "@/util/translations";
 import { motion } from "framer-motion";
+import usePdf from "@/hooks/usePdf";
 
 interface Props {
-  facitPdfUrl: string | null;
-  onFacitZoomIn: () => void;
-  onFacitZoomOut: () => void;
-  onRotateFacitClockwise: () => void;
-  onRotateFacitCounterClockwise: () => void;
-  onToggleBlur: () => void;
-  isBlurred: boolean;
+  pdfUrl: string;
 }
 
 const ToolbarButton = ({
@@ -60,19 +49,13 @@ const ToolbarButton = ({
   </TooltipProvider>
 );
 
-const TentaFacitToolbar: FC<Props> = ({
-  facitPdfUrl,
-  onFacitZoomIn,
-  onFacitZoomOut,
-  onRotateFacitClockwise,
-  onRotateFacitCounterClockwise,
-  onToggleBlur,
-  isBlurred,
-}) => {
+const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
   const [isMouseActive, setIsMouseActive] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(isHovering);
+
+  const { zoomIn, zoomOut, rotateLeft, rotateRight } = usePdf("solution");
 
   useEffect(() => {
     isHoveringRef.current = isHovering;
@@ -112,7 +95,7 @@ const TentaFacitToolbar: FC<Props> = ({
 
   return (
     <motion.div
-      className="fixed top-16 right-5 flex flex-col space-y-2 z-40"
+      className="fixed top-20 right-5 flex flex-col space-y-2 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
@@ -128,38 +111,33 @@ const TentaFacitToolbar: FC<Props> = ({
     >
       <ToolbarButton
         icon={PlusIcon}
-        onClick={onFacitZoomIn}
+        onClick={zoomIn}
         tooltip={getTranslation("zoomIn")}
       />
       <ToolbarButton
         icon={DashIcon}
-        onClick={onFacitZoomOut}
+        onClick={zoomOut}
         tooltip={getTranslation("zoomOut")}
       />
       <Separator />
       <ToolbarButton
         icon={RotateCcw}
-        onClick={onRotateFacitCounterClockwise}
+        onClick={rotateLeft}
         tooltip={getTranslation("rotateLeft")}
       />
       <ToolbarButton
         icon={RotateCw}
-        onClick={onRotateFacitClockwise}
+        onClick={rotateRight}
         tooltip={getTranslation("rotateRight")}
       />
       <Separator />
       <ToolbarButton
         icon={DownloadIcon}
-        onClick={() => window.open(facitPdfUrl || "#", "_blank")}
+        onClick={() => window.open(pdfUrl || "#", "_blank")}
         tooltip={getTranslation("downloadFacit")}
-      />
-      <ToolbarButton
-        icon={isBlurred ? EyeClosedIcon : EyeIcon}
-        onClick={onToggleBlur}
-        tooltip={getTranslation(isBlurred ? "showFacit" : "hideFacit")}
       />
     </motion.div>
   );
 };
 
-export default TentaFacitToolbar;
+export default SolutionToolbar;
