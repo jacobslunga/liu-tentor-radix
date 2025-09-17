@@ -1,7 +1,7 @@
 import usePdf from "@/hooks/usePdf";
 
 export function getResponsiveScale(panelWidth: number): number {
-  if (panelWidth >= 1600) return 1.8; // very wide screens
+  if (panelWidth >= 1600) return 3; // very wide screens
   if (panelWidth >= 1280) return 1.5; // typical 1080p
   if (panelWidth >= 1024) return 1.8; // laptops
   if (panelWidth >= 768) return 1.3; // small laptops/tablets

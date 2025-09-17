@@ -35,7 +35,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
   onLoadSuccess,
 }) => {
   if (!pdfUrl) {
-    return <PdfError error="no-url" />;
+    return null;
   }
 
   const { effectiveTheme } = useTheme();
@@ -52,21 +52,15 @@ const PdfRenderer: FC<PdfRendererProps> = ({
     setPageRotations((prev) => ({ ...prev, [pageNumber]: nativeRotation }));
   };
 
-  const isDark = effectiveTheme === "dark";
-
   return (
     <div
-      className="w-full h-full overflow-auto"
-      style={{
-        backgroundColor: "var(--background)",
-        color: "var(--foreground)",
-        filter: isDark ? "invert(0.98) brightness(1) contrast(0.8)" : "none",
-      }}
+      className="w-full h-full overflow-auto bg-background"
+      data-theme={effectiveTheme}
     >
       <Document
         file={pdfUrl}
         onLoadSuccess={onLoadSuccess}
-        className="w-full h-full flex items-center justify-start space-y-5 flex-col"
+        className="w-full h-full flex items-center justify-start space-y-5 flex-col bg-background"
         loading={() => (
           <div className="w-full h-full flex items-center justify-center">
             <Loader2 className="animate-spin w-5 h-5" />
@@ -93,16 +87,6 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       </Document>
     </div>
   );
-};
-
-type PdfError = "no-url" | "no-load";
-
-interface PdfErrorProps {
-  error: PdfError;
-}
-
-const PdfError: FC<PdfErrorProps> = ({ error }) => {
-  return <div>{error}</div>;
 };
 
 export default PdfRenderer;
