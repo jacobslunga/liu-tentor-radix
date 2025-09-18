@@ -9,7 +9,7 @@ const Header = () => {
 
   return (
     <header
-      className="bg-background top-0 z-50 h-16 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
+      className="bg-background top-0 z-50 h-20 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
       role="banner"
       style={{
         maxWidth: "100%",

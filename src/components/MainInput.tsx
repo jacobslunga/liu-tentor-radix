@@ -18,9 +18,9 @@ import {
 import Cookies from "js-cookie";
 import { kurskodArray } from "@/data/kurskoder";
 import { useLanguage } from "@/context/LanguageContext";
-import { useTranslation } from "@/hooks/useTranslation";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useVirtualizer } from "@tanstack/react-virtual";
 
 interface RecentActivity {

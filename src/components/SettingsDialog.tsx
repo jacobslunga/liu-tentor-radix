@@ -30,14 +30,10 @@ import useTranslation from "@/hooks/useTranslation";
 type ShortcutAction =
   | "moveFacitRight"
   | "moveFacitLeft"
-  | "toggleShowFacit"
   | "zoomIn"
   | "zoomOut"
   | "rotateLeft"
-  | "rotateRight"
-  | "toggleExamToolbar"
-  | "toggleExam"
-  | "toggleFacitToolbar";
+  | "rotateRight";
 
 const SettingsDialog: FC = () => {
   const { t } = useTranslation();
@@ -87,14 +83,10 @@ const SettingsDialog: FC = () => {
   }> = [
     { action: "moveFacitRight", key: "→", category: "navigation" },
     { action: "moveFacitLeft", key: "←", category: "navigation" },
-    { action: "toggleShowFacit", key: "T", category: "visibility" },
     { action: "zoomIn", key: "+", category: "zoom" },
     { action: "zoomOut", key: "-", category: "zoom" },
     { action: "rotateLeft", key: "R", category: "rotation" },
     { action: "rotateRight", key: "L", category: "rotation" },
-    { action: "toggleExamToolbar", key: "A", category: "visibility" },
-    { action: "toggleExam", key: "E", category: "visibility" },
-    { action: "toggleFacitToolbar", key: "P", category: "visibility" },
   ];
 
   const categoryTranslations = {
