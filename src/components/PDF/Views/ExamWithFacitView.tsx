@@ -5,15 +5,15 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 
+import { Button } from "@/components/ui/button";
 import ExamPdf from "../ExamPdf";
 import { ExamWithSolutions } from "@/types/exam";
 import { ImperativePanelHandle } from "react-resizable-panels";
+import { Link } from "react-router-dom";
 import SolutionOverlay from "../SolutionOverlay";
 import SolutionPdf from "../SolutionPdf";
 import { usePanelScaling } from "@/hooks/usePanelScaling";
 import { useResizeHotkeys } from "@/hooks/useResizeHotkeys";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 
 interface Props {
   examDetail: ExamWithSolutions;

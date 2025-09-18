@@ -107,7 +107,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
                   key={key}
                   className="flex items-center gap-2 text-sm text-muted-foreground"
                 >
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
+                  <div className="w-1.5 h-1.5 rounded-md bg-primary" />
                   {feature as string}
                 </div>
               ))}

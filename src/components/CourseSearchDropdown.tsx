@@ -240,7 +240,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full ${sizeClasses[size]} pl-10 pr-10 bg-input text-foreground outline-none ring-offset-background rounded-full transition-all duration-200`}
+          className={`w-full ${sizeClasses[size]} pl-10 pr-10 bg-secondary border text-foreground outline-none ring-offset-background rounded-lg transition-all duration-200`}
         />
         {courseCode && (
           <button

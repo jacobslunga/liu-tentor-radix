@@ -1,7 +1,8 @@
-import { motion } from "framer-motion";
 import { Columns2, PanelRight } from "lucide-react";
-import useLayoutMode from "@/stores/LayoutModeStore";
 import { useEffect, useRef, useState } from "react";
+
+import { motion } from "framer-motion";
+import useLayoutMode from "@/stores/LayoutModeStore";
 import useTranslation from "@/hooks/useTranslation";
 
 export default function LayoutSwitcher() {
@@ -46,12 +47,12 @@ export default function LayoutSwitcher() {
     {
       value: "exam-with-facit",
       label: t("examAndFacit"),
-      icon: <Columns2 className="w-4 h-4" />,
+      icon: <Columns2 className="w-5 h-5" />,
     },
     {
       value: "exam-only",
       label: t("examOnly"),
-      icon: <PanelRight className="w-4 h-4" />,
+      icon: <PanelRight className="w-5 h-5" />,
     },
   ];
 
@@ -68,7 +69,7 @@ export default function LayoutSwitcher() {
       style={{
         pointerEvents: isMouseActive || isHovering ? "auto" : "none",
       }}
-      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background/70 backdrop-blur-md rounded-xl border p-1 space-x-1"
+      className="fixed shadow-md bottom-10 left-5 z-40 hidden md:flex bg-background/70 backdrop-blur-md rounded-xl border p-1 space-x-1"
     >
       {modes.map((mode) => {
         const isActive = layoutMode === mode.value;
@@ -76,7 +77,7 @@ export default function LayoutSwitcher() {
           <button
             key={mode.value}
             onClick={() => setLayoutMode(mode.value)}
-            className="relative px-3 py-2 text-xs flex items-center gap-1 rounded-lg cursor-pointer"
+            className="relative px-3 py-1 text-xs flex items-center gap-1 rounded-lg cursor-pointer"
           >
             {isActive && (
               <motion.div
@@ -91,7 +92,6 @@ export default function LayoutSwitcher() {
               }`}
             >
               {mode.icon}
-              {mode.label}
             </span>
           </button>
         );
