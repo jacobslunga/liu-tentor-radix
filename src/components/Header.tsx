@@ -2,17 +2,10 @@ import CourseSearchDropdown from "@/components/CourseSearchDropdown";
 import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
-import translations from "@/util/translations";
-import { useLanguage } from "@/context/LanguageContext";
+import useTranslation from "@/hooks/useTranslation";
 
 const Header = () => {
-  const { language } = useLanguage();
-
-  const getTranslation = (
-    key: keyof (typeof translations)[typeof language]
-  ) => {
-    return translations[language][key];
-  };
+  const { t } = useTranslation();
 
   return (
     <header
@@ -25,7 +18,7 @@ const Header = () => {
       <Link
         to="/"
         className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
-        aria-label={getTranslation("homeTitle")}
+        aria-label={t("homeTitle")}
       >
         <LogoIcon className="w-10 h-10" />
       </Link>
@@ -35,7 +28,7 @@ const Header = () => {
         role="search"
       >
         <CourseSearchDropdown
-          placeholder={getTranslation("searchCoursePlaceholder")}
+          placeholder={t("searchCoursePlaceholder")}
           className="w-full"
           size="md"
         />

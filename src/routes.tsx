@@ -10,8 +10,8 @@ import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import { RouteObject } from "react-router-dom";
 import SearchLayout from "@/layouts/SearchLayout";
 import StatsSearchPage from "@/pages/StatsSearchPage";
-import TentaPage from "@/pages/TentaPage";
-import TentaSearchPage from "@/pages/TentaSearchPage";
+import TentaPage from "@/pages/ExamPage";
+import TentaSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 
 const routes: RouteObject[] = [

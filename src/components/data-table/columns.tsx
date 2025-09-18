@@ -1,17 +1,16 @@
 import { Check, X } from "lucide-react";
-import { Language, Translations } from "@/util/translations";
+import { Translations } from "@/util/translations";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Exam } from "@/types/exam";
 import { ExamStatsDialog } from "@/components/ExamStatsDialog";
 
 export const getColumns = (
-  language: Language,
-  translations: Translations
+  t: (key: keyof Translations) => string
 ): ColumnDef<Exam, any>[] => [
   {
     id: "exam_name",
-    header: translations[language].examName,
+    header: t("examName"),
     cell: ({ row }) => {
       return (
         <div className="flex items-center group-hover:underline font-medium ransition-colors">
@@ -22,7 +21,7 @@ export const getColumns = (
   },
   {
     accessorKey: "exam_date",
-    header: translations[language].createdAt,
+    header: t("createdAt"),
     cell: ({ row }) => {
       let date = new Intl.DateTimeFormat("sv-SE", {
         year: "numeric",
@@ -35,7 +34,7 @@ export const getColumns = (
   },
   {
     accessorKey: "has_solution",
-    header: translations[language].hasFacit,
+    header: t("hasFacit"),
     cell: ({ row }) => (
       <div className="flex justify-center">
         <span
@@ -52,7 +51,7 @@ export const getColumns = (
   },
   {
     id: "approvalRate",
-    header: translations[language].passedCount || "Godkända",
+    header: t("passedCount"),
     cell: ({ row }) => {
       const passedCount = row.original.pass_rate;
 

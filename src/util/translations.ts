@@ -1,299 +1,381 @@
 export type Language = "sv" | "en";
 
-export interface Translations {
-  [key: string]: {
-    homeTitle: string;
-    homeDescription: string;
-    searchPlaceholder: string;
-    popularSearches: string;
-    courseCodePlaceholder: string;
-    searchButton: string;
-    popularSearchesTitle: string;
-    popularSearchesDescription: string;
-    homeLink: string;
-    feedbackLink: string;
-    allRightsReserved: string;
-    madeBy: string;
-    feedbackTitle: string;
-    feedbackDescription: string;
-    nameLegend: string;
-    namePlaceholder: string;
-    nameDescription: string;
-    messageLegend: string;
-    messagePlaceholder: string;
-    messageDescription: string;
-    partOfWebsitePlaceholder: string;
-    submitButton: string;
-    searchCoursePlaceholder: string;
-    zoomIn: string;
-    zoomOut: string;
-    showFacit: string;
-    hideFacit: string;
-    chooseFacit: string;
-    loadingPDF: string;
-    noFacitAvailable: string;
-    chooseFacitDescription: string;
-    mouseOverDescription: string;
-    next: string;
-    previous: string;
-    courseCode: string;
-    examName: string;
-    createdAt: string;
-    searchResultsForCourseCode: string;
-    examsAvailable: string;
-    usefulShortcuts: string;
-    keyboardAction: string;
-    nextSide: string;
-    previousSide: string;
-    toggleShowFacit: string;
-    noPopularSearchesMessage: string;
-    feedbackSuccessMessage: string;
-    feedbackErrorMessage: string;
-    tryAgainButton: string;
-    homeButton: string;
-    showPagination: string;
-    hidePagination: string;
-    togglePagination: string;
-    completed: string;
-    cookieBannerText: string;
-    acceptCookie: string;
-    rejectCookie: string;
-    cookieBannerDescription: string;
-    cookieConsentRequired: string;
-    noExamsFound: string;
-    rotateLeft: string;
-    rotateRight: string;
-    markAsCompleted: string;
-    moveFacitLeft: string;
-    moveFacitRight: string;
-    downloadExam: string;
-    downloadFacit: string;
-    showExamToolbar: string;
-    hideExamToolbar: string;
-    showFacitToolbar: string;
-    hideFacitToolbar: string;
-    toggleFacitToolbar: string;
-    toggleExamToolbar: string;
-    goBack: string;
-    loadingMessage: string;
-    clearSearch: string;
-    suggestions: string;
-    keyboardShortcuts: string;
-    feedbackForm: string;
-    didYouMean: string;
-    notFound: string;
-    hasFacit: string;
-    textSize: string;
-    addTab: string;
-    removeTab: string;
-    emailPlaceholder: string;
-    contactLink: string;
-    privacyPolicyTitle: string;
-    privacyPolicyLastUpdated: string;
-    privacyPolicyIntro: string;
-    privacyPolicySection1Title: string;
-    privacyPolicySection1Content: string;
-    privacyPolicySection1Item1: string;
-    privacyPolicySection1Item2: string;
-    privacyPolicySection1Item3: string;
-    privacyPolicySection1Item4: string;
-    privacyPolicySection2Title: string;
-    privacyPolicySection2Content: string;
-    privacyPolicySection3Title: string;
-    privacyPolicySection3Content: string;
-    privacyPolicySection4Title: string;
-    privacyPolicySection4Content: string;
-    privacyPolicySection5Title: string;
-    privacyPolicySection5Content: string;
-    privacyPolicySection5Item1: string;
-    privacyPolicySection5Item2: string;
-    privacyPolicySection5Item3: string;
-    privacyPolicySection6Title: string;
-    privacyPolicySection6Content: string;
-    privacyPolicySection7Title: string;
-    privacyPolicySection7Content: string;
-    privacyPolicyContactEmail: string;
-    remainingExamsTitle: string;
-    remainingExamsMessage: string;
-    allExamsCompletedTitle: string;
-    allExamsCompletedMessage: string;
-    closeDialog: string;
-    congratulationsMessage: string;
-    facitAvailable: string;
-    facitNotAvailable: string;
-    notCompleted: string;
-    examOnly: string;
-    examAndFacit: string;
-    toggleExam: string;
-    moreExamsTitle: string;
-    moreExamsBtn: string;
-    uploadTitle: string;
-    selectTextSize: string;
-    small: string;
-    standard: string;
-    large: string;
-    askAI: string;
-    aiTitle: string;
-    aiDescription: string;
-    examDone: string;
-    withFacit: string;
-    noResults: string;
-    scrollHint: string;
-    requiredField: string;
-    requiredFieldMessage: string;
-    exampleEmail: string;
-    partOfWebsiteLegend: string;
-    dragAndDrop: string;
-    uploadDescription: string;
-    uploadSuccess: string;
-    uploadError: string;
-    reset: string;
-    noFacitAvailableDescription: string;
-    uploadButton: string;
-    weNeedYourHelp: string;
-    markedAsCompleted: string;
-    unMarkedAsCompleted: string;
-    goodJob: string;
-    makeLiuTentorBetter: string;
-    settings: string;
-    settingsDescription: string;
-    settingsTheme: string;
-    settingsLanguage: string;
-    settingsKeyboardShortcuts: string;
-    exam: string;
-    facit: string;
-    courses: string;
-    noResultsFound: string;
-    recentSearches: string;
-    allCourses: string;
-    globalSearch: string;
-    login: string;
-    create_account: string;
-    welcome_back: string;
-    login_with_liu_mail: string;
-    register_with_liu_mail: string;
-    exams: string;
-    uploadExamsOrFacit: string;
-    backToHome: string;
-    contactUs: string;
-    privacyPolicyContactText: string;
-    contactEmail: string;
-    feedbackSuccessTitle: string;
-    feedbackErrorTitle: string;
-    justNow: string;
-    minutesAgo: string;
-    hoursAgo: string;
-    daysAgo: string;
-    continueWhereYouLeftOff: string;
-    recentActivityDescription: string;
-    noRecentActivity: string;
-    lostMessage: string;
-    goHome: string;
-    theme: string;
-    themeDescription: string;
-    font: string;
-    fontDescription: string;
-    quickLinks: string;
-    tapToSeeMore: string;
-    privacyPolicyGDPRTitle: string;
-    privacyPolicyGDPRContent: string;
-    privacyPolicyGDPRItem1: string;
-    privacyPolicyGDPRItem2: string;
-    privacyPolicyGDPRItem3: string;
-    showContinueWhereYouLeftOff: string;
-    hideContinueWhereYouLeftOff: string;
-    new: string;
-    minShort: string;
-    hShort: string;
-    dShort: string;
-    uploadGuidelinesTitle: string;
-    uploadGuidelineCourseCode: string;
-    uploadGuidelineNaming: string;
-    uploadGuidelineDate: string;
-    uploadGuidelineDuplicateCheck: string;
-    uploadGuidelineQuality: string;
-    passedCount: string;
-    averagePassRate: string;
-    withSolution: string;
-    examStatisticsDescription: string;
-  };
+// Grouped translation interfaces for better organization
+interface CommonTranslations {
+  // Navigation & Layout
+  homeLink: string;
+  goBack: string;
+  goHome: string;
+  backToHome: string;
+  settings: string;
+  contactUs: string;
+  quickLinks: string;
+
+  // Loading & States
+  loadingMessage: string;
+  loadingPDF: string;
+  noResults: string;
+  noResultsFound: string;
+  notFound: string;
+  lostMessage: string;
+
+  // Actions
+  submitButton: string;
+  searchButton: string;
+  clearSearch: string;
+  reset: string;
+  tryAgainButton: string;
+  acceptCookie: string;
+  rejectCookie: string;
+  closeDialog: string;
 }
 
-const translations: Translations = {
+interface HomePageTranslations {
+  homeTitle: string;
+  homeDescription: string;
+  searchPlaceholder: string;
+  courseCodePlaceholder: string;
+  popularSearches: string;
+  popularSearchesTitle: string;
+  popularSearchesDescription: string;
+  recentSearches: string;
+  noPopularSearchesMessage: string;
+  globalSearch: string;
+  allCourses: string;
+  courses: string;
+  suggestions: string;
+  didYouMean: string;
+}
+
+interface ExamTranslations {
+  exam: string;
+  exams: string;
+  examName: string;
+  examDone: string;
+  examOnly: string;
+  examAndFacit: string;
+  facit: string;
+  facitAvailable: string;
+  facitNotAvailable: string;
+  showFacit: string;
+  hideFacit: string;
+  chooseFacit: string;
+  noFacitAvailable: string;
+  noFacitAvailableDescription: string;
+  chooseFacitDescription: string;
+  mouseOverDescription: string;
+  withFacit: string;
+  withSolution: string;
+  hasFacit: string;
+  toggleExam: string;
+  toggleShowFacit: string;
+}
+
+interface PDFControlTranslations {
+  zoomIn: string;
+  zoomOut: string;
+  rotateLeft: string;
+  rotateRight: string;
+  downloadExam: string;
+  downloadFacit: string;
+  showExamToolbar: string;
+  hideExamToolbar: string;
+  showFacitToolbar: string;
+  hideFacitToolbar: string;
+  toggleExamToolbar: string;
+  toggleFacitToolbar: string;
+  moveFacitLeft: string;
+  moveFacitRight: string;
+  next: string;
+  previous: string;
+  nextSide: string;
+  previousSide: string;
+}
+
+interface CourseTranslations {
+  courseCode: string;
+  searchCoursePlaceholder: string;
+  searchResultsForCourseCode: string;
+  examsAvailable: string;
+  noExamsFound: string;
+  courseCodeNotFound: string;
+  courseCodeNotFoundMessage: string;
+  noExamsFoundMessage: string;
+  createdAt: string;
+}
+
+interface UserProgressTranslations {
+  completed: string;
+  notCompleted: string;
+  markAsCompleted: string;
+  markedAsCompleted: string;
+  unMarkedAsCompleted: string;
+  remainingExamsTitle: string;
+  remainingExamsMessage: string;
+  allExamsCompletedTitle: string;
+  allExamsCompletedMessage: string;
+  congratulationsMessage: string;
+  goodJob: string;
+  continueWhereYouLeftOff: string;
+  showContinueWhereYouLeftOff: string;
+  hideContinueWhereYouLeftOff: string;
+  recentActivityDescription: string;
+  noRecentActivity: string;
+}
+
+interface FeedbackTranslations {
+  feedbackLink: string;
+  feedbackTitle: string;
+  feedbackDescription: string;
+  feedbackForm: string;
+  feedbackSuccessTitle: string;
+  feedbackSuccessMessage: string;
+  feedbackErrorTitle: string;
+  feedbackErrorMessage: string;
+  nameLegend: string;
+  namePlaceholder: string;
+  nameDescription: string;
+  messageLegend: string;
+  messagePlaceholder: string;
+  messageDescription: string;
+  partOfWebsiteLegend: string;
+  partOfWebsitePlaceholder: string;
+  emailPlaceholder: string;
+  exampleEmail: string;
+  requiredField: string;
+  requiredFieldMessage: string;
+  weNeedYourHelp: string;
+  makeLiuTentorBetter: string;
+}
+
+interface UploadTranslations {
+  uploadTitle: string;
+  uploadButton: string;
+  uploadDescription: string;
+  uploadSuccess: string;
+  uploadError: string;
+  uploadExamsOrFacit: string;
+  dragAndDrop: string;
+  moreExamsTitle: string;
+  moreExamsBtn: string;
+  uploadGuidelinesTitle: string;
+  uploadGuidelineCourseCode: string;
+  uploadGuidelineNaming: string;
+  uploadGuidelineDate: string;
+  uploadGuidelineDuplicateCheck: string;
+  uploadGuidelineQuality: string;
+}
+
+interface UITranslations {
+  textSize: string;
+  selectTextSize: string;
+  small: string;
+  standard: string;
+  large: string;
+  font: string;
+  fontDescription: string;
+  theme: string;
+  themeDescription: string;
+  settingsDescription: string;
+  settingsTheme: string;
+  settingsLanguage: string;
+  settingsKeyboardShortcuts: string;
+  addTab: string;
+  removeTab: string;
+  showPagination: string;
+  hidePagination: string;
+  togglePagination: string;
+  scrollHint: string;
+  tapToSeeMore: string;
+}
+
+interface KeyboardTranslations {
+  keyboardShortcuts: string;
+  usefulShortcuts: string;
+  keyboardAction: string;
+}
+
+interface TimeTranslations {
+  justNow: string;
+  minutesAgo: string;
+  hoursAgo: string;
+  daysAgo: string;
+  new: string;
+  minShort: string;
+  hShort: string;
+  dShort: string;
+}
+
+interface CookieTranslations {
+  cookieBannerText: string;
+  cookieBannerDescription: string;
+  cookieConsentRequired: string;
+}
+
+interface PrivacyTranslations {
+  privacyPolicyTitle: string;
+  privacyPolicyLastUpdated: string;
+  privacyPolicyIntro: string;
+  privacyPolicySection1Title: string;
+  privacyPolicySection1Content: string;
+  privacyPolicySection1Item1: string;
+  privacyPolicySection1Item2: string;
+  privacyPolicySection1Item3: string;
+  privacyPolicySection1Item4: string;
+  privacyPolicySection2Title: string;
+  privacyPolicySection2Content: string;
+  privacyPolicySection3Title: string;
+  privacyPolicySection3Content: string;
+  privacyPolicySection4Title: string;
+  privacyPolicySection4Content: string;
+  privacyPolicySection5Title: string;
+  privacyPolicySection5Content: string;
+  privacyPolicySection5Item1: string;
+  privacyPolicySection5Item2: string;
+  privacyPolicySection5Item3: string;
+  privacyPolicySection6Title: string;
+  privacyPolicySection6Content: string;
+  privacyPolicySection7Title: string;
+  privacyPolicySection7Content: string;
+  privacyPolicyContactEmail: string;
+  privacyPolicyContactText: string;
+  privacyPolicyGDPRTitle: string;
+  privacyPolicyGDPRContent: string;
+  privacyPolicyGDPRItem1: string;
+  privacyPolicyGDPRItem2: string;
+  privacyPolicyGDPRItem3: string;
+}
+
+interface AuthTranslations {
+  login: string;
+  create_account: string;
+  welcome_back: string;
+  login_with_liu_mail: string;
+  register_with_liu_mail: string;
+}
+
+interface StatisticsTranslations {
+  statistics: string;
+  passedCount: string;
+  averagePassRate: string;
+  examStatisticsDescription: string;
+}
+
+interface MiscTranslations {
+  allRightsReserved: string;
+  madeBy: string;
+  contactLink: string;
+  contactEmail: string;
+  askAI: string;
+  aiTitle: string;
+  aiDescription: string;
+  // Page specific
+  faq: string;
+  aboutUs: string;
+  feedback: string;
+  privacyPolicy: string;
+  loadingExams: string;
+  uploadExams: string;
+  noExamsFoundShort: string;
+  helpOtherStudentsMessage: string;
+  uploadMore: string;
+  examCount: string;
+  solutionCount: string;
+}
+
+// Main translations interface combining all sections
+export interface Translations
+  extends CommonTranslations,
+    HomePageTranslations,
+    ExamTranslations,
+    PDFControlTranslations,
+    CourseTranslations,
+    UserProgressTranslations,
+    FeedbackTranslations,
+    UploadTranslations,
+    UITranslations,
+    KeyboardTranslations,
+    TimeTranslations,
+    CookieTranslations,
+    PrivacyTranslations,
+    AuthTranslations,
+    StatisticsTranslations,
+    MiscTranslations {}
+
+const translations: Record<Language, Translations> = {
   sv: {
+    // Common
+    homeLink: "Hem",
+    goBack: "Gå tillbaka",
+    goHome: "Gå hem",
+    backToHome: "Tillbaka till startsidan",
+    settings: "Inställningar",
+    contactUs: "Kontakta oss",
+    quickLinks: "Snabblänkar",
+    loadingMessage: "Laddar...",
+    loadingPDF: "Laddar PDF...",
+    noResults: "Inga resultat",
+    noResultsFound: "Inga resultat hittades",
+    notFound: "Inga tentor hittades för kurskod",
+    lostMessage: "Det verkar som att du kommit till den akademiska djungeln.",
+    submitButton: "Skicka",
+    searchButton: "Sök tentor",
+    clearSearch: "Rensa",
+    reset: "Återställ",
+    tryAgainButton: "Försök igen",
+    acceptCookie: "Acceptera",
+    rejectCookie: "Avvisa",
+    closeDialog: "Stäng",
+
+    // Home Page
     homeTitle: "LiU Tentor",
     homeDescription:
       "Äntligen kan du hitta tentor från Linköpings universitet på ett och samma ställe... Främst TekFak",
     searchPlaceholder: "Sök efter",
-    popularSearches: "Populära sökningar",
     courseCodePlaceholder: "Kurskod",
-    searchButton: "Sök tentor",
+    popularSearches: "Populära sökningar",
     popularSearchesTitle: "Senaste sökningar",
     popularSearchesDescription:
       "Här är några av dina senaste sökta kurser just nu.",
-    homeLink: "Hem",
-    feedbackLink: "Ge feedback",
-    allRightsReserved: "All rights reserved",
-    madeBy: "Made with",
-    feedbackTitle: "Hjälp oss bli bättre!",
-    feedbackDescription:
-      "Vi uppskattar din feedback. Vänligen fyll i formuläret.",
-    nameLegend: "Namn",
-    namePlaceholder: "Namn",
-    nameDescription: "Valfritt",
-    messageLegend: "Meddelande",
-    messagePlaceholder: "Meddelande",
-    messageDescription:
-      "Berätta vad du tycker om LiU Tentor! Vi uppskattar om du är så detaljerad som möjligt.",
-    partOfWebsitePlaceholder: "Vilken del av hemsidan?",
-    submitButton: "Skicka",
-    searchCoursePlaceholder: "Sök efter kurskod",
-    zoomIn: "Zooma in",
-    zoomOut: "Zooma ut",
+    recentSearches: "Senaste sökningarna",
+    noPopularSearchesMessage:
+      "Börja söka för att se dina mest besökta kurser här",
+    globalSearch: "Global sökning",
+    allCourses: "Kurser",
+    courses: "Kurser",
+    suggestions: "Förslag",
+    didYouMean: "Menade du",
+
+    // Exams
+    exam: "Tenta",
+    exams: "Tentor",
+    examName: "Namn",
+    examDone: "Gjord",
+    examOnly: "Facit dolt",
+    examAndFacit: "Facit synligt",
+    facit: "Facit",
+    facitAvailable: "Facit tillgängligt",
+    facitNotAvailable: "Facit inte tillgängligt",
     showFacit: "Visa facit",
     hideFacit: "Dölj facit",
     chooseFacit: "Välj facit",
-    loadingPDF: "Laddar PDF...",
     noFacitAvailable: "Inget facit tillgängligt",
+    noFacitAvailableDescription:
+      "Vissa tentor har inget facit. Du kan ladda upp ett facit om du har ett.",
     chooseFacitDescription:
       "Vissa tentor har inget facit, men du kan välja ett facit från listan nedan om det finns tillgängligt. Det kan också vara så att facit finns lite längre ner i tenta dokumentet.",
     mouseOverDescription: "Håll musen över för att se facit",
-    next: "Nästa",
-    previous: "Föregående",
-    courseCode: "Kurskod",
-    examName: "Namn",
-    createdAt: "Skriven",
-    searchResultsForCourseCode: `Sökresultat`,
-    examsAvailable: "Tentor tillgängliga för",
-    usefulShortcuts: "Här är några användbara tangentbordsgenvägar:",
-    keyboardAction: "Handling",
-    nextSide: "Nästa sida",
-    previousSide: "Föregående sida",
+    withFacit: "Med facit",
+    withSolution: "med facit",
+    hasFacit: "Har facit",
+    toggleExam: "Toggla facit (facit bara mode)",
     toggleShowFacit: "Toggla facit visning",
-    noPopularSearchesMessage:
-      "Börja söka för att se dina mest besökta kurser här",
-    feedbackSuccessMessage: "Vi återkommer så snart som möjligt!",
-    feedbackErrorMessage: "Något gick fel när din feedback skickades.",
-    tryAgainButton: "Försök igen",
-    homeButton: "Hitta din tenta!",
-    showPagination: "Visa sidnummer",
-    hidePagination: "Dölj sidnummer",
-    togglePagination: "Toggla sidnummer",
-    completed: "Har gjorts",
-    cookieBannerText:
-      "Vi använder cookies för att ge dig den bästa upplevelsen på vår webbplats.",
-    acceptCookie: "Acceptera",
-    rejectCookie: "Avvisa",
-    cookieBannerDescription:
-      "När du accepterar cookies kan du använda alla funktioner som snabb sökning och filtrering.",
-    cookieConsentRequired:
-      "Du måste acceptera cookies för att se populära sökningar.",
-    noExamsFound: "Inga tentor hittades för kurskoden: ",
+
+    // PDF Controls
+    zoomIn: "Zooma in",
+    zoomOut: "Zooma ut",
     rotateLeft: "Rotera vänster",
     rotateRight: "Rotera höger",
-    markAsCompleted: "Markera som klar",
-    moveFacitLeft: "Flytta facit till vänster",
-    moveFacitRight: "Flytta facit till höger",
     downloadExam: "Ladda ner tenta",
     downloadFacit: "Ladda ner facit",
     showExamToolbar: "Visa tenta verktygsfält",
@@ -302,20 +384,135 @@ const translations: Translations = {
     hideFacitToolbar: "Dölj facit verktygsfält",
     toggleExamToolbar: "Toggla tenta verktygsfält",
     toggleFacitToolbar: "Toggla facit verktygsfält",
-    goBack: "Gå tillbaka",
-    loadingMessage: "Laddar...",
-    clearSearch: "Rensa",
-    suggestions: "Förslag",
-    keyboardShortcuts: "Keyboard Shortcuts",
+    moveFacitLeft: "Flytta facit till vänster",
+    moveFacitRight: "Flytta facit till höger",
+    next: "Nästa",
+    previous: "Föregående",
+    nextSide: "Nästa sida",
+    previousSide: "Föregående sida",
+
+    // Course
+    courseCode: "Kurskod",
+    searchCoursePlaceholder: "Sök efter kurskod",
+    searchResultsForCourseCode: "Sökresultat",
+    examsAvailable: "Tentor tillgängliga för",
+    noExamsFound: "Inga tentor hittades för kurskoden: ",
+    courseCodeNotFound: "Kurskoden hittades inte",
+    courseCodeNotFoundMessage:
+      "Kurskoden finns inte i vår databas. Kontrollera stavningen eller prova en annan kurskod.",
+    noExamsFoundMessage: "Inga tentor hittades för kurskoden.",
+    createdAt: "Skriven",
+
+    // User Progress
+    completed: "Har gjorts",
+    notCompleted: "Inte gjord",
+    markAsCompleted: "Markera som klar",
+    markedAsCompleted: "Markerad som klar",
+    unMarkedAsCompleted: "Avmarkerad som klar",
+    remainingExamsTitle: "Grymt jobbat!",
+    remainingExamsMessage: "Här är tentor du inte har gjort:",
+    allExamsCompletedTitle: "Bra jobbat!",
+    allExamsCompletedMessage: "Du har klarat alla tentor för denna kurs!",
+    congratulationsMessage: "Grattis! Du har klarat alla tentor!",
+    goodJob: "Bra jobbat!",
+    continueWhereYouLeftOff: "Senaste aktiviteter",
+    showContinueWhereYouLeftOff: "Visa fortsätt där du slutade",
+    hideContinueWhereYouLeftOff: "Dölj fortsätt där du slutade",
+    recentActivityDescription: "Här är dina senaste aktiviteter",
+    noRecentActivity: "Inga senaste aktiviteter",
+
+    // Feedback
+    feedbackLink: "Ge feedback",
+    feedbackTitle: "Hjälp oss bli bättre!",
+    feedbackDescription:
+      "Vi uppskattar din feedback. Vänligen fyll i formuläret.",
     feedbackForm: "Feedback Formulär",
-    didYouMean: "Menade du",
-    notFound: "Inga tentor hittades för kurskod",
-    hasFacit: "Har facit",
+    feedbackSuccessTitle: "Tack för din feedback!",
+    feedbackSuccessMessage: "Vi återkommer så snart som möjligt!",
+    feedbackErrorTitle: "Något gick fel",
+    feedbackErrorMessage: "Något gick fel när din feedback skickades.",
+    nameLegend: "Namn",
+    namePlaceholder: "Namn",
+    nameDescription: "Valfritt",
+    messageLegend: "Meddelande",
+    messagePlaceholder: "Meddelande",
+    messageDescription:
+      "Berätta vad du tycker om LiU Tentor! Vi uppskattar om du är så detaljerad som möjligt.",
+    partOfWebsiteLegend: "Del av hemsidan",
+    partOfWebsitePlaceholder: "Vilken del av hemsidan?",
+    emailPlaceholder: "LiU Mail",
+    exampleEmail: "t.ex. liuid123@student.liu.se",
+    requiredField: "Obligatoriskt",
+    requiredFieldMessage: "Obligatoriskt fält",
+    weNeedYourHelp: "Vi behöver din hjälp!",
+    makeLiuTentorBetter: "Hjälp oss göra LiU Tentor bättre",
+
+    // Upload
+    uploadTitle: "Ladda upp tenta eller facit",
+    uploadButton: "Ladda upp tenta eller facit",
+    uploadDescription:
+      "Vänligen ange kurskod och ladda upp en eller flera PDF:er.",
+    uploadSuccess: "Uppladdning lyckades",
+    uploadError: "Något gick fel vid uppladdningen",
+    uploadExamsOrFacit: "Ladda upp fler tentor eller facit",
+    dragAndDrop: "Släpp PDF-filer här eller klicka för att välja filer",
+    moreExamsTitle: "Hittade inte tentan eller facit du letade efter?",
+    moreExamsBtn: "Klicka här",
+    uploadGuidelinesTitle: "Riktlinjer för uppladdning",
+    uploadGuidelineCourseCode:
+      "Se till att kurskoden är korrekt innan uppladdning.",
+    uploadGuidelineNaming:
+      'Namnge filerna tydligt - t.ex. "2024-03-20-Frågor.pdf".',
+    uploadGuidelineDate: "Inkludera gärna datum eller termin i filnamnet.",
+    uploadGuidelineDuplicateCheck: "Dubbelkolla om filen redan finns på sidan.",
+    uploadGuidelineQuality: "Ladda endast upp tydliga och läsbara PDF-filer.",
+
+    // UI
     textSize: "Text storlek",
+    selectTextSize: "Välj textstorlek",
+    small: "Liten",
+    standard: "Standard",
+    large: "Stor",
+    font: "Font",
+    fontDescription: "Välj vilken font du vill använda på LiU Tentor",
+    theme: "Tema",
+    themeDescription: "Välj vilket tema du vill använda på LiU Tentor",
+    settingsDescription: "Anpassa dina inställningar och visa kortkommandon",
+    settingsTheme: "Tema",
+    settingsLanguage: "Språk",
+    settingsKeyboardShortcuts: "Kortkommandon",
     addTab: "Lägg till tab",
     removeTab: "Ta bort tab",
-    emailPlaceholder: "LiU Mail",
-    contactLink: "Kontakt",
+    showPagination: "Visa sidnummer",
+    hidePagination: "Dölj sidnummer",
+    togglePagination: "Toggla sidnummer",
+    scrollHint: "Scrolla för att se mer",
+    tapToSeeMore: "Tryck för att se mer",
+
+    // Keyboard
+    keyboardShortcuts: "Keyboard Shortcuts",
+    usefulShortcuts: "Här är några användbara tangentbordsgenvägar:",
+    keyboardAction: "Handling",
+
+    // Time
+    justNow: "Just nu",
+    minutesAgo: "minuter sedan",
+    hoursAgo: "timmar sedan",
+    daysAgo: "dagar sedan",
+    new: "Ny",
+    minShort: "m",
+    hShort: "h",
+    dShort: "d",
+
+    // Cookies
+    cookieBannerText:
+      "Vi använder cookies för att ge dig den bästa upplevelsen på vår webbplats.",
+    cookieBannerDescription:
+      "När du accepterar cookies kan du använda alla funktioner som snabb sökning och filtrering.",
+    cookieConsentRequired:
+      "Du måste acceptera cookies för att se populära sökningar.",
+
+    // Privacy Policy
     privacyPolicyTitle: "Integritetspolicy",
     privacyPolicyLastUpdated: "Senast uppdaterad: ",
     privacyPolicyIntro:
@@ -354,92 +551,9 @@ const translations: Translations = {
     privacyPolicySection7Content:
       "Om du har några frågor om denna integritetspolicy eller hur dina uppgifter hanteras, vänligen kontakta oss på:",
     privacyPolicyContactEmail: "E-post: liutentor@gmail.com",
-    remainingExamsTitle: "Grymt jobbat!",
-    remainingExamsMessage: "Här är tentor du inte har gjort:",
-    allExamsCompletedTitle: "Bra jobbat!",
-    allExamsCompletedMessage: "Du har klarat alla tentor för denna kurs!",
-    closeDialog: "Stäng",
-    congratulationsMessage: "Grattis! Du har klarat alla tentor!",
-    facitAvailable: "Facit tillgängligt",
-    facitNotAvailable: "Facit inte tillgängligt",
-    notCompleted: "Inte gjord",
-    examAndFacit: "Facit synligt",
-    examOnly: "Facit dolt",
-    toggleExam: "Toggla facit (facit bara mode)",
-    moreExamsTitle: "Hittade inte tentan eller facit du letade efter?",
-    moreExamsBtn: "Klicka här",
-    uploadTitle: "Ladda upp tenta eller facit",
-    selectTextSize: "Välj textstorlek",
-    small: "Liten",
-    standard: "Standard",
-    large: "Stor",
-    askAI: "Fråga AI",
-    aiTitle: "Vad behöver du hjälp med?",
-    aiDescription:
-      "Få frågor besvarade, förklarade och diskuterade av chatten.",
-    examDone: "Gjord",
-    withFacit: "Med facit",
-    noResults: "Inga resultat",
-    scrollHint: "Scrolla för att se mer",
-    requiredField: "Obligatoriskt",
-    requiredFieldMessage: "Obligatoriskt fält",
-    exampleEmail: "t.ex. liuid123@student.liu.se",
-    partOfWebsiteLegend: "Del av hemsidan",
-    dragAndDrop: "Släpp PDF-filer här eller klicka för att välja filer",
-    uploadDescription:
-      "Vänligen ange kurskod och ladda upp en eller flera PDF:er.",
-    uploadSuccess: "Uppladdning lyckades",
-    uploadError: "Något gick fel vid uppladdningen",
-    reset: "Återställ",
-    noFacitAvailableDescription:
-      "Vissa tentor har inget facit. Du kan ladda upp ett facit om du har ett.",
-    uploadButton: "Ladda upp tenta eller facit",
-    weNeedYourHelp: "Vi behöver din hjälp!",
-    markedAsCompleted: "Markerad som klar",
-    unMarkedAsCompleted: "Avmarkerad som klar",
-    goodJob: "Bra jobbat!",
-    makeLiuTentorBetter: "Hjälp oss göra LiU Tentor bättre",
-    settings: "Inställningar",
-    settingsDescription: "Anpassa dina inställningar och visa kortkommandon",
-    settingsTheme: "Tema",
-    settingsLanguage: "Språk",
-    settingsKeyboardShortcuts: "Kortkommandon",
-    exam: "Tenta",
-    facit: "Facit",
-    courses: "Kurser",
-    noResultsFound: "Inga resultat hittades",
-    allCourses: "Kurser",
-    recentSearches: "Senaste sökningarna",
-    globalSearch: "Global sökning",
-    login: "Logga in",
-    create_account: "Skapa konto",
-    login_with_liu_mail: "Logga in med LiU-mail",
-    welcome_back: "Välkommen tillbaka",
-    register_with_liu_mail: "Registrera med LiU-mail",
-    exams: "Tentor",
-    uploadExamsOrFacit: "Ladda upp fler tentor eller facit",
-    backToHome: "Tillbaka till startsidan",
-    contactUs: "Kontakta oss",
     privacyPolicyContactText:
       "Om du har några frågor om vår integritetspolicy, vänligen kontakta oss.",
-    contactEmail: "Kontakta via e-post",
-    feedbackSuccessTitle: "Tack för din feedback!",
-    feedbackErrorTitle: "Något gick fel",
-    continueWhereYouLeftOff: "Senaste aktiviteter",
-    justNow: "Just nu",
-    minutesAgo: "minuter sedan",
-    hoursAgo: "timmar sedan",
-    daysAgo: "dagar sedan",
-    recentActivityDescription: "Här är dina senaste aktiviteter",
-    noRecentActivity: "Inga senaste aktiviteter",
-    lostMessage: "Det verkar som att du kommit till den akademiska djungeln.",
-    goHome: "Gå hem",
-    theme: "Tema",
-    font: "Font",
-    fontDescription: "Välj vilken font du vill använda på LiU Tentor",
-    themeDescription: "Välj vilket tema du vill använda på LiU Tentor",
-    quickLinks: "Snabblänkar",
-    tapToSeeMore: "Tryck för att se mer",
+    privacyPolicyGDPRTitle: "Hantering av personuppgifter och GDPR",
     privacyPolicyGDPRContent:
       "Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss.",
     privacyPolicyGDPRItem1:
@@ -448,45 +562,173 @@ const translations: Translations = {
       "Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.",
     privacyPolicyGDPRItem3:
       "Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.",
-    privacyPolicyGDPRTitle: "Hantering av personuppgifter och GDPR",
-    showContinueWhereYouLeftOff: "Visa fortsätt där du slutade",
-    hideContinueWhereYouLeftOff: "Dölj fortsätt där du slutade",
-    new: "Ny",
-    dShort: "d",
-    hShort: "h",
-    minShort: "m",
-    uploadGuidelinesTitle: "Riktlinjer för uppladdning",
-    uploadGuidelineCourseCode:
-      "Se till att kurskoden är korrekt innan uppladdning.",
-    uploadGuidelineNaming:
-      'Namnge filerna tydligt – t.ex. "2024-03-20-Frågor.pdf".',
-    uploadGuidelineDate: "Inkludera gärna datum eller termin i filnamnet.",
-    uploadGuidelineDuplicateCheck: "Dubbelkolla om filen redan finns på sidan.",
-    uploadGuidelineQuality: "Ladda endast upp tydliga och läsbara PDF-filer.",
+
+    // Auth
+    login: "Logga in",
+    create_account: "Skapa konto",
+    welcome_back: "Välkommen tillbaka",
+    login_with_liu_mail: "Logga in med LiU-mail",
+    register_with_liu_mail: "Registrera med LiU-mail",
+
+    // Statistics
+    statistics: "Statistik",
     passedCount: "Godkända",
     averagePassRate: "Genomsnitt godkända",
-    withSolution: "med facit",
     examStatisticsDescription:
       "Vi har precis introducerat tentastatistik, klicka på procenten för att få en mer detaljerad vy",
+
+    // Misc
+    allRightsReserved: "All rights reserved",
+    madeBy: "Made with",
+    contactLink: "Kontakt",
+    contactEmail: "Kontakta via e-post",
+    askAI: "Fråga AI",
+    aiTitle: "Vad behöver du hjälp med?",
+    aiDescription:
+      "Få frågor besvarade, förklarade och diskuterade av chatten.",
+    faq: "Vanliga frågor",
+    aboutUs: "Om oss",
+    feedback: "Feedback",
+    privacyPolicy: "Integritetspolicy",
+    loadingExams: "Laddar tentor...",
+    uploadExams: "Ladda upp tentor",
+    noExamsFoundShort: "Inga tentor hittades",
+    helpOtherStudentsMessage:
+      "Har du tentor för den här kursen? Hjälp andra studenter genom att ladda upp dem!",
+    uploadMore: "Ladda upp mer",
+    examCount: "tenta",
+    solutionCount: "facit",
   },
+
   en: {
+    // Common
+    homeLink: "Home",
+    goBack: "Go back",
+    goHome: "Go home",
+    backToHome: "Back to Home",
+    settings: "Settings",
+    contactUs: "Contact Us",
+    quickLinks: "Quick Links",
+    loadingMessage: "Loading...",
+    loadingPDF: "Loading PDF...",
+    noResults: "No results",
+    noResultsFound: "No results found",
+    notFound: "No exams found for course code",
+    lostMessage: "It looks like you're lost in the academic void...",
+    submitButton: "Submit",
+    searchButton: "Search Exams",
+    clearSearch: "Clear",
+    reset: "Reset",
+    tryAgainButton: "Try again",
+    acceptCookie: "Accept",
+    rejectCookie: "Reject",
+    closeDialog: "Close",
+
+    // Home Page
     homeTitle: "LiU Exams",
     homeDescription:
       "Finally, you can find exams from Linköping University all in one place... Mostly TekFak",
     searchPlaceholder: "Search for",
-    popularSearches: "Popular Searches",
     courseCodePlaceholder: "Course Code",
-    searchButton: "Search Exams",
+    popularSearches: "Popular Searches",
     popularSearchesTitle: "Recently Searched",
     popularSearchesDescription:
       "Here are some of your recent searched courses right now.",
-    homeLink: "Home",
+    recentSearches: "Recent Searches",
+    noPopularSearchesMessage:
+      "Start searching to see your most visited courses here",
+    globalSearch: "Global Search",
+    allCourses: "Courses",
+    courses: "Courses",
+    suggestions: "Suggestions",
+    didYouMean: "Did you mean",
+
+    // Exams
+    exam: "Exam",
+    exams: "Exams",
+    examName: "Name",
+    examDone: "Done",
+    examOnly: "Solution hidden",
+    examAndFacit: "Solution visible",
+    facit: "Facit",
+    facitAvailable: "Facit available",
+    facitNotAvailable: "Facit not available",
+    showFacit: "Show Facit",
+    hideFacit: "Hide Facit",
+    chooseFacit: "Choose Facit",
+    noFacitAvailable: "No facit available",
+    noFacitAvailableDescription:
+      "Some exams do not have a facit. You can upload a facit if you have one.",
+    chooseFacitDescription:
+      "Some exams do not have a facit, but you can choose a facit from the list below if available. It may also be that the facit is a bit further down in the exam document.",
+    mouseOverDescription: "Hover over to see facit",
+    withFacit: "With solution",
+    withSolution: "with solutions",
+    hasFacit: "Has solution",
+    toggleExam: "Toggle exam (exam only mode)",
+    toggleShowFacit: "Toggle show solution",
+
+    // PDF Controls
+    zoomIn: "Zoom In",
+    zoomOut: "Zoom Out",
+    rotateLeft: "Rotate left",
+    rotateRight: "Rotate right",
+    downloadExam: "Download exam",
+    downloadFacit: "Download facit",
+    showExamToolbar: "Show exam toolbar",
+    hideExamToolbar: "Hide exam toolbar",
+    showFacitToolbar: "Show facit toolbar",
+    hideFacitToolbar: "Hide facit toolbar",
+    toggleExamToolbar: "Toggle exam toolbar",
+    toggleFacitToolbar: "Toggle facit toolbar",
+    moveFacitLeft: "Move facit to the left",
+    moveFacitRight: "Move facit to the right",
+    next: "Next",
+    previous: "Previous",
+    nextSide: "Next side",
+    previousSide: "Previous side",
+
+    // Course
+    courseCode: "Course Code",
+    searchCoursePlaceholder: "Search for course code",
+    searchResultsForCourseCode: "Search results",
+    examsAvailable: "Exams available for",
+    noExamsFound: "No exams found for course code: ",
+    courseCodeNotFound: "Course code not found",
+    courseCodeNotFoundMessage:
+      "The course code was not found in our database. Please check the spelling or try another course code.",
+    noExamsFoundMessage: "No exams found for course code.",
+    createdAt: "Written",
+
+    // User Progress
+    completed: "Completed",
+    notCompleted: "Not completed",
+    markAsCompleted: "Mark as completed",
+    markedAsCompleted: "Marked as completed",
+    unMarkedAsCompleted: "Unmarked as completed",
+    remainingExamsTitle: "Great job!",
+    remainingExamsMessage: "Here are the exams you haven't completed:",
+    allExamsCompletedTitle: "Great Job!",
+    allExamsCompletedMessage:
+      "You have completed all available exams for this course!",
+    congratulationsMessage: "Congratulations! You have completed all exams!",
+    goodJob: "Good job!",
+    continueWhereYouLeftOff: "Recent activities",
+    showContinueWhereYouLeftOff: "Show continue where you left off",
+    hideContinueWhereYouLeftOff: "Hide continue where you left off",
+    recentActivityDescription: "Here are your recent activities",
+    noRecentActivity: "No recent activities",
+
+    // Feedback
     feedbackLink: "Give Feedback",
-    allRightsReserved: "All rights reserved",
-    madeBy: "Made with",
     feedbackTitle: "Help us get better!",
     feedbackDescription:
       "We appreciate your feedback. Please fill out the form.",
+    feedbackForm: "Feedback Form",
+    feedbackSuccessTitle: "Thank you for your feedback!",
+    feedbackSuccessMessage: "We will get back to you as soon as possible!",
+    feedbackErrorTitle: "Something went wrong",
+    feedbackErrorMessage: "Something went wrong when your feedback was sent.",
     nameLegend: "Name",
     namePlaceholder: "Name",
     nameDescription: "Optional",
@@ -494,76 +736,82 @@ const translations: Translations = {
     messagePlaceholder: "Message",
     messageDescription:
       "Tell us what you think about LiU Exams! We appreciate as much detail as possible.",
+    partOfWebsiteLegend: "Part of the website",
     partOfWebsitePlaceholder: "Which part of the website?",
-    submitButton: "Submit",
-    searchCoursePlaceholder: "Search for course code",
-    zoomIn: "Zoom In",
-    zoomOut: "Zoom Out",
-    showFacit: "Show Facit",
-    hideFacit: "Hide Facit",
-    chooseFacit: "Choose Facit",
-    loadingPDF: "Loading PDF...",
-    noFacitAvailable: "No facit available",
-    chooseFacitDescription:
-      "Some exams do not have a facit, but you can choose a facit from the list below if available. It may also be that the facit is a bit further down in the exam document.",
-    mouseOverDescription: "Hover over to see facit",
-    next: "Next",
-    previous: "Previous",
-    courseCode: "Course Code",
-    examName: "Name",
-    createdAt: "Written",
-    searchResultsForCourseCode: `Search results`,
-    examsAvailable: "Exams available for",
-    usefulShortcuts: "Here are some handy keyboard shortcuts:",
-    keyboardAction: "Action",
-    nextSide: "Next side",
-    previousSide: "Previous side",
-    toggleShowFacit: "Toggle show solution",
-    noPopularSearchesMessage:
-      "Start searching to see your most visited courses here",
-    feedbackSuccessMessage: "We will get back to you as soon as possible!",
-    feedbackErrorMessage: "Something went wrong when your feedback was sent.",
-    tryAgainButton: "Try again",
-    homeButton: "Find your exam!",
+    emailPlaceholder: "LiU Mail",
+    exampleEmail: "e.g. liuid123@student.liu.se",
+    requiredField: "Required",
+    requiredFieldMessage: "Required field",
+    weNeedYourHelp: "We need your help!",
+    makeLiuTentorBetter: "Help us make LiU Exams better",
+
+    // Upload
+    uploadTitle: "Upload exam or solution",
+    uploadButton: "Upload exam or solution",
+    uploadDescription: "Please enter course code and upload one or more PDFs.",
+    uploadSuccess: "Upload successful",
+    uploadError: "Something went wrong with the upload",
+    uploadExamsOrFacit: "Upload more exams or solutions",
+    dragAndDrop: "Drop PDF files here or click to select files",
+    moreExamsTitle: "Didn't find the exam or solution you were looking for?",
+    moreExamsBtn: "Click here",
+    uploadGuidelinesTitle: "Upload Guidelines",
+    uploadGuidelineCourseCode:
+      "Make sure the course code is correct before uploading.",
+    uploadGuidelineNaming:
+      'Name files clearly - e.g., "2024-03-20-Questions.pdf".',
+    uploadGuidelineDate:
+      "Include the date or term in the filename if possible.",
+    uploadGuidelineDuplicateCheck:
+      "Double-check if the file already exists on the site.",
+    uploadGuidelineQuality: "Only upload clear and readable PDF files.",
+
+    // UI
+    textSize: "Text size",
+    selectTextSize: "Select text size",
+    small: "Small",
+    standard: "Standard",
+    large: "Large",
+    font: "Font",
+    fontDescription: "Choose which font you want to use on LiU Exams",
+    theme: "Theme",
+    themeDescription: "Choose which theme you want to use on LiU Exams",
+    settingsDescription:
+      "Customize your preferences and view keyboard shortcuts",
+    settingsTheme: "Theme",
+    settingsLanguage: "Language",
+    settingsKeyboardShortcuts: "Keyboard Shortcuts",
+    addTab: "Add tab",
+    removeTab: "Remove tab",
     showPagination: "Show page number",
     hidePagination: "Hide page number",
     togglePagination: "Toggle page number",
-    completed: "Completed",
+    scrollHint: "Scroll to see more",
+    tapToSeeMore: "Tap to see more",
+
+    // Keyboard
+    keyboardShortcuts: "Keyboard Shortcuts",
+    usefulShortcuts: "Here are some handy keyboard shortcuts:",
+    keyboardAction: "Action",
+
+    // Time
+    justNow: "Just now",
+    minutesAgo: "minutes ago",
+    hoursAgo: "hours ago",
+    daysAgo: "days ago",
+    new: "New",
+    minShort: "m",
+    hShort: "h",
+    dShort: "d",
+
+    // Cookies
     cookieBannerText:
       "We use cookies to give you the best experience on our website",
-    acceptCookie: "Accept",
-    rejectCookie: "Reject",
     cookieBannerDescription:
       "When you accept cookies, you can use all features like quick search and filtering.",
     cookieConsentRequired: "You must accept cookies to see popular searches.",
-    noExamsFound: "No exams found for course code: ",
-    rotateLeft: "Rotate left",
-    rotateRight: "Rotate right",
-    markAsCompleted: "Mark as completed",
-    moveFacitLeft: "Move facit to the left",
-    moveFacitRight: "Move facit to the right",
-    downloadExam: "Download exam",
-    downloadFacit: "Download facit",
-    hideExamToolbar: "Hide exam toolbar",
-    showExamToolbar: "Show exam toolbar",
-    showFacitToolbar: "Show facit toolbar",
-    hideFacitToolbar: "Hide facit toolbar",
-    toggleExamToolbar: "Toggle exam toolbar",
-    toggleFacitToolbar: "Toggle facit toolbar",
-    goBack: "Go back",
-    loadingMessage: "Loading...",
-    clearSearch: "Clear",
-    suggestions: "Suggestions",
-    keyboardShortcuts: "Keyboard Shortcuts",
-    feedbackForm: "Feedback Form",
-    didYouMean: "Did you mean",
-    notFound: "No exams found for course code",
-    hasFacit: "Has solution",
-    textSize: "Text size",
-    addTab: "Add tab",
-    removeTab: "Remove tab",
-    emailPlaceholder: "LiU Mail",
-    contactLink: "Contact",
+
+    // Privacy Policy
     privacyPolicyTitle: "Privacy Policy",
     privacyPolicyLastUpdated: "Last updated: ",
     privacyPolicyIntro:
@@ -601,93 +849,9 @@ const translations: Translations = {
     privacyPolicySection7Content:
       "If you have any questions about this privacy policy or how your data is handled, please contact us at:",
     privacyPolicyContactEmail: "Email: liutentor@gmail.com",
-    remainingExamsTitle: "Great job!",
-    remainingExamsMessage: "Here are the exams you haven't completed:",
-    allExamsCompletedTitle: "Great Job!",
-    allExamsCompletedMessage:
-      "You have completed all available exams for this course!",
-    closeDialog: "Close",
-    congratulationsMessage: "Congratulations! You have completed all exams!",
-    facitAvailable: "Facit available",
-    facitNotAvailable: "Facit not available",
-    notCompleted: "Not completed",
-    examAndFacit: "Solution visible",
-    examOnly: "Solution hidden",
-    toggleExam: "Toggle exam (exam only mode)",
-    moreExamsTitle: "Didn't find the exam or solution you were looking for?",
-    moreExamsBtn: "Click here",
-    uploadTitle: "Upload exam or solution",
-    selectTextSize: "Select text size",
-    small: "Small",
-    standard: "Standard",
-    large: "Large",
-    askAI: "Ask AI",
-    aiTitle: "What do you need help with?",
-    aiDescription:
-      "Get questions answered, explained, and discussed by the chat.",
-    examDone: "Done",
-    withFacit: "With solution",
-    noResults: "No results",
-    scrollHint: "Scroll to see more",
-    requiredField: "Required",
-    requiredFieldMessage: "Required field",
-    exampleEmail: "e.g. liuid123@student.liu.se",
-    partOfWebsiteLegend: "Part of the website",
-    dragAndDrop: "Drop PDF files here or click to select files",
-    uploadDescription: "Please enter course code and upload one or more PDFs.",
-    uploadSuccess: "Upload successful",
-    uploadError: "Something went wrong with the upload",
-    reset: "Reset",
-    noFacitAvailableDescription:
-      "Some exams do not have a facit. You can upload a facit if you have one.",
-    uploadButton: "Upload exam or solution",
-    weNeedYourHelp: "We need your help!",
-    markedAsCompleted: "Marked as completed",
-    unMarkedAsCompleted: "Unmarked as completed",
-    goodJob: "Good job!",
-    makeLiuTentorBetter: "Help us make LiU Exams better",
-    settings: "Settings",
-    settingsDescription:
-      "Customize your preferences and view keyboard shortcuts",
-    settingsTheme: "Theme",
-    settingsLanguage: "Language",
-    settingsKeyboardShortcuts: "Keyboard Shortcuts",
-    exam: "Exam",
-    facit: "Facit",
-    courses: "Courses",
-    noResultsFound: "No results found",
-    allCourses: "Courses",
-    recentSearches: "Recent Searches",
-    globalSearch: "Global Search",
-    create_account: "Create account",
-    login: "Login",
-    login_with_liu_mail: "Login with LiU mail",
-    welcome_back: "Welcome back",
-    register_with_liu_mail: "Register with LiU mail",
-    exams: "Exams",
-    uploadExamsOrFacit: "Upload more exams or solutions",
-    backToHome: "Back to Home",
-    contactUs: "Contact Us",
     privacyPolicyContactText:
       "If you have any questions about our privacy policy, please contact us.",
-    contactEmail: "Contact Email",
-    feedbackSuccessTitle: "Thank you for your feedback!",
-    feedbackErrorTitle: "Something went wrong",
-    continueWhereYouLeftOff: "Recent activities",
-    justNow: "Just now",
-    minutesAgo: "minutes ago",
-    hoursAgo: "hours ago",
-    daysAgo: "days ago",
-    recentActivityDescription: "Here are your recent activities",
-    noRecentActivity: "No recent activities",
-    goHome: "Go home",
-    lostMessage: "It looks like you're lost in the academic void...",
-    font: "Font",
-    theme: "Theme",
-    fontDescription: "Choose which font you want to use on LiU Exams",
-    themeDescription: "Choose which theme you want to use on LiU Exams",
-    quickLinks: "Quick Links",
-    tapToSeeMore: "Tap to see more",
+    privacyPolicyGDPRTitle: "Handling of personal data and GDPR",
     privacyPolicyGDPRContent:
       "We display publicly available exams published by the university, including names of examiners as part of the document original content. We respect the right to privacy and follow GDPR regulations. If you are an examiner and want to request removal of your name from an exam, please contact us.",
     privacyPolicyGDPRItem1:
@@ -696,28 +860,42 @@ const translations: Translations = {
       "Examiners names are included only if they are part of the original exam.",
     privacyPolicyGDPRItem3:
       "If you want to request removal of an exam or a name, please contact us via email.",
-    privacyPolicyGDPRTitle: "Handling of personal data and GDPR",
-    hideContinueWhereYouLeftOff: "Hide continue where you left off",
-    showContinueWhereYouLeftOff: "Show continue where you left off",
-    new: "New",
-    dShort: "d",
-    hShort: "h",
-    minShort: "m",
-    uploadGuidelinesTitle: "Upload Guidelines",
-    uploadGuidelineCourseCode:
-      "Make sure the course code is correct before uploading.",
-    uploadGuidelineNaming:
-      'Name files clearly – e.g., "2024-03-20-Questions.pdf".',
-    uploadGuidelineDate:
-      "Include the date or term in the filename if possible.",
-    uploadGuidelineDuplicateCheck:
-      "Double-check if the file already exists on the site.",
-    uploadGuidelineQuality: "Only upload clear and readable PDF files.",
+
+    // Auth
+    login: "Login",
+    create_account: "Create account",
+    welcome_back: "Welcome back",
+    login_with_liu_mail: "Login with LiU mail",
+    register_with_liu_mail: "Register with LiU mail",
+
+    // Statistics
+    statistics: "Statistics",
     passedCount: "Passed",
     averagePassRate: "Average pass rate",
-    withSolution: "with solutions",
     examStatisticsDescription:
       "We have just introduced exam statistics, click on the percentage to get a more detailed view",
+
+    // Misc
+    allRightsReserved: "All rights reserved",
+    madeBy: "Made with",
+    contactLink: "Contact",
+    contactEmail: "Contact Email",
+    askAI: "Ask AI",
+    aiTitle: "What do you need help with?",
+    aiDescription:
+      "Get questions answered, explained, and discussed by the chat.",
+    faq: "FAQ",
+    aboutUs: "About Us",
+    feedback: "Feedback",
+    privacyPolicy: "Privacy Policy",
+    loadingExams: "Loading exams...",
+    uploadExams: "Upload exams",
+    noExamsFoundShort: "No exams found",
+    helpOtherStudentsMessage:
+      "Do you have exams for this course? Help other students by uploading them!",
+    uploadMore: "Upload more",
+    examCount: "exam",
+    solutionCount: "solution",
   },
 };
 

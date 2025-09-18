@@ -4,9 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
 import { CornerUpRight } from "lucide-react";
-import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import useSWR from "swr";
+import useTranslation from "@/hooks/useTranslation";
 
 interface RecentActivity {
   courseCode: string;
@@ -38,6 +38,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   const { language } = useLanguage();
   const navigate = useNavigate();
   const { pathname } = useLocation();
+  const { t } = useTranslation();
 
   const [courseCode, setCourseCode] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
@@ -56,9 +57,6 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       revalidateOnFocus: false,
     }
   );
-
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
 
   const loadRecentSearches = useCallback(() => {
     const cookieConsent = Cookies.get("cookieConsent");
@@ -236,7 +234,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
         />
         <input
           ref={inputRef}
-          placeholder={placeholder || getTranslation("searchCoursePlaceholder")}
+          placeholder={placeholder || t("searchCoursePlaceholder")}
           value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -272,7 +270,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
             {recentSearches.length > 0 && !courseCode.trim() && (
               <>
                 <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs">
-                  {getTranslation("recentSearches")}
+                  {t("recentSearches")}
                 </div>
                 {recentSearches.map((suggestion, index) => (
                   <div
@@ -297,7 +295,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                   <div className="border-t mx-2 my-1" />
                 )}
                 <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs">
-                  {getTranslation("allCourses")}
+                  {t("allCourses")}
                 </div>
                 {suggestions.slice(0, 10).map((suggestion, index) => (
                   <div

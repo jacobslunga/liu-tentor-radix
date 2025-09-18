@@ -6,21 +6,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useLanguage } from "@/context/LanguageContext";
-import translations from "@/util/translations";
 import { motion } from "framer-motion";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import useTranslation from "@/hooks/useTranslation";
 
 const CookieBanner = () => {
-  const { language } = useLanguage();
-
-  const getTranslation = (
-    key: keyof (typeof translations)[typeof language]
-  ) => {
-    return translations[language][key];
-  };
+  const { t } = useTranslation();
 
   const [isBannerVisible, setBannerVisible] = useState<boolean>(true);
 
@@ -59,27 +52,24 @@ const CookieBanner = () => {
       <Card className="p-4 w-full max-w-3xl mx-auto mb-4">
         <CardHeader>
           <CardTitle id="cookie-banner-title">
-            {getTranslation("cookieBannerText")}
+            {t("cookieBannerText")}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <CardDescription id="cookie-banner-description">
-            {getTranslation("cookieBannerDescription")}
+            {t("cookieBannerDescription")}
           </CardDescription>
         </CardContent>
         <CardFooter className="flex justify-end space-x-2">
-          <Button
-            onClick={handleAccept}
-            aria-label={getTranslation("acceptCookie")}
-          >
-            {getTranslation("acceptCookie")}
+          <Button onClick={handleAccept} aria-label={t("acceptCookie")}>
+            {t("acceptCookie")}
           </Button>
           <Button
             variant="secondary"
             onClick={handleReject}
-            aria-label={getTranslation("rejectCookie")}
+            aria-label={t("rejectCookie")}
           >
-            {getTranslation("rejectCookie")}
+            {t("rejectCookie")}
           </Button>
         </CardFooter>
       </Card>

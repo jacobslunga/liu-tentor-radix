@@ -1,16 +1,23 @@
 import { FC, useEffect } from "react";
-
-import ExamHeader from "@/components/ExamHeader";
-import { Loader2 } from "lucide-react";
-import PDFView from "@/components/PDFView";
-import { useCourseExams } from "@/hooks/useCourseExams";
-import { useExamDetails } from "@/hooks/useExamDetail";
-import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 
-const TentaPage: FC = () => {
-  const { language } = useLanguage();
+import useLayoutMode from "@/stores/LayoutModeStore";
+import ExamHeader from "@/components/ExamHeader";
+import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
+
+import { useCourseExams } from "@/hooks/useCourseExams";
+import { useExamDetails } from "@/hooks/useExamDetail";
+import { useMetadata } from "@/hooks/useMetadata";
+import { formatExamDate } from "@/util/formatExamDate";
+
+import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
+import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
+import { Loader2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
+
+const ExamPage: FC = () => {
+  const { layoutMode } = useLayoutMode();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,20 +33,11 @@ const TentaPage: FC = () => {
     isLoading: examsLoading,
     isError: examsError,
   } = useCourseExams(courseCode);
-
   const {
     examDetail,
     isLoading: detailLoading,
     isError: detailError,
   } = useExamDetails(Number(examId));
-
-  const formatExamDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("sv-SE", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
 
   const pageTitle =
     examDetail && courseData
@@ -72,26 +70,55 @@ const TentaPage: FC = () => {
   });
 
   if (examsLoading || detailLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
-        <p className="text-sm text-muted-foreground">
-          {language === "sv" ? "Laddar tenta..." : "Loading exam..."}
-        </p>
-      </div>
-    );
+    return <LoadingState />;
   }
 
   if (!courseData || !examDetail || examsError || detailError) {
-    return <div>Error loading data</div>;
+    return <ErrorState />;
   }
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <ExamHeader exams={courseData.exams} />
-      <PDFView examDetail={examDetail} />
+
+      {/** Desktop/Laptop view */}
+      <div className="w-full mt-0 h-screen md:mt-14 md:max-h-[calc(100vh-3.5rem)] relative bg-background hidden lg:flex flex-row items-center justify-center overflow-hidden">
+        {layoutMode === "exam-only" ? (
+          <ExamOnlyView examDetail={examDetail} />
+        ) : (
+          <ExamWithFacitView examDetail={examDetail} />
+        )}
+        <LayoutSwitcher />
+      </div>
+
+      {/** Mobile view */}
+      <MobilePdfView examDetail={examDetail} />
     </div>
   );
 };
 
-export default TentaPage;
+export default ExamPage;
+
+const LoadingState = () => {
+  return (
+    <div className="w-screen h-screen flex flex-col items-center justify-center gap-2">
+      <Loader2 className="w-10 h-10 animate-spin" />
+      <p className="font-medium text-foreground/70">Laddar tenta...</p>
+    </div>
+  );
+};
+
+const ErrorState = () => {
+  return (
+    <div className="h-screen w-screen flex flex-col items-center justify-center gap-2">
+      <p className="text-4xl text-foreground/80">Något gick fel!</p>
+      <p className="text-sm text-foreground/50">
+        Ibland fungerar det att bara ladda om sidan :)
+      </p>
+
+      <Button onClick={() => window.location.reload()} variant="secondary">
+        Ladda om
+      </Button>
+    </div>
+  );
+};

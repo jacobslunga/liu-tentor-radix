@@ -1,13 +1,7 @@
 import { FC, useState, useEffect, useRef } from "react";
-import { RotateCcw, RotateCw, Square } from "lucide-react";
-import {
-  DownloadIcon,
-  PlusIcon,
-  DashIcon,
-  CheckIcon,
-} from "@primer/octicons-react";
+import { RotateCcw, RotateCw } from "lucide-react";
+import { DownloadIcon, PlusIcon, DashIcon } from "@primer/octicons-react";
 import { Button } from "@/components/ui/button";
-import { Exam } from "@/types/exam";
 import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
@@ -15,16 +9,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import Cookies from "js-cookie";
 import { motion } from "framer-motion";
+import usePdf from "@/hooks/usePdf";
+import { downloadFile } from "@/lib/utils";
 
 interface Props {
-  selectedExam: Exam;
   pdfUrl: string | null;
-  onZoomIn: () => void;
-  onZoomOut: () => void;
-  onRotateClockwise: () => void;
-  onRotateCounterClockwise: () => void;
 }
 
 const ToolbarButton = ({
@@ -57,25 +47,13 @@ const ToolbarButton = ({
   </TooltipProvider>
 );
 
-const TentaToolbar: FC<Props> = ({
-  selectedExam,
-  pdfUrl,
-  onZoomIn,
-  onZoomOut,
-  onRotateClockwise,
-  onRotateCounterClockwise,
-}) => {
-  const [completedExams, setCompletedExams] = useState<Record<number, boolean>>(
-    () => {
-      const stored = Cookies.get("completedExams");
-      return stored ? JSON.parse(stored) : {};
-    }
-  );
-
+const ExamToolbar: FC<Props> = ({ pdfUrl }) => {
   const [isMouseActive, setIsMouseActive] = useState(true);
   const [isHovering, setIsHovering] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(isHovering);
+
+  const { zoomIn, zoomOut, rotateLeft, rotateRight } = usePdf("exam");
 
   useEffect(() => {
     isHoveringRef.current = isHovering;
@@ -108,29 +86,9 @@ const TentaToolbar: FC<Props> = ({
     };
   }, []);
 
-  const toggleCompleted = () => {
-    const id = selectedExam.id;
-    setCompletedExams((prev) => {
-      const newCompleted = !prev[id];
-      const updated = { ...prev, [id]: newCompleted };
-
-      Cookies.set("completedExams", JSON.stringify(updated), {
-        secure: true,
-        sameSite: "Lax",
-        expires: 365 * 100,
-        domain:
-          window.location.hostname === "liutentor.se"
-            ? ".liutentor.se"
-            : undefined,
-      });
-
-      return updated;
-    });
-  };
-
   return (
     <motion.div
-      className="fixed top-16 left-5 flex flex-col space-y-2 z-40"
+      className="fixed top-20 left-5 flex flex-col space-y-2 z-40"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) {
@@ -144,34 +102,27 @@ const TentaToolbar: FC<Props> = ({
       animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
       transition={{ duration: 0.3 }}
     >
-      {/* Själva knapparna */}
-      <ToolbarButton icon={PlusIcon} onClick={onZoomIn} tooltip="Zooma in" />
-      <ToolbarButton icon={DashIcon} onClick={onZoomOut} tooltip="Zooma ut" />
+      <ToolbarButton icon={PlusIcon} onClick={zoomIn} tooltip="Zooma in" />
+      <ToolbarButton icon={DashIcon} onClick={zoomOut} tooltip="Zooma ut" />
       <Separator />
       <ToolbarButton
         icon={RotateCcw}
-        onClick={onRotateCounterClockwise}
+        onClick={rotateLeft}
         tooltip="Rotera vänster"
       />
       <ToolbarButton
         icon={RotateCw}
-        onClick={onRotateClockwise}
+        onClick={rotateRight}
         tooltip="Rotera höger"
       />
       <Separator />
       <ToolbarButton
         icon={DownloadIcon}
-        onClick={() => window.open(pdfUrl || "#")}
+        onClick={() => pdfUrl && downloadFile(pdfUrl)}
         tooltip="Ladda ner tenta"
-      />
-      <ToolbarButton
-        icon={completedExams[selectedExam.id] ? CheckIcon : Square}
-        onClick={toggleCompleted}
-        tooltip="Markera som klar"
-        className={completedExams[selectedExam.id] ? "text-primary" : ""}
       />
     </motion.div>
   );
 };
 
-export default TentaToolbar;
+export default ExamToolbar;

@@ -23,11 +23,24 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
+import useTranslation from "@/hooks/useTranslation";
+
+type ShortcutAction =
+  | "moveFacitRight"
+  | "moveFacitLeft"
+  | "toggleShowFacit"
+  | "zoomIn"
+  | "zoomOut"
+  | "rotateLeft"
+  | "rotateRight"
+  | "toggleExamToolbar"
+  | "toggleExam"
+  | "toggleFacitToolbar";
 
 const SettingsDialog: FC = () => {
+  const { t } = useTranslation();
   const { setTheme, theme } = useTheme();
   const { changeLanguage, languages, language } = useLanguage();
   const [_, setSystemPrefersDark] = useState(false);
@@ -44,12 +57,6 @@ const SettingsDialog: FC = () => {
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
-
-  const getTranslation = (
-    key: keyof (typeof translations)[typeof language]
-  ) => {
-    return translations[language][key];
-  };
 
   const themeOptions: {
     id: "light" | "dark" | "system";
@@ -73,7 +80,11 @@ const SettingsDialog: FC = () => {
     },
   ];
 
-  const shortcuts = [
+  const shortcuts: Array<{
+    action: ShortcutAction;
+    key: string;
+    category: string;
+  }> = [
     { action: "moveFacitRight", key: "→", category: "navigation" },
     { action: "moveFacitLeft", key: "←", category: "navigation" },
     { action: "toggleShowFacit", key: "T", category: "visibility" },
@@ -103,19 +114,15 @@ const SettingsDialog: FC = () => {
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg">
         <DialogHeader>
-          <DialogTitle className="text-2xl">
-            {getTranslation("settings")}
-          </DialogTitle>
-          <DialogDescription>
-            {getTranslation("settingsDescription")}
-          </DialogDescription>
+          <DialogTitle className="text-2xl">{t("settings")}</DialogTitle>
+          <DialogDescription>{t("settingsDescription")}</DialogDescription>
         </DialogHeader>
 
         {/* Theme Selector */}
         <div className="space-y-3">
-          <h3 className="font-medium">{getTranslation("theme")}</h3>
+          <h3 className="font-medium">{t("theme")}</h3>
           <p className="text-sm text-muted-foreground">
-            {getTranslation("themeDescription")}
+            {t("themeDescription")}
           </p>
           <div className="flex gap-2">
             {themeOptions.map(({ id, label, icon }) => (
@@ -139,7 +146,7 @@ const SettingsDialog: FC = () => {
 
         {/* Language Selector */}
         <div className="space-y-4">
-          <h3 className="font-medium">{getTranslation("settingsLanguage")}</h3>
+          <h3 className="font-medium">{t("settingsLanguage")}</h3>
           <Select onValueChange={changeLanguage} value={language}>
             <SelectTrigger className="w-full">
               <SelectValue>{languages[language]}</SelectValue>
@@ -156,9 +163,7 @@ const SettingsDialog: FC = () => {
 
         {/* Keyboard Shortcuts */}
         <div className="space-y-4">
-          <h3 className="font-medium">
-            {getTranslation("settingsKeyboardShortcuts")}
-          </h3>
+          <h3 className="font-medium">{t("settingsKeyboardShortcuts")}</h3>
           <div className="space-y-4">
             {Object.keys(categoryTranslations).map((category) => {
               const categoryShortcuts = shortcuts.filter(
@@ -180,11 +185,7 @@ const SettingsDialog: FC = () => {
                       <tbody className="divide-y">
                         {categoryShortcuts.map((shortcut) => (
                           <tr key={shortcut.action} className="text-sm">
-                            <td className="px-4 py-3">
-                              {getTranslation(
-                                shortcut.action as keyof (typeof translations)[typeof language]
-                              )}
-                            </td>
+                            <td className="px-4 py-3">{t(shortcut.action)}</td>
                             <td className="px-4 py-3 text-right">
                               <kbd className="pointer-events-none inline-flex h-7 select-none items-center gap-1 rounded border bg-muted px-2 font-mono text-sm font-medium">
                                 {shortcut.key}

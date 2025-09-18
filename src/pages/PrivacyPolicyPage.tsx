@@ -1,28 +1,25 @@
 import { FC, useEffect } from "react";
-import translations, { Language } from "@/util/translations";
 
 import { Button } from "@/components/ui/button";
 import { Mailbox } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
+import useTranslation from "@/hooks/useTranslation";
 
 const PrivacyPolicy: FC = () => {
-  const { language } = useLanguage();
-  const getTranslation = (key: keyof (typeof translations)[Language]) =>
-    translations[language][key] || key;
+  const { t } = useTranslation();
 
   useMetadata({
-    title: `LiU Tentor | ${getTranslation("privacyPolicyTitle")}`,
-    description: getTranslation("privacyPolicyIntro"),
+    title: `LiU Tentor | ${t("privacyPolicyTitle")}`,
+    description: t("privacyPolicyIntro"),
     keywords:
       "integritetspolicy, privacy policy, GDPR, personuppgifter, data, Linköpings Universitet, LiU",
-    ogTitle: `LiU Tentor | ${getTranslation("privacyPolicyTitle")}`,
-    ogDescription: getTranslation("privacyPolicyIntro"),
+    ogTitle: `LiU Tentor | ${t("privacyPolicyTitle")}`,
+    ogDescription: t("privacyPolicyIntro"),
     ogType: "website",
     twitterCard: "summary",
-    twitterTitle: `LiU Tentor | ${getTranslation("privacyPolicyTitle")}`,
-    twitterDescription: getTranslation("privacyPolicyIntro"),
+    twitterTitle: `LiU Tentor | ${t("privacyPolicyTitle")}`,
+    twitterDescription: t("privacyPolicyIntro"),
     robots: "index, follow",
   });
 
@@ -55,58 +52,58 @@ const PrivacyPolicy: FC = () => {
       <div className="max-w-2xl mx-auto">
         <div className="mb-6 mt-12">
           <h1 className="text-3xl text-foreground font-medium flex items-center gap-2">
-            {getTranslation("privacyPolicyTitle")}
+            {t("privacyPolicyTitle")}
           </h1>
           <p className="text-xs text-muted-foreground mt-2">
-            {getTranslation("privacyPolicyLastUpdated")} 2025/03/18
+            {t("privacyPolicyLastUpdated")} 2025/03/18
           </p>
         </div>
         {/* Intro */}
         <div className="mb-8 text-sm leading-relaxed">
-          <p>{getTranslation("privacyPolicyIntro")}</p>
+          <p>{t("privacyPolicyIntro")}</p>
         </div>
         <Separator />
         {/* Sections */}
         <div className="space-y-6 mt-8">
           <Section
-            title={getTranslation("privacyPolicySection1Title")}
-            content={getTranslation("privacyPolicySection1Content")}
+            title={t("privacyPolicySection1Title")}
+            content={t("privacyPolicySection1Content")}
             items={[
-              getTranslation("privacyPolicySection1Item1"),
-              getTranslation("privacyPolicySection1Item2"),
-              getTranslation("privacyPolicySection1Item3"),
-              getTranslation("privacyPolicySection1Item4"),
+              t("privacyPolicySection1Item1"),
+              t("privacyPolicySection1Item2"),
+              t("privacyPolicySection1Item3"),
+              t("privacyPolicySection1Item4"),
             ]}
           />
 
           <Section
-            title={getTranslation("privacyPolicySection2Title")}
-            content={getTranslation("privacyPolicySection2Content")}
+            title={t("privacyPolicySection2Title")}
+            content={t("privacyPolicySection2Content")}
           />
 
           <Section
-            title={getTranslation("privacyPolicySection3Title")}
-            content={getTranslation("privacyPolicySection3Content")}
+            title={t("privacyPolicySection3Title")}
+            content={t("privacyPolicySection3Content")}
           />
 
           <Section
-            title={getTranslation("privacyPolicySection4Title")}
-            content={getTranslation("privacyPolicySection4Content")}
+            title={t("privacyPolicySection4Title")}
+            content={t("privacyPolicySection4Content")}
           />
 
           <Section
-            title={getTranslation("privacyPolicySection5Title")}
-            content={getTranslation("privacyPolicySection5Content")}
+            title={t("privacyPolicySection5Title")}
+            content={t("privacyPolicySection5Content")}
             items={[
-              getTranslation("privacyPolicySection5Item1"),
-              getTranslation("privacyPolicySection5Item2"),
-              getTranslation("privacyPolicySection5Item3"),
+              t("privacyPolicySection5Item1"),
+              t("privacyPolicySection5Item2"),
+              t("privacyPolicySection5Item3"),
             ]}
           />
 
           <Section
-            title={getTranslation("privacyPolicySection6Title")}
-            content={getTranslation("privacyPolicySection6Content")}
+            title={t("privacyPolicySection6Title")}
+            content={t("privacyPolicySection6Content")}
           />
 
           <Separator />
@@ -114,19 +111,19 @@ const PrivacyPolicy: FC = () => {
           {/* GDPR Section */}
           <Section
             title={
-              getTranslation("privacyPolicyGDPRTitle") ||
+              t("privacyPolicyGDPRTitle") ||
               "Hantering av personuppgifter och GDPR"
             }
             content={
-              getTranslation("privacyPolicyGDPRContent") ||
+              t("privacyPolicyGDPRContent") ||
               "Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss."
             }
             items={[
-              getTranslation("privacyPolicyGDPRItem1") ||
+              t("privacyPolicyGDPRItem1") ||
                 "Vi publicerar endast tentor som är offentligt tillgängliga.",
-              getTranslation("privacyPolicyGDPRItem2") ||
+              t("privacyPolicyGDPRItem2") ||
                 "Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.",
-              getTranslation("privacyPolicyGDPRItem3") ||
+              t("privacyPolicyGDPRItem3") ||
                 "Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.",
             ]}
           />
@@ -135,10 +132,10 @@ const PrivacyPolicy: FC = () => {
         <div className="mt-10 pt-6 border-t flex flex-col items-center text-center space-y-3">
           <Mailbox className="h-10 w-10 text-primary" />
           <h3 className="text-md font-medium">
-            {getTranslation("contactUs") || "Contact Us"}
+            {t("contactUs") || "Contact Us"}
           </h3>
           <p className="text-sm text-muted-foreground">
-            {getTranslation("privacyPolicyContactText") ||
+            {t("privacyPolicyContactText") ||
               "If you have any questions about our privacy policy, please contact us."}
           </p>
           <Button
@@ -148,7 +145,7 @@ const PrivacyPolicy: FC = () => {
               (window.location.href = "mailto:liutentor@gmail.com")
             }
           >
-            {getTranslation("contactEmail") || "Contact Email"}
+            {t("contactEmail") || "Contact Email"}
           </Button>
         </div>
       </div>

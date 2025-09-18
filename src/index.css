@@ -45,6 +45,29 @@
     background-color: transparent !important;
   }
 
+  .react-pdf__Page {
+    background-color: hsl(var(--background)) !important;
+    border: 1px solid hsl(var(--border));
+    border-radius: 8px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+
+  .react-pdf__Document {
+    background-color: hsl(var(--background)) !important;
+  }
+
+  /* Dark mode PDF inversion for better readability */
+  .dark .react-pdf__Page__canvas {
+    filter: invert(0.78) hue-rotate(180deg) brightness(0.8) contrast(1.2);
+  }
+
+  /* Ensure container backgrounds match theme */
+  .dark .react-pdf__Page,
+  .dark .react-pdf__Document {
+    background-color: hsl(var(--background)) !important;
+  }
+
   .pdf-container::-webkit-scrollbar {
     width: 8px;
     height: 8px;

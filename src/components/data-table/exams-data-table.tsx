@@ -28,8 +28,8 @@ import { Button } from "@/components/ui/button";
 import { ChartColumnIncreasing } from "lucide-react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
-import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
+import useTranslation from "@/hooks/useTranslation";
 
 interface Props {
   data: Exam[];
@@ -48,13 +48,11 @@ export function DataTable({
 }: Props) {
   const navigate = useNavigate();
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const [filter, setFilter] = useState("");
   const [selectedExamType, setSelectedExamType] = useState<String | null>("");
 
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
-
-  const columns = getColumns(language, translations);
+  const columns = getColumns(t);
   const examTypes = useMemo(
     () => new Set(data.map((exam) => exam.exam_name.split(" ")[0])),
     [data]
@@ -98,7 +96,7 @@ export function DataTable({
         <div className="flex flex-row items-center space-x-2">
           <h1 className="text-sm text-foreground/70">{courseCode}</h1>
           <Badge variant="outline">
-            {data.length} {translations[language].exams}
+            {data.length} {t("exams")}
           </Badge>
         </div>
 
@@ -120,13 +118,13 @@ export function DataTable({
             <span className="font-medium text-foreground">
               {avgPassRate.toFixed(1)}%
             </span>{" "}
-            {getTranslation("averagePassRate")}
+            {t("averagePassRate")}
           </div>
           <div>
             <span className="font-medium text-foreground">
               {totalWithSolutions}/{data.length}
             </span>{" "}
-            {getTranslation("withSolution")}
+            {t("withSolution")}
           </div>
         </div>
 
@@ -218,7 +216,7 @@ export function DataTable({
                   colSpan={columns.length}
                   className="h-24 text-center text-muted-foreground"
                 >
-                  {translations[language].noResults}
+                  {t("noExamsFound")}
                 </TableCell>
               </TableRow>
             )}
@@ -227,7 +225,7 @@ export function DataTable({
       </div>
 
       <div className="sm:hidden text-center text-xs text-muted-foreground">
-        {translations[language].scrollHint}
+        {t("scrollHint")}
       </div>
     </div>
   );
