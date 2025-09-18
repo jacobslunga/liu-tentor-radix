@@ -27,6 +27,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChartColumnIncreasing } from "lucide-react";
 import { Exam } from "@/types/exam";
+import { Sponsor } from "@/types/sponsor";
+import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getColumns } from "@/components/data-table/columns";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";

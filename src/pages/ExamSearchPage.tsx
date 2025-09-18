@@ -6,19 +6,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Loader2, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
+import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
+import { useMetadata } from "@/hooks/useMetadata";
 import { useTranslation } from "@/hooks/useTranslation";
-import { sponsors } from "@/components/sponsors/sponsorsData";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -164,22 +166,49 @@ const ExamSearchPage: FC = () => {
         )}
 
         {!isLoading && !isError && formattedExams.length > 0 && (
-          <div className="w-full flex flex-col items-center justify-center">
-            <div className="flex items-center justify-center flex-col col-span-1">
-              <SponsorBanner
-                sponsor={sponsors[0]}
-                description="Sök jobb hos Exsitec i sommar!"
-              />
+          <div className="w-full lg:w-auto flex items-center justify-center flex-col">
+            {/* Axis summer job example */}
+            {/* <SponsorBanner
+              sponsor={{
+                linkName: "",
+                to: "https://www.axis.com",
+                logo: "/sponsor-logos/axis.png",
+                name: "Axis Communications",
+              }}
+              description="Sök jobb hos Axis i sommar!"
+            /> */}
 
-              <DataTable
-                data={formattedExams}
-                courseCode={courseCode?.toUpperCase() ?? ""}
-                courseNameSwe={courseData?.course_name_swe || ""}
-                courseNameEng={courseData?.course_name_eng || ""}
-                onSortChange={() =>
-                  setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
-                }
-              />
+            {/* Ericsson student night */}
+            {/* <SponsorBanner
+              sponsor={{
+                linkName: "",
+                to: "https://www.ericsson.com",
+                logo: "/sponsor-logos/ericsson.png",
+                name: "Ericsson",
+              }}
+              description="Missa inte Ericssons studentkväll på deras kontor :)"
+            /> */}
+
+            {/* Opera workshop */}
+            <SponsorBanner
+              sponsor={{
+                linkName: "",
+                to: "https://www.opera.com",
+                logo: "/sponsor-logos/opera.png",
+                name: "Ericsson",
+              }}
+              description="Opera håller i en workshop för mikroprocessorer"
+            />
+
+            <DataTable
+              data={formattedExams}
+              courseCode={courseCode?.toUpperCase() ?? ""}
+              courseNameSwe={courseData?.course_name_swe || ""}
+              courseNameEng={courseData?.course_name_eng || ""}
+              onSortChange={() =>
+                setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+              }
+            />
 
               <Link to="/upload-exams">
                 <Button className="w-full z-50">{t("uploadMore")}</Button>
