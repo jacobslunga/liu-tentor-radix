@@ -1,5 +1,3 @@
-import "@/lib/pdfWorker";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,11 +27,12 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { ExamModeManager } from "@/lib/examMode";
-import PDFViewer from "@/components/PDF/PDFViewer";
 import { pdfjs } from "react-pdf";
 import { useExamDetails } from "@/hooks/useExamDetail";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
+import PdfRenderer from "@/components/PDF/PdfRenderer";
+import usePdf from "@/hooks/usePdf";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -51,9 +50,16 @@ const ExamModePage: React.FC = () => {
   const [showFinishDialog, setShowFinishDialog] = useState(false);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
 
-  const [numPages, setNumPages] = useState<number>();
-  const [scale, setScale] = useState<number>(1.3);
-  const [rotation, setRotation] = useState<number>(0);
+  const {
+    scale,
+    rotation,
+    zoomIn,
+    zoomOut,
+    rotateLeft,
+    rotateRight,
+    setNumPages,
+    numPages,
+  } = usePdf("exam");
 
   const [showControls] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
@@ -124,17 +130,6 @@ const ExamModePage: React.FC = () => {
       }
     };
   }, [session, navigate]);
-
-  const zoomIn = useCallback(() => setScale((p) => Math.min(p + 0.1, 3.0)), []);
-  const zoomOut = useCallback(
-    () => setScale((p) => Math.max(p - 0.1, 0.5)),
-    []
-  );
-  const rotateClockwise = useCallback(() => setRotation((p) => p + 90), []);
-  const rotateCounterClockwise = useCallback(
-    () => setRotation((p) => p - 90),
-    []
-  );
 
   const onDocumentLoadSuccess = useCallback(
     ({ numPages }: { numPages: number }) => setNumPages(numPages),
@@ -297,14 +292,10 @@ const ExamModePage: React.FC = () => {
                 <Button variant="ghost" size="sm" onClick={zoomIn}>
                   <ZoomIn className="w-4 h-4" />
                 </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={rotateCounterClockwise}
-                >
+                <Button variant="ghost" size="sm" onClick={rotateLeft}>
                   <RotateCcw className="w-4 h-4" />
                 </Button>
-                <Button variant="ghost" size="sm" onClick={rotateClockwise}>
+                <Button variant="ghost" size="sm" onClick={rotateRight}>
                   <RotateCw className="w-4 h-4" />
                 </Button>
                 <div className="w-px h-6 bg-white/20 mx-2" />
@@ -347,7 +338,7 @@ const ExamModePage: React.FC = () => {
           <div className="h-full p-4 overflow-auto">
             {examDetail ? (
               <div className="h-full w-full flex justify-center overflow-auto">
-                <PDFViewer
+                <PdfRenderer
                   pdfUrl={examDetail.exam.pdf_url}
                   scale={scale}
                   rotation={rotation}

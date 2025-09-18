@@ -82,7 +82,11 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild onClick={(e) => e.stopPropagation()}>
+      <DialogTrigger
+        asChild
+        onClick={(e) => e.stopPropagation()}
+        className="hidden lg:flex"
+      >
         {trigger}
       </DialogTrigger>
       <DialogContent className="w-full">

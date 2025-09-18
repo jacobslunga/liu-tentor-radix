@@ -13,6 +13,7 @@ import {
 import { motion } from "framer-motion";
 import usePdf from "@/hooks/usePdf";
 import useTranslation from "@/hooks/useTranslation";
+import { downloadFile } from "@/lib/utils";
 
 interface Props {
   pdfUrl: string;
@@ -120,7 +121,7 @@ const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
       <Separator />
       <ToolbarButton
         icon={DownloadIcon}
-        onClick={() => window.open(pdfUrl || "#", "_blank")}
+        onClick={() => downloadFile(pdfUrl)}
         tooltip={t("downloadFacit")}
       />
     </motion.div>

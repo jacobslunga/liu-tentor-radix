@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
 import usePdf from "@/hooks/usePdf";
+import { downloadFile } from "@/lib/utils";
 
 interface Props {
   pdfUrl: string | null;
@@ -117,7 +118,7 @@ const ExamToolbar: FC<Props> = ({ pdfUrl }) => {
       <Separator />
       <ToolbarButton
         icon={DownloadIcon}
-        onClick={() => window.open(pdfUrl || "#")}
+        onClick={() => pdfUrl && downloadFile(pdfUrl)}
         tooltip="Ladda ner tenta"
       />
     </motion.div>
