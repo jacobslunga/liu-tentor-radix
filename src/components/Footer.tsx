@@ -2,27 +2,24 @@ import { FC } from "react";
 import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
-import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
+import useTranslation from "@/hooks/useTranslation";
 
 const Footer: FC = () => {
   const { language } = useLanguage();
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
+  const { t } = useTranslation();
 
   const groupedLinks = [
     {
       title: language === "sv" ? "Sidor" : "Pages",
       links: [
-        { name: getTranslation("homeLink"), href: "/" },
+        { name: t("homeLink"), href: "/" },
         { name: "Om oss", href: "/om-oss" },
       ],
     },
     {
       title: language === "sv" ? "Juridiskt" : "Legal",
-      links: [
-        { name: getTranslation("privacyPolicyTitle"), href: "/privacy-policy" },
-      ],
+      links: [{ name: t("privacyPolicyTitle"), href: "/privacy-policy" }],
     },
     {
       title: language === "sv" ? "Support" : "Support",
@@ -42,7 +39,7 @@ const Footer: FC = () => {
             <div className="flex items-center gap-2">
               <LogoIcon className="w-8 h-8 text-primary" />
               <span className="text-xl font-logo font-semibold text-foreground/80 tracking-tight">
-                {getTranslation("homeTitle")}
+                {t("homeTitle")}
               </span>
             </div>
             <p className="text-sm text-muted-foreground">
@@ -79,8 +76,8 @@ const Footer: FC = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-xs text-muted-foreground">
-            &copy; {new Date().getFullYear()} {getTranslation("homeTitle")}.{" "}
-            {getTranslation("allRightsReserved")}
+            &copy; {new Date().getFullYear()} {t("homeTitle")}.{" "}
+            {t("allRightsReserved")}
           </p>
           <div className="flex items-center gap-4">
             <a

@@ -20,10 +20,10 @@ import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/supabase/supabaseClient";
-import translations from "@/util/translations";
 import { useDropzone } from "react-dropzone";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
+import useTranslation from "@/hooks/useTranslation";
 
 const parseDateFromFilename = (name: string): string | null => {
   const fullDateMatch = name.match(/(\d{4})[-_]?(\d{2})[-_]?(\d{2})/);
@@ -84,21 +84,19 @@ const isSolution = (name: string): boolean => {
 
 const UploadExamPage = () => {
   const { language } = useLanguage();
-  const t = translations[language];
-
-  const getTranslation = (key: keyof typeof t) => t[key];
+  const { t } = useTranslation();
 
   useMetadata({
-    title: `LiU Tentor | ${getTranslation("uploadTitle")}`,
-    description: getTranslation("uploadDescription"),
+    title: `LiU Tentor | ${t("uploadTitle")}`,
+    description: t("uploadDescription"),
     keywords:
       "ladda upp, tenta, tentamen, Linköpings Universitet, LiU, upload, exam",
-    ogTitle: `LiU Tentor | ${getTranslation("uploadTitle")}`,
-    ogDescription: getTranslation("uploadDescription"),
+    ogTitle: `LiU Tentor | ${t("uploadTitle")}`,
+    ogDescription: t("uploadDescription"),
     ogType: "website",
     twitterCard: "summary",
-    twitterTitle: `LiU Tentor | ${getTranslation("uploadTitle")}`,
-    twitterDescription: getTranslation("uploadDescription"),
+    twitterTitle: `LiU Tentor | ${t("uploadTitle")}`,
+    twitterDescription: t("uploadDescription"),
     robots: "index, follow",
   });
 
@@ -192,8 +190,8 @@ const UploadExamPage = () => {
     <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 text-center">
       <div className="w-full max-w-md mx-auto space-y-10">
         <div className="space-y-4">
-          <h1 className="text-3xl font-medium">{t.uploadTitle}</h1>
-          <p className="text-muted-foreground">{t.uploadDescription}</p>
+          <h1 className="text-3xl font-medium">{t("uploadTitle")}</h1>
+          <p className="text-muted-foreground">{t("uploadDescription")}</p>
         </div>
 
         <div className="space-y-2">
@@ -201,7 +199,7 @@ const UploadExamPage = () => {
             htmlFor="course-code"
             className="text-sm font-medium text-muted-foreground"
           >
-            {t.courseCodePlaceholder}
+            {t("courseCodePlaceholder")}
           </label>
           <input
             id="course-code"
@@ -225,7 +223,7 @@ const UploadExamPage = () => {
           <input {...getInputProps()} disabled={loading} />
           <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
             <UploadCloud className="h-8 w-8" />
-            <p className="font-medium">{t.dragAndDrop}</p>
+            <p className="font-medium">{t("dragAndDrop")}</p>
             <p className="text-xs">PDF files only</p>
           </div>
         </div>
@@ -267,7 +265,7 @@ const UploadExamPage = () => {
               ) : (
                 <>
                   <UploadCloud className="h-5 w-5 mr-2" />
-                  {t.uploadButton} ({files.length})
+                  {t("uploadButton")} ({files.length})
                 </>
               )}
             </Button>
@@ -293,7 +291,9 @@ const UploadExamPage = () => {
               <AlertCircle className="text-red-500 h-12 w-12 mx-auto" />
             )}
             <AlertDialogTitle className="text-xl">
-              {uploadStatus === "success" ? t.uploadSuccess : t.uploadError}
+              {uploadStatus === "success"
+                ? t("uploadSuccess")
+                : t("uploadError")}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {uploadStatus === "success"

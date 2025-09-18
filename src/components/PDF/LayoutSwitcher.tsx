@@ -1,18 +1,11 @@
 import { motion } from "framer-motion";
 import { Columns2, PanelRight } from "lucide-react";
 import useLayoutMode from "@/stores/LayoutModeStore";
-import { useLanguage } from "@/context/LanguageContext";
-import { useEffect, useMemo, useRef, useState } from "react";
-import translations from "@/util/translations";
+import { useEffect, useRef, useState } from "react";
+import useTranslation from "@/hooks/useTranslation";
 
 export default function LayoutSwitcher() {
-  const { language } = useLanguage();
-
-  const getTranslation = useMemo(() => {
-    return (key: keyof (typeof translations)[typeof language]) => {
-      return translations[language][key];
-    };
-  }, [language]);
+  const { t } = useTranslation();
 
   const { layoutMode, setLayoutMode } = useLayoutMode();
 
@@ -52,12 +45,12 @@ export default function LayoutSwitcher() {
   }[] = [
     {
       value: "exam-with-facit",
-      label: getTranslation("examAndFacit"),
+      label: t("examAndFacit"),
       icon: <Columns2 className="w-4 h-4" />,
     },
     {
       value: "exam-only",
-      label: getTranslation("examOnly"),
+      label: t("examOnly"),
       icon: <PanelRight className="w-4 h-4" />,
     },
   ];

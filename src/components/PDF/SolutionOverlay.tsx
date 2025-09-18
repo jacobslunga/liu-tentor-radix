@@ -1,7 +1,5 @@
-import { useLanguage } from "@/context/LanguageContext";
+import useTranslation from "@/hooks/useTranslation";
 import { motion, AnimatePresence } from "framer-motion";
-import { useMemo } from "react";
-import translations from "@/util/translations";
 import { MousePointerClick } from "lucide-react";
 
 interface Props {
@@ -9,13 +7,7 @@ interface Props {
 }
 
 const SolutionOverlay = ({ isBlurred }: Props) => {
-  const { language } = useLanguage();
-
-  const getTranslation = useMemo(() => {
-    return (key: keyof (typeof translations)[typeof language]) => {
-      return translations[language][key];
-    };
-  }, [language]);
+  const { t } = useTranslation();
 
   return (
     <AnimatePresence>
@@ -27,9 +19,7 @@ const SolutionOverlay = ({ isBlurred }: Props) => {
           transition={{ duration: 0.1 }}
           className="absolute inset-0 flex flex-col items-center justify-center bg-background/30 z-30"
         >
-          <p className="font-medium text-center">
-            {getTranslation("mouseOverDescription")}
-          </p>
+          <p className="font-medium text-center">{t("mouseOverDescription")}</p>
           <MousePointerClick className="w-7 h-7 mt-2" />
         </motion.div>
       )}

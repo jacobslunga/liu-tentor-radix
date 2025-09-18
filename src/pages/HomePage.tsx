@@ -1,4 +1,3 @@
-import translations, { Language } from "@/util/translations";
 import { useEffect, useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -8,27 +7,25 @@ import { Loader2 } from "lucide-react";
 import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
 import { UploadIcon } from "@primer/octicons-react";
-import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
+import useTranslation from "@/hooks/useTranslation";
 
 export default function HomePage() {
-  const { language } = useLanguage();
-  const getTranslation = (key: keyof (typeof translations)[Language]) =>
-    translations[language][key] || key;
+  const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [focusInput, setFocusInput] = useState(false);
 
   useMetadata({
-    title: `${getTranslation("homeTitle")}`,
-    description: getTranslation("homeDescription"),
+    title: `${t("homeTitle")}`,
+    description: t("homeDescription"),
     keywords:
       "tentaarkiv, tenta, tentamen, facit, Linköpings Universitet, LiU, gamla tentor, exam archive",
-    ogTitle: `LiU Tentor | ${getTranslation("homeTitle")}`,
-    ogDescription: getTranslation("homeDescription"),
+    ogTitle: `LiU Tentor | ${t("homeTitle")}`,
+    ogDescription: t("homeDescription"),
     ogType: "website",
     twitterCard: "summary",
-    twitterTitle: `LiU Tentor | ${getTranslation("homeTitle")}`,
-    twitterDescription: getTranslation("homeDescription"),
+    twitterTitle: `LiU Tentor | ${t("homeTitle")}`,
+    twitterDescription: t("homeDescription"),
     robots: "index, follow",
   });
 
@@ -52,7 +49,7 @@ export default function HomePage() {
             <div className="flex flex-row items-center justify-center space-x-2">
               <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-20 lg:h-20" />
               <h1 className="text-4xl lg:text-5xl font-semibold font-logo text-foreground/80 tracking-tight">
-                {getTranslation("homeTitle")}
+                {t("homeTitle")}
               </h1>
             </div>
           </div>
@@ -79,7 +76,7 @@ export default function HomePage() {
                     className="hidden md:flex flex-row items-center justify-center"
                   >
                     <UploadIcon className="w-5 h-5" />
-                    {getTranslation("uploadTitle")}
+                    {t("uploadTitle")}
                   </Button>
                 </Link>
               </div>

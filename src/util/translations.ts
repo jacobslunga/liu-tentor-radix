@@ -462,7 +462,7 @@ const translations: Record<Language, Translations> = {
     uploadGuidelineCourseCode:
       "Se till att kurskoden är korrekt innan uppladdning.",
     uploadGuidelineNaming:
-      'Namnge filerna tydligt – t.ex. "2024-03-20-Frågor.pdf".',
+      'Namnge filerna tydligt - t.ex. "2024-03-20-Frågor.pdf".',
     uploadGuidelineDate: "Inkludera gärna datum eller termin i filnamnet.",
     uploadGuidelineDuplicateCheck: "Dubbelkolla om filen redan finns på sidan.",
     uploadGuidelineQuality: "Ladda endast upp tydliga och läsbara PDF-filer.",
@@ -759,7 +759,7 @@ const translations: Record<Language, Translations> = {
     uploadGuidelineCourseCode:
       "Make sure the course code is correct before uploading.",
     uploadGuidelineNaming:
-      'Name files clearly – e.g., "2024-03-20-Questions.pdf".',
+      'Name files clearly - e.g., "2024-03-20-Questions.pdf".',
     uploadGuidelineDate:
       "Include the date or term in the filename if possible.",
     uploadGuidelineDuplicateCheck:

@@ -14,12 +14,11 @@ import { Link } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { supabase } from "@/supabase/supabaseClient";
-import translations from "@/util/translations";
 import { useForm } from "react-hook-form";
-import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useTranslation from "@/hooks/useTranslation";
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
@@ -38,26 +37,21 @@ const formSchema = z.object({
 });
 
 const FeedbackPage: FC = () => {
-  const { language } = useLanguage();
   const [isSuccess, setIsSuccess] = useState<boolean | null>(null);
 
-  const getTranslation = (
-    key: keyof (typeof translations)[typeof language]
-  ) => {
-    return translations[language][key];
-  };
+  const { t } = useTranslation();
 
   useMetadata({
-    title: `LiU Tentor | ${getTranslation("feedbackTitle")}`,
-    description: getTranslation("feedbackDescription"),
+    title: `LiU Tentor | ${t("feedbackTitle")}`,
+    description: t("feedbackDescription"),
     keywords:
       "feedback, återkoppling, kontakt, support, Linköpings Universitet, LiU, hjälp",
-    ogTitle: `LiU Tentor | ${getTranslation("feedbackTitle")}`,
-    ogDescription: getTranslation("feedbackDescription"),
+    ogTitle: `LiU Tentor | ${t("feedbackTitle")}`,
+    ogDescription: t("feedbackDescription"),
     ogType: "website",
     twitterCard: "summary",
-    twitterTitle: `LiU Tentor | ${getTranslation("feedbackTitle")}`,
-    twitterDescription: getTranslation("feedbackDescription"),
+    twitterTitle: `LiU Tentor | ${t("feedbackTitle")}`,
+    twitterDescription: t("feedbackDescription"),
     robots: "index, follow",
   });
 
@@ -107,7 +101,7 @@ const FeedbackPage: FC = () => {
         {isRequired ? (
           <span className="text-destructive">*</span>
         ) : (
-          getTranslation("nameDescription")
+          t("nameDescription")
         )}
       </span>
     </div>
@@ -117,10 +111,10 @@ const FeedbackPage: FC = () => {
     <div className="container max-w-2xl mx-auto px-4 pb-16 grow">
       <div className="relative w-full flex flex-col items-center mb-5 mt-12">
         <h1 className="text-3xl text-foreground font-medium text-center mt-5 mb-4">
-          {getTranslation("feedbackTitle")}
+          {t("feedbackTitle")}
         </h1>
         <p className="text-lg text-muted-foreground text-center max-w-xl">
-          {getTranslation("feedbackDescription")}
+          {t("feedbackDescription")}
         </p>
       </div>
 
@@ -138,14 +132,14 @@ const FeedbackPage: FC = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-normal mb-2">
-                  {getTranslation("feedbackSuccessTitle") || "Thank you!"}
+                  {t("feedbackSuccessTitle") || "Thank you!"}
                 </h2>
                 <p className="text-foreground/80">
-                  {getTranslation("feedbackSuccessMessage")}
+                  {t("feedbackSuccessMessage")}
                 </p>
               </div>
               <Button>
-                <Link to="/">{getTranslation("homeButton")}</Link>
+                <Link to="/">{t("homeLink")}</Link>
               </Button>
             </div>
           ) : (
@@ -155,15 +149,14 @@ const FeedbackPage: FC = () => {
               </div>
               <div>
                 <h2 className="text-2xl font-normal mb-2">
-                  {getTranslation("feedbackErrorTitle") ||
-                    "Something went wrong"}
+                  {t("feedbackErrorTitle") || "Something went wrong"}
                 </h2>
                 <p className="text-foreground/80">
-                  {getTranslation("feedbackErrorMessage")}
+                  {t("feedbackErrorMessage")}
                 </p>
               </div>
               <Button onClick={() => setIsSuccess(null)}>
-                {getTranslation("tryAgainButton")}
+                {t("tryAgainButton")}
               </Button>
             </div>
           )}
@@ -181,12 +174,9 @@ const FeedbackPage: FC = () => {
                   name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{getTranslation("nameLegend")}</FormLabel>
+                      <FormLabel>{t("nameLegend")}</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder={getTranslation("namePlaceholder")}
-                          {...field}
-                        />
+                        <Input placeholder={t("namePlaceholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -200,10 +190,7 @@ const FeedbackPage: FC = () => {
                     <FormItem>
                       <FormLabel isRequired>LiU Mail</FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder={getTranslation("emailPlaceholder")}
-                          {...field}
-                        />
+                        <Input placeholder={t("emailPlaceholder")} {...field} />
                       </FormControl>
                       <FormMessage />
                       <p className="text-xs text-muted-foreground mt-1">
@@ -218,14 +205,10 @@ const FeedbackPage: FC = () => {
                   name="partOfWebsite"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {getTranslation("partOfWebsiteLegend")}
-                      </FormLabel>
+                      <FormLabel>{t("partOfWebsiteLegend")}</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder={getTranslation(
-                            "partOfWebsitePlaceholder"
-                          )}
+                          placeholder={t("partOfWebsitePlaceholder")}
                           {...field}
                         />
                       </FormControl>
@@ -239,12 +222,10 @@ const FeedbackPage: FC = () => {
                   name="message"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel isRequired>
-                        {getTranslation("messageLegend")}
-                      </FormLabel>
+                      <FormLabel isRequired>{t("messageLegend")}</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder={getTranslation("messagePlaceholder")}
+                          placeholder={t("messagePlaceholder")}
                           className="min-h-[150px] resize-none"
                           {...field}
                         />
@@ -261,10 +242,10 @@ const FeedbackPage: FC = () => {
               <div className="space-y-4 pt-2">
                 <p className="text-sm text-muted-foreground">
                   <span className="text-destructive">*</span>{" "}
-                  {getTranslation("requiredField")}
+                  {t("requiredField")}
                 </p>
                 <Button type="submit" className="w-full">
-                  {getTranslation("submitButton")}
+                  {t("submitButton")}
                 </Button>
               </div>
             </form>

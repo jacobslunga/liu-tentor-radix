@@ -189,7 +189,7 @@ const ExamModePage: React.FC = () => {
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
-  const translations = {
+  const examModeTranslations = {
     sv: {
       examMode: "Exam Mode",
       paused: "PAUSAD",
@@ -220,7 +220,7 @@ const ExamModePage: React.FC = () => {
     },
   } as const;
 
-  const t = translations[language as keyof typeof translations];
+  const t = examModeTranslations[language as keyof typeof examModeTranslations];
 
   if (detailError) {
     return (

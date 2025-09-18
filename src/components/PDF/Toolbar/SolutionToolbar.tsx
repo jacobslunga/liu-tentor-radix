@@ -10,10 +10,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-import { useLanguage } from "@/context/LanguageContext";
-import translations from "@/util/translations";
 import { motion } from "framer-motion";
 import usePdf from "@/hooks/usePdf";
+import useTranslation from "@/hooks/useTranslation";
 
 interface Props {
   pdfUrl: string;
@@ -55,6 +54,7 @@ const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const isHoveringRef = useRef(isHovering);
 
+  const { t } = useTranslation();
   const { zoomIn, zoomOut, rotateLeft, rotateRight } = usePdf("solution");
 
   useEffect(() => {
@@ -88,11 +88,6 @@ const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
     };
   }, []);
 
-  const { language } = useLanguage();
-
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
-
   return (
     <motion.div
       className="fixed top-20 right-5 flex flex-col space-y-2 z-40"
@@ -109,32 +104,24 @@ const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
       animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
       transition={{ duration: 0.3 }}
     >
-      <ToolbarButton
-        icon={PlusIcon}
-        onClick={zoomIn}
-        tooltip={getTranslation("zoomIn")}
-      />
-      <ToolbarButton
-        icon={DashIcon}
-        onClick={zoomOut}
-        tooltip={getTranslation("zoomOut")}
-      />
+      <ToolbarButton icon={PlusIcon} onClick={zoomIn} tooltip={t("zoomIn")} />
+      <ToolbarButton icon={DashIcon} onClick={zoomOut} tooltip={t("zoomOut")} />
       <Separator />
       <ToolbarButton
         icon={RotateCcw}
         onClick={rotateLeft}
-        tooltip={getTranslation("rotateLeft")}
+        tooltip={t("rotateLeft")}
       />
       <ToolbarButton
         icon={RotateCw}
         onClick={rotateRight}
-        tooltip={getTranslation("rotateRight")}
+        tooltip={t("rotateRight")}
       />
       <Separator />
       <ToolbarButton
         icon={DownloadIcon}
         onClick={() => window.open(pdfUrl || "#", "_blank")}
-        tooltip={getTranslation("downloadFacit")}
+        tooltip={t("downloadFacit")}
       />
     </motion.div>
   );

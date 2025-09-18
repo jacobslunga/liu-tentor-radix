@@ -49,7 +49,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
     }
   };
 
-  const translations = {
+  const examModeTranslations = {
     sv: {
       title: "Aktivera Lock In Mode",
       description:
@@ -78,7 +78,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
     },
   } as const;
 
-  const t = translations[language as keyof typeof translations];
+  const t = examModeTranslations[language as keyof typeof examModeTranslations];
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

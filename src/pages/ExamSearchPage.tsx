@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Link, useParams } from "react-router-dom";
 import { Loader2, Upload } from "lucide-react";
-import React, { useMemo, useState } from "react";
+import { FC, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
@@ -60,8 +60,9 @@ const ErrorCard: React.FC<{
   );
 };
 
-const TentaSearchPage: React.FC = () => {
+const ExamSearchPage: FC = () => {
   const { courseCode } = useParams<{ courseCode: string }>();
+
   const { t } = useTranslation();
   const { language } = useLanguage();
   const { courseData, isLoading, isError } = useCourseExams(courseCode || "");
@@ -109,6 +110,23 @@ const TentaSearchPage: React.FC = () => {
     twitterDescription: pageDescription,
     canonical: `${window.location.origin}/course/${courseCode}`,
   });
+
+  if (courseCode === "TFYA86") {
+    return (
+      <div className="h-screen w-screen flex flex-col gap-3 items-center justify-center">
+        <h2 className="text-foreground text-2xl font-medium">
+          Borttaget på begäran!
+        </h2>
+        <p className="text-base max-w-2xl text-center">
+          Kursen TFYA86 har tagits bort. Tentor och facit har tagits bort på
+          begäran av examinatorn.
+        </p>
+        <Link to="/">
+          <Button>Hitta andra kurser</Button>
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
@@ -165,4 +183,4 @@ const TentaSearchPage: React.FC = () => {
   );
 };
 
-export default TentaSearchPage;
+export default ExamSearchPage;
