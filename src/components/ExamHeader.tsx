@@ -17,8 +17,8 @@ import { ExamModeDialog } from "@/components/ExamModeDialog";
 import { ExamModeManager } from "@/lib/examMode";
 import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
-import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   exams: Exam[];
@@ -26,6 +26,7 @@ interface Props {
 
 const ExamHeader: FC<Props> = ({ exams }) => {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const { courseCode = "", examId = "" } = useParams<{
     courseCode: string;
     examId: string;
@@ -65,8 +66,6 @@ const ExamHeader: FC<Props> = ({ exams }) => {
       }
     }
   }, [isDropdownOpen, sorted, examId]);
-
-  const t = (k: keyof (typeof translations)["sv"]) => translations[language][k];
 
   const completed = useMemo<Record<number, boolean>>(() => {
     if (Cookies.get("cookieConsent") !== "true") return {};
@@ -179,7 +178,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
                               variant="outline"
                               className="text-xs px-1.5 py-0 bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800"
                             >
-                              {language === "sv" ? "Facit" : "Sol"}
+                              {t("facit")}
                             </Badge>
                           )}
                           {done && (

@@ -17,8 +17,8 @@ import {
 
 import Cookies from "js-cookie";
 import { kurskodArray } from "@/data/kurskoder";
-import translations from "@/util/translations";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTranslation } from "@/hooks/useTranslation";
 import { useNavigate } from "react-router-dom";
 import useSWR from "swr";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -45,6 +45,7 @@ const fetchCourseCodes = async (): Promise<string[]> => {
 
 const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   const { language } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const [courseCode, setCourseCode] = useState("");
@@ -73,9 +74,6 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
       revalidateOnFocus: false,
     }
   );
-
-  const getTranslation = (key: keyof (typeof translations)[typeof language]) =>
-    translations[language][key];
 
   const loadRecentSearches = useCallback(() => {
     const cookieConsent = Cookies.get("cookieConsent");
@@ -274,8 +272,8 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="tentor">Tentor</SelectItem>
-            <SelectItem value="stats">Statistik</SelectItem>
+            <SelectItem value="tentor">{t("exams")}</SelectItem>
+            <SelectItem value="stats">{t("statistics")}</SelectItem>
           </SelectContent>
         </Select>
 
@@ -321,7 +319,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
               {recentSearches.length > 0 && (
                 <div ref={suggestionsRef}>
                   <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
-                    {getTranslation("recentSearches")}
+                    {t("recentSearches")}
                   </div>
                   {recentSearches.map((suggestion, index) => (
                     <div
@@ -347,7 +345,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
                     <div className="border-t mx-2 my-1" />
                   )}
                   <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
-                    {getTranslation("allCourses")}
+                    {t("allCourses")}
                   </div>
                   <div ref={listParentRef} className="overflow-y-auto max-h-56">
                     <div

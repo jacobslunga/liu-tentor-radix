@@ -1,22 +1,16 @@
 import { LogoIcon } from "@/components/LogoIcon";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/context/LanguageContext";
-import translations, { Language } from "@/util/translations";
+import { useTranslation } from "@/hooks/useTranslation";
 import { Link } from "react-router-dom";
 
 export default function CustomPagesHeader() {
-  const { language } = useLanguage();
-  const getTranslation = (key: keyof (typeof translations)[Language]) =>
-    translations[language][key] || key;
+  const { t } = useTranslation();
 
   const links = [
-    { to: "/faq", label: language === "sv" ? "Vanliga frågor" : "FAQ" },
-    { to: "/om-oss", label: language === "sv" ? "Om oss" : "About Us" },
-    { to: "/feedback", label: language === "sv" ? "Feedback" : "Feedback" },
-    {
-      to: "/privacy-policy",
-      label: language === "sv" ? "Integritetspolicy" : "Privacy Policy",
-    },
+    { to: "/faq", label: t("faq") },
+    { to: "/om-oss", label: t("aboutUs") },
+    { to: "/feedback", label: t("feedback") },
+    { to: "/privacy-policy", label: t("privacyPolicy") },
   ];
 
   return (
@@ -25,7 +19,7 @@ export default function CustomPagesHeader() {
         <Link to="/" className="flex flex-row items-center space-x-2 mb-2">
           <LogoIcon className="w-8 h-8 sm:w-10 sm:h-10" />
           <h1 className="text-xl sm:text-2xl font-logo text-foreground/80 tracking-tight">
-            {getTranslation("homeTitle")}
+            {t("homeTitle")}
           </h1>
         </Link>
 
