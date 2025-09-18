@@ -26,6 +26,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChartBarIcon, ArrowsDownUpIcon } from "@phosphor-icons/react";
 import { Exam } from "@/types/exam";
+import { Sponsor } from "@/types/sponsor";
+import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getColumns } from "@/components/data-table/columns";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";
@@ -86,6 +88,64 @@ export function DataTable({
       totalWithSolutions: solutions,
     };
   }, [data]);
+
+  // Sponsor data - in real app this would come from props or context
+  const sponsors: Sponsor[] = [
+    {
+      name: "Axis Communications",
+      logo: "/sponsor-logos/axis.png",
+      linkName: "axis.com",
+      to: "https://www.axis.com",
+    },
+    {
+      name: "Ericsson",
+      logo: "/sponsor-logos/ericsson.png",
+      linkName: "ericsson.com",
+      to: "https://www.ericsson.com/en",
+    },
+    {
+      name: "Opera",
+      logo: "/sponsor-logos/opera.png",
+      linkName: "opera.com",
+      to: "https://www.opera.com",
+    },
+  ];
+
+  // Calculate sponsor placement positions
+  const sponsorPositions = useMemo(() => {
+    const examCount = filteredData.length;
+    const sponsorCount = sponsors.length;
+
+    if (examCount === 0 || sponsorCount === 0) return new Map();
+
+    const positions = new Map<number, number>();
+
+    if (examCount <= sponsorCount) {
+      // If we have few exams, show sponsors after each exam (except the last)
+      for (let i = 0; i < Math.min(examCount - 1, sponsorCount); i++) {
+        positions.set(i, i);
+      }
+    } else {
+      // Evenly distribute sponsors among exams
+      const interval = Math.floor(examCount / (sponsorCount + 1));
+
+      for (let i = 0; i < sponsorCount; i++) {
+        const position = (i + 1) * interval - 1; // -1 to show after the exam row
+        if (position < examCount - 1) {
+          // Don't show after the last exam
+          positions.set(position, i);
+        }
+      }
+    }
+
+    return positions;
+  }, [filteredData.length, sponsors.length]);
+
+  const getSponsorDescription = () => {
+    return language === "sv"
+      ? "Tack för ditt stöd till våra studenter!"
+      : "Thank you for supporting our students!";
+  };
 
   return (
     <div className="w-full space-y-6 mx-auto relative">
@@ -184,25 +244,44 @@ export function DataTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  onClick={() =>
-                    navigate(
-                      `/search/${row.original.course_code}/${row.original.id}`
-                    )
-                  }
-                  className="group cursor-pointer transition-all border-t"
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-6 py-4">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
+              table.getRowModel().rows.map((row, index) => (
+                <>
+                  {/* Show sponsor banner at calculated positions */}
+                  {sponsorPositions.has(index) && sponsors.length > 0 && (
+                    <TableRow
+                      key={`sponsor-${index}`}
+                      className="hover:bg-transparent"
+                    >
+                      <TableCell colSpan={columns.length} className="p-0">
+                        <SponsorBanner
+                          sponsor={sponsors[sponsorPositions.get(index)!]}
+                          description={getSponsorDescription()}
+                          variant="table"
+                        />
+                      </TableCell>
+                    </TableRow>
+                  )}
+
+                  {/* Regular exam row */}
+                  <TableRow
+                    key={row.id}
+                    onClick={() =>
+                      navigate(
+                        `/search/${row.original.course_code}/${row.original.id}`
+                      )
+                    }
+                    className="group cursor-pointer transition-all border-t"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id} className="px-6 py-4">
+                        {flexRender(
+                          cell.column.columnDef.cell,
+                          cell.getContext()
+                        )}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                </>
               ))
             ) : (
               <TableRow>

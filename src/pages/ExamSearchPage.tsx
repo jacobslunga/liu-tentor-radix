@@ -16,7 +16,6 @@ import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetadata";
 import { useTranslation } from "@/hooks/useTranslation";
 import { sponsors } from "@/components/sponsors/sponsorsData";
 
