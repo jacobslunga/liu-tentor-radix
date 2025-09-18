@@ -309,6 +309,10 @@ interface MiscTranslations {
   learnMore: string;
 }
 
+interface SponsorTranslations {
+  sponsorsWeWorkWith: string;
+}
+
 // Main translations interface combining all sections
 export interface Translations
   extends CommonTranslations,
@@ -326,6 +330,7 @@ export interface Translations
     PrivacyTranslations,
     AuthTranslations,
     StatisticsTranslations,
+    SponsorTranslations,
     MiscTranslations {}
 
 const translations: Record<Language, Translations> = {
@@ -658,6 +663,9 @@ const translations: Record<Language, Translations> = {
     uploadMore: "Ladda upp mer",
     examCount: "tenta",
     solutionCount: "facit",
+
+    // Sponsors
+    sponsorsWeWorkWith: "Sponsorer vi jobbar med",
   },
   en: {
     // Common
@@ -989,6 +997,9 @@ const translations: Record<Language, Translations> = {
     uploadMore: "Upload more",
     examCount: "exam",
     solutionCount: "solution",
+
+    // Sponsors
+    sponsorsWeWorkWith: "Sponsors we work with",
   },
 };
 
