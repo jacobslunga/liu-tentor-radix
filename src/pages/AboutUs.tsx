@@ -56,7 +56,7 @@ const OmOss: FC = () => {
               finns någonstans på kurshemsidan.
             </p>
             <p>
-              Vi bygger LiU Tentor för att vi själva använder det – och
+              Vi bygger LiU Tentor för att vi själva använder det - och
               förbättrar det ständigt utifrån våra behov, era förslag och små
               idéer som dyker upp mitt i natten. Det är ett passion project, men
               också något vi verkligen tror gör studentlivet lite enklare.
@@ -82,9 +82,9 @@ const OmOss: FC = () => {
               course site.
             </p>
             <p>
-              We’re building LiU Tentor because we use it ourselves – and we’re
+              We're building LiU Tentor because we use it ourselves - and we're
               constantly improving it based on our needs, your suggestions, and
-              random 2 a.m. ideas. It’s a passion project, but also something we
+              random 2 a.m. ideas. It's a passion project, but also something we
               truly believe makes student life a bit easier.
             </p>
             <p>
