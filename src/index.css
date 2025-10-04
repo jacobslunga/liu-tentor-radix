@@ -55,6 +55,15 @@
 
   .react-pdf__Document {
     background-color: hsl(var(--background)) !important;
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  /* Ensure proper scrolling across browsers */
+  .pdf-container {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted-foreground)) transparent;
   }
 
   /* Dark mode PDF inversion for better readability */
