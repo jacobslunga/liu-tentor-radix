@@ -1,20 +1,18 @@
 import { FC, useEffect } from "react";
-import { useParams } from "react-router-dom";
 
-import useLayoutMode from "@/stores/LayoutModeStore";
+import { Button } from "@/components/ui/button";
 import ExamHeader from "@/components/ExamHeader";
-import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
-
-import { useCourseExams } from "@/hooks/useCourseExams";
-import { useExamDetails } from "@/hooks/useExamDetail";
-import { useMetadata } from "@/hooks/useMetadata";
-import { formatExamDate } from "@/util/formatExamDate";
-
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
+import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
 import { Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
+import { formatExamDate } from "@/util/formatExamDate";
+import { useCourseExams } from "@/hooks/useCourseExams";
+import { useExamDetails } from "@/hooks/useExamDetail";
+import useLayoutMode from "@/stores/LayoutModeStore";
+import { useMetadata } from "@/hooks/useMetadata";
+import { useParams } from "react-router-dom";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
@@ -39,10 +37,12 @@ const ExamPage: FC = () => {
     isError: detailError,
   } = useExamDetails(Number(examId));
 
+  console.log(examDetail);
+
   const pageTitle =
     examDetail && courseData
       ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${
-          courseData.course_name_eng
+          courseData.course_name_swe
         }`
       : `${courseCode} - Tenta ${examId}`;
 

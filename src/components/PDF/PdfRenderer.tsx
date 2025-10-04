@@ -54,36 +54,37 @@ const PdfRenderer: FC<PdfRendererProps> = ({
 
   return (
     <div
-      className="w-full h-full overflow-auto bg-background"
+      className="w-full h-full bg-background overflow-hidden"
       data-theme={effectiveTheme}
     >
       <Document
         file={pdfUrl}
         onLoadSuccess={onLoadSuccess}
-        className="w-full h-full flex items-center justify-start space-y-5 flex-col bg-background"
+        className="pdf-container w-full h-full overflow-y-auto overflow-x-hidden bg-background"
         loading={() => (
           <div className="w-full h-full flex items-center justify-center">
             <Loader2 className="animate-spin w-5 h-5" />
           </div>
         )}
       >
-        {Array.from({ length: numPages || 0 }, (_, i) => (
-          <Page
-            key={i + 1}
-            pageNumber={i + 1}
-            rotate={(pageRotations[i + 1] || 0) + rotation}
-            scale={scale}
-            onLoadSuccess={(page) => handlePageLoadSuccess(page, i + 1)}
-            className="pdf-page"
-            renderTextLayer={true}
-            renderAnnotationLayer={true}
-            loading={() => (
-              <div className="w-full h-full flex items-center justify-center">
-                <Loader2 className="animate-spin w-5 h-5" />
-              </div>
-            )}
-          />
-        ))}
+        <div className="flex flex-col items-center gap-4 py-4">
+          {Array.from({ length: numPages || 0 }, (_, i) => (
+            <Page
+              key={i + 1}
+              pageNumber={i + 1}
+              rotate={(pageRotations[i + 1] || 0) + rotation}
+              scale={scale}
+              onLoadSuccess={(page) => handlePageLoadSuccess(page, i + 1)}
+              renderTextLayer={true}
+              renderAnnotationLayer={true}
+              loading={() => (
+                <div className="w-full h-64 flex items-center justify-center">
+                  <Loader2 className="animate-spin w-5 h-5" />
+                </div>
+              )}
+            />
+          ))}
+        </div>
       </Document>
     </div>
   );
