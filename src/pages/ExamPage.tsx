@@ -37,8 +37,6 @@ const ExamPage: FC = () => {
     isError: detailError,
   } = useExamDetails(Number(examId));
 
-  console.log(examDetail);
-
   const pageTitle =
     examDetail && courseData
       ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${
