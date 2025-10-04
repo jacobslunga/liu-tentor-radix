@@ -184,6 +184,8 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
   );
 
   useEffect(() => {
+    if (!courseCode) return;
+
     const q = courseCode.toUpperCase().trim();
     if (!q) {
       setShowSuggestions(false);
