@@ -94,9 +94,7 @@ export function DataTable({
       {/* Header */}
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
-          <h1 className="text-sm font-bold text-primary font-mono">
-            {courseCode}
-          </h1>
+          <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
           <Badge variant="outline">
             {data.length} {t("exams")}
           </Badge>
@@ -104,7 +102,7 @@ export function DataTable({
 
         {/* Course title */}
         <h2
-          className={`font-medium text-foreground ${
+          className={`font-semibold text-foreground ${
             (courseNameEng?.length ?? 0) > 40 ||
             (courseNameSwe?.length ?? 0) > 40
               ? "text-2xl"
@@ -152,7 +150,7 @@ export function DataTable({
           </Select>
 
           <Link to={`/search/${courseCode}/stats`}>
-            <Button variant="secondary">
+            <Button variant="ghost">
               <ChartColumnIncreasing />
               {language === "sv" ? "Statistik" : "Statistics"}
             </Button>
@@ -161,7 +159,7 @@ export function DataTable({
       </div>
 
       {/* Table */}
-      <div className="border border-border rounded-md bg-background overflow-hidden">
+      <div className="border border-border rounded-2xl bg-background overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-[#FAFAFA] dark:bg-secondary">
             {table.getHeaderGroups().map((headerGroup) => (
