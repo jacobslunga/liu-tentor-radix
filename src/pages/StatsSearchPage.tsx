@@ -206,12 +206,16 @@ export default function StatsSearchPage() {
     <div className="w-full md:max-w-screen-lg mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 overflow-x-hidden">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6 sm:mb-8">
         <div className="flex flex-col items-start justify-start">
-          <p className="text-[12px] text-foreground/60">{courseCode}</p>
-          <h1 className="text-2xl sm:text-3xl font-medium">
-            {language === "sv" ? "Statistik för" : "Statistics for"}{" "}
-            {language === "sv"
-              ? courseData?.course_name_swe
-              : courseData?.course_name_eng}
+          <h1 className="text-2xl sm:text-3xl font-semibold">
+            <span className="font-medium text-foreground/60 text-lg">
+              {language === "sv" ? "Statistik för" : "Statistics for"} <br />
+            </span>
+            <span className="flex flex-row items-center justify-center space-x-2">
+              {courseCode} -{" "}
+              {language === "sv"
+                ? courseData?.course_name_swe
+                : courseData?.course_name_eng}{" "}
+            </span>
           </h1>
         </div>
         <Link to={`/search/${courseCode}`}>
@@ -250,13 +254,15 @@ export default function StatsSearchPage() {
                 />
                 <Tooltip
                   cursor={{ fill: "transparent" }}
-                  formatter={(v: any) => `${v}%`}
                   contentStyle={{
-                    background: c.bg,
-                    border: `1px solid ${c.border}`,
-                    color: c.fg,
+                    backgroundColor: "var(--background)",
+                    border: "1px solid var(--border)",
                     borderRadius: "0.5rem",
                     fontSize: "0.875rem",
+                    color: "var(--foreground)",
+                  }}
+                  itemStyle={{
+                    color: "var(--foreground)",
                   }}
                   labelStyle={{ color: c.fg }}
                 />
@@ -311,14 +317,17 @@ export default function StatsSearchPage() {
                       p?.payload?.label ?? ""
                     }`,
                   ]}
+                  cursor={{ fill: "transparent" }}
                   contentStyle={{
-                    background: c.bg,
-                    border: `1px solid ${c.border}`,
-                    color: c.fg,
+                    backgroundColor: "var(--background)",
+                    border: "1px solid var(--border)",
                     borderRadius: "0.5rem",
                     fontSize: "0.875rem",
+                    color: "var(--foreground)",
                   }}
-                  labelStyle={{ color: c.fg }}
+                  itemStyle={{
+                    color: "var(--foreground)",
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>

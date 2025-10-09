@@ -1,9 +1,9 @@
 import { Check, X } from "lucide-react";
-import { Translations } from "@/util/translations";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Exam } from "@/types/exam";
 import { ExamStatsDialog } from "@/components/ExamStatsDialog";
+import { Translations } from "@/util/translations";
 
 export const getColumns = (
   t: (key: keyof Translations) => string
@@ -82,7 +82,7 @@ export const getColumns = (
           date={row.original.exam_date}
           trigger={
             <span
-              className={`${color} font-medium p-2 hover:bg-secondary cursor-pointer rounded-md transition-colors duration-150`}
+              className={`${color} h-12 px-2 hover:bg-foreground/5 cursor-pointer rounded-md transition-colors duration-150`}
               onClick={(e) => e.stopPropagation()}
             >
               {passedCount.toFixed(1)}%

@@ -52,7 +52,6 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
 
-  // Press E -> toggle visibility and lock/unlock
   useHotkeys("e", () => {
     setIsFacitVisible((prev) => !prev);
     setIsManual((prev) => !prev);
@@ -64,10 +63,6 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
         className={`w-full h-full bg-background ${
           isFacitVisible ? "overflow-auto" : "overflow-hidden"
         }`}
-        style={{
-          width: isFacitVisible ? "50%" : "100%",
-          transition: "width 0.3s ease-in-out",
-        }}
       >
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
       </div>
