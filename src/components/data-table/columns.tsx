@@ -82,7 +82,7 @@ export const getColumns = (
           date={row.original.exam_date}
           trigger={
             <span
-              className={`${color} h-12 px-2 hover:bg-foreground/5 cursor-pointer rounded-md transition-colors duration-150`}
+              className={`${color} p-2 hover:bg-foreground/5 cursor-pointer rounded-md transition-colors duration-150`}
               onClick={(e) => e.stopPropagation()}
             >
               {passedCount.toFixed(1)}%
