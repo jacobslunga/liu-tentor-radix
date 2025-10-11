@@ -30,6 +30,7 @@ import { Exam } from "@/types/exam";
 import { Sponsor } from "@/types/sponsor";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getColumns } from "@/components/data-table/columns";
+import { sponsors } from "../sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";
 
@@ -91,28 +92,6 @@ export function DataTable({
     };
   }, [data]);
 
-  // Sponsor data - in real app this would come from props or context
-  const sponsors: Sponsor[] = [
-    {
-      name: "Axis Communications",
-      logo: "/sponsor-logos/axis.png",
-      linkName: "axis.com",
-      to: "https://www.axis.com",
-    },
-    {
-      name: "Ericsson",
-      logo: "/sponsor-logos/ericsson.png",
-      linkName: "ericsson.com",
-      to: "https://www.ericsson.com/en",
-    },
-    {
-      name: "Opera",
-      logo: "/sponsor-logos/opera.png",
-      linkName: "opera.com",
-      to: "https://www.opera.com",
-    },
-  ];
-
   // Calculate sponsor placement positions
   const sponsorPositions = useMemo(() => {
     const examCount = filteredData.length;
@@ -123,18 +102,15 @@ export function DataTable({
     const positions = new Map<number, number>();
 
     if (examCount <= sponsorCount) {
-      // If we have few exams, show sponsors after each exam (except the last)
       for (let i = 0; i < Math.min(examCount - 1, sponsorCount); i++) {
         positions.set(i, i);
       }
     } else {
-      // Evenly distribute sponsors among exams
       const interval = Math.floor(examCount / (sponsorCount + 1));
 
       for (let i = 0; i < sponsorCount; i++) {
-        const position = (i + 1) * interval - 1; // -1 to show after the exam row
+        const position = (i + 1) * interval - 1;
         if (position < examCount - 1) {
-          // Don't show after the last exam
           positions.set(position, i);
         }
       }
@@ -253,7 +229,7 @@ export function DataTable({
               table.getRowModel().rows.map((row, index) => (
                 <>
                   {/* Show sponsor banner at calculated positions */}
-                  {sponsorPositions.has(index) && sponsors.length > 0 && (
+                  {/* {sponsorPositions.has(index) && sponsors.length > 0 && (
                     <TableRow
                       key={`sponsor-${index}`}
                       className="hover:bg-transparent"
@@ -266,7 +242,7 @@ export function DataTable({
                         />
                       </TableCell>
                     </TableRow>
-                  )}
+                  )} */}
 
                   {/* Regular exam row */}
                   <TableRow
