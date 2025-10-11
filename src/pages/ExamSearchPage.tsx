@@ -6,19 +6,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { FC, useMemo, useState } from "react";
-import { FC, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Loader2, Upload } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
-import SponsorBanner from "@/components/sponsors/SponsorBanner";
+import SponsorsSidebar from "@/components/sponsors/SponsorsSidebar";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
-import { useMetadata } from "@/hooks/useMetadata";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -135,6 +133,7 @@ const ExamSearchPage: FC = () => {
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {isLoading && (
           <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
             <LoadingSpinner />
@@ -166,9 +165,14 @@ const ExamSearchPage: FC = () => {
         )}
 
         {!isLoading && !isError && formattedExams.length > 0 && (
-          <div className="w-full lg:w-auto flex items-center justify-center flex-col">
-            {/* Axis summer job example */}
-            {/* <SponsorBanner
+          <div className="w-full grid grid-cols-1 xl:grid-cols-[1fr_auto_1fr] gap-8 items-start">
+            {/* Empty spacer on the left */}
+            <div className="hidden xl:block"></div>
+
+            {/* Main content area - centered */}
+            <div className="flex items-center justify-center flex-col col-span-1">
+              {/* Axis summer job example */}
+              {/* <SponsorBanner
               sponsor={{
                 linkName: "",
                 to: "https://www.axis.com",
@@ -178,8 +182,8 @@ const ExamSearchPage: FC = () => {
               description="Sök jobb hos Axis i sommar!"
             /> */}
 
-            {/* Ericsson student night */}
-            {/* <SponsorBanner
+              {/* Ericsson student night */}
+              {/* <SponsorBanner
               sponsor={{
                 linkName: "",
                 to: "https://www.ericsson.com",
@@ -189,30 +193,35 @@ const ExamSearchPage: FC = () => {
               description="Missa inte Ericssons studentkväll på deras kontor :)"
             /> */}
 
-            {/* Opera workshop */}
-            <SponsorBanner
-              sponsor={{
-                linkName: "",
-                to: "https://www.opera.com",
-                logo: "/sponsor-logos/opera.png",
-                name: "Ericsson",
-              }}
-              description="Opera håller i en workshop för mikroprocessorer"
-            />
+              {/* Opera workshop */}
+              <SponsorBanner
+                sponsor={{
+                  linkName: "",
+                  to: "https://www.opera.com",
+                  logo: "/sponsor-logos/opera.png",
+                  name: "Ericsson",
+                }}
+                description="Opera håller i en workshop för mikroprocessorer"
+              />
 
-            <DataTable
-              data={formattedExams}
-              courseCode={courseCode?.toUpperCase() ?? ""}
-              courseNameSwe={courseData?.course_name_swe || ""}
-              courseNameEng={courseData?.course_name_eng || ""}
-              onSortChange={() =>
-                setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
-              }
-            />
+              <DataTable
+                data={formattedExams}
+                courseCode={courseCode?.toUpperCase() ?? ""}
+                courseNameSwe={courseData?.course_name_swe || ""}
+                courseNameEng={courseData?.course_name_eng || ""}
+                onSortChange={() =>
+                  setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+                }
+              />
 
               <Link to="/upload-exams">
                 <Button className="w-full z-50">{t("uploadMore")}</Button>
               </Link>
+            </div>
+
+            {/* Sponsors sidebar - hidden on mobile, visible on xl screens */}
+            <div className="hidden xl:block">
+              <SponsorsSidebar />
             </div>
           </div>
         )}

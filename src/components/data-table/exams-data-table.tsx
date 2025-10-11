@@ -30,6 +30,7 @@ import { Exam } from "@/types/exam";
 import { Sponsor } from "@/types/sponsor";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getColumns } from "@/components/data-table/columns";
+import { sponsors } from "../sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";
 

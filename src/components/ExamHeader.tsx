@@ -17,6 +17,8 @@ import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
 import SponsorHeaderBanner from "./sponsors/SponsorHeaderBanner";
 import { sponsors } from "./sponsors/sponsorsData";
+import SponsorHeaderBanner from "./sponsors/SponsorHeaderBanner";
+import { sponsors } from "./sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
@@ -226,7 +228,14 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
         {/* Sponsor Banner */}
         <div className="hidden lg:block">
-          <SponsorHeaderBanner sponsor={sponsors[0]} />
+          <SponsorHeaderBanner
+            sponsor={sponsors[0]}
+            description={
+              language === "sv"
+                ? "Sök sommarjobb"
+                : "Apply for summer internship"
+            }
+          />
         </div>
       </div>
       <div className="flex items-center gap-3">
