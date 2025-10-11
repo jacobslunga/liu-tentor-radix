@@ -12,6 +12,7 @@ import { Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
+import SponsorsSidebar from "@/components/sponsors/SponsorsSidebar";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
