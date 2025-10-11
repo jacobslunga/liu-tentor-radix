@@ -11,18 +11,7 @@ const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const [isExamMode, setIsExamMode] = useState(false);
 
-  const customPagePaths = [
-    "/faq",
-    "/om-oss",
-    "/feedback",
-    "/privacy-policy",
-    "/upload-exams",
-  ];
-
   const isExamPage = /^\/search\/[A-Z0-9]+\/[0-9]+$/.test(pathname);
-  const isCustomPage = customPagePaths.some((path) =>
-    pathname.startsWith(path)
-  );
 
   useEffect(() => {
     const checkSession = () => {
@@ -116,7 +105,7 @@ const MainLayout: React.FC = () => {
         <Outlet />
       </main>
 
-      {!isExamPage && !isCustomPage && !isExamMode && <Footer />}
+      {!isExamPage && !isExamMode && <Footer />}
 
       {!isExamMode && <SystemUpdateBanner />}
       {!isExamMode && <CookieBanner />}
