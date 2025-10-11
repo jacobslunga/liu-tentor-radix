@@ -34,8 +34,8 @@ const OmOss: FC = () => {
   }, []);
 
   return (
-    <div className="container mx-auto px-4 pb-12 max-w-2xl min-h-screen">
-      <h1 className="text-3xl font-medium text-foreground mb-4 mt-12">
+    <div className="container mx-auto px-4 py-12 max-w-3xl min-h-screen">
+      <h1 className="text-3xl font-medium text-foreground mb-6">
         {language === "sv" ? "Om oss" : "About Us"}
       </h1>
       <div className="text-sm text-foreground/80 leading-relaxed space-y-4">
@@ -63,7 +63,7 @@ const OmOss: FC = () => {
             </p>
             <p>
               Har du idéer, hittat en bugg eller vill bara säga hej? Hör av dig!
-              Vi älskar feedback 🧠✨
+              Vi älskar feedback
             </p>
           </>
         ) : (
@@ -89,7 +89,7 @@ const OmOss: FC = () => {
             </p>
             <p>
               Got ideas, found a bug, or just want to say hi? Reach out! We love
-              feedback 🧠✨
+              feedback
             </p>
           </>
         )}

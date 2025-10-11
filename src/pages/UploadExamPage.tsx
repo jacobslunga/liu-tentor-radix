@@ -16,9 +16,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
+import { kurskodArray } from "@/data/kurskoder";
 import { supabase } from "@/supabase/supabaseClient";
 import { useDropzone } from "react-dropzone";
 import { useLanguage } from "@/context/LanguageContext";
@@ -112,6 +113,55 @@ const UploadExamPage = () => {
   );
   const [errorMessage, setErrorMessage] = useState("");
 
+  const [typed, setTyped] = useState("");
+  const [exIndex, setExIndex] = useState(() =>
+    Math.floor(Math.random() * kurskodArray.length)
+  );
+  const [charIndex, setCharIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  const shuffledExamples = useMemo(() => {
+    return [...kurskodArray].sort(() => Math.random() - 0.5);
+  }, []);
+
+  useEffect(() => {
+    const showTypewriter = !kurskod;
+    if (!showTypewriter) return;
+
+    const current = shuffledExamples[exIndex % shuffledExamples.length] || "";
+    const doneTyping = charIndex === current.length && !deleting;
+    const doneDeleting = charIndex === 0 && deleting;
+    const speed = deleting ? 30 : 55;
+    const pause = doneTyping ? 1200 : doneDeleting ? 500 : 0;
+
+    const timer = setTimeout(() => {
+      if (doneTyping) {
+        setDeleting(true);
+      } else if (doneDeleting) {
+        setDeleting(false);
+        setExIndex((prev) => {
+          let next = prev;
+          while (next === prev) {
+            next = Math.floor(Math.random() * shuffledExamples.length);
+          }
+          return next;
+        });
+      } else {
+        setCharIndex((c) => c + (deleting ? -1 : 1));
+        setTyped(current.slice(0, deleting ? charIndex - 1 : charIndex + 1));
+      }
+    }, pause || speed);
+
+    return () => clearTimeout(timer);
+  }, [kurskod, shuffledExamples, exIndex, charIndex, deleting]);
+
+  useEffect(() => {
+    if (!kurskod) {
+      const current = shuffledExamples[exIndex % shuffledExamples.length] || "";
+      setTyped(current.slice(0, charIndex));
+    }
+  }, [kurskod, exIndex, charIndex, shuffledExamples]);
+
   const handleUpload = async () => {
     if (files.length === 0 || !kurskod) return;
     setLoading(true);
@@ -204,11 +254,11 @@ const UploadExamPage = () => {
           <input
             id="course-code"
             type="text"
-            placeholder="TDDD97"
+            placeholder={kurskod ? "" : typed}
             value={kurskod}
             onChange={(e) => setKurskod(e.target.value.toUpperCase())}
             disabled={loading}
-            className="w-full bg-transparent font-medium outline-none border-0 border-b-2 border-foreground/20 text-center text-5xl focus:ring-0 focus:border-primary transition-colors p-2"
+            className="w-full bg-transparent font-medium outline-none border-0 border-b-2 border-foreground/20 text-center text-5xl focus:ring-0 focus:border-primary transition-colors p-2 placeholder:text-muted-foreground/40"
           />
         </div>
 
@@ -224,7 +274,6 @@ const UploadExamPage = () => {
           <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
             <UploadCloud className="h-8 w-8" />
             <p className="font-medium">{t("dragAndDrop")}</p>
-            <p className="text-xs">PDF files only</p>
           </div>
         </div>
 

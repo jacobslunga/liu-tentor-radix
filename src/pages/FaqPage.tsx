@@ -42,10 +42,10 @@ const FAQPage = () => {
   }, []);
 
   return (
-    <main className="container mx-auto px-4 pb-12">
-      <div className="max-w-2xl mx-auto">
+    <main className="container mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto">
         {/* Sidans H1 */}
-        <h1 className="text-3xl font-medium mb-8 text-foreground mt-12">
+        <h1 className="text-3xl font-medium mb-8 text-foreground">
           {language === "sv" ? "Vanliga frågor" : "Frequently Asked Questions"}
         </h1>
 

@@ -48,9 +48,9 @@ const PrivacyPolicy: FC = () => {
   );
 
   return (
-    <div className="container mx-auto px-4 pb-12">
-      <div className="max-w-2xl mx-auto">
-        <div className="mb-6 mt-12">
+    <div className="container mx-auto px-4 py-12">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-6">
           <h1 className="text-3xl text-foreground font-medium flex items-center gap-2">
             {t("privacyPolicyTitle")}
           </h1>

@@ -65,10 +65,10 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="hidden min-h-screen items-center justify-center lg:flex lg:w-56 lg:fixed lg:inset-y-0 lg:z-50 lg:bg-background">
+    <div className="hidden min-h-screen flex-col py-10 px-5 items-start justify-start lg:flex lg:w-72 lg:fixed lg:inset-y-0 lg:z-10 lg:bg-background">
       <Link
         to="/"
-        className="absolute top-5 left-4 flex flex-row items-center justify-center gap-1"
+        className="flex flex-row items-center justify-center gap-1 mb-10"
       >
         <LogoIcon className="w-12 h-12" />
         <h1 className="font-semibold text-2xl font-logo text-foreground/80 tracking-tight">

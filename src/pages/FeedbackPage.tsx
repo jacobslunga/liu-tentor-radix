@@ -16,9 +16,9 @@ import { motion } from "framer-motion";
 import { supabase } from "@/supabase/supabaseClient";
 import { useForm } from "react-hook-form";
 import { useMetadata } from "@/hooks/useMetadata";
+import useTranslation from "@/hooks/useTranslation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import useTranslation from "@/hooks/useTranslation";
 
 const formSchema = z.object({
   partOfWebsite: z.string().max(50).optional(),
@@ -108,9 +108,9 @@ const FeedbackPage: FC = () => {
   );
 
   return (
-    <div className="container max-w-2xl mx-auto px-4 pb-16 grow">
-      <div className="relative w-full flex flex-col items-center mb-5 mt-12">
-        <h1 className="text-3xl text-foreground font-medium text-center mt-5 mb-4">
+    <div className="container max-w-3xl mx-auto px-4 py-12 grow">
+      <div className="relative w-full flex flex-col items-center mb-8">
+        <h1 className="text-3xl text-foreground font-medium text-center mb-4">
           {t("feedbackTitle")}
         </h1>
         <p className="text-lg text-muted-foreground text-center max-w-xl">
