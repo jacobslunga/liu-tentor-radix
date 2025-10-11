@@ -1,6 +1,7 @@
-import useTranslation from "@/hooks/useTranslation";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+
 import { MousePointerClick } from "lucide-react";
+import useTranslation from "@/hooks/useTranslation";
 
 interface Props {
   isBlurred: boolean;
@@ -19,7 +20,7 @@ const SolutionOverlay = ({ isBlurred }: Props) => {
           transition={{ duration: 0.1 }}
           className="absolute inset-0 flex flex-col items-center justify-center bg-background/30 z-30"
         >
-          <p className="font-medium text-center">{t("mouseOverDescription")}</p>
+          <p className="font-normal text-center">{t("mouseOverDescription")}</p>
           <MousePointerClick className="w-7 h-7 mt-2" />
         </motion.div>
       )}
