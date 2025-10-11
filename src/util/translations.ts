@@ -285,6 +285,7 @@ interface MiscTranslations {
 
 interface SponsorTranslations {
   sponsorsWeWorkWith: string;
+  ourSponsors: string;
 }
 
 // Main translations interface combining all sections
@@ -606,6 +607,7 @@ const translations: Record<Language, Translations> = {
 
     // Sponsors
     sponsorsWeWorkWith: "Sponsorer vi jobbar med",
+    ourSponsors: "Våra sponsorer",
   },
 
   en: {
@@ -907,6 +909,7 @@ const translations: Record<Language, Translations> = {
 
     // Sponsors
     sponsorsWeWorkWith: "Sponsors we work with",
+    ourSponsors: "Our sponsors",
   },
 };
 
