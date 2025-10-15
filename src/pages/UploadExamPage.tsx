@@ -237,7 +237,7 @@ const UploadExamPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 text-center">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-start py-12 p-4 text-center">
       <div className="w-full max-w-md mx-auto space-y-10">
         <div className="space-y-4">
           <h1 className="text-3xl font-medium">{t("uploadTitle")}</h1>
