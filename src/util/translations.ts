@@ -276,6 +276,7 @@ interface MiscTranslations {
   aiChatPlaceholder: string;
   aiChatPoweredBy: string;
   aiChatSend: string;
+  aiChatThinking: string;
   // Page specific
   faq: string;
   aboutUs: string;
@@ -614,6 +615,8 @@ const translations: Record<Language, Translations> = {
     uploadMore: "Ladda upp mer",
     examCount: "tenta",
     solutionCount: "facit",
+
+    aiChatThinking: "Tänker",
   },
 
   en: {
@@ -921,6 +924,8 @@ const translations: Record<Language, Translations> = {
     uploadMore: "Upload more",
     examCount: "exam",
     solutionCount: "solution",
+
+    aiChatThinking: "Thinking",
   },
 };
 

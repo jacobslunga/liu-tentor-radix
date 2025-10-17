@@ -27,6 +27,24 @@
       sans-serif;
   }
 
+  :root *::selection {
+    background: oklch(0.6193 0.1154 172.06 / 0.28);
+    color: oklch(0.2 0 0);
+  }
+  :root *::-moz-selection {
+    background: oklch(0.6193 0.1154 172.06 / 0.28);
+    color: oklch(0.2 0 0);
+  }
+
+  .dark *::selection {
+    background: oklch(0.8332 0.088 144.73 / 0.35);
+    color: oklch(0.985 0 0);
+  }
+  .dark *::-moz-selection {
+    background: oklch(0.8332 0.088 144.73 / 0.35);
+    color: oklch(0.985 0 0);
+  }
+
   @font-face {
     font-family: "Logo";
     src: url("/fonts/DMSerifText-Regular.ttf");
