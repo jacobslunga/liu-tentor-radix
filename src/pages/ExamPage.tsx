@@ -34,7 +34,7 @@ const ExamPage: FC = () => {
       e.preventDefault();
       setIsChatOpen((prev) => !prev);
     },
-    { preventDefault: true }
+    { preventDefault: true },
   );
 
   const { courseCode = "", examId = "" } = useParams<{
@@ -64,7 +64,7 @@ const ExamPage: FC = () => {
   const pageDescription =
     examDetail && courseData
       ? `Se tenta för ${courseCode} från ${formatExamDate(
-          examDetail.exam.exam_date
+          examDetail.exam.exam_date,
         )} - ${courseData.course_name_eng}`
       : `Tenta för ${courseCode}`;
 
