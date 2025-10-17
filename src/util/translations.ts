@@ -277,7 +277,12 @@ interface MiscTranslations {
   aiChatPoweredBy: string;
   aiChatSend: string;
   aiChatThinking: string;
-  learnMore: string;
+  aiChatTitle: string;
+  aiChatEmptyTitle: string;
+  aiChatEmptyDescription: string;
+  aiChatPlaceholder: string;
+  aiChatPoweredBy: string;
+  aiChatSend: string;
   // Page specific
   faq: string;
   aboutUs: string;
@@ -290,6 +295,7 @@ interface MiscTranslations {
   uploadMore: string;
   examCount: string;
   solutionCount: string;
+  learnMore: string;
 }
 
 // Main translations interface combining all sections
@@ -604,6 +610,13 @@ const translations: Record<Language, Translations> = {
     aiChatPoweredBy:
       "Powered by OpenAI. AI kan göra misstag, kontrollera alltid svar.",
     aiChatSend: "Skicka",
+    aiChatTitle: "LiU Tentor AI",
+    aiChatEmptyTitle: "Ställ en fråga om tentan!",
+    aiChatEmptyDescription:
+      "Jag kan hjälpa dig att förstå frågor och koncept från denna tenta.",
+    aiChatPlaceholder: "Fråga, sök eller chatta...",
+    aiChatPoweredBy: "Drivs av OpenAI - AI kan göra misstag",
+    aiChatSend: "Skicka",
     learnMore: "Läs mer",
     faq: "Vanliga frågor",
     aboutUs: "Om oss",
@@ -913,6 +926,13 @@ const translations: Record<Language, Translations> = {
     aiChatPlaceholder: "Ask, search or chat...",
     aiChatPoweredBy:
       "Powered by OpenAI. AI can make mistakes, always check responses.",
+    aiChatSend: "Send",
+    aiChatTitle: "LiU Tentor AI",
+    aiChatEmptyTitle: "Ask a question about the exam!",
+    aiChatEmptyDescription:
+      "I can help you understand questions and concepts from this exam.",
+    aiChatPlaceholder: "Ask, search or chat...",
+    aiChatPoweredBy: "Powered by OpenAI • AI can make mistakes",
     aiChatSend: "Send",
     learnMore: "Learn More",
     faq: "FAQ",
