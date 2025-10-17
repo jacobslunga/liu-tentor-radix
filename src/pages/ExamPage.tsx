@@ -52,6 +52,7 @@ const ExamPage: FC = () => {
     isLoading: detailLoading,
     isError: detailError,
   } = useExamDetails(Number(examId));
+  console.log(examDetail);
 
   const pageTitle =
     examDetail && courseData
