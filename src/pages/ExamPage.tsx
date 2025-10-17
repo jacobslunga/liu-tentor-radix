@@ -52,6 +52,7 @@ const ExamPage: FC = () => {
     isLoading: detailLoading,
     isError: detailError,
   } = useExamDetails(Number(examId));
+  console.log(examDetail);
 
   const pageTitle =
     examDetail && courseData
@@ -112,9 +113,7 @@ const ExamPage: FC = () => {
 
         {/* Chat Window */}
         <ChatWindow
-          examId={examId}
-          examName={examDetail.exam.exam_name}
-          hasSolution={examDetail.exam.has_solution}
+          examDetail={examDetail}
           isOpen={isChatOpen}
           onClose={handleCloseChat}
         />

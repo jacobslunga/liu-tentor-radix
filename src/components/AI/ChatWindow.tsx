@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect, memo } from "react";
+import { FC, useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -24,6 +24,8 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowUpIcon, X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LogoIcon } from "../LogoIcon";
+import { ExamWithSolutions } from "@/types/exam";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Message {
   role: "user" | "assistant";
@@ -31,27 +33,18 @@ interface Message {
 }
 
 interface ChatWindowProps {
-  examId: string;
-  examName: string;
-  hasSolution: boolean;
+  examDetail: ExamWithSolutions;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const ChatWindow: FC<ChatWindowProps> = ({
-  examId,
-  examName,
-  hasSolution,
-  isOpen,
-  onClose,
-}) => {
+const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
+  const { language } = useLanguage();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  console.log(examId);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -82,7 +75,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
     try {
       const response = await fetch(
-        `http://localhost:8787/exams/${examId}/chat`,
+        `http://localhost:8787/exams/${examDetail.exam.id}/chat`,
         {
           method: "POST",
           headers: {
@@ -248,37 +241,35 @@ const ChatWindow: FC<ChatWindowProps> = ({
                 onKeyDown={handleKeyDown}
                 autoFocus
                 rows={4}
-                className="!text-base xl:!text-lg resize-none !min-h-[120px]"
+                className="!text-base 2xl:!text-lg resize-none"
                 style={{ fontSize: "16px" }}
               />
               <InputGroupAddon align="block-end">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <span className="text-xs text-muted-foreground truncate">
-                    {examName || "Loading..."}
-                  </span>
-                  {hasSolution && (
-                    <Badge
-                      variant="outline"
-                      className="text-xs shrink-0 whitespace-nowrap"
-                    >
-                      + {t("facit")}
-                    </Badge>
-                  )}
+                  <Badge className="text-xs truncate" variant="secondary">
+                    {language === "sv" ? "Tenta " : "Exam "}{" "}
+                    {examDetail.exam.exam_date || "Loading..."}
+                    {examDetail.solutions.length > 0 && (
+                      <span>
+                        + {t("facit")}{" "}
+                        {language === "sv" ? "inkluderat" : "included"}
+                      </span>
+                    )}
+                  </Badge>
                 </div>
                 <Separator orientation="vertical" className="!h-6 ml-2" />
                 <InputGroupButton
                   variant="default"
-                  className="rounded-full ml-2 !h-12 !w-12"
                   size="icon-sm"
                   disabled={!input.trim() || isLoading}
                   onClick={sendMessage}
                 >
-                  <ArrowUpIcon className="h-6 w-6" />
+                  <ArrowUpIcon className="h-10 w-10" />
                   <span className="sr-only">{t("aiChatSend")}</span>
                 </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
-            <p className="text-xs text-muted-foreground text-center">
+            <p className="text-[10px] text-muted-foreground text-center">
               {t("aiChatPoweredBy")}
             </p>
           </div>
@@ -288,4 +279,4 @@ const ChatWindow: FC<ChatWindowProps> = ({
   );
 };
 
-export default memo(ChatWindow);
+export default ChatWindow;

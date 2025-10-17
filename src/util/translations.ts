@@ -599,7 +599,8 @@ const translations: Record<Language, Translations> = {
     aiChatEmptyDescription:
       "Jag kan hjälpa dig att förstå frågor och koncept från denna tenta.",
     aiChatPlaceholder: "Fråga, sök eller chatta...",
-    aiChatPoweredBy: "Drivs av OpenAI - AI kan göra misstag",
+    aiChatPoweredBy:
+      "Powered by OpenAI - AI kan göra misstag, kontrollera alltid svar.",
     aiChatSend: "Skicka",
     faq: "Vanliga frågor",
     aboutUs: "Om oss",
@@ -905,7 +906,8 @@ const translations: Record<Language, Translations> = {
     aiChatEmptyDescription:
       "I can help you understand questions and concepts from this exam.",
     aiChatPlaceholder: "Ask, search or chat...",
-    aiChatPoweredBy: "Powered by OpenAI • AI can make mistakes",
+    aiChatPoweredBy:
+      "Powered by OpenAI - AI can make mistakes, always check responses.",
     aiChatSend: "Send",
     faq: "FAQ",
     aboutUs: "About Us",
