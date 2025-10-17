@@ -1,4 +1,4 @@
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -18,7 +18,6 @@ import {
   EmptyDescription,
   EmptyMedia,
 } from "@/components/ui/empty";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpIcon, X, ArrowDown, Loader2 } from "lucide-react";
@@ -30,20 +29,20 @@ import { useLanguage } from "@/context/LanguageContext";
 const markdownString = `
   "För att kunna förklara Uppgift 1, låt oss gå igenom vad som efterfrågas och hur man kan lösa den.
 
-**Uppgift 1:**  
+**Uppgift 1:**
 "Ange en ekvation på normalform för det plan som innehåller punkterna (3, 0, −1), (−1, 1, 0) och (4, 1, −2)."
 
 ---
 
 ### Steg för att lösa Uppgift 1:
 
-1. **Identifiera punkterna:**  
+1. **Identifiera punkterna:**
    Vi har tre punkter:
    - \( P_1 = (3, 0, -1) \)
    - \( P_2 = (-1, 1, 0) \)
    - \( P_3 = (4, 1, -2) \)
 
-2. **Hitta två vektorer i planet:**  
+2. **Hitta två vektorer i planet:**
    Välj en punkt, till exempel \( P_1 \), och bilda två vektorer i planet:
    \[
    \vec{v}_1 = P_2 - P_1 = (-1 - 3, 1 - 0, 0 - (-1)) = (-4, 1, 1)
@@ -52,22 +51,22 @@ const markdownString = `
    \vec{v}_2 = P_3 - P_1 = (4 - 3, 1 - 0, -2 - (-1)) = (1, 1, -1)
    \]
 
-3. **Beräkna normalvektorn till planet:**  
+3. **Beräkna normalvektorn till planet:**
    Normalvektorn \(\vec{n}\) är vektorn som är korsprodukt av \(\vec{v}_1\) och \(\vec{v}_2\):
    \[
    \vec{n} = \vec{v}_1 \times \vec{v}_2
    \]
-   
+
    Korsprodukten:
    \[
-   \vec{n} = 
+   \vec{n} =
    \begin{vmatrix}
    \mathbf{i} & \mathbf{j} & \mathbf{k} \\
    -4 & 1 & 1 \\
    1 & 1 & -1
    \end{vmatrix}
    \]
-   
+
    Beräkning:
    \[
    \vec{n} = \mathbf{i} \cdot (1 \cdot (-1) - 1 \cdot 1) - \mathbf{j} \cdot (-4 \cdot (-1) - 1 \cdot 1) + \mathbf{k} \cdot (-4 \cdot 1 - 1 \cdot 1)
@@ -76,7 +75,7 @@ const markdownString = `
    \[
    = \mathbf{i} \cdot (-1 - 1) - \mathbf{j} \cdot (4 - 1) + \mathbf{k} \cdot (-4 - 1)
    \]
-   
+
    \[
    = \mathbf{i} \cdot (-2) - \mathbf{j} \cdot 3 + \mathbf{k} \cdot (-5)
    \]
@@ -85,14 +84,14 @@ const markdownString = `
    \Rightarrow \vec{n} = (-2, -3, -5)
    \]
 
-   Vi kan multiplicera vektorn med -1 för enklare tecken, men det är inte nödvändigt.   
-   
-   **Normalvektorn kan alltså vara:**  
+   Vi kan multiplicera vektorn med -1 för enklare tecken, men det är inte nödvändigt.
+
+   **Normalvektorn kan alltså vara:**
    \[
    \boxed{\vec{n} = (2, 3, 5)}
    \]
 
-4. **Ekvation för planet i normalform:**  
+4. **Ekvation för planet i normalform:**
    Ekvationen för en plan i normalform är:
    \[
    \vec{n} \cdot (x, y, z) = d
@@ -104,8 +103,8 @@ const markdownString = `
    d = 2 \times 3 + 3 \times 0 + 5 \times (-1) = 6 + 0 - 5 = 1
    \]
 
-5. **Svar:**  
-   **Ekvationen på normalform för planet är:**  
+5. **Svar:**
+   **Ekvationen på normalform för planet är:**
    \[
    2x + 3y + 5z = 1
    \]
@@ -121,6 +120,22 @@ const markdownString = `
 
 Jag hoppas att detta hjälper dig att förstå hur man löser Uppgift 1! Om du vill ha ytterligare förklaring eller exempel, säg bara till!
 `;
+
+const mathEx = `
+    $$
+    \displaystyle\sum_{k=3}^5 k^2=3^2 + 4^2 + 5^2 =50
+    $$
+`;
+
+const normalizeMath = (s: string) =>
+  s
+    .replace(/\\\[/g, "$$")
+    .replace(/\\\]/g, "$$")
+    .replace(/\\\(/g, "$")
+    .replace(/\\\)/g, "$");
+
+const stripIndent = (s: string) =>
+  s.replace(/^\n/, "").replace(/^[ \t]+/gm, "");
 
 interface Message {
   role: "user" | "assistant";
@@ -139,7 +154,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: markdownString,
+      content: mathEx,
     },
   ]);
   const [input, setInput] = useState("");
@@ -154,13 +169,17 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     messagesEndRef.current?.scrollIntoView({ behavior });
   };
 
+  const handleClose = useCallback(() => {
+    setInput("");
+    onClose();
+  }, [onClose]);
+
   useEffect(() => {
     if (autoScroll) {
       scrollToBottom("smooth");
     }
   }, [messages, autoScroll]);
 
-  // Handle scroll detection
   useEffect(() => {
     const container = messagesContainerRef.current;
     if (!container) return;
@@ -186,7 +205,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen]);
+  }, [isOpen, handleClose]);
 
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
@@ -212,7 +231,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               content: msg.content,
             })),
           }),
-        }
+        },
       );
 
       if (!response.ok) {
@@ -224,7 +243,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       let assistantMessage = "";
       let isFirstChunk = true;
 
-      // Add loading message
       setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       if (reader) {
@@ -273,11 +291,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     }
   };
 
-  const handleClose = () => {
-    setInput("");
-    onClose();
-  };
-
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
@@ -302,7 +315,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
             <X className="h-4 w-4" />
           </Button>
 
-          {/* Messages */}
           <div
             ref={messagesContainerRef}
             className="flex-1 overflow-y-auto p-4 pt-12 space-y-4 relative"
@@ -332,7 +344,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                   className={`max-w-[100%] rounded-lg p-3 ${
                     message.role === "user"
                       ? "bg-primary text-primary-foreground"
-                      : "bg-muted"
+                      : "bg-background"
                   }`}
                 >
                   {message.role === "assistant" ? (
@@ -344,24 +356,10 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                         </span>
                       </div>
                     ) : (
-                      <div className="prose prose-sm dark:prose-invert max-w-none [&_.katex]:text-current">
+                      <div className="prose prose-sm dark:prose-invert max-w-none">
                         <ReactMarkdown
                           remarkPlugins={[remarkMath, remarkGfm]}
-                          rehypePlugins={[
-                            [
-                              rehypeKatex,
-                              {
-                                strict: false,
-                                throwOnError: false,
-                                trust: true,
-                                macros: {
-                                  "\\vec": "\\mathbf{#1}",
-                                  "\\boxed": "\\fbox{#1}",
-                                },
-                                output: "html",
-                              },
-                            ],
-                          ]}
+                          rehypePlugins={[rehypeKatex]}
                           components={{
                             a: (props) => (
                               <a
@@ -416,7 +414,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                             ),
                           }}
                         >
-                          {message.content}
+                          {stripIndent(normalizeMath(message.content))}
                         </ReactMarkdown>
                       </div>
                     )
@@ -480,10 +478,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                     )}
                   </Badge>
                 </div>
-                <Separator
-                  orientation="vertical"
-                  className="!h-6 ml-2 bg-border"
-                />
                 <InputGroupButton
                   variant="default"
                   size="icon-sm"
@@ -495,9 +489,15 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
-            <p className="text-[9px] text-muted-foreground text-center">
-              {t("aiChatPoweredBy")}
-            </p>
+            <div className="flex flex-row items-center justify-between px-2 w-full mb-2">
+              <p className="text-[9px] text-muted-foreground text-center">
+                {t("aiChatPoweredBy")}
+              </p>
+
+              <p className="text-[9px] text-muted-foreground text-center">
+                Shift + Enter för ny rad
+              </p>
+            </div>
           </div>
         </motion.div>
       )}
