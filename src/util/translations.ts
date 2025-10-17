@@ -86,6 +86,7 @@ interface PDFControlTranslations {
   toggleFacitToolbar: string;
   moveFacitLeft: string;
   moveFacitRight: string;
+  toggleAIChat: string;
   next: string;
   previous: string;
   nextSide: string;
@@ -269,6 +270,12 @@ interface MiscTranslations {
   askAI: string;
   aiTitle: string;
   aiDescription: string;
+  aiChatTitle: string;
+  aiChatEmptyTitle: string;
+  aiChatEmptyDescription: string;
+  aiChatPlaceholder: string;
+  aiChatPoweredBy: string;
+  aiChatSend: string;
   // Page specific
   faq: string;
   aboutUs: string;
@@ -386,6 +393,7 @@ const translations: Record<Language, Translations> = {
     toggleFacitToolbar: "Toggla facit verktygsfält",
     moveFacitLeft: "Flytta facit till vänster",
     moveFacitRight: "Flytta facit till höger",
+    toggleAIChat: "Toggla AI-chatt",
     next: "Nästa",
     previous: "Föregående",
     nextSide: "Nästa sida",
@@ -586,6 +594,13 @@ const translations: Record<Language, Translations> = {
     aiTitle: "Vad behöver du hjälp med?",
     aiDescription:
       "Få frågor besvarade, förklarade och diskuterade av chatten.",
+    aiChatTitle: "LiU Tentor AI",
+    aiChatEmptyTitle: "Ställ en fråga om tentan!",
+    aiChatEmptyDescription:
+      "Jag kan hjälpa dig att förstå frågor och koncept från denna tenta.",
+    aiChatPlaceholder: "Fråga, sök eller chatta...",
+    aiChatPoweredBy: "Drivs av OpenAI - AI kan göra misstag",
+    aiChatSend: "Skicka",
     faq: "Vanliga frågor",
     aboutUs: "Om oss",
     feedback: "Feedback",
@@ -683,6 +698,7 @@ const translations: Record<Language, Translations> = {
     toggleFacitToolbar: "Toggle facit toolbar",
     moveFacitLeft: "Move facit to the left",
     moveFacitRight: "Move facit to the right",
+    toggleAIChat: "Toggle AI chat",
     next: "Next",
     previous: "Previous",
     nextSide: "Next side",
@@ -884,6 +900,13 @@ const translations: Record<Language, Translations> = {
     aiTitle: "What do you need help with?",
     aiDescription:
       "Get questions answered, explained, and discussed by the chat.",
+    aiChatTitle: "LiU Tentor AI",
+    aiChatEmptyTitle: "Ask a question about the exam!",
+    aiChatEmptyDescription:
+      "I can help you understand questions and concepts from this exam.",
+    aiChatPlaceholder: "Ask, search or chat...",
+    aiChatPoweredBy: "Powered by OpenAI • AI can make mistakes",
+    aiChatSend: "Send",
     faq: "FAQ",
     aboutUs: "About Us",
     feedback: "Feedback",
