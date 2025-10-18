@@ -34,7 +34,7 @@ import {
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpIcon, ArrowDown, Loader2, ChevronRight } from "lucide-react";
+import { ArrowUpIcon, ArrowDown, ChevronRight, Loader2 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LogoIcon } from "../LogoIcon";
 import { ExamWithSolutions } from "@/types/exam";
@@ -63,9 +63,12 @@ const markdownComponents = {
   ),
   code: ({ inline, ...props }: any) =>
     inline ? (
-      <code {...props} className="bg-muted/50 px-1 py-0.5 rounded text-base" />
+      <code
+        {...props}
+        className="bg-muted/50 text-foreground px-1 py-0.5 rounded text-base"
+      />
     ) : (
-      <code {...props} className="break-words text-base" />
+      <code {...props} className="break-words text-foreground text-base" />
     ),
   p: (props: any) => <p {...props} className="my-2 text-base" />,
   ul: (props: any) => (
@@ -100,9 +103,9 @@ const MessageBubble = memo(
 
     return (
       <div
-        className={`max-w-[100%] rounded-lg p-3 ${
+        className={`max-w-[100%] rounded-2xl p-3 ${
           message.role === "user"
-            ? "bg-primary text-primary-foreground"
+            ? "bg-secondary text-foreground"
             : "bg-background"
         }`}
       >
@@ -422,7 +425,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               />
               <InputGroupAddon align="block-end">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <Badge className="text-sm truncate" variant="secondary">
+                  <Badge className="text-xs truncate" variant="outline">
                     {language === "sv" ? "Tenta " : "Exam "}{" "}
                     {examDetail.solutions.length > 0 && (
                       <span>
