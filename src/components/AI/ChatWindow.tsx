@@ -1,4 +1,12 @@
-import { FC, useState, useRef, useEffect, useCallback } from "react";
+import {
+  FC,
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  useMemo,
+  memo,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -12,6 +20,12 @@ import {
   InputGroupButton,
 } from "@/components/ui/input-group";
 import {
+  TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
+import {
   Empty,
   EmptyHeader,
   EmptyTitle,
@@ -20,112 +34,11 @@ import {
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpIcon, X, ArrowDown, Loader2 } from "lucide-react";
+import { ArrowUpIcon, ArrowDown, Loader2, ChevronRight } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LogoIcon } from "../LogoIcon";
 import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
-
-const markdownString = `
-  "För att kunna förklara Uppgift 1, låt oss gå igenom vad som efterfrågas och hur man kan lösa den.
-
-**Uppgift 1:**
-"Ange en ekvation på normalform för det plan som innehåller punkterna (3, 0, −1), (−1, 1, 0) och (4, 1, −2)."
-
----
-
-### Steg för att lösa Uppgift 1:
-
-1. **Identifiera punkterna:**
-   Vi har tre punkter:
-   - \( P_1 = (3, 0, -1) \)
-   - \( P_2 = (-1, 1, 0) \)
-   - \( P_3 = (4, 1, -2) \)
-
-2. **Hitta två vektorer i planet:**
-   Välj en punkt, till exempel \( P_1 \), och bilda två vektorer i planet:
-   \[
-   \vec{v}_1 = P_2 - P_1 = (-1 - 3, 1 - 0, 0 - (-1)) = (-4, 1, 1)
-   \]
-   \[
-   \vec{v}_2 = P_3 - P_1 = (4 - 3, 1 - 0, -2 - (-1)) = (1, 1, -1)
-   \]
-
-3. **Beräkna normalvektorn till planet:**
-   Normalvektorn \(\vec{n}\) är vektorn som är korsprodukt av \(\vec{v}_1\) och \(\vec{v}_2\):
-   \[
-   \vec{n} = \vec{v}_1 \times \vec{v}_2
-   \]
-
-   Korsprodukten:
-   \[
-   \vec{n} =
-   \begin{vmatrix}
-   \mathbf{i} & \mathbf{j} & \mathbf{k} \\
-   -4 & 1 & 1 \\
-   1 & 1 & -1
-   \end{vmatrix}
-   \]
-
-   Beräkning:
-   \[
-   \vec{n} = \mathbf{i} \cdot (1 \cdot (-1) - 1 \cdot 1) - \mathbf{j} \cdot (-4 \cdot (-1) - 1 \cdot 1) + \mathbf{k} \cdot (-4 \cdot 1 - 1 \cdot 1)
-   \]
-
-   \[
-   = \mathbf{i} \cdot (-1 - 1) - \mathbf{j} \cdot (4 - 1) + \mathbf{k} \cdot (-4 - 1)
-   \]
-
-   \[
-   = \mathbf{i} \cdot (-2) - \mathbf{j} \cdot 3 + \mathbf{k} \cdot (-5)
-   \]
-
-   \[
-   \Rightarrow \vec{n} = (-2, -3, -5)
-   \]
-
-   Vi kan multiplicera vektorn med -1 för enklare tecken, men det är inte nödvändigt.
-
-   **Normalvektorn kan alltså vara:**
-   \[
-   \boxed{\vec{n} = (2, 3, 5)}
-   \]
-
-4. **Ekvation för planet i normalform:**
-   Ekvationen för en plan i normalform är:
-   \[
-   \vec{n} \cdot (x, y, z) = d
-   \]
-   där \( d = \vec{n} \cdot P_1 \).
-
-   Beräkna:
-   \[
-   d = 2 \times 3 + 3 \times 0 + 5 \times (-1) = 6 + 0 - 5 = 1
-   \]
-
-5. **Svar:**
-   **Ekvationen på normalform för planet är:**
-   \[
-   2x + 3y + 5z = 1
-   \]
-
----
-
-### **Sammanfattning:**
-- Härledde två vektorer i planet genom att subtrahera punkter.
-- Beräknade deras korsprodukt till normalvektorn.
-- Satt in normalvektorn och en punkt i planet i ekvationsformen.
-
----
-
-Jag hoppas att detta hjälper dig att förstå hur man löser Uppgift 1! Om du vill ha ytterligare förklaring eller exempel, säg bara till!
-`;
-
-const mathEx = `
-    $$
-    \displaystyle\sum_{k=3}^5 k^2=3^2 + 4^2 + 5^2 =50
-    $$
-`;
 
 const normalizeMath = (s: string) =>
   s
@@ -137,6 +50,91 @@ const normalizeMath = (s: string) =>
 const stripIndent = (s: string) =>
   s.replace(/^\n/, "").replace(/^[ \t]+/gm, "");
 
+// Memoized markdown components to prevent re-renders
+const markdownComponents = {
+  a: (props: any) => (
+    <a {...props} rel="noopener noreferrer" className="underline" />
+  ),
+  pre: (props: any) => (
+    <pre
+      {...props}
+      className="overflow-x-auto my-3 bg-muted/50 rounded p-2 text-base"
+    />
+  ),
+  code: ({ inline, ...props }: any) =>
+    inline ? (
+      <code {...props} className="bg-muted/50 px-1 py-0.5 rounded text-base" />
+    ) : (
+      <code {...props} className="break-words text-base" />
+    ),
+  p: (props: any) => <p {...props} className="my-2 text-base" />,
+  ul: (props: any) => (
+    <ul {...props} className="my-2 ml-4 list-disc text-base" />
+  ),
+  ol: (props: any) => (
+    <ol {...props} className="my-2 ml-4 list-decimal text-base" />
+  ),
+  li: (props: any) => <li {...props} className="my-1 text-base" />,
+  h1: (props: any) => <h1 {...props} className="text-xl font-bold mt-4 mb-2" />,
+  h2: (props: any) => <h2 {...props} className="text-lg font-bold mt-3 mb-2" />,
+  h3: (props: any) => (
+    <h3 {...props} className="text-base font-bold mt-2 mb-1" />
+  ),
+};
+
+// Memoized message component to prevent unnecessary re-renders
+const MessageBubble = memo(
+  ({
+    message,
+    isLoading,
+    language,
+  }: {
+    message: Message;
+    isLoading: boolean;
+    language: string;
+  }) => {
+    const processedContent = useMemo(
+      () => stripIndent(normalizeMath(message.content)),
+      [message.content]
+    );
+
+    return (
+      <div
+        className={`max-w-[100%] rounded-lg p-3 ${
+          message.role === "user"
+            ? "bg-primary text-primary-foreground"
+            : "bg-background"
+        }`}
+      >
+        {message.role === "assistant" ? (
+          message.content === "" && isLoading ? (
+            <div className="flex items-center gap-2">
+              <Loader2 className="h-5 w-5 animate-spin" />
+              <span className="text-base text-muted-foreground">
+                {language === "sv" ? "Tänker..." : "Thinking..."}
+              </span>
+            </div>
+          ) : (
+            <div className="prose prose-base dark:prose-invert max-w-none">
+              <ReactMarkdown
+                remarkPlugins={[remarkMath, remarkGfm]}
+                rehypePlugins={[rehypeKatex]}
+                components={markdownComponents}
+              >
+                {processedContent}
+              </ReactMarkdown>
+            </div>
+          )
+        ) : (
+          <p className="text-base whitespace-pre-wrap">{message.content}</p>
+        )}
+      </div>
+    );
+  }
+);
+
+MessageBubble.displayName = "MessageBubble";
+
 interface Message {
   role: "user" | "assistant";
   content: string;
@@ -147,38 +145,50 @@ interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content: mathEx,
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [autoScroll, setAutoScroll] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const autoScrollRef = useRef(autoScroll);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    autoScrollRef.current = autoScroll;
+  }, [autoScroll]);
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
   };
+
+  console.log(messages);
 
   const handleClose = useCallback(() => {
     setInput("");
     onClose();
   }, [onClose]);
 
+  // Use requestAnimationFrame to batch scroll updates
   useEffect(() => {
-    if (autoScroll) {
-      scrollToBottom("smooth");
+    if (autoScroll && messages.length > 0) {
+      requestAnimationFrame(() => {
+        scrollToBottom("smooth");
+      });
     }
-  }, [messages, autoScroll]);
+  }, [messages.length, autoScroll]); // Only depend on length, not entire array
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => {
+        scrollToBottom("instant");
+      }, 100);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     const container = messagesContainerRef.current;
@@ -189,12 +199,17 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
 
       setShowScrollButton(!isNearBottom);
-      setAutoScroll(isNearBottom);
+
+      if (!isNearBottom && autoScroll) {
+        setAutoScroll(false);
+      } else if (isNearBottom && !autoScroll) {
+        setAutoScroll(true);
+      }
     };
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
-  }, []);
+  }, [autoScroll]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -214,9 +229,9 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
-    setIsStreaming(true);
     setAutoScroll(true);
 
+    setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
       const response = await fetch(
         `http://localhost:4330/exams/exam/${examDetail.exam.id}/chat`,
@@ -231,7 +246,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               content: msg.content,
             })),
           }),
-        },
+        }
       );
 
       if (!response.ok) {
@@ -241,46 +256,55 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = "";
-      let isFirstChunk = true;
-
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+      let lastUpdateTime = 0;
+      const UPDATE_INTERVAL = 50; // Update UI every 50ms instead of every chunk
 
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
-          if (done) break;
+          if (done) {
+            // Final update with complete message
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                role: "assistant",
+                content: assistantMessage,
+              };
+              return newMessages;
+            });
+            break;
+          }
 
           const chunk = decoder.decode(value);
           assistantMessage += chunk;
 
-          // Remove loading state after first chunk
-          if (isFirstChunk) {
-            setIsStreaming(false);
-            isFirstChunk = false;
+          // Throttle UI updates to reduce re-renders
+          const now = Date.now();
+          if (now - lastUpdateTime >= UPDATE_INTERVAL) {
+            lastUpdateTime = now;
+            setMessages((prev) => {
+              const newMessages = [...prev];
+              newMessages[newMessages.length - 1] = {
+                role: "assistant",
+                content: assistantMessage,
+              };
+              return newMessages;
+            });
           }
-
-          setMessages((prev) => {
-            const newMessages = [...prev];
-            newMessages[newMessages.length - 1] = {
-              role: "assistant",
-              content: assistantMessage,
-            };
-            return newMessages;
-          });
         }
       }
     } catch (error) {
       console.error("Error sending message:", error);
-      setMessages((prev) => [
-        ...prev,
-        {
+      setMessages((prev) => {
+        const newMessages = [...prev];
+        newMessages[newMessages.length - 1] = {
           role: "assistant",
           content: "Något gick fel. Försök igen senare.",
-        },
-      ]);
+        };
+        return newMessages;
+      });
     } finally {
       setIsLoading(false);
-      setIsStreaming(false);
     }
   };
 
@@ -305,25 +329,15 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
           }}
           className="fixed right-0 top-0 h-full w-1/2 bg-background border-l flex flex-col overflow-hidden z-50"
         >
-          {/* Close button - floating */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={handleClose}
-            className="absolute top-2 right-2 z-10"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-
           <div
             ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto p-4 pt-12 space-y-4 relative"
+            className="flex-1 overflow-y-auto p-4 pt-12 pb-20 space-y-4 relative"
           >
             {messages.length === 0 && (
               <Empty className="h-full border-0">
                 <EmptyHeader>
                   <EmptyMedia variant="default">
-                    <LogoIcon className="w-12 h-12" />
+                    <LogoIcon className="w-20 h-20" />
                   </EmptyMedia>
                   <EmptyTitle>{t("aiChatEmptyTitle")}</EmptyTitle>
                   <EmptyDescription>
@@ -340,97 +354,37 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <div
-                  className={`max-w-[100%] rounded-lg p-3 ${
-                    message.role === "user"
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-background"
-                  }`}
-                >
-                  {message.role === "assistant" ? (
-                    message.content === "" && isStreaming ? (
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm text-muted-foreground">
-                          {language === "sv" ? "Tänker..." : "Thinking..."}
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="prose prose-sm dark:prose-invert max-w-none">
-                        <ReactMarkdown
-                          remarkPlugins={[remarkMath, remarkGfm]}
-                          rehypePlugins={[rehypeKatex]}
-                          components={{
-                            a: (props) => (
-                              <a
-                                {...props}
-                                rel="noopener noreferrer"
-                                className="underline"
-                              />
-                            ),
-                            pre: (props) => (
-                              <pre
-                                {...props}
-                                className="overflow-x-auto my-3 bg-muted/50 rounded p-2"
-                              />
-                            ),
-                            code: ({ inline, ...props }: any) =>
-                              inline ? (
-                                <code
-                                  {...props}
-                                  className="bg-muted/50 px-1 py-0.5 rounded text-sm"
-                                />
-                              ) : (
-                                <code {...props} className="break-words" />
-                              ),
-                            p: (props) => <p {...props} className="my-2" />,
-                            ul: (props) => (
-                              <ul {...props} className="my-2 ml-4 list-disc" />
-                            ),
-                            ol: (props) => (
-                              <ol
-                                {...props}
-                                className="my-2 ml-4 list-decimal"
-                              />
-                            ),
-                            li: (props) => <li {...props} className="my-1" />,
-                            h1: (props) => (
-                              <h1
-                                {...props}
-                                className="text-lg font-bold mt-4 mb-2"
-                              />
-                            ),
-                            h2: (props) => (
-                              <h2
-                                {...props}
-                                className="text-base font-bold mt-3 mb-2"
-                              />
-                            ),
-                            h3: (props) => (
-                              <h3
-                                {...props}
-                                className="text-sm font-bold mt-2 mb-1"
-                              />
-                            ),
-                          }}
-                        >
-                          {stripIndent(normalizeMath(message.content))}
-                        </ReactMarkdown>
-                      </div>
-                    )
-                  ) : (
-                    <p className="text-sm whitespace-pre-wrap">
-                      {message.content}
-                    </p>
-                  )}
-                </div>
+                <MessageBubble
+                  message={message}
+                  isLoading={isLoading && index === messages.length - 1}
+                  language={language}
+                />
               </div>
             ))}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
-          <div className="px-2 space-y-2 relative">
+          <div className="px-2 space-y-2 relative pb-2">
+            {/* Close button - absolutely positioned, floating above messages */}
+            <TooltipProvider delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    onClick={handleClose}
+                    className="absolute -top-16 left-2 z-30 hover:bg-accent shadow-md"
+                  >
+                    <ChevronRight className="h-5 w-5" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="right">
+                  <p>{language === "sv" ? "Stäng" : "Close"}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
             {/* Scroll to bottom button */}
             <AnimatePresence>
               {showScrollButton && (
@@ -463,12 +417,12 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 onKeyDown={handleKeyDown}
                 autoFocus
                 rows={2}
-                className="!text-sm resize-none"
-                style={{ fontSize: "14px" }}
+                className="!text-base resize-none"
+                style={{ fontSize: "16px" }}
               />
               <InputGroupAddon align="block-end">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <Badge className="text-xs truncate" variant="secondary">
+                  <Badge className="text-sm truncate" variant="secondary">
                     {language === "sv" ? "Tenta " : "Exam "}{" "}
                     {examDetail.solutions.length > 0 && (
                       <span>
@@ -490,11 +444,11 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               </InputGroupAddon>
             </InputGroup>
             <div className="flex flex-row items-center justify-between px-2 w-full mb-2">
-              <p className="text-[9px] text-muted-foreground text-center">
+              <p className="text-[10px] text-muted-foreground text-center">
                 {t("aiChatPoweredBy")}
               </p>
 
-              <p className="text-[9px] text-muted-foreground text-center">
+              <p className="text-[10px] text-muted-foreground text-center">
                 Shift + Enter för ny rad
               </p>
             </div>
