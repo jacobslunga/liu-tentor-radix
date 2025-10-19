@@ -69,7 +69,7 @@ export default function LayoutSwitcher() {
       style={{
         pointerEvents: isMouseActive || isHovering ? "auto" : "none",
       }}
-      className="fixed shadow-md bottom-10 left-5 z-40 hidden md:flex bg-background/70 backdrop-blur-md rounded-xl border p-1 space-x-1"
+      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background rounded-xl border p-1 space-x-1"
     >
       {modes.map((mode) => {
         const isActive = layoutMode === mode.value;

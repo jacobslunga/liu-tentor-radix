@@ -3,10 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --font-mono: "Spline Sans Mono", monospace;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
