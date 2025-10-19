@@ -277,12 +277,6 @@ interface MiscTranslations {
   aiChatPoweredBy: string;
   aiChatSend: string;
   aiChatThinking: string;
-  aiChatTitle: string;
-  aiChatEmptyTitle: string;
-  aiChatEmptyDescription: string;
-  aiChatPlaceholder: string;
-  aiChatPoweredBy: string;
-  aiChatSend: string;
   // Page specific
   faq: string;
   aboutUs: string;
