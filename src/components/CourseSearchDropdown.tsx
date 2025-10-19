@@ -1,9 +1,10 @@
-import { ClockFillIcon, SearchIcon, XIcon } from "@primer/octicons-react";
+import { ClockFillIcon, XIcon } from "@primer/octicons-react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
-import { CornerUpRight } from "lucide-react";
+import { CornerUpRight, Search } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import useSWR from "swr";
 import useTranslation from "@/hooks/useTranslation";
@@ -229,10 +230,10 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   return (
     <div className={`relative ${className}`}>
       <div className="relative flex items-center">
-        <SearchIcon
-          className={`${iconSizes[size]} text-muted-foreground absolute left-3 pointer-events-none`}
+        <Search
+          className={`${iconSizes[size]} text-muted-foreground absolute left-3 pointer-events-none z-10`}
         />
-        <input
+        <Input
           ref={inputRef}
           placeholder={placeholder || t("searchCoursePlaceholder")}
           value={courseCode.toUpperCase()}
@@ -240,11 +241,11 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full ${sizeClasses[size]} pl-10 pr-10 bg-secondary text-foreground outline-none ring-offset-background rounded-full transition-all duration-200`}
+          className={`w-full ${sizeClasses[size]} pl-10 pr-10`}
         />
         {courseCode && (
           <button
-            className="absolute right-3 top-1/2 -translate-y-1/2"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10"
             onClick={() => setCourseCode("")}
             aria-label="Clear search"
           >

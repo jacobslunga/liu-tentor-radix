@@ -3,10 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  --font-mono: "Spline Sans Mono", monospace;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -200,7 +196,7 @@
 }
 
 :root {
-  --radius: 0.625rem;
+  --radius: 0.8rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.2 0 0);
   --card: oklch(1 0 0);

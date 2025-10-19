@@ -269,6 +269,7 @@ interface MiscTranslations {
   askAI: string;
   aiTitle: string;
   aiDescription: string;
+  learnMore: string;
   // Page specific
   faq: string;
   aboutUs: string;
@@ -586,6 +587,7 @@ const translations: Record<Language, Translations> = {
     aiTitle: "Vad behöver du hjälp med?",
     aiDescription:
       "Få frågor besvarade, förklarade och diskuterade av chatten.",
+    learnMore: "Läs mer",
     faq: "Vanliga frågor",
     aboutUs: "Om oss",
     feedback: "Feedback",
@@ -884,6 +886,7 @@ const translations: Record<Language, Translations> = {
     aiTitle: "What do you need help with?",
     aiDescription:
       "Get questions answered, explained, and discussed by the chat.",
+    learnMore: "Learn More",
     faq: "FAQ",
     aboutUs: "About Us",
     feedback: "Feedback",
