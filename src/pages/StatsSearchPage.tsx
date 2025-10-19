@@ -47,40 +47,6 @@ export default function StatsSearchPage() {
     destructive: cssVar("--destructive"),
   };
 
-  const thresholds = [
-    {
-      labelSv: "≥85% Mycket hög",
-      labelEn: "≥85% Excellent",
-      min: 85,
-      color: c.chart1,
-    },
-    {
-      labelSv: "70-84% Hög",
-      labelEn: "70-84% Strong",
-      min: 70,
-      color: c.chart2,
-    },
-    {
-      labelSv: "60-69% Medel",
-      labelEn: "60-69% Moderate",
-      min: 60,
-      color: c.chart3,
-    },
-    { labelSv: "50-59% Låg", labelEn: "50-59% Low", min: 50, color: c.chart4 },
-    {
-      labelSv: "30-49% Mycket låg",
-      labelEn: "30-49% Poor",
-      min: 30,
-      color: c.chart5,
-    },
-    {
-      labelSv: "<30% Underkända dominerar",
-      labelEn: "<30% Fail-heavy",
-      min: -1,
-      color: c.destructive,
-    },
-  ];
-
   const getBarColor = (v: number) => {
     if (v >= 85) return c.chart1;
     if (v >= 70) return c.chart2;
@@ -203,70 +169,123 @@ export default function StatsSearchPage() {
     );
 
   return (
-    <div className="w-full md:max-w-screen-lg mx-auto px-3 sm:px-4 md:px-6 py-6 sm:py-8 overflow-x-hidden">
-      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6 sm:mb-8">
-        <div className="flex flex-col items-start justify-start">
-          <h1 className="text-2xl sm:text-3xl font-semibold">
-            <span className="font-medium text-foreground/60 text-lg">
-              {language === "sv" ? "Statistik för" : "Statistics for"} <br />
-            </span>
-            <span className="flex flex-row items-center justify-center space-x-2">
-              {courseCode} -{" "}
+    <div className="w-full md:max-w-screen-xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 overflow-x-hidden">
+      {/* Header */}
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <div>
+            <p className="text-xs text-muted-foreground mb-0.5">
+              {language === "sv" ? "Kursstatistik" : "Course Statistics"}
+            </p>
+            <h1 className="text-2xl sm:text-3xl font-bold">{courseCode}</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
               {language === "sv"
                 ? courseData?.course_name_swe
-                : courseData?.course_name_eng}{" "}
-            </span>
-          </h1>
+                : courseData?.course_name_eng}
+            </p>
+          </div>
+          <Link to={`/search/${courseCode}`}>
+            <Button variant="outline" size="sm">
+              <FileText className="h-4 w-4" />
+              {language === "sv" ? "Visa tentor" : "View exams"}
+            </Button>
+          </Link>
         </div>
-        <Link to={`/search/${courseCode}`}>
-          <Button variant="secondary">
-            <FileText />
-            {language === "sv" ? "Till kursens tentor" : "Back to exams"}
-          </Button>
-        </Link>
+
+        {/* Stats Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-xs text-muted-foreground mb-0.5">
+              {language === "sv" ? "Totalt antal tentor" : "Total exams"}
+            </p>
+            <p className="text-2xl font-bold">{sorted.length}</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-xs text-muted-foreground mb-0.5">
+              {language === "sv" ? "Totalt antal betyg" : "Total grades"}
+            </p>
+            <p className="text-2xl font-bold">{aggregate.grand}</p>
+          </div>
+          <div className="rounded-lg border bg-card p-4">
+            <p className="text-xs text-muted-foreground mb-0.5">
+              {language === "sv"
+                ? "Genomsnittlig godkänd %"
+                : "Average pass rate"}
+            </p>
+            <p className="text-2xl font-bold">
+              {passSeries.length > 0
+                ? (
+                    passSeries.reduce((sum, d) => sum + d.passRate, 0) /
+                    passSeries.length
+                  ).toFixed(1)
+                : "0.0"}
+              %
+            </p>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-5 gap-6 sm:gap-8">
-        <div className="xl:col-span-3 rounded-xl border p-3 sm:p-4">
-          <div className="text-sm font-normal mb-2 sm:mb-3">
-            {language === "sv"
-              ? "Fördelning över tid"
-              : "Distribution over time"}
+      {/* Charts Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Pass Rate Over Time */}
+        <div className="lg:col-span-2 rounded-lg border bg-card p-4">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold mb-0.5">
+              {language === "sv" ? "Godkända över tid" : "Pass Rate Over Time"}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {language === "sv"
+                ? "Procentuell andel godkända per tenta"
+                : "Percentage of passing grades per exam"}
+            </p>
           </div>
-          <div className="h-[220px] sm:h-[280px] md:h-72">
+          <div className="h-[280px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={passSeries}>
-                <CartesianGrid strokeDasharray="3 3" stroke={c.border} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke={c.border}
+                  opacity={0.3}
+                />
                 <XAxis
                   dataKey="date"
-                  tick={{ fill: c.fg, fontSize: 11 }}
+                  tick={{ fill: c.fg, fontSize: 12 }}
                   axisLine={{ stroke: c.border }}
                   tickLine={false}
-                  minTickGap={12}
+                  minTickGap={20}
                 />
                 <YAxis
                   domain={[0, 100]}
-                  tick={{ fill: c.fg, fontSize: 11 }}
+                  tick={{ fill: c.fg, fontSize: 12 }}
                   tickFormatter={(v) => `${v}%`}
                   axisLine={{ stroke: c.border }}
                   tickLine={false}
-                  width={40}
+                  width={45}
                 />
                 <Tooltip
-                  cursor={{ fill: "transparent" }}
+                  cursor={{ fill: "var(--muted)", opacity: 0.1 }}
                   contentStyle={{
-                    backgroundColor: "var(--background)",
+                    backgroundColor: "var(--popover)",
                     border: "1px solid var(--border)",
-                    borderRadius: "0.5rem",
+                    borderRadius: "0.75rem",
                     fontSize: "0.875rem",
                     color: "var(--foreground)",
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   }}
                   itemStyle={{
                     color: "var(--foreground)",
                   }}
-                  labelStyle={{ color: c.fg }}
+                  labelStyle={{
+                    color: c.fg,
+                    fontWeight: 600,
+                    marginBottom: "4px",
+                  }}
+                  formatter={(v: any) => [
+                    `${v}%`,
+                    language === "sv" ? "Godkända" : "Pass Rate",
+                  ]}
                 />
-                <Bar dataKey="passRate" radius={[4, 4, 0, 0]}>
+                <Bar dataKey="passRate" radius={[6, 6, 0, 0]}>
                   {passSeries.map((d, i) => (
                     <Cell key={i} fill={getBarColor(d.passRate)} />
                   ))}
@@ -274,35 +293,28 @@ export default function StatsSearchPage() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
-            {thresholds.map((t) => (
-              <div
-                key={t.min}
-                className="flex items-center gap-2 text-xs sm:text-sm"
-              >
-                <span
-                  className="inline-block w-3 h-3 rounded"
-                  style={{ background: t.color }}
-                />
-                <span>{language === "sv" ? t.labelSv : t.labelEn}</span>
-              </div>
-            ))}
-          </div>
         </div>
 
-        <div className="xl:col-span-2 rounded-xl border p-3 sm:p-4">
-          <div className="text-sm font-normal mb-2 sm:mb-3">
-            {language === "sv" ? "Total fördelning" : "Total distribution"}
+        {/* Grade Distribution */}
+        <div className="rounded-lg border bg-card p-4">
+          <div className="mb-4">
+            <h2 className="text-lg font-semibold mb-0.5">
+              {language === "sv" ? "Betygsfördelning" : "Grade Distribution"}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {language === "sv" ? "Total fördelning" : "Total distribution"}
+            </p>
           </div>
-          <div className="h-[220px] sm:h-[260px]">
+          <div className="h-[200px]">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
                   dataKey="value"
                   nameKey="label"
                   data={aggregate.entries}
-                  outerRadius={95}
-                  innerRadius={58}
+                  outerRadius={75}
+                  innerRadius={45}
+                  paddingAngle={2}
                   label={false}
                   labelLine={false}
                 >
@@ -319,11 +331,12 @@ export default function StatsSearchPage() {
                   ]}
                   cursor={{ fill: "transparent" }}
                   contentStyle={{
-                    backgroundColor: "var(--background)",
+                    backgroundColor: "var(--popover)",
                     border: "1px solid var(--border)",
-                    borderRadius: "0.5rem",
+                    borderRadius: "0.75rem",
                     fontSize: "0.875rem",
                     color: "var(--foreground)",
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                   }}
                   itemStyle={{
                     color: "var(--foreground)",
@@ -332,26 +345,33 @@ export default function StatsSearchPage() {
               </PieChart>
             </ResponsiveContainer>
           </div>
-          <div className="mt-3 grid grid-cols-2 sm:grid-cols-3 gap-x-3 gap-y-2">
+          <div className="mt-3 space-y-1.5">
             {aggregate.entries.map((d) => (
               <div
                 key={d.key}
-                className="flex items-start justify-center gap-2 text-xs sm:text-sm"
+                className="flex items-center justify-between py-1.5 px-2.5 rounded-md bg-muted/50"
               >
                 <div className="flex items-center gap-2">
                   <span
-                    className="inline-block w-2 h-2 rounded-full"
+                    className="inline-block w-2.5 h-2.5 rounded-full"
                     style={{ background: d.color }}
                   />
-                  <span>{language === "sv" ? `${d.label}` : `${d.label}`}</span>
+                  <span className="text-sm font-medium">
+                    {language === "sv"
+                      ? `Betyg ${d.label}`
+                      : `Grade ${d.label}`}
+                  </span>
                 </div>
-                <div className="text-foreground/80">({d.pct.toFixed(1)}%)</div>
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xs text-muted-foreground">
+                    {nf.format(d.value)}
+                  </span>
+                  <span className="text-sm font-semibold min-w-[44px] text-right">
+                    {d.pct.toFixed(1)}%
+                  </span>
+                </div>
               </div>
             ))}
-          </div>
-          <div className="mt-2 text-[11px] sm:text-xs text-muted-foreground">
-            {language === "sv" ? "Totalt antal" : "Total count"}:{" "}
-            {aggregate.grand}
           </div>
         </div>
       </div>
