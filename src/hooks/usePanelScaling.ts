@@ -1,11 +1,13 @@
 import usePdf from "@/hooks/usePdf";
 
 export function getResponsiveScale(panelWidth: number): number {
-  if (panelWidth >= 1600) return 3; // very wide screens
-  if (panelWidth >= 1280) return 1.5; // typical 1080p
-  if (panelWidth >= 1024) return 1.8; // laptops
-  if (panelWidth >= 768) return 1.3; // small laptops/tablets
-  return 1.0; // fallback for narrow
+  // More intelligent scaling based on actual panel width
+  // These values are tuned for comfortable reading on different screen sizes
+  if (panelWidth >= 1200) return 1.4; // Large desktop panels
+  if (panelWidth >= 900) return 1.3; // Medium desktop panels
+  if (panelWidth >= 700) return 1.2; // Smaller desktop/large laptop
+  if (panelWidth >= 500) return 1.1; // Laptop panels
+  return 1.0; // Small panels/mobile fallback
 }
 
 export function usePanelScaling(key: "exam" | "solution") {
@@ -13,6 +15,7 @@ export function usePanelScaling(key: "exam" | "solution") {
 
   const updateScale = (size: number) => {
     const screenWidth = window.innerWidth;
+    // size is a percentage (0-100), convert to actual pixel width
     const fraction = size / 100;
     const panelWidth = screenWidth * fraction;
 

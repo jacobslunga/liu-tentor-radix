@@ -59,11 +59,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
   return (
     <div className="w-full h-full relative max-w-full bg-background">
-      <div
-        className={`w-full h-full bg-background ${
-          isFacitVisible ? "overflow-auto" : "overflow-hidden"
-        }`}
-      >
+      <div className="w-full h-full bg-background overflow-auto">
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
       </div>
 

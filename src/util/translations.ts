@@ -277,6 +277,7 @@ interface MiscTranslations {
   aiChatPoweredBy: string;
   aiChatSend: string;
   aiChatThinking: string;
+  learnMore: string;
   // Page specific
   faq: string;
   aboutUs: string;
@@ -603,6 +604,7 @@ const translations: Record<Language, Translations> = {
     aiChatPoweredBy:
       "Powered by OpenAI. AI kan göra misstag, kontrollera alltid svar.",
     aiChatSend: "Skicka",
+    learnMore: "Läs mer",
     faq: "Vanliga frågor",
     aboutUs: "Om oss",
     feedback: "Feedback",
@@ -912,6 +914,7 @@ const translations: Record<Language, Translations> = {
     aiChatPoweredBy:
       "Powered by OpenAI. AI can make mistakes, always check responses.",
     aiChatSend: "Send",
+    learnMore: "Learn More",
     faq: "FAQ",
     aboutUs: "About Us",
     feedback: "Feedback",
