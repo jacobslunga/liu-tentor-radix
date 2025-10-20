@@ -130,7 +130,7 @@ const ExamSearchPage: FC = () => {
 
   return (
     <div className="min-h-screen bg-background w-full overflow-x-hidden">
-      <div className="container mx-auto flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+      <div className="container mx-auto flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
         {isLoading && (
           <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
             <LoadingSpinner />

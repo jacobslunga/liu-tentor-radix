@@ -30,6 +30,7 @@ import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";
+import { SolutionInfoBanner } from "@/components/banners/SolutionInfoBanner";
 
 interface Props {
   data: Exam[];
@@ -91,6 +92,8 @@ export function DataTable({
 
   return (
     <div className="w-full space-y-6 mt-10 mx-auto relative">
+      <SolutionInfoBanner />
+
       {/* Header */}
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
@@ -109,7 +112,7 @@ export function DataTable({
               : "text-4xl"
           }`}
         >
-          {language === "sv" ? courseNameSwe : courseNameEng}
+          {courseNameSwe}
         </h2>
 
         {/* New: Stats row */}
