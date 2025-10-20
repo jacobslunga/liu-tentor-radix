@@ -53,19 +53,30 @@ const ExamHeader: FC<Props> = ({ exams }) => {
     }
   }, [sorted, examId]);
 
-  useEffect(() => {
-    if (isDropdownOpen && scrollRef.current) {
-      const idx = sorted.findIndex((e) => e.id.toString() === examId);
-      if (idx >= 0) {
-        const itemHeight = 60;
-        const containerHeight = scrollRef.current.clientHeight;
-        scrollRef.current.scrollTo({
-          top: idx * itemHeight - containerHeight / 2 + itemHeight / 2,
-          behavior: "auto",
-        });
-      }
+  const scrollToCurrentExam = () => {
+    if (!scrollRef.current) return;
+
+    const idx = sorted.findIndex((e) => e.id.toString() === examId);
+    if (idx >= 0) {
+      const itemHeight = 68;
+      const containerHeight = scrollRef.current.clientHeight;
+      const scrollPosition =
+        idx * itemHeight - containerHeight / 2 + itemHeight / 2;
+
+      scrollRef.current.scrollTop = Math.max(0, scrollPosition);
     }
-  }, [isDropdownOpen, sorted, examId]);
+  };
+
+  const setScrollRefAndCenter = (node: HTMLDivElement | null) => {
+    scrollRef.current = node;
+    if (node && isDropdownOpen) {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          scrollToCurrentExam();
+        });
+      });
+    }
+  };
 
   const completed = useMemo<Record<number, boolean>>(() => {
     if (Cookies.get("cookieConsent") !== "true") return {};
@@ -100,7 +111,6 @@ const ExamHeader: FC<Props> = ({ exams }) => {
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
 
-        {/* Enhanced Exam Information */}
         <div className="flex items-center space-x-4">
           {selectedExam && (
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
@@ -140,7 +150,10 @@ const ExamHeader: FC<Props> = ({ exams }) => {
                   {language === "sv" ? "Välj tenta" : "Select Exam"} (
                   {sorted.length})
                 </div>
-                <div ref={scrollRef} className="max-h-80 overflow-y-auto">
+                <div
+                  ref={setScrollRefAndCenter}
+                  className="max-h-80 overflow-y-auto"
+                >
                   {sorted.map((e) => {
                     const sel = e.id.toString() === examId;
                     const done = completed[e.id];
