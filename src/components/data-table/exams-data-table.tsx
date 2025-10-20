@@ -94,7 +94,7 @@ export function DataTable({
       {/* Header */}
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
-          <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
+          <h1 className="text-sm font-semibold font-mono">{courseCode}</h1>
           <Badge variant="outline">
             {data.length} {t("exams")}
           </Badge>
