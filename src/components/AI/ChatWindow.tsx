@@ -13,6 +13,11 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import {
+  oneDark,
+  oneLight,
+} from "react-syntax-highlighter/dist/esm/styles/prism";
 import {
   InputGroup,
   InputGroupTextarea,
@@ -34,10 +39,18 @@ import {
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowUpIcon, ArrowDown, ChevronRight, Loader2 } from "lucide-react";
+import {
+  ArrowUpIcon,
+  ArrowDown,
+  ChevronRight,
+  Loader2,
+  Check,
+  Copy,
+} from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
+import { useTheme } from "@/context/ThemeContext";
 
 const normalizeMath = (s: string) =>
   s
@@ -46,29 +59,109 @@ const normalizeMath = (s: string) =>
     .replace(/\\\(/g, "$")
     .replace(/\\\)/g, "$");
 
-const stripIndent = (s: string) =>
-  s.replace(/^\n/, "").replace(/^[ \t]+/gm, "");
+const CodeBlock = memo(
+  ({
+    inline,
+    className,
+    children,
+    ...props
+  }: {
+    inline?: boolean;
+    className?: string;
+    children?: React.ReactNode;
+  }) => {
+    const [copied, setCopied] = useState(false);
+    const { effectiveTheme } = useTheme();
+    const match = /language-(\w+)/.exec(className || "");
+    const language = match ? match[1] : "";
+    const { language: l } = useLanguage();
+
+    const codeString = String(children).replace(/\n$/, "");
+
+    const handleCopy = () => {
+      navigator.clipboard.writeText(codeString);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    };
+
+    if (inline) {
+      return (
+        <code
+          className="bg-muted/50 text-foreground px-1 py-0.5 rounded text-base"
+          {...props}
+        >
+          {children}
+        </code>
+      );
+    }
+
+    return (
+      <div className="relative group my-4 w-full">
+        {/* Header with language and copy button */}
+        <div className="flex items-center justify-between bg-muted/30 border border-border rounded-t-lg px-4 py-2">
+          <span className="text-xs font-medium text-muted-foreground">
+            {language || "text"}
+          </span>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleCopy}
+            className="h-7 px-2 text-xs"
+          >
+            {copied ? (
+              <>
+                <Check className="h-3 w-3 mr-1" />
+                {l === "sv" ? "Kopierat" : "Copied"}
+              </>
+            ) : (
+              <>
+                <Copy className="h-3 w-3 mr-1" />
+                {l === "sv" ? "Kopiera" : "Copy"}
+              </>
+            )}
+          </Button>
+        </div>
+        {/* Code content */}
+        <div className="relative overflow-hidden rounded-b-lg border border-t-0 border-border">
+          <SyntaxHighlighter
+            language={language}
+            style={effectiveTheme === "dark" ? oneDark : oneLight}
+            customStyle={{
+              margin: 0,
+              padding: "1.25rem",
+              fontSize: "0.95rem",
+              lineHeight: "1.6",
+              borderRadius: 0,
+            }}
+            showLineNumbers={false}
+            wrapLines={false}
+            wrapLongLines={true}
+            codeTagProps={{
+              style: {
+                fontSize: "0.95rem",
+                lineHeight: "1.6",
+                tabSize: 2,
+              },
+            }}
+            {...props}
+          >
+            {codeString}
+          </SyntaxHighlighter>
+        </div>
+      </div>
+    );
+  }
+);
+
+CodeBlock.displayName = "CodeBlock";
 
 // Memoized markdown components to prevent re-renders
 const markdownComponents = {
   a: (props: any) => (
     <a {...props} rel="noopener noreferrer" className="underline" />
   ),
-  pre: (props: any) => (
-    <pre
-      {...props}
-      className="overflow-x-auto my-3 bg-muted/50 rounded p-2 text-base"
-    />
-  ),
-  code: ({ inline, ...props }: any) =>
-    inline ? (
-      <code
-        {...props}
-        className="bg-muted/50 text-foreground px-1 py-0.5 rounded text-base"
-      />
-    ) : (
-      <code {...props} className="break-words text-foreground text-base" />
-    ),
+  pre: ({ children }: any) => <>{children}</>,
+  code: CodeBlock,
   p: (props: any) => <p {...props} className="my-2 text-base" />,
   ul: (props: any) => (
     <ul {...props} className="my-2 ml-4 list-disc text-base" />
@@ -96,16 +189,16 @@ const MessageBubble = memo(
     language: string;
   }) => {
     const processedContent = useMemo(
-      () => stripIndent(normalizeMath(message.content)),
+      () => normalizeMath(message.content),
       [message.content]
     );
 
     return (
       <div
-        className={`max-w-[100%] rounded-2xl p-3 ${
+        className={`rounded-2xl p-3 ${
           message.role === "user"
-            ? "bg-secondary text-foreground"
-            : "bg-background"
+            ? "bg-secondary text-foreground max-w-[85%]"
+            : "bg-background w-full"
         }`}
       >
         {message.role === "assistant" ? (
@@ -150,7 +243,107 @@ interface ChatWindowProps {
 const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "user",
+      content:
+        "Can you help me understand how to solve dynamic programming problems? I'm working on a fibonacci problem.",
+    },
+    {
+      role: "assistant",
+      content: `Of course! Dynamic programming is all about breaking down problems into smaller subproblems and storing their results. Let me show you a few approaches to the Fibonacci problem in different languages.
+
+First, here's a classic recursive approach with memoization in Python:
+
+\`\`\`python
+def fibonacci(n, memo={}):
+    if n in memo:
+        return memo[n]
+    if n <= 1:
+        return n
+    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)
+    return memo[n]
+
+# Example usage
+print(fibonacci(10))  # Output: 55
+\`\`\`
+
+Here's the same concept in JavaScript using an iterative approach:
+
+\`\`\`javascript
+function fibonacci(n) {
+    if (n <= 1) return n;
+    
+    let prev = 0, curr = 1;
+    for (let i = 2; i <= n; i++) {
+        let next = prev + curr;
+        prev = curr;
+        curr = next;
+    }
+    return curr;
+}
+
+console.log(fibonacci(10)); // Output: 55
+\`\`\`
+
+And finally, here's a TypeScript version with proper typing:
+
+\`\`\`typescript
+function fibonacci(n: number): number {
+    const dp: number[] = new Array(n + 1);
+    dp[0] = 0;
+    dp[1] = 1;
+    
+    for (let i = 2; i <= n; i++) {
+        dp[i] = dp[i - 1] + dp[i - 2];
+    }
+    
+    return dp[n];
+}
+
+const result: number = fibonacci(10);
+console.log(result); // Output: 55
+\`\`\`
+
+The key insight is that we avoid recalculating the same values multiple times. Each approach has O(n) time complexity instead of the exponential O(2^n) of naive recursion.`,
+    },
+    {
+      role: "user",
+      content:
+        "That's really helpful! Can you also show me a C++ example with optimization?",
+    },
+    {
+      role: "assistant",
+      content: `Absolutely! Here's an optimized C++ version that uses constant space:
+
+\`\`\`cpp
+#include <iostream>
+using namespace std;
+
+long long fibonacci(int n) {
+    if (n <= 1) return n;
+    
+    long long prev = 0, curr = 1;
+    for (int i = 2; i <= n; i++) {
+        long long next = prev + curr;
+        prev = curr;
+        curr = next;
+    }
+    return curr;
+}
+
+int main() {
+    int n = 10;
+    cout << "Fibonacci(" << n << ") = " << fibonacci(n) << endl;
+    return 0;
+}
+\`\`\`
+
+This version only uses O(1) space instead of O(n), making it more memory-efficient for large values of n.
+
+You can also use matrix exponentiation for even faster computation when dealing with very large numbers, but that's a more advanced technique!`,
+    },
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
