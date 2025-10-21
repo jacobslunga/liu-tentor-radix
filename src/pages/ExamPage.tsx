@@ -6,7 +6,7 @@ import ExamHeader from "@/components/ExamHeader";
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
 import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
-import { Loader2, MessageCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
 import { formatExamDate } from "@/util/formatExamDate";
 import { useCourseExams } from "@/hooks/useCourseExams";
@@ -15,6 +15,7 @@ import useLayoutMode from "@/stores/LayoutModeStore";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
+import AiButton from "@/components/AI/AIButton";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
@@ -34,7 +35,7 @@ const ExamPage: FC = () => {
       e.preventDefault();
       setIsChatOpen((prev) => !prev);
     },
-    { preventDefault: true },
+    { preventDefault: true }
   );
 
   const { courseCode = "", examId = "" } = useParams<{
@@ -64,7 +65,7 @@ const ExamPage: FC = () => {
   const pageDescription =
     examDetail && courseData
       ? `Se tenta för ${courseCode} från ${formatExamDate(
-          examDetail.exam.exam_date,
+          examDetail.exam.exam_date
         )} - ${courseData.course_name_eng}`
       : `Tenta för ${courseCode}`;
 
@@ -119,15 +120,7 @@ const ExamPage: FC = () => {
         />
 
         {/* Floating Chat Button */}
-        {!isChatOpen && (
-          <Button
-            onClick={() => setIsChatOpen(true)}
-            size="icon"
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50"
-          >
-            <MessageCircle className="h-6 w-6" />
-          </Button>
-        )}
+        {!isChatOpen && <AiButton onClick={() => setIsChatOpen(true)} />}
       </div>
 
       {/** Mobile view */}

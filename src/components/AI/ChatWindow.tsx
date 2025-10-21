@@ -36,7 +36,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpIcon, ArrowDown, ChevronRight, Loader2 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { LogoIcon } from "../LogoIcon";
 import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -340,7 +339,11 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               <Empty className="h-full border-0">
                 <EmptyHeader>
                   <EmptyMedia variant="default">
-                    <LogoIcon className="w-20 h-20" />
+                    <img
+                      src="/aibutton.svg"
+                      alt="AI"
+                      className="h-20 w-20 object-cover"
+                    />
                   </EmptyMedia>
                   <EmptyTitle>{t("aiChatEmptyTitle")}</EmptyTitle>
                   <EmptyDescription>
