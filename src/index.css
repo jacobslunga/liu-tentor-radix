@@ -4,6 +4,10 @@
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
 
+@theme {
+  --font-mono: "Jetbrains Mono", monospace;
+}
+
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;

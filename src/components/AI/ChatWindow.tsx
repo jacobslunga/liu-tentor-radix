@@ -133,6 +133,7 @@ const CodeBlock = memo(
               fontSize: "0.95rem",
               lineHeight: "1.6",
               borderRadius: 0,
+              fontFamily: "Jetbrains Mono",
             }}
             showLineNumbers={false}
             wrapLines={false}
@@ -236,26 +237,15 @@ interface Message {
   content: string;
 }
 
-interface ChatWindowProps {
-  examDetail: ExamWithSolutions;
-  isOpen: boolean;
-  onClose: () => void;
-}
-const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
-  const { t } = useTranslation();
-  const { language } = useLanguage();
-  const [width, setWidth] = useState(50); // Width as percentage
-  const [isResizing, setIsResizing] = useState(false);
-  const chatWindowRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "user",
-      content:
-        "Can you help me understand how to solve dynamic programming problems? I'm working on a fibonacci problem.",
-    },
-    {
-      role: "assistant",
-      content: `Of course! Dynamic programming is all about breaking down problems into smaller subproblems and storing their results. Let me show you a few approaches to the Fibonacci problem in different languages.
+const codeMsgs: Message[] = [
+  {
+    role: "user",
+    content:
+      "Can you help me understand how to solve dynamic programming problems? I'm working on a fibonacci problem.",
+  },
+  {
+    role: "assistant",
+    content: `Of course! Dynamic programming is all about breaking down problems into smaller subproblems and storing their results. Let me show you a few approaches to the Fibonacci problem in different languages.
 
 First, here's a classic recursive approach with memoization in Python:
 
@@ -310,15 +300,15 @@ console.log(result); // Output: 55
 \`\`\`
 
 The key insight is that we avoid recalculating the same values multiple times. Each approach has O(n) time complexity instead of the exponential O(2^n) of naive recursion.`,
-    },
-    {
-      role: "user",
-      content:
-        "That's really helpful! Can you also show me a C++ example with optimization?",
-    },
-    {
-      role: "assistant",
-      content: `Absolutely! Here's an optimized C++ version that uses constant space:
+  },
+  {
+    role: "user",
+    content:
+      "That's really helpful! Can you also show me a C++ example with optimization?",
+  },
+  {
+    role: "assistant",
+    content: `Absolutely! Here's an optimized C++ version that uses constant space:
 
 \`\`\`cpp
 #include <iostream>
@@ -346,19 +336,26 @@ int main() {
 This version only uses O(1) space instead of O(n), making it more memory-efficient for large values of n.
 
 You can also use matrix exponentiation for even faster computation when dealing with very large numbers, but that's a more advanced technique!`,
-    },
-  ]);
+  },
+];
+
+interface ChatWindowProps {
+  examDetail: ExamWithSolutions;
+  isOpen: boolean;
+  onClose: () => void;
+}
+const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
+  const { t } = useTranslation();
+  const { language } = useLanguage();
+  const [width, setWidth] = useState(50); // Width as percentage
+  const [isResizing, setIsResizing] = useState(false);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
+  const [messages, setMessages] = useState<Message[]>(codeMsgs);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [autoScroll, setAutoScroll] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const autoScrollRef = useRef(autoScroll);
-
-  useEffect(() => {
-    autoScrollRef.current = autoScroll;
-  }, [autoScroll]);
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
@@ -369,14 +366,16 @@ You can also use matrix exponentiation for even faster computation when dealing 
     onClose();
   }, [onClose]);
 
+  // Scroll to bottom when new messages arrive
   useEffect(() => {
-    if (autoScroll && messages.length > 0) {
+    if (messages.length > 0) {
       requestAnimationFrame(() => {
         scrollToBottom("smooth");
       });
     }
-  }, [messages.length, autoScroll]);
+  }, [messages.length]);
 
+  // Scroll to bottom when chat opens
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
@@ -385,26 +384,26 @@ You can also use matrix exponentiation for even faster computation when dealing 
     }
   }, [isOpen]);
 
+  // Track scroll position to show/hide scroll-to-bottom button
   useEffect(() => {
+    if (!isOpen) return;
+
     const container = messagesContainerRef.current;
     if (!container) return;
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      const isNearBottom = scrollHeight - scrollTop - clientHeight < 100;
-
+      const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
+      const isNearBottom = distanceFromBottom < 100;
       setShowScrollButton(!isNearBottom);
-
-      if (!isNearBottom && autoScroll) {
-        setAutoScroll(false);
-      } else if (isNearBottom && !autoScroll) {
-        setAutoScroll(true);
-      }
     };
+
+    // Initial check
+    handleScroll();
 
     container.addEventListener("scroll", handleScroll);
     return () => container.removeEventListener("scroll", handleScroll);
-  }, [autoScroll]);
+  }, [isOpen]);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -430,7 +429,6 @@ You can also use matrix exponentiation for even faster computation when dealing 
     };
 
     if (isOpen) {
-      // Add a small delay to prevent immediate closing when opening
       setTimeout(() => {
         document.addEventListener("mousedown", handleClickOutside);
       }, 100);
@@ -480,7 +478,6 @@ You can also use matrix exponentiation for even faster computation when dealing 
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
-    setAutoScroll(true);
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
@@ -651,13 +648,11 @@ You can also use matrix exponentiation for even faster computation when dealing 
                   className="absolute -top-14 left-1/2 -translate-x-1/2 z-20"
                 >
                   <Button
-                    variant="secondary"
+                    variant="outline"
                     size="icon"
                     onClick={() => {
-                      setAutoScroll(true);
                       scrollToBottom("smooth");
                     }}
-                    className="shadow-lg rounded-full"
                   >
                     <ArrowDown className="h-4 w-4" />
                   </Button>
