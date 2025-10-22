@@ -354,8 +354,10 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
+  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const isUserScrollingRef = useRef(false);
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
@@ -366,16 +368,19 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     onClose();
   }, [onClose]);
 
-  // Scroll to bottom when new messages arrive
+  // Scroll to bottom when new messages arrive (only if auto-scroll is enabled)
   useEffect(() => {
-    if (messages.length > 0) {
+    if (
+      messages.length > 0 &&
+      autoScrollEnabled &&
+      !isUserScrollingRef.current
+    ) {
       requestAnimationFrame(() => {
         scrollToBottom("smooth");
       });
     }
-  }, [messages.length]);
+  }, [messages, autoScrollEnabled]);
 
-  // Scroll to bottom when chat opens
   useEffect(() => {
     if (isOpen) {
       setTimeout(() => {
@@ -384,21 +389,31 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  // Track scroll position to show/hide scroll-to-bottom button
   useEffect(() => {
     if (!isOpen) return;
 
     const container = messagesContainerRef.current;
     if (!container) return;
 
+    let lastScrollTop = container.scrollTop;
+
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
       const distanceFromBottom = scrollHeight - scrollTop - clientHeight;
       const isNearBottom = distanceFromBottom < 100;
+
+      if (scrollTop < lastScrollTop) {
+        isUserScrollingRef.current = true;
+        setAutoScrollEnabled(false);
+      } else if (isNearBottom) {
+        isUserScrollingRef.current = false;
+        setAutoScrollEnabled(true);
+      }
+
+      lastScrollTop = scrollTop;
       setShowScrollButton(!isNearBottom);
     };
 
-    // Initial check
     handleScroll();
 
     container.addEventListener("scroll", handleScroll);
@@ -478,6 +493,10 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
+
+    // Re-enable auto-scroll when sending a new message
+    setAutoScrollEnabled(true);
+    isUserScrollingRef.current = false;
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
@@ -651,6 +670,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                     variant="outline"
                     size="icon"
                     onClick={() => {
+                      setAutoScrollEnabled(true);
+                      isUserScrollingRef.current = false;
                       scrollToBottom("smooth");
                     }}
                   >
