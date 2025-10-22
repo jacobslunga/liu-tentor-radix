@@ -242,13 +242,14 @@ interface ChatWindowProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
 const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
-  const [width, setWidth] = useState(50); // Width as percentage
+  const [width, setWidth] = useState(50);
   const [isResizing, setIsResizing] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<Message[]>(codeMsgs);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -266,7 +267,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     onClose();
   }, [onClose]);
 
-  // Scroll to bottom when new messages arrive (only if auto-scroll is enabled)
   useEffect(() => {
     if (
       messages.length > 0 &&
@@ -352,7 +352,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     };
   }, [isOpen, handleClose]);
 
-  // Handle resizing
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing) return;
@@ -360,7 +359,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       const windowWidth = window.innerWidth;
       const newWidth = ((windowWidth - e.clientX) / windowWidth) * 100;
 
-      // Constrain between 25% and 75%
       const constrainedWidth = Math.min(Math.max(newWidth, 25), 75);
       setWidth(constrainedWidth);
     };
@@ -392,7 +390,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setInput("");
     setIsLoading(true);
 
-    // Re-enable auto-scroll when sending a new message
     setAutoScrollEnabled(true);
     isUserScrollingRef.current = false;
 
