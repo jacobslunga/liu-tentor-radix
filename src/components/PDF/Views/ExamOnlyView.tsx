@@ -12,8 +12,8 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const facitVariants = {
-    hidden: { x: "100%", opacity: 0, filter: "blur(8px)" },
-    visible: { x: "0%", opacity: 1, filter: "blur(0px)" },
+    hidden: { x: "100%", opacity: 0 },
+    visible: { x: "0%", opacity: 1 },
   };
 
   const hasFacit = examDetail.solutions.length > 0;

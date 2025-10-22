@@ -352,7 +352,6 @@ You can also use matrix exponentiation for even faster computation when dealing 
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const autoScrollRef = useRef(autoScroll);
 
-  // Keep ref in sync with state
   useEffect(() => {
     autoScrollRef.current = autoScroll;
   }, [autoScroll]);
@@ -368,14 +367,13 @@ You can also use matrix exponentiation for even faster computation when dealing 
     onClose();
   }, [onClose]);
 
-  // Use requestAnimationFrame to batch scroll updates
   useEffect(() => {
     if (autoScroll && messages.length > 0) {
       requestAnimationFrame(() => {
         scrollToBottom("smooth");
       });
     }
-  }, [messages.length, autoScroll]); // Only depend on length, not entire array
+  }, [messages.length, autoScroll]);
 
   useEffect(() => {
     if (isOpen) {
@@ -452,13 +450,12 @@ You can also use matrix exponentiation for even faster computation when dealing 
       const decoder = new TextDecoder();
       let assistantMessage = "";
       let lastUpdateTime = 0;
-      const UPDATE_INTERVAL = 50; // Update UI every 50ms instead of every chunk
+      const UPDATE_INTERVAL = 50;
 
       if (reader) {
         while (true) {
           const { done, value } = await reader.read();
           if (done) {
-            // Final update with complete message
             setMessages((prev) => {
               const newMessages = [...prev];
               newMessages[newMessages.length - 1] = {
@@ -473,7 +470,6 @@ You can also use matrix exponentiation for even faster computation when dealing 
           const chunk = decoder.decode(value);
           assistantMessage += chunk;
 
-          // Throttle UI updates to reduce re-renders
           const now = Date.now();
           if (now - lastUpdateTime >= UPDATE_INTERVAL) {
             lastUpdateTime = now;
@@ -514,9 +510,9 @@ You can also use matrix exponentiation for even faster computation when dealing 
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
-          initial={{ x: "100%", opacity: 0, filter: "blur(8px)" }}
-          animate={{ x: "0%", opacity: 1, filter: "blur(0px)" }}
-          exit={{ x: "100%", opacity: 0, filter: "blur(8px)" }}
+          initial={{ x: "100%", opacity: 0 }}
+          animate={{ x: "0%", opacity: 1 }}
+          exit={{ x: "100%", opacity: 0 }}
           transition={{
             x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
             opacity: { duration: 0.3 },

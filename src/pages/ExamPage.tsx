@@ -15,7 +15,6 @@ import useLayoutMode from "@/stores/LayoutModeStore";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
-import AiButton from "@/components/AI/AIButton";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
@@ -53,7 +52,6 @@ const ExamPage: FC = () => {
     isLoading: detailLoading,
     isError: detailError,
   } = useExamDetails(Number(examId));
-  console.log(examDetail);
 
   const pageTitle =
     examDetail && courseData
@@ -97,33 +95,25 @@ const ExamPage: FC = () => {
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <ExamHeader exams={courseData.exams} />
 
-      {/** Desktop/Laptop view */}
-      <div className="w-full mt-0 h-screen md:mt-14 md:max-h-[calc(100vh-3.5rem)] relative bg-background hidden lg:flex flex-row items-center justify-center overflow-hidden">
-        <div
-          className={`flex-1 h-full transition-all duration-300 ${
-            isChatOpen ? "mr-0" : "mr-0"
-          }`}
-        >
-          {layoutMode === "exam-only" ? (
-            <ExamOnlyView examDetail={examDetail} />
-          ) : (
-            <ExamWithFacitView examDetail={examDetail} />
-          )}
-          <LayoutSwitcher />
+      <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
+          <div className="flex-1 h-full">
+            {layoutMode === "exam-only" ? (
+              <ExamOnlyView examDetail={examDetail} />
+            ) : (
+              <ExamWithFacitView examDetail={examDetail} />
+            )}
+            <LayoutSwitcher />
+          </div>
+
+          <ChatWindow
+            examDetail={examDetail}
+            isOpen={isChatOpen}
+            onClose={handleCloseChat}
+          />
         </div>
-
-        {/* Chat Window */}
-        <ChatWindow
-          examDetail={examDetail}
-          isOpen={isChatOpen}
-          onClose={handleCloseChat}
-        />
-
-        {/* Floating Chat Button */}
-        {!isChatOpen && <AiButton onClick={() => setIsChatOpen(true)} />}
       </div>
 
-      {/** Mobile view */}
       <MobilePdfView examDetail={examDetail} />
     </div>
   );
