@@ -29,7 +29,7 @@ const ExamPage: FC = () => {
   }, []);
 
   useHotkeys(
-    "a",
+    "c",
     (e) => {
       e.preventDefault();
       setIsChatOpen((prev) => !prev);
@@ -93,7 +93,7 @@ const ExamPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <ExamHeader exams={courseData.exams} />
+      <ExamHeader exams={courseData.exams} setIsChatOpen={setIsChatOpen} />
 
       <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-col overflow-hidden">
         <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">

@@ -20,12 +20,14 @@ import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
+import { Kbd } from "@/components/ui/kbd";
 
 interface Props {
   exams: Exam[];
+  setIsChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ExamHeader: FC<Props> = ({ exams }) => {
+const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const { courseCode = "", examId = "" } = useParams<{
@@ -245,6 +247,13 @@ const ExamHeader: FC<Props> = ({ exams }) => {
         </div>
       </div>
       <div className="flex items-center gap-3">
+        <Button onClick={() => setIsChatOpen(true)} variant="outline">
+          <span className="relative z-10 flex items-center gap-2">
+            <Kbd>{language === "sv" ? "Tryck" : "Press"} C</Kbd>
+            {language === "sv" ? "Fråga Chatt" : "Ask Chat"}
+          </span>
+        </Button>
+
         {selectedExam && selectedExam.statistics ? (
           <ExamStatsDialog
             statistics={{
@@ -257,7 +266,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
             }}
             date={selectedExam.exam_date}
             trigger={
-              <Button variant="ghost">
+              <Button variant="outline">
                 <ChartColumnIncreasing />
                 {language === "sv" ? "Statistik" : "Statistics"}
               </Button>
@@ -271,7 +280,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
 
         <ExamModeDialog
           trigger={
-            <Button variant="secondary">
+            <Button variant="outline">
               <Coffee />
               Lock in
             </Button>

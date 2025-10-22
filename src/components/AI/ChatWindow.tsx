@@ -51,6 +51,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
+import { LogoIcon } from "../LogoIcon";
 
 const normalizeMath = (s: string) =>
   s
@@ -243,6 +244,9 @@ interface ChatWindowProps {
 const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
+  const [width, setWidth] = useState(50); // Width as percentage
+  const [isResizing, setIsResizing] = useState(false);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "user",
@@ -415,6 +419,62 @@ You can also use matrix exponentiation for even faster computation when dealing 
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, handleClose]);
 
+  // Handle click outside to close
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        isOpen &&
+        chatWindowRef.current &&
+        !chatWindowRef.current.contains(e.target as Node)
+      ) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      // Add a small delay to prevent immediate closing when opening
+      setTimeout(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+      }, 100);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, handleClose]);
+
+  // Handle resizing
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return;
+
+      const windowWidth = window.innerWidth;
+      const newWidth = ((windowWidth - e.clientX) / windowWidth) * 100;
+
+      // Constrain between 25% and 75%
+      const constrainedWidth = Math.min(Math.max(newWidth, 25), 75);
+      setWidth(constrainedWidth);
+    };
+
+    const handleMouseUp = () => {
+      setIsResizing(false);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+
+    if (isResizing) {
+      document.body.style.cursor = "col-resize";
+      document.body.style.userSelect = "none";
+      document.addEventListener("mousemove", handleMouseMove);
+      document.addEventListener("mouseup", handleMouseUp);
+    }
+
+    return () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing]);
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
@@ -510,6 +570,7 @@ You can also use matrix exponentiation for even faster computation when dealing 
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
+          ref={chatWindowRef}
           initial={{ x: "100%", opacity: 0 }}
           animate={{ x: "0%", opacity: 1 }}
           exit={{ x: "100%", opacity: 0 }}
@@ -518,8 +579,16 @@ You can also use matrix exponentiation for even faster computation when dealing 
             opacity: { duration: 0.3 },
             filter: { duration: 0.3 },
           }}
-          className="fixed right-0 top-0 h-full w-1/2 bg-background border-l flex flex-col overflow-hidden z-50"
+          className="fixed right-0 top-0 h-full bg-background border-l flex flex-col overflow-hidden z-50"
+          style={{ width: `${width}%` }}
         >
+          {/* Resize handle */}
+          <div
+            className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-primary/20 transition-colors group z-50"
+            onMouseDown={() => setIsResizing(true)}
+          >
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-16 bg-border group-hover:bg-primary/50 transition-colors rounded-r flex items-center justify-center" />
+          </div>
           <div
             ref={messagesContainerRef}
             className="flex-1 overflow-y-auto p-4 pt-12 pb-20 space-y-4 relative"
@@ -528,11 +597,7 @@ You can also use matrix exponentiation for even faster computation when dealing 
               <Empty className="h-full border-0">
                 <EmptyHeader>
                   <EmptyMedia variant="default">
-                    <img
-                      src="/aibutton.svg"
-                      alt="AI"
-                      className="h-20 w-20 object-cover"
-                    />
+                    <LogoIcon className="w-20 h-20" />
                   </EmptyMedia>
                   <EmptyTitle>{t("aiChatEmptyTitle")}</EmptyTitle>
                   <EmptyDescription>
