@@ -158,7 +158,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   className="flex flex-row items-center px-3 transition-colors group"
                 >
                   <span>
@@ -247,7 +247,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <Button onClick={() => setIsChatOpen(true)} variant="outline">
+        <Button onClick={() => setIsChatOpen(true)} variant="outline" size="sm">
           <span className="relative z-10 flex items-center gap-2">
             <Kbd>{language === "sv" ? "Tryck" : "Press"} C</Kbd>
             {language === "sv" ? "Fråga Chatt" : "Ask Chat"}
@@ -266,7 +266,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
             }}
             date={selectedExam.exam_date}
             trigger={
-              <Button variant="outline">
+              <Button variant="ghost" size="sm">
                 <ChartColumnIncreasing />
                 {language === "sv" ? "Statistik" : "Statistics"}
               </Button>
@@ -280,7 +280,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
 
         <ExamModeDialog
           trigger={
-            <Button variant="outline">
+            <Button variant="ghost" size="sm">
               <Coffee />
               Lock in
             </Button>

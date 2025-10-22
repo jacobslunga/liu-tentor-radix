@@ -364,8 +364,6 @@ You can also use matrix exponentiation for even faster computation when dealing 
     messagesEndRef.current?.scrollIntoView({ behavior });
   };
 
-  console.log(messages);
-
   const handleClose = useCallback(() => {
     setInput("");
     onClose();
@@ -571,13 +569,11 @@ You can also use matrix exponentiation for even faster computation when dealing 
       {isOpen && (
         <motion.div
           ref={chatWindowRef}
-          initial={{ x: "100%", opacity: 0 }}
-          animate={{ x: "0%", opacity: 1 }}
-          exit={{ x: "100%", opacity: 0 }}
+          initial={{ x: "100%" }}
+          animate={{ x: "0%" }}
+          exit={{ x: "100%" }}
           transition={{
-            x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-            opacity: { duration: 0.3 },
-            filter: { duration: 0.3 },
+            x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
           className="fixed right-0 top-0 h-full bg-background border-l flex flex-col overflow-hidden z-50"
           style={{ width: `${width}%` }}
@@ -677,7 +673,7 @@ You can also use matrix exponentiation for even faster computation when dealing 
                 onKeyDown={handleKeyDown}
                 autoFocus
                 rows={2}
-                className="!text-base resize-none"
+                className="text-base! resize-none"
                 style={{ fontSize: "16px" }}
               />
               <InputGroupAddon align="block-end">

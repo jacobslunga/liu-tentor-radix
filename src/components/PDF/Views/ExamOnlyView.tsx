@@ -71,9 +71,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
           initial="hidden"
           animate={isFacitVisible ? "visible" : "hidden"}
           transition={{
-            x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-            opacity: { duration: 0.3 },
-            filter: { duration: 0.3 },
+            x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
         >
           <SolutionPdf pdfUrl={examDetail.solutions[0].pdf_url} />
