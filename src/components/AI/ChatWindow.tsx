@@ -237,108 +237,6 @@ interface Message {
   content: string;
 }
 
-const codeMsgs: Message[] = [
-  {
-    role: "user",
-    content:
-      "Can you help me understand how to solve dynamic programming problems? I'm working on a fibonacci problem.",
-  },
-  {
-    role: "assistant",
-    content: `Of course! Dynamic programming is all about breaking down problems into smaller subproblems and storing their results. Let me show you a few approaches to the Fibonacci problem in different languages.
-
-First, here's a classic recursive approach with memoization in Python:
-
-\`\`\`python
-def fibonacci(n, memo={}):
-    if n in memo:
-        return memo[n]
-    if n <= 1:
-        return n
-    memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)
-    return memo[n]
-
-# Example usage
-print(fibonacci(10))  # Output: 55
-\`\`\`
-
-Here's the same concept in JavaScript using an iterative approach:
-
-\`\`\`javascript
-function fibonacci(n) {
-    if (n <= 1) return n;
-    
-    let prev = 0, curr = 1;
-    for (let i = 2; i <= n; i++) {
-        let next = prev + curr;
-        prev = curr;
-        curr = next;
-    }
-    return curr;
-}
-
-console.log(fibonacci(10)); // Output: 55
-\`\`\`
-
-And finally, here's a TypeScript version with proper typing:
-
-\`\`\`typescript
-function fibonacci(n: number): number {
-    const dp: number[] = new Array(n + 1);
-    dp[0] = 0;
-    dp[1] = 1;
-    
-    for (let i = 2; i <= n; i++) {
-        dp[i] = dp[i - 1] + dp[i - 2];
-    }
-    
-    return dp[n];
-}
-
-const result: number = fibonacci(10);
-console.log(result); // Output: 55
-\`\`\`
-
-The key insight is that we avoid recalculating the same values multiple times. Each approach has O(n) time complexity instead of the exponential O(2^n) of naive recursion.`,
-  },
-  {
-    role: "user",
-    content:
-      "That's really helpful! Can you also show me a C++ example with optimization?",
-  },
-  {
-    role: "assistant",
-    content: `Absolutely! Here's an optimized C++ version that uses constant space:
-
-\`\`\`cpp
-#include <iostream>
-using namespace std;
-
-long long fibonacci(int n) {
-    if (n <= 1) return n;
-    
-    long long prev = 0, curr = 1;
-    for (int i = 2; i <= n; i++) {
-        long long next = prev + curr;
-        prev = curr;
-        curr = next;
-    }
-    return curr;
-}
-
-int main() {
-    int n = 10;
-    cout << "Fibonacci(" << n << ") = " << fibonacci(n) << endl;
-    return 0;
-}
-\`\`\`
-
-This version only uses O(1) space instead of O(n), making it more memory-efficient for large values of n.
-
-You can also use matrix exponentiation for even faster computation when dealing with very large numbers, but that's a more advanced technique!`,
-  },
-];
-
 interface ChatWindowProps {
   examDetail: ExamWithSolutions;
   isOpen: boolean;
@@ -732,3 +630,105 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 };
 
 export default ChatWindow;
+
+// const codeMsgs: Message[] = [
+//   {
+//     role: "user",
+//     content:
+//       "Can you help me understand how to solve dynamic programming problems? I'm working on a fibonacci problem.",
+//   },
+//   {
+//     role: "assistant",
+//     content: `Of course! Dynamic programming is all about breaking down problems into smaller subproblems and storing their results. Let me show you a few approaches to the Fibonacci problem in different languages.
+
+// First, here's a classic recursive approach with memoization in Python:
+
+// \`\`\`python
+// def fibonacci(n, memo={}):
+//     if n in memo:
+//         return memo[n]
+//     if n <= 1:
+//         return n
+//     memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)
+//     return memo[n]
+
+// # Example usage
+// print(fibonacci(10))  # Output: 55
+// \`\`\`
+
+// Here's the same concept in JavaScript using an iterative approach:
+
+// \`\`\`javascript
+// function fibonacci(n) {
+//     if (n <= 1) return n;
+
+//     let prev = 0, curr = 1;
+//     for (let i = 2; i <= n; i++) {
+//         let next = prev + curr;
+//         prev = curr;
+//         curr = next;
+//     }
+//     return curr;
+// }
+
+// console.log(fibonacci(10)); // Output: 55
+// \`\`\`
+
+// And finally, here's a TypeScript version with proper typing:
+
+// \`\`\`typescript
+// function fibonacci(n: number): number {
+//     const dp: number[] = new Array(n + 1);
+//     dp[0] = 0;
+//     dp[1] = 1;
+
+//     for (let i = 2; i <= n; i++) {
+//         dp[i] = dp[i - 1] + dp[i - 2];
+//     }
+
+//     return dp[n];
+// }
+
+// const result: number = fibonacci(10);
+// console.log(result); // Output: 55
+// \`\`\`
+
+// The key insight is that we avoid recalculating the same values multiple times. Each approach has O(n) time complexity instead of the exponential O(2^n) of naive recursion.`,
+//   },
+//   {
+//     role: "user",
+//     content:
+//       "That's really helpful! Can you also show me a C++ example with optimization?",
+//   },
+//   {
+//     role: "assistant",
+//     content: `Absolutely! Here's an optimized C++ version that uses constant space:
+
+// \`\`\`cpp
+// #include <iostream>
+// using namespace std;
+
+// long long fibonacci(int n) {
+//     if (n <= 1) return n;
+
+//     long long prev = 0, curr = 1;
+//     for (int i = 2; i <= n; i++) {
+//         long long next = prev + curr;
+//         prev = curr;
+//         curr = next;
+//     }
+//     return curr;
+// }
+
+// int main() {
+//     int n = 10;
+//     cout << "Fibonacci(" << n << ") = " << fibonacci(n) << endl;
+//     return 0;
+// }
+// \`\`\`
+
+// This version only uses O(1) space instead of O(n), making it more memory-efficient for large values of n.
+
+// You can also use matrix exponentiation for even faster computation when dealing with very large numbers, but that's a more advanced technique!`,
+//   },
+// ];
