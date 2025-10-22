@@ -504,7 +504,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               <Empty className="h-full border-0">
                 <EmptyHeader>
                   <EmptyMedia variant="default">
-                    <LogoIcon className="w-20 h-20" />
+                    <LogoIcon className="w-16 h-16" />
                   </EmptyMedia>
                   <EmptyTitle>{t("aiChatEmptyTitle")}</EmptyTitle>
                   <EmptyDescription>
