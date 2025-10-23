@@ -12,8 +12,8 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const facitVariants = {
-    hidden: { x: "100%", opacity: 0, filter: "blur(8px)" },
-    visible: { x: "0%", opacity: 1, filter: "blur(0px)" },
+    hidden: { x: "100%", opacity: 0 },
+    visible: { x: "0%", opacity: 1 },
   };
 
   const hasFacit = examDetail.solutions.length > 0;
@@ -71,9 +71,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
           initial="hidden"
           animate={isFacitVisible ? "visible" : "hidden"}
           transition={{
-            x: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
-            opacity: { duration: 0.3 },
-            filter: { duration: 0.3 },
+            x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
         >
           <SolutionPdf pdfUrl={examDetail.solutions[0].pdf_url} />

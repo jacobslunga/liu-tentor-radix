@@ -106,6 +106,21 @@ const PrivacyPolicy: FC = () => {
             content={t("privacyPolicySection6Content")}
           />
 
+          <Section
+            title={t("privacyPolicySection7Title")}
+            content={t("privacyPolicySection7Content")}
+            items={[
+              t("privacyPolicySection7Item1"),
+              t("privacyPolicySection7Item2"),
+              t("privacyPolicySection7Item3"),
+            ]}
+          />
+
+          <Section
+            title={t("privacyPolicySection8Title")}
+            content={t("privacyPolicySection8Content")}
+          />
+
           <Separator />
 
           {/* GDPR Section */}

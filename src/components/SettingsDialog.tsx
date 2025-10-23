@@ -33,7 +33,8 @@ type ShortcutAction =
   | "zoomIn"
   | "zoomOut"
   | "rotateLeft"
-  | "rotateRight";
+  | "rotateRight"
+  | "toggleAIChat";
 
 const SettingsDialog: FC = () => {
   const { t } = useTranslation();
@@ -83,6 +84,7 @@ const SettingsDialog: FC = () => {
   }> = [
     { action: "moveFacitRight", key: "→", category: "navigation" },
     { action: "moveFacitLeft", key: "←", category: "navigation" },
+    { action: "toggleAIChat", key: "C", category: "navigation" },
     { action: "zoomIn", key: "+", category: "zoom" },
     { action: "zoomOut", key: "-", category: "zoom" },
     { action: "rotateLeft", key: "R", category: "rotation" },

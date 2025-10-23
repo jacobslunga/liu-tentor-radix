@@ -23,8 +23,29 @@ export type CourseExamResponse = {
   exams: Exam[];
 };
 
+/**
+ * course_code
+: 
+"TATA42"
+exam_date
+: 
+"2025-08-28"
+id
+: 
+15438
+pdf_url
+: 
+"https:
+ * 
+ */
+
 export type ExamWithSolutions = {
-  exam: Exam;
+  exam: {
+    course_code: string;
+    exam_date: string;
+    id: number;
+    pdf_url: string;
+  };
   solutions: {
     id: number;
     exam_id: number;
