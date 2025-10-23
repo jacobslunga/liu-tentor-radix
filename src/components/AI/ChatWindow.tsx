@@ -30,13 +30,6 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import {
-  Empty,
-  EmptyHeader,
-  EmptyTitle,
-  EmptyDescription,
-  EmptyMedia,
-} from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
 import {
   ArrowUpIcon,
@@ -53,7 +46,6 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
-import { LogoIcon } from "../LogoIcon";
 
 const normalizeMath = (s: string) => {
   let result = s.replace(/\\\[([\s\S]*?)\\\]/g, (_match, content) => {
@@ -259,9 +251,37 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
+  const [typed, setTyped] = useState("");
+  const [charIndex, setCharIndex] = useState(0);
+  const [exampleIndex, setExampleIndex] = useState(0);
+  const [deleting, setDeleting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrollingRef = useRef(false);
+
+  const examples = [
+    "Förklara uppgift 7",
+    "Summera tentans område",
+    "Skapa ett fuskpapper i LaTeX",
+    "Vad är skillnaden mellan X och Y?",
+    "Hur löser jag denna uppgiften?",
+    "Ge tips på hur jag kan plugga bättre",
+    "Vilka formler behöver jag kunna?",
+    "Beskriv det här diagrammet",
+    "Förklara denna formel steg för steg",
+    "Vad är det viktigaste att komma ihåg?",
+    "Kan du göra ett övningsexempel?",
+    "Hitta fel i min lösning",
+    "Gör om denna text till punkter",
+    "Förklara med ett vardagsexempel",
+    "Vad är typiska fällor på denna tenta?",
+    "Sammanfatta kapitel 4",
+    "Vad betyder denna term?",
+    "Ge mig en minnesregel för detta",
+    "Jämför metod A med metod B",
+    "Vilken lösningsmetod är enklast?",
+  ];
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     messagesEndRef.current?.scrollIntoView({ behavior });
@@ -271,6 +291,36 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setInput("");
     onClose();
   }, [onClose]);
+
+  // Typewriter effect for empty state
+  useEffect(() => {
+    if (!isOpen || messages.length > 0) return;
+
+    const currentExample = examples[exampleIndex];
+    const isTypingComplete = charIndex === currentExample.length && !deleting;
+    const isDeletingComplete = charIndex === 0 && deleting;
+
+    if (isTypingComplete) {
+      const timer = setTimeout(() => setDeleting(true), 1500);
+      return () => clearTimeout(timer);
+    }
+
+    if (isDeletingComplete) {
+      setDeleting(false);
+      setExampleIndex((prev) => (prev + 1) % examples.length);
+      return;
+    }
+
+    const speed = deleting ? 30 : 50;
+    const timer = setTimeout(() => {
+      setCharIndex((prev) => prev + (deleting ? -1 : 1));
+      setTyped(
+        currentExample.slice(0, deleting ? charIndex - 1 : charIndex + 1)
+      );
+    }, speed);
+
+    return () => clearTimeout(timer);
+  }, [isOpen, charIndex, deleting, exampleIndex, examples, messages.length]);
 
   useEffect(() => {
     if (isOpen) {
@@ -364,7 +414,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
       const response = await fetch(
-        `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
+        `https://hono-liutentor.onrender.com/chat/completion/${examDetail.exam.id}`,
         {
           method: "POST",
           headers: {
@@ -460,15 +510,15 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
         >
           {/* Resize handle */}
           <div
-            className="absolute left-0 top-0 bottom-0 w-1 hover:w-2 transition-all cursor-col-resize hover:bg-primary/20 group z-50"
+            className="absolute left-0 top-0 bottom-0 w-4 hover:bg-primary/10 transition-all cursor-col-resize group z-50"
             onMouseDown={() => setIsResizing(true)}
           >
             <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 group-hover:w-2 h-16 bg-black/70 dark:bg-white/80 group-hover:bg-primary transition-all rounded-r flex items-center justify-center" />
           </div>
 
           {/* Header with gradient fade */}
-          <div className="absolute top-0 left-0 right-0 bg-linear-to-b from-background via-background to-transparent h-20 z-40 pointer-events-none">
-            <div className="p-4 flex items-center justify-between pointer-events-auto">
+          <div className="absolute top-0 left-0 right-0 bg-linear-to-b from-background via-background to-transparent h-14 z-40 pointer-events-none">
+            <div className="px-4 py-2 flex items-center justify-between pointer-events-auto">
               <p className="text-sm font-medium text-muted-foreground">
                 {language === "sv" ? "Tenta" : "Exam"}
                 {examDetail.solutions.length > 0 &&
@@ -487,7 +537,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                       {language === "sv" ? "Feedback" : "Feedback"}
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>
+                  <TooltipContent side="left">
                     <p>
                       {language === "sv"
                         ? "Ge feedback om AI-chatten"
@@ -504,17 +554,51 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
             className="flex-1 overflow-y-auto p-4 pt-20 pb-20 space-y-4 relative"
           >
             {messages.length === 0 && (
-              <Empty className="h-full border-0">
-                <EmptyHeader>
-                  <EmptyMedia variant="default">
-                    <LogoIcon className="w-16 h-16" />
-                  </EmptyMedia>
-                  <EmptyTitle>{t("aiChatEmptyTitle")}</EmptyTitle>
-                  <EmptyDescription>
-                    {t("aiChatEmptyDescription")}
-                  </EmptyDescription>
-                </EmptyHeader>
-              </Empty>
+              <div className="h-full flex flex-col items-center justify-center px-8">
+                <div className="max-w-2xl w-full space-y-8">
+                  {/* Typewriter effect */}
+                  <div className="min-h-[100px] flex items-center justify-center">
+                    <h2 className="text-2xl font-semibold text-center">
+                      {typed}
+                      <span className="inline-block w-4 h-4 bg-foreground ml-2 rounded-full" />
+                    </h2>
+                  </div>
+
+                  {/* Description */}
+                  <div className="space-y-4 flex items-center justify-center flex-col">
+                    <p className="text-sm text-muted-foreground max-w-lg text-center leading-relaxed">
+                      {language === "sv" ? (
+                        <>
+                          Ställ frågor om tentan, få förklaringar eller be om
+                          hjälp med specifika uppgifter. AI:n har tillgång till
+                          både tentan
+                          {examDetail.solutions.length > 0 && " och lösningen"}.
+                        </>
+                      ) : (
+                        <>
+                          Ask questions about the exam, get explanations, or
+                          request help with specific problems. The AI has access
+                          to the exam
+                          {examDetail.solutions.length > 0 && " and solution"}.
+                        </>
+                      )}
+                    </p>
+
+                    <div className="flex items-center justify-center">
+                      <a
+                        href="/privacy-policy"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-4"
+                      >
+                        {language === "sv"
+                          ? "Läs om vår AI-policy"
+                          : "Read about our AI policy"}
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </div>
             )}
 
             {messages.map((message, index) => (
@@ -586,49 +670,66 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 onKeyDown={handleKeyDown}
                 autoFocus
                 rows={1}
+                ref={inputRef}
                 className="text-base! resize-none max-h-[200px] overflow-y-auto"
                 style={{ fontSize: "16px" }}
               />
               <InputGroupAddon align="block-end">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <span className="text-xs text-muted-foreground whitespace-nowrap">
-                    {language === "sv" ? "Läge:" : "Mode:"}
-                  </span>
+                <div className="flex items-center gap-0 min-w-0 flex-1">
                   <TooltipProvider delayDuration={0}>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setGiveDirectAnswer(!giveDirectAnswer)}
-                          className={`text-xs gap-1.5 h-7 px-2 ${
-                            !giveDirectAnswer
-                              ? "bg-primary/20 hover:bg-primary/10 text-foreground border-primary/40"
-                              : ""
+                        <button
+                          onClick={() => {
+                            setGiveDirectAnswer(true);
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
+                          }}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-md cursor-pointer ${
+                            giveDirectAnswer
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
                           }`}
                         >
-                          {giveDirectAnswer ? (
-                            <>
-                              <BookOpen className="h-3.5 w-3.5" />
-                              {language === "sv" ? "Svar" : "Answer"}
-                            </>
-                          ) : (
-                            <>
-                              <Lightbulb className="h-3.5 w-3.5" />
-                              {language === "sv" ? "Hints" : "Hints"}
-                            </>
-                          )}
-                        </Button>
+                          <BookOpen className="h-3.5 w-3.5" />
+                          {language === "sv" ? "Svar" : "Answer"}
+                        </button>
                       </TooltipTrigger>
                       <TooltipContent>
                         <p>
-                          {giveDirectAnswer
-                            ? language === "sv"
-                              ? "Byt till guidningsläge"
-                              : "Switch to guidance mode"
-                            : language === "sv"
-                              ? "Byt till direkt svar"
-                              : "Switch to direct answer"}
+                          {language === "sv"
+                            ? "Få fullständiga svar och lösningar"
+                            : "Get complete answers and solutions"}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => {
+                            setGiveDirectAnswer(false);
+                            if (inputRef.current) {
+                              inputRef.current.focus();
+                            }
+                          }}
+                          className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-md cursor-pointer ${
+                            !giveDirectAnswer
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
+                          }`}
+                        >
+                          <Lightbulb className="h-3.5 w-3.5" />
+                          {language === "sv" ? "Hints" : "Hints"}
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {language === "sv"
+                            ? "Få ledtrådar och vägledning"
+                            : "Get hints and guidance"}
                         </p>
                       </TooltipContent>
                     </Tooltip>
@@ -662,105 +763,3 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 };
 
 export default ChatWindow;
-
-// const codeMsgs: Message[] = [
-//   {
-//     role: "user",
-//     content:
-//       "Can you help me understand how to solve dynamic programming problems? I'm working on a fibonacci problem.",
-//   },
-//   {
-//     role: "assistant",
-//     content: `Of course! Dynamic programming is all about breaking down problems into smaller subproblems and storing their results. Let me show you a few approaches to the Fibonacci problem in different languages.
-
-// First, here's a classic recursive approach with memoization in Python:
-
-// \`\`\`python
-// def fibonacci(n, memo={}):
-//     if n in memo:
-//         return memo[n]
-//     if n <= 1:
-//         return n
-//     memo[n] = fibonacci(n-1, memo) + fibonacci(n-2, memo)
-//     return memo[n]
-
-// # Example usage
-// print(fibonacci(10))  # Output: 55
-// \`\`\`
-
-// Here's the same concept in JavaScript using an iterative approach:
-
-// \`\`\`javascript
-// function fibonacci(n) {
-//     if (n <= 1) return n;
-
-//     let prev = 0, curr = 1;
-//     for (let i = 2; i <= n; i++) {
-//         let next = prev + curr;
-//         prev = curr;
-//         curr = next;
-//     }
-//     return curr;
-// }
-
-// console.log(fibonacci(10)); // Output: 55
-// \`\`\`
-
-// And finally, here's a TypeScript version with proper typing:
-
-// \`\`\`typescript
-// function fibonacci(n: number): number {
-//     const dp: number[] = new Array(n + 1);
-//     dp[0] = 0;
-//     dp[1] = 1;
-
-//     for (let i = 2; i <= n; i++) {
-//         dp[i] = dp[i - 1] + dp[i - 2];
-//     }
-
-//     return dp[n];
-// }
-
-// const result: number = fibonacci(10);
-// console.log(result); // Output: 55
-// \`\`\`
-
-// The key insight is that we avoid recalculating the same values multiple times. Each approach has O(n) time complexity instead of the exponential O(2^n) of naive recursion.`,
-//   },
-//   {
-//     role: "user",
-//     content:
-//       "That's really helpful! Can you also show me a C++ example with optimization?",
-//   },
-//   {
-//     role: "assistant",
-//     content: `Absolutely! Here's an optimized C++ version that uses constant space:
-
-// \`\`\`cpp
-// #include <iostream>
-// using namespace std;
-
-// long long fibonacci(int n) {
-//     if (n <= 1) return n;
-
-//     long long prev = 0, curr = 1;
-//     for (int i = 2; i <= n; i++) {
-//         long long next = prev + curr;
-//         prev = curr;
-//         curr = next;
-//     }
-//     return curr;
-// }
-
-// int main() {
-//     int n = 10;
-//     cout << "Fibonacci(" << n << ") = " << fibonacci(n) << endl;
-//     return 0;
-// }
-// \`\`\`
-
-// This version only uses O(1) space instead of O(n), making it more memory-efficient for large values of n.
-
-// You can also use matrix exponentiation for even faster computation when dealing with very large numbers, but that's a more advanced technique!`,
-//   },
-// ];
