@@ -114,7 +114,7 @@ export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
                   LiU Tentor
                 </DialogTitle>
                 <span className="text-lg font-semibold text-muted-foreground leading-tight">
-                  ChatGPT
+                  Chat
                 </span>
               </div>
             </div>
@@ -127,7 +127,7 @@ export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
           <div className="flex items-center justify-center min-h-[250px] py-12">
             <h2 className="text-3xl font-semibold text-center">
               {typed}
-              <span className="inline-block animate-pulse w-5 h-5 rounded-full bg-black dark:bg-white ml-2" />
+              <span className="inline-block w-5 h-5 rounded-full bg-black dark:bg-white ml-2" />
             </h2>
           </div>
 

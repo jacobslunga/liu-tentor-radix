@@ -38,7 +38,6 @@ import {
   EmptyMedia,
 } from "@/components/ui/empty";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
   ArrowUpIcon,
   ArrowDown,
@@ -46,6 +45,9 @@ import {
   Loader2,
   Check,
   Copy,
+  Lightbulb,
+  BookOpen,
+  MessageSquare,
 } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ExamWithSolutions } from "@/types/exam";
@@ -53,12 +55,15 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 import { LogoIcon } from "../LogoIcon";
 
-const normalizeMath = (s: string) =>
-  s
-    .replace(/\\\[/g, "$$")
-    .replace(/\\\]/g, "$$")
-    .replace(/\\\(/g, "$")
-    .replace(/\\\)/g, "$");
+const normalizeMath = (s: string) => {
+  let result = s.replace(/\\\[([\s\S]*?)\\\]/g, (_match, content) => {
+    return `\n$$${content}$$\n`;
+  });
+
+  result = result.replace(/\\\((.*?)\\\)/g, "$$$1$$");
+
+  return result;
+};
 
 const CodeBlock = memo(
   ({
@@ -130,7 +135,7 @@ const CodeBlock = memo(
             customStyle={{
               margin: 0,
               padding: "1.25rem",
-              fontSize: "0.95rem",
+              fontSize: "0.85rem",
               lineHeight: "1.6",
               borderRadius: 0,
               fontFamily: "Jetbrains Mono",
@@ -140,7 +145,7 @@ const CodeBlock = memo(
             wrapLongLines={true}
             codeTagProps={{
               style: {
-                fontSize: "0.95rem",
+                fontSize: "0.85rem",
                 lineHeight: "1.6",
                 tabSize: 2,
               },
@@ -207,7 +212,7 @@ const MessageBubble = memo(
           message.content === "" && isLoading ? (
             <div className="flex items-center gap-2">
               <Loader2 className="h-5 w-5 animate-spin" />
-              <span className="text-base text-muted-foreground">
+              <span className="text-sm text-muted-foreground">
                 {language === "sv" ? "Tänker..." : "Thinking..."}
               </span>
             </div>
@@ -253,7 +258,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
-  const [autoScrollEnabled, setAutoScrollEnabled] = useState(true);
+  const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrollingRef = useRef(false);
@@ -266,18 +271,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setInput("");
     onClose();
   }, [onClose]);
-
-  useEffect(() => {
-    if (
-      messages.length > 0 &&
-      autoScrollEnabled &&
-      !isUserScrollingRef.current
-    ) {
-      requestAnimationFrame(() => {
-        scrollToBottom("smooth");
-      });
-    }
-  }, [messages, autoScrollEnabled]);
 
   useEffect(() => {
     if (isOpen) {
@@ -302,10 +295,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 
       if (scrollTop < lastScrollTop) {
         isUserScrollingRef.current = true;
-        setAutoScrollEnabled(false);
       } else if (isNearBottom) {
         isUserScrollingRef.current = false;
-        setAutoScrollEnabled(true);
       }
 
       lastScrollTop = scrollTop;
@@ -327,29 +318,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, handleClose]);
-
-  // Handle click outside to close
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        isOpen &&
-        chatWindowRef.current &&
-        !chatWindowRef.current.contains(e.target as Node)
-      ) {
-        handleClose();
-      }
-    };
-
-    if (isOpen) {
-      setTimeout(() => {
-        document.addEventListener("mousedown", handleClickOutside);
-      }, 100);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
   }, [isOpen, handleClose]);
 
   useEffect(() => {
@@ -390,13 +358,13 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     setInput("");
     setIsLoading(true);
 
-    setAutoScrollEnabled(true);
     isUserScrollingRef.current = false;
+    scrollToBottom();
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
       const response = await fetch(
-        `http://localhost:4330/exams/exam/${examDetail.exam.id}/chat`,
+        `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
         {
           method: "POST",
           headers: {
@@ -407,6 +375,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               role: msg.role,
               content: msg.content,
             })),
+            giveDirectAnswer,
           }),
         }
       );
@@ -491,14 +460,48 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
         >
           {/* Resize handle */}
           <div
-            className="absolute left-0 top-0 bottom-0 w-2 cursor-col-resize hover:bg-primary/20 transition-colors group z-50"
+            className="absolute left-0 top-0 bottom-0 w-1 hover:w-2 transition-all cursor-col-resize hover:bg-primary/20 group z-50"
             onMouseDown={() => setIsResizing(true)}
           >
-            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-2 h-16 bg-border group-hover:bg-primary/50 transition-colors rounded-r flex items-center justify-center" />
+            <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 group-hover:w-2 h-16 bg-black/70 dark:bg-white/80 group-hover:bg-primary transition-all rounded-r flex items-center justify-center" />
           </div>
+
+          {/* Header with gradient fade */}
+          <div className="absolute top-0 left-0 right-0 bg-linear-to-b from-background via-background to-transparent h-20 z-40 pointer-events-none">
+            <div className="p-4 flex items-center justify-between pointer-events-auto">
+              <p className="text-sm font-medium text-muted-foreground">
+                {language === "sv" ? "Tenta" : "Exam"}
+                {examDetail.solutions.length > 0 &&
+                  ` + ${language === "sv" ? "Lösning" : "Solution"}`}
+              </p>
+              <TooltipProvider delayDuration={0}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => window.open("/feedback", "_blank")}
+                      className="text-xs gap-1.5 h-8 px-2"
+                    >
+                      <MessageSquare className="h-3.5 w-3.5" />
+                      {language === "sv" ? "Feedback" : "Feedback"}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {language === "sv"
+                        ? "Ge feedback om AI-chatten"
+                        : "Give feedback about the AI chat"}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          </div>
+
           <div
             ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto p-4 pt-12 pb-20 space-y-4 relative"
+            className="flex-1 overflow-y-auto p-4 pt-20 pb-20 space-y-4 relative"
           >
             {messages.length === 0 && (
               <Empty className="h-full border-0">
@@ -565,7 +568,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                     variant="outline"
                     size="icon"
                     onClick={() => {
-                      setAutoScrollEnabled(true);
                       isUserScrollingRef.current = false;
                       scrollToBottom("smooth");
                     }}
@@ -583,21 +585,54 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 autoFocus
-                rows={2}
-                className="text-base! resize-none"
+                rows={1}
+                className="text-base! resize-none max-h-[200px] overflow-y-auto"
                 style={{ fontSize: "16px" }}
               />
               <InputGroupAddon align="block-end">
                 <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <Badge className="text-xs truncate" variant="outline">
-                    {language === "sv" ? "Tenta " : "Exam "}{" "}
-                    {examDetail.solutions.length > 0 && (
-                      <span>
-                        + {t("facit")}{" "}
-                        {language === "sv" ? "inkluderat" : "included"}
-                      </span>
-                    )}
-                  </Badge>
+                  <span className="text-xs text-muted-foreground whitespace-nowrap">
+                    {language === "sv" ? "Läge:" : "Mode:"}
+                  </span>
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setGiveDirectAnswer(!giveDirectAnswer)}
+                          className={`text-xs gap-1.5 h-7 px-2 ${
+                            !giveDirectAnswer
+                              ? "bg-primary/20 hover:bg-primary/10 text-foreground border-primary/40"
+                              : ""
+                          }`}
+                        >
+                          {giveDirectAnswer ? (
+                            <>
+                              <BookOpen className="h-3.5 w-3.5" />
+                              {language === "sv" ? "Svar" : "Answer"}
+                            </>
+                          ) : (
+                            <>
+                              <Lightbulb className="h-3.5 w-3.5" />
+                              {language === "sv" ? "Hints" : "Hints"}
+                            </>
+                          )}
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>
+                          {giveDirectAnswer
+                            ? language === "sv"
+                              ? "Byt till guidningsläge"
+                              : "Switch to guidance mode"
+                            : language === "sv"
+                              ? "Byt till direkt svar"
+                              : "Switch to direct answer"}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
                 <InputGroupButton
                   variant="default"
