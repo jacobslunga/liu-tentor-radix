@@ -18,7 +18,7 @@ interface AIIntroDialogProps {
 
 export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
   const { language } = useLanguage();
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [typed, setTyped] = useState("");
   const [charIndex, setCharIndex] = useState(0);
   const [exampleIndex, setExampleIndex] = useState(0);
@@ -47,17 +47,17 @@ export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
     "Vilken lösningsmetod är enklast?",
   ];
 
-  //   useEffect(() => {
-  //     // Check if user has seen the intro
-  //     const hasSeen = localStorage.getItem(AI_INTRO_SEEN_KEY);
-  //     if (!hasSeen) {
-  //       // Show dialog after a short delay for better UX
-  //       const timer = setTimeout(() => {
-  //         setIsOpen(true);
-  //       }, 1000);
-  //       return () => clearTimeout(timer);
-  //     }
-  //   }, []);
+  useEffect(() => {
+    // Check if user has seen the intro
+    const hasSeen = localStorage.getItem(AI_INTRO_SEEN_KEY);
+    if (!hasSeen) {
+      // Show dialog after a short delay for better UX
+      const timer = setTimeout(() => {
+        setIsOpen(true);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   // Typing effect for examples
   useEffect(() => {
