@@ -294,6 +294,7 @@ interface MiscTranslations {
   aiIntroFeature3Description: string;
   aiIntroGetStarted: string;
   aiIntroSkip: string;
+  learnMore: string;
   // Page specific
   faq: string;
   aboutUs: string;
@@ -307,6 +308,9 @@ interface MiscTranslations {
   examCount: string;
   solutionCount: string;
   learnMore: string;
+  // Banner messages
+  examContainsSolutionBanner: string;
+  examContainsSolutionBannerCTA: string;
 }
 
 // Main translations interface combining all sections
@@ -658,6 +662,9 @@ const translations: Record<Language, Translations> = {
     uploadMore: "Ladda upp mer",
     examCount: "tenta",
     solutionCount: "facit",
+    examContainsSolutionBanner:
+      "Vissa tentor innehåller lösningar i samma dokument. Om din tenta saknar separat facit, kontakta oss gärna.",
+    examContainsSolutionBannerCTA: "Kontakta oss här",
   },
   en: {
     // Common
@@ -989,6 +996,9 @@ const translations: Record<Language, Translations> = {
     uploadMore: "Upload more",
     examCount: "exam",
     solutionCount: "solution",
+    examContainsSolutionBanner:
+      "Some exams contain solutions in the same document. If your exam is missing a separate solution file, please contact us.",
+    examContainsSolutionBannerCTA: "Contact us here",
   },
 };
 
