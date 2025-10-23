@@ -307,7 +307,6 @@ interface MiscTranslations {
   uploadMore: string;
   examCount: string;
   solutionCount: string;
-  learnMore: string;
   // Banner messages
   examContainsSolutionBanner: string;
   examContainsSolutionBannerCTA: string;
