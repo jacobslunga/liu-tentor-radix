@@ -19,30 +19,20 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/context/LanguageContext";
-import { Language } from "@/util/translations";
 
 interface ExamModeDialogProps {
   trigger: React.ReactNode;
   onStartExam?: (duration: string) => void;
 }
 
-type TimeOption = {
-  value: string;
-  label: string;
-};
-
-const getTimeOptions = (language: Language) => {
-  const TIME_OPTIONS: TimeOption[] = [
-    { value: "30", label: "30 min" },
-    { value: "60", label: language === "sv" ? "1 timme" : "1 hour" },
-    { value: "120", label: language === "sv" ? "2 timmar" : "2 hours" },
-    { value: "180", label: language === "sv" ? "3 timmar" : "3 hours" },
-    { value: "240", label: language === "sv" ? "4 timmar" : "4 hours" },
-    { value: "300", label: language === "sv" ? "5 timmar" : "5 hours" },
-  ];
-
-  return TIME_OPTIONS;
-};
+const TIME_OPTIONS = [
+  { value: "30", label: "30 min" },
+  { value: "60", label: "1 hour" },
+  { value: "120", label: "2 hours" },
+  { value: "180", label: "3 hours" },
+  { value: "240", label: "4 hours" },
+  { value: "300", label: "5 hours" },
+];
 
 export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
   trigger,
@@ -140,7 +130,7 @@ export const ExamModeDialog: React.FC<ExamModeDialogProps> = ({
                 </div>
               </SelectTrigger>
               <SelectContent>
-                {getTimeOptions(language).map((option) => (
+                {TIME_OPTIONS.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
                   </SelectItem>
