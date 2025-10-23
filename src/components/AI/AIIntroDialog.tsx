@@ -123,7 +123,6 @@ export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
             </DialogDescription>
           </DialogHeader>
 
-          {/* Big centered typewriter effect */}
           <div className="flex items-center justify-center min-h-[250px] py-12">
             <h2 className="text-3xl font-semibold text-center">
               {typed}
