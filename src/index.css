@@ -2,11 +2,6 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-@plugin "@tailwindcss/typography";
-
-@theme {
-  --font-mono: "Jetbrains Mono", monospace;
-}
 
 @layer utilities {
   .not-scroll {
@@ -17,85 +12,14 @@
     display: none;
   }
 
-  .mesh {
-    background-color: hsla(0, 49%, 56%, 0);
-    background-image:
-      radial-gradient(
-        at 31% 20%,
-        hsla(44, 97%, 73%, 0.33) 0px,
-        transparent 50%
-      ),
-      radial-gradient(
-        at 37% 39%,
-        hsla(106, 97%, 73%, 0.35) 0px,
-        transparent 50%
-      ),
-      radial-gradient(
-        at 67% 65%,
-        hsla(174, 72%, 65%, 0.36) 0px,
-        transparent 50%
-      ),
-      radial-gradient(
-        at 15% 70%,
-        hsla(280, 85%, 70%, 0.3) 0px,
-        transparent 50%
-      ),
-      radial-gradient(
-        at 85% 30%,
-        hsla(340, 90%, 75%, 0.32) 0px,
-        transparent 50%
-      ),
-      radial-gradient(
-        at 50% 90%,
-        hsla(200, 80%, 70%, 0.28) 0px,
-        transparent 50%
-      );
-  }
-
-  .prose hr {
-    border-color: hsl(var(--border));
-    opacity: 0.2;
-  }
-
-  .dark .prose hr {
-    border-color: hsl(var(--border));
-  }
-
   html {
     scrollbar-gutter: stable both-edges;
   }
 
   body {
-    font-family:
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      "Segoe UI",
-      Roboto,
-      Oxygen,
-      Ubuntu,
-      Cantarell,
-      "Open Sans",
-      "Helvetica Neue",
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
       sans-serif;
-  }
-
-  :root *::selection {
-    background: oklch(0.6193 0.1154 172.06 / 0.28);
-    color: oklch(0.2 0 0);
-  }
-  :root *::-moz-selection {
-    background: oklch(0.6193 0.1154 172.06 / 0.28);
-    color: oklch(0.2 0 0);
-  }
-
-  .dark *::selection {
-    background: oklch(0.8332 0.088 144.73 / 0.35);
-    color: oklch(0.985 0 0);
-  }
-  .dark *::-moz-selection {
-    background: oklch(0.8332 0.088 144.73 / 0.35);
-    color: oklch(0.985 0 0);
   }
 
   @font-face {
@@ -118,7 +42,7 @@
   }
 
   .react-pdf__Page__canvas {
-    background-color: white !important;
+    background-color: transparent !important;
   }
 
   .react-pdf__Page {
@@ -136,71 +60,96 @@
     height: 100% !important;
   }
 
+  /* Ensure proper scrolling across browsers */
   .pdf-container {
     scrollbar-width: thin;
     scrollbar-color: hsl(var(--muted-foreground)) transparent;
   }
 
+  /* Dark mode PDF inversion for better readability */
   .dark .react-pdf__Page__canvas {
-    filter: invert(0.838) hue-rotate(180deg) brightness(1.05) contrast(1.15)
-      saturate(0.9);
-    background-color: white !important;
+    filter: invert(0.78) hue-rotate(180deg) brightness(0.8) contrast(1.2);
   }
 
+  /* Ensure container backgrounds match theme */
   .dark .react-pdf__Page,
   .dark .react-pdf__Document {
     background-color: hsl(var(--background)) !important;
   }
 
   .pdf-container::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-    background-color: transparent;
+    width: 8px;
+    height: 8px;
   }
 
   .pdf-container::-webkit-scrollbar-track {
-    background-color: transparent;
+    background: transparent;
   }
 
   .pdf-container::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted-foreground) / 0.5);
+    background: linear-gradient(
+      180deg,
+      var(--muted-foreground),
+      color-mix(in oklch, var(--muted-foreground) 70%, transparent)
+    );
     border-radius: 9999px;
-    border: 3px solid transparent;
+    border: 2px solid transparent;
     background-clip: content-box;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    opacity: 0.6;
   }
 
   .pdf-container::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--primary) / 0.8);
-  }
-
-  *::-webkit-scrollbar {
-    width: 12px;
-    height: 12px;
-    background-color: transparent;
-    scrollbar-color: transparent;
-  }
-
-  *::-webkit-scrollbar-track {
-    background-color: transparent;
-  }
-
-  *::-webkit-scrollbar-thumb {
-    background-color: hsl(var(--muted-foreground) / 0.5);
-    border-radius: 9999px;
-    border: 3px solid transparent;
-    background-clip: content-box;
-    transition: background-color 0.2s ease;
+    background: linear-gradient(
+      180deg,
+      var(--primary),
+      color-mix(in oklch, var(--primary) 80%, var(--muted-foreground))
+    );
+    opacity: 0.9;
   }
 
   *::-webkit-scrollbar-thumb:hover {
-    background-color: hsl(var(--primary) / 0.8);
-    scrollbar-color: transparent;
+    background: linear-gradient(
+      180deg,
+      var(--primary),
+      color-mix(in oklch, var(--primary) 80%, var(--muted-foreground))
+    );
+    opacity: 0.9;
   }
 
-  * {
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground) / 0.5) transparent;
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      var(--muted-foreground),
+      color-mix(in oklch, var(--muted-foreground) 70%, transparent)
+    );
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    opacity: 0.6;
+  }
+
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      180deg,
+      var(--muted-foreground),
+      color-mix(in oklch, var(--muted-foreground) 70%, transparent)
+    );
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background-clip: content-box;
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+    opacity: 0.6;
   }
 }
 

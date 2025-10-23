@@ -86,7 +86,6 @@ interface PDFControlTranslations {
   toggleFacitToolbar: string;
   moveFacitLeft: string;
   moveFacitRight: string;
-  toggleAIChat: string;
   next: string;
   previous: string;
   nextSide: string;
@@ -238,11 +237,6 @@ interface PrivacyTranslations {
   privacyPolicySection6Content: string;
   privacyPolicySection7Title: string;
   privacyPolicySection7Content: string;
-  privacyPolicySection7Item1: string;
-  privacyPolicySection7Item2: string;
-  privacyPolicySection7Item3: string;
-  privacyPolicySection8Title: string;
-  privacyPolicySection8Content: string;
   privacyPolicyContactEmail: string;
   privacyPolicyContactText: string;
   privacyPolicyGDPRTitle: string;
@@ -275,25 +269,6 @@ interface MiscTranslations {
   askAI: string;
   aiTitle: string;
   aiDescription: string;
-  aiChatTitle: string;
-  aiChatEmptyTitle: string;
-  aiChatEmptyDescription: string;
-  aiChatPlaceholder: string;
-  aiChatPoweredBy: string;
-  aiChatSend: string;
-  aiChatThinking: string;
-  // AI Introduction Dialog
-  aiIntroTitle: string;
-  aiIntroSubtitle: string;
-  aiIntroDescription: string;
-  aiIntroFeature1Title: string;
-  aiIntroFeature1Description: string;
-  aiIntroFeature2Title: string;
-  aiIntroFeature2Description: string;
-  aiIntroFeature3Title: string;
-  aiIntroFeature3Description: string;
-  aiIntroGetStarted: string;
-  aiIntroSkip: string;
   learnMore: string;
   // Page specific
   faq: string;
@@ -307,7 +282,6 @@ interface MiscTranslations {
   uploadMore: string;
   examCount: string;
   solutionCount: string;
-  learnMore: string;
   // Banner messages
   examContainsSolutionBanner: string;
   examContainsSolutionBannerCTA: string;
@@ -416,7 +390,6 @@ const translations: Record<Language, Translations> = {
     toggleFacitToolbar: "Toggla facit verktygsfält",
     moveFacitLeft: "Flytta facit till vänster",
     moveFacitRight: "Flytta facit till höger",
-    toggleAIChat: "Toggla AI-chatt",
     next: "Nästa",
     previous: "Föregående",
     nextSide: "Nästa sida",
@@ -578,17 +551,8 @@ const translations: Record<Language, Translations> = {
     privacyPolicySection6Title: "6. Ändringar i denna policy",
     privacyPolicySection6Content:
       "Vi förbehåller oss rätten att uppdatera denna policy när som helst. Eventuella ändringar kommer att publiceras på denna sida, och vi rekommenderar att du regelbundet granskar denna policy för att hålla dig uppdaterad.",
-    privacyPolicySection7Title: "7. AI-assistent och konversationsintegritet",
+    privacyPolicySection7Title: "7. Kontaktinformation",
     privacyPolicySection7Content:
-      "Vi erbjuder en AI-assistent powered by OpenAI för att hjälpa dig att förstå tentamaterial. Din integritet är vår högsta prioritet:",
-    privacyPolicySection7Item1:
-      "Vi sparar inte dina konversationer: Inga chatthistorik eller frågor du ställer till AI:n lagras på våra servrar.",
-    privacyPolicySection7Item2:
-      "Tillfällig bearbetning: Dina meddelanden skickas till OpenAI för bearbetning men lagras inte permanent av oss.",
-    privacyPolicySection7Item3:
-      "Ingen användarprofil: Vi bygger inte upp någon profil baserad på dina AI-konversationer eller använder dem för analys.",
-    privacyPolicySection8Title: "8. Kontaktinformation",
-    privacyPolicySection8Content:
       "Om du har några frågor om denna integritetspolicy eller hur dina uppgifter hanteras, vänligen kontakta oss på:",
     privacyPolicyContactEmail: "E-post: liutentor@gmail.com",
     privacyPolicyContactText:
@@ -626,29 +590,6 @@ const translations: Record<Language, Translations> = {
     aiTitle: "Vad behöver du hjälp med?",
     aiDescription:
       "Få frågor besvarade, förklarade och diskuterade av chatten.",
-    aiChatTitle: "LiU Tentor AI",
-    aiChatEmptyTitle: "Ställ en fråga om tentan!",
-    aiChatEmptyDescription:
-      "Jag kan hjälpa dig att förstå frågor och koncept från denna tenta.",
-    aiChatPlaceholder: "Fråga, sök eller chatta...",
-    aiChatPoweredBy: "AI kan göra misstag, kontrollera alltid svar.",
-    aiChatSend: "Skicka",
-    aiChatThinking: "Tänker",
-    aiIntroTitle: "LiU Tentor x ChatGPT",
-    aiIntroSubtitle: "Din personliga studieassistent",
-    aiIntroDescription:
-      "Vi har lagt in chatten som vi alla älskar som hjälper dig att förstå och lära dig från tentor. Ställ frågor, få förklaringar och förbättra din förståelse.",
-    aiIntroFeature1Title: "Ställ frågor om tentan",
-    aiIntroFeature1Description:
-      "Få hjälp med att förstå frågor, koncept och lösningar direkt från tentan.",
-    aiIntroFeature2Title: "Förklaringar i realtid",
-    aiIntroFeature2Description:
-      "AI:n analyserar tentans innehåll och ger dig detaljerade förklaringar.",
-    aiIntroFeature3Title: "Alltid tillgänglig",
-    aiIntroFeature3Description:
-      "Använd kortkommandot 'C' när som helst för att öppna AI-chatten.",
-    aiIntroGetStarted: "Kom igång",
-    aiIntroSkip: "Hoppa över",
     learnMore: "Läs mer",
     faq: "Vanliga frågor",
     aboutUs: "Om oss",
@@ -666,6 +607,7 @@ const translations: Record<Language, Translations> = {
       "Vissa tentor innehåller lösningar i samma dokument. Om din tenta saknar separat facit, kontakta oss gärna.",
     examContainsSolutionBannerCTA: "Kontakta oss här",
   },
+
   en: {
     // Common
     homeLink: "Home",
@@ -749,7 +691,6 @@ const translations: Record<Language, Translations> = {
     toggleFacitToolbar: "Toggle facit toolbar",
     moveFacitLeft: "Move facit to the left",
     moveFacitRight: "Move facit to the right",
-    toggleAIChat: "Toggle AI chat",
     next: "Next",
     previous: "Previous",
     nextSide: "Next side",
@@ -912,17 +853,8 @@ const translations: Record<Language, Translations> = {
     privacyPolicySection6Title: "6. Changes to this policy",
     privacyPolicySection6Content:
       "We reserve the right to update this policy at any time. Any changes will be published on this page, and we recommend that you regularly review this policy to stay informed.",
-    privacyPolicySection7Title: "7. AI Assistant and conversation privacy",
+    privacyPolicySection7Title: "7. Contact information",
     privacyPolicySection7Content:
-      "We offer an AI assistant powered by OpenAI to help you understand exam materials. Your privacy is our top priority:",
-    privacyPolicySection7Item1:
-      "We don't save your conversations: No chat history or questions you ask the AI are stored on our servers.",
-    privacyPolicySection7Item2:
-      "Temporary processing: Your messages are sent to OpenAI for processing but are not permanently stored by us.",
-    privacyPolicySection7Item3:
-      "No user profiling: We do not build any profile based on your AI conversations or use them for analysis.",
-    privacyPolicySection8Title: "8. Contact information",
-    privacyPolicySection8Content:
       "If you have any questions about this privacy policy or how your data is handled, please contact us at:",
     privacyPolicyContactEmail: "Email: liutentor@gmail.com",
     privacyPolicyContactText:
@@ -960,29 +892,6 @@ const translations: Record<Language, Translations> = {
     aiTitle: "What do you need help with?",
     aiDescription:
       "Get questions answered, explained, and discussed by the chat.",
-    aiChatTitle: "LiU Tentor AI",
-    aiChatEmptyTitle: "Ask a question about the exam!",
-    aiChatEmptyDescription:
-      "I can help you understand questions and concepts from this exam.",
-    aiChatPlaceholder: "Ask, search or chat...",
-    aiChatPoweredBy: "AI can make mistakes, always check responses.",
-    aiChatSend: "Send",
-    aiChatThinking: "Thinking",
-    aiIntroTitle: "LiU Tentor x ChatGPT",
-    aiIntroSubtitle: "Your personal study assistant",
-    aiIntroDescription:
-      "We've added chat as we all love to help you understand and learn from exams. Ask questions, get explanations, and improve your understanding.",
-    aiIntroFeature1Title: "Ask questions about the exam",
-    aiIntroFeature1Description:
-      "Get help understanding questions, concepts, and solutions directly from the exam.",
-    aiIntroFeature2Title: "Real-time explanations",
-    aiIntroFeature2Description:
-      "The AI analyzes the exam content and provides you with detailed explanations.",
-    aiIntroFeature3Title: "Always available",
-    aiIntroFeature3Description:
-      "Use the 'C' keyboard shortcut anytime to open the AI chat.",
-    aiIntroGetStarted: "Get Started",
-    aiIntroSkip: "Skip",
     learnMore: "Learn More",
     faq: "FAQ",
     aboutUs: "About Us",
