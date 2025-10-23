@@ -19,12 +19,15 @@ import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
+import { motion } from "framer-motion";
+import { Kbd } from "@/components/ui/kbd";
 
 interface Props {
   exams: Exam[];
+  setIsChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ExamHeader: FC<Props> = ({ exams }) => {
+const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const { courseCode = "", examId = "" } = useParams<{
@@ -36,6 +39,10 @@ const ExamHeader: FC<Props> = ({ exams }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [isMouseActive, setIsMouseActive] = useState(true);
+  const [isHovering, setIsHovering] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isHoveringRef = useRef(isHovering);
 
   const sorted = useMemo(
     () =>
@@ -45,6 +52,37 @@ const ExamHeader: FC<Props> = ({ exams }) => {
       ),
     [exams]
   );
+
+  useEffect(() => {
+    isHoveringRef.current = isHovering;
+  }, [isHovering]);
+
+  useEffect(() => {
+    const handleMouseMove = () => {
+      setIsMouseActive(true);
+
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+
+      timeoutRef.current = setTimeout(() => {
+        if (!isHoveringRef.current) {
+          setIsMouseActive(false);
+        }
+      }, 1000);
+    };
+
+    handleMouseMove();
+
+    window.addEventListener("mousemove", handleMouseMove);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     const sel = sorted.find((e) => e.id.toString() === examId);
@@ -100,7 +138,21 @@ const ExamHeader: FC<Props> = ({ exams }) => {
   };
 
   return (
-    <div className="flex z-20 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-background border-b">
+    <motion.div
+      className="flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-transparent"
+      onMouseEnter={() => {
+        setIsHovering(true);
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      }}
+      onMouseLeave={() => {
+        setIsHovering(false);
+      }}
+      initial={{ opacity: 1 }}
+      animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="flex items-center space-x-5">
         <Button
           size="icon"
@@ -116,7 +168,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button
-                  variant="ghost"
+                  variant="outline"
                   className="flex flex-row items-center px-3 transition-colors group"
                 >
                   <span>
@@ -208,6 +260,13 @@ const ExamHeader: FC<Props> = ({ exams }) => {
         </div>
       </div>
       <div className="flex items-center gap-3">
+        <Button onClick={() => setIsChatOpen(true)} variant="outline" size="sm">
+          <span className="relative z-10 flex items-center gap-2">
+            <Kbd>{language === "sv" ? "Tryck" : "Press"} C</Kbd>
+            {language === "sv" ? "Fråga Chatt" : "Ask Chat"}
+          </span>
+        </Button>
+
         {selectedExam && selectedExam.statistics ? (
           <ExamStatsDialog
             statistics={{
@@ -220,7 +279,7 @@ const ExamHeader: FC<Props> = ({ exams }) => {
             }}
             date={selectedExam.exam_date}
             trigger={
-              <Button size="sm" variant="ghost">
+              <Button variant="ghost" size="sm">
                 <ChartColumnIncreasing />
                 {language === "sv" ? "Statistik" : "Statistics"}
               </Button>
@@ -234,16 +293,17 @@ const ExamHeader: FC<Props> = ({ exams }) => {
 
         <ExamModeDialog
           trigger={
-            <Button variant="secondary" size="sm">
+            <Button variant="ghost" size="sm">
               <Coffee />
               Lock in
             </Button>
           }
           onStartExam={handleStartExamMode}
         />
+
         <SettingsDialog />
       </div>
-    </div>
+    </motion.div>
   );
 };
 
