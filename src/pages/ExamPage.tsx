@@ -25,17 +25,23 @@ const ExamPage: FC = () => {
     window.scrollTo(0, 0);
   }, []);
 
-  const handleCloseChat = useCallback(() => {
+  const handleCloseChat = () => {
     setIsChatOpen(false);
-  }, []);
+  };
+
+  const handleToggleChat = useCallback(() => {
+    setIsChatOpen((prev) => !prev);
+  }, [isChatOpen]);
 
   useHotkeys(
     "c",
     (e) => {
       e.preventDefault();
-      setIsChatOpen((prev) => !prev);
+      handleToggleChat();
+      console.log(isChatOpen);
     },
-    { preventDefault: true }
+    { preventDefault: true },
+    [handleToggleChat]
   );
 
   const { courseCode = "", examId = "" } = useParams<{
@@ -95,7 +101,11 @@ const ExamPage: FC = () => {
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <AIIntroDialog onGetStarted={() => setIsChatOpen(true)} />
-      <ExamHeader exams={courseData.exams} setIsChatOpen={setIsChatOpen} />
+      <ExamHeader
+        exams={courseData.exams}
+        setIsChatOpen={setIsChatOpen}
+        onToggleChat={handleToggleChat}
+      />
 
       <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-col overflow-hidden">
         <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
@@ -107,14 +117,13 @@ const ExamPage: FC = () => {
             )}
             <LayoutSwitcher />
           </div>
-
-          <ChatWindow
-            examDetail={examDetail}
-            isOpen={isChatOpen}
-            onClose={handleCloseChat}
-          />
         </div>
       </div>
+      <ChatWindow
+        examDetail={examDetail}
+        isOpen={isChatOpen}
+        onClose={handleCloseChat}
+      />
 
       <MobilePdfView examDetail={examDetail} />
     </div>

@@ -25,9 +25,10 @@ import { Kbd } from "@/components/ui/kbd";
 interface Props {
   exams: Exam[];
   setIsChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  onToggleChat?: () => void;
 }
 
-const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
+const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const { courseCode = "", examId = "" } = useParams<{
@@ -247,10 +248,17 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen }) => {
         </div>
       </div>
       <div className="flex items-center gap-3">
-        <Button onClick={() => setIsChatOpen(true)} variant="outline" size="sm">
+        <Button
+          onClick={onToggleChat || (() => setIsChatOpen(true))}
+          variant="outline"
+          size="sm"
+          className="hidden sm:flex"
+        >
           <span className="relative z-10 flex items-center gap-2">
-            <Kbd>{language === "sv" ? "Tryck" : "Press"} C</Kbd>
-            {language === "sv" ? "Fråga Chatt" : "Ask Chat"}
+            <Kbd className="hidden lg:block">
+              {language === "sv" ? "Tryck" : "Press"} C
+            </Kbd>
+            {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>
         </Button>
 
