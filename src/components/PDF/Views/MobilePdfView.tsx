@@ -29,7 +29,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
   ];
 
   return (
-    <div className="flex lg:hidden flex-col items-center justify-center h-screen mt-14 max-h-[calc(100vh-3.5rem)] overflow-hidden w-full relative">
+    <div className="flex lg:hidden flex-col items-center justify-center h-screen overflow-hidden w-full relative">
       {/* PDF Content */}
       {showSolution && hasSolution ? (
         <SolutionPdf pdfUrl={examDetail.solutions[0].pdf_url} />
