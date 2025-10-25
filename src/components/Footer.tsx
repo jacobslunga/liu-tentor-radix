@@ -61,7 +61,7 @@ const Footer: FC = () => {
                     <li key={link.href}>
                       <Link
                         to={link.href}
-                        className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                        className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {link.name}
                       </Link>

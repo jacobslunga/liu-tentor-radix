@@ -13,6 +13,7 @@ import StatsSearchPage from "@/pages/StatsSearchPage";
 import TentaPage from "@/pages/ExamPage";
 import TentaSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
+import UpdatesPage from "@/pages/UpdatesPage";
 
 const routes: RouteObject[] = [
   {
@@ -34,6 +35,7 @@ const routes: RouteObject[] = [
       {
         element: <InfoPageLayout />,
         children: [
+          { path: "updates", element: <UpdatesPage /> },
           { path: "feedback", element: <FeedbackPage /> },
           { path: "privacy-policy", element: <PrivacyPolicyPage /> },
           { path: "upload-exams", element: <UploadExamPage /> },
