@@ -20,7 +20,6 @@ import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
-import { Kbd } from "@/components/ui/kbd";
 
 interface Props {
   exams: Exam[];
@@ -61,49 +60,40 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
   useEffect(() => {
     const handleMouseMove = () => {
       setIsMouseActive(true);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
       timeoutRef.current = setTimeout(() => {
-        if (!isHoveringRef.current) {
-          setIsMouseActive(false);
-        }
+        if (!isHoveringRef.current) setIsMouseActive(false);
       }, 1000);
     };
-
     handleMouseMove();
-
     window.addEventListener("mousemove", handleMouseMove);
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
   }, []);
 
   useEffect(() => {
     const sel = sorted.find((e) => e.id.toString() === examId);
-    if (sel) {
-      setSelectedExam(sel);
-    }
+    if (sel) setSelectedExam(sel);
   }, [sorted, examId]);
 
   useEffect(() => {
-    if (isDropdownOpen && scrollRef.current) {
-      const idx = sorted.findIndex((e) => e.id.toString() === examId);
-      if (idx >= 0) {
-        const itemHeight = 60;
-        const containerHeight = scrollRef.current.clientHeight;
-        scrollRef.current.scrollTo({
-          top: idx * itemHeight - containerHeight / 2 + itemHeight / 2,
-          behavior: "auto",
-        });
+    if (!isDropdownOpen) return;
+    const tryScroll = () => {
+      const container = scrollRef.current;
+      if (!container) return;
+      const el = container.querySelector(
+        '[data-current="true"]'
+      ) as HTMLElement | null;
+      if (el) {
+        el.scrollIntoView({ block: "center" });
       }
-    }
+    };
+    const id = requestAnimationFrame(() => {
+      requestAnimationFrame(tryScroll);
+    });
+    return () => cancelAnimationFrame(id);
   }, [isDropdownOpen, sorted, examId]);
 
   const completed = useMemo<Record<number, boolean>>(() => {
@@ -132,9 +122,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       className="flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-transparent"
       onMouseEnter={() => {
         setIsHovering(true);
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
+        if (timeoutRef.current) clearTimeout(timeoutRef.current);
       }}
       onMouseLeave={() => {
         setIsHovering(false);
@@ -153,7 +141,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           <ArrowLeftIcon className="w-5 h-5" />
         </Button>
 
-        {/* Enhanced Exam Information */}
         <div className="flex items-center space-x-4">
           {selectedExam && (
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
@@ -197,17 +184,16 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                   {sorted.map((e) => {
                     const sel = e.id.toString() === examId;
                     const done = completed[e.id];
-
                     return (
                       <DropdownMenuItem
                         key={e.id}
                         onClick={() => changeExam(e)}
-                        className={`
-                      flex items-center mt-2 justify-between px-3 py-3 cursor-pointer text-sm
-                      ${
-                        sel ? "bg-primary/10 text-primary" : "hover:bg-muted/50"
-                      }
-                    `}
+                        data-current={sel ? "true" : undefined}
+                        className={`flex items-center mt-2 justify-between px-3 py-3 cursor-pointer text-sm ${
+                          sel
+                            ? "bg-primary/10 text-primary"
+                            : "hover:bg-muted/50"
+                        }`}
                       >
                         <div className="flex-1 min-w-0 pr-3">
                           <div className="font-medium truncate">
@@ -224,7 +210,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                             </div>
                           )}
                         </div>
-
                         <div className="flex items-center gap-2 shrink-0">
                           {e.has_solution && (
                             <Badge
@@ -255,9 +240,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           className="hidden sm:flex"
         >
           <span className="relative z-10 flex items-center gap-2">
-            <Kbd className="hidden lg:block">
-              {language === "sv" ? "Tryck" : "Press"} C
-            </Kbd>
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>
         </Button>
