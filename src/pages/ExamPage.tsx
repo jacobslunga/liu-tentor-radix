@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useCallback } from "react";
+import { FC, useEffect, useCallback } from "react";
 
 import { AIIntroDialog } from "@/components/AI/AIIntroDialog";
 import { Button } from "@/components/ui/button";
@@ -16,29 +16,29 @@ import useLayoutMode from "@/stores/LayoutModeStore";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useChatWindow } from "@/context/ChatWindowContext";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
-  const [isChatOpen, setIsChatOpen] = useState(false);
+  const { showChatWindow, setShowChatWindow } = useChatWindow();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const handleCloseChat = () => {
-    setIsChatOpen(false);
+    setShowChatWindow(false);
   };
 
   const handleToggleChat = useCallback(() => {
-    setIsChatOpen((prev) => !prev);
-  }, [isChatOpen]);
+    setShowChatWindow((prev) => !prev);
+  }, [showChatWindow]);
 
   useHotkeys(
     "c",
     (e) => {
       e.preventDefault();
       handleToggleChat();
-      console.log(isChatOpen);
     },
     { preventDefault: true },
     [handleToggleChat]
@@ -100,10 +100,10 @@ const ExamPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <AIIntroDialog onGetStarted={() => setIsChatOpen(true)} />
+      <AIIntroDialog onGetStarted={() => setShowChatWindow(true)} />
       <ExamHeader
         exams={courseData.exams}
-        setIsChatOpen={setIsChatOpen}
+        setIsChatOpen={setShowChatWindow}
         onToggleChat={handleToggleChat}
       />
 
@@ -121,7 +121,7 @@ const ExamPage: FC = () => {
       </div>
       <ChatWindow
         examDetail={examDetail}
-        isOpen={isChatOpen}
+        isOpen={showChatWindow}
         onClose={handleCloseChat}
       />
 
