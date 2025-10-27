@@ -100,8 +100,15 @@ export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
     setIsOpen(false);
   };
 
+  const handleOpenChange = (open: boolean) => {
+    if (!open) {
+      localStorage.setItem(AI_INTRO_SEEN_KEY, "true");
+    }
+    setIsOpen(open);
+  };
+
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className="max-w-5xl overflow-hidden p-0">
         <div className="absolute inset-0 mesh opacity-80 dark:opacity-20" />
 
