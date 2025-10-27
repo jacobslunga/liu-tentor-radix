@@ -3,12 +3,15 @@ import PdfRenderer from "./PdfRenderer";
 import usePdf from "@/hooks/usePdf";
 import ExamToolbar from "./Toolbar/ExamToolbar";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useChatWindow } from "@/context/ChatWindowContext";
 
 interface Props {
   pdfUrl: string | null;
 }
 
 const ExamPdf: FC<Props> = ({ pdfUrl }) => {
+  const { showChatWindow } = useChatWindow();
+
   const {
     numPages,
     scale,
@@ -39,6 +42,8 @@ const ExamPdf: FC<Props> = ({ pdfUrl }) => {
   );
 
   useEffect(() => {
+    if (showChatWindow) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       const action = keyboardActions[e.key as keyof typeof keyboardActions];
       if (action) action();

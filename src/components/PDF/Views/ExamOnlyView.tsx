@@ -5,8 +5,10 @@ import GradientIndicator from "@/components/GradientIndicator";
 import SolutionPdf from "@/components/PDF/SolutionPdf";
 import { motion } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useChatWindow } from "@/context/ChatWindowContext";
 
 const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
+  const { showChatWindow } = useChatWindow();
   const [isFacitVisible, setIsFacitVisible] = useState(false);
   const [isManual, setIsManual] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
@@ -20,7 +22,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!hasFacit || isManual) return;
+      if (!hasFacit || isManual || showChatWindow) return;
 
       const w = window.innerWidth;
       const threshold = w * 0.9;
@@ -44,7 +46,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
       setIsFacitVisible(false);
     },
-    [hasFacit, isManual]
+    [hasFacit, isManual, showChatWindow]
   );
 
   useEffect(() => {
@@ -55,6 +57,11 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
   useHotkeys("e", () => {
     setIsFacitVisible((prev) => !prev);
     setIsManual((prev) => !prev);
+  });
+
+  useHotkeys("esc", () => {
+    setIsManual(false);
+    setIsFacitVisible(false);
   });
 
   return (
