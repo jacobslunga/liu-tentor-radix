@@ -121,13 +121,12 @@ export function DataTable({
         {/* Course title */}
         <h2
           className={`font-semibold text-foreground ${
-            (courseNameEng?.length ?? 0) > 40 ||
             (courseNameSwe?.length ?? 0) > 40
               ? "text-2xl"
               : "text-4xl"
           }`}
         >
-          {language === "sv" ? courseNameSwe : courseNameEng}
+          {courseNameSwe}
         </h2>
 
         <div className="flex flex-row items-center justify-between w-full">
