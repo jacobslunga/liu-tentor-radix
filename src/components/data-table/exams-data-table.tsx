@@ -28,7 +28,6 @@ import { Button } from "@/components/ui/button";
 import { ChartColumnIncreasing } from "lucide-react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
-import { sponsors } from "../sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";
 
