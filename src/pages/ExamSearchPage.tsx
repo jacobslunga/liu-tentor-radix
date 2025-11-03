@@ -12,7 +12,6 @@ import { Loader2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
-import SponsorsSidebar from "@/components/sponsors/SponsorsSidebar";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
@@ -164,43 +163,16 @@ const ExamSearchPage: FC = () => {
         )}
 
         {!isLoading && !isError && formattedExams.length > 0 && (
-          <div className="w-full grid grid-cols-1 xl:grid-cols-[1fr_auto_1fr] gap-8 items-start">
-            {/* Empty spacer on the left */}
-            <div className="hidden xl:block"></div>
-
-            {/* Main content area - centered */}
+          <div className="w-full flex flex-col items-center justify-center">
             <div className="flex items-center justify-center flex-col col-span-1">
-              {/* Axis summer job example */}
-              {/* <SponsorBanner
-              sponsor={{
-                linkName: "",
-                to: "https://www.axis.com",
-                logo: "/sponsor-logos/axis.png",
-                name: "Axis Communications",
-              }}
-              description="Sök jobb hos Axis i sommar!"
-            /> */}
-
-              {/* Ericsson student night */}
-              {/* <SponsorBanner
-              sponsor={{
-                linkName: "",
-                to: "https://www.ericsson.com",
-                logo: "/sponsor-logos/ericsson.png",
-                name: "Ericsson",
-              }}
-              description="Missa inte Ericssons studentkväll på deras kontor :)"
-            /> */}
-
-              {/* Opera workshop */}
               <SponsorBanner
                 sponsor={{
                   linkName: "",
                   to: "https://www.opera.com",
-                  logo: "/sponsor-logos/opera.png",
-                  name: "Ericsson",
+                  logo: "https://standoutcapital.com/wp-content/uploads/2022/04/Standout-Capital_Portfolio-Exsitec_Color_Logo_3x2.png",
+                  name: "Exsitec",
                 }}
-                description="Opera håller i en workshop för mikroprocessorer"
+                description="Sök jobb hos Exsitec"
               />
 
               <DataTable
@@ -216,11 +188,6 @@ const ExamSearchPage: FC = () => {
               <Link to="/upload-exams">
                 <Button className="w-full z-50">{t("uploadMore")}</Button>
               </Link>
-            </div>
-
-            {/* Sponsors sidebar - hidden on mobile, visible on xl screens */}
-            <div className="hidden xl:block">
-              <SponsorsSidebar />
             </div>
           </div>
         )}
