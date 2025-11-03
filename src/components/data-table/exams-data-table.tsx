@@ -28,7 +28,6 @@ import { Button } from "@/components/ui/button";
 import { ChartColumnIncreasing } from "lucide-react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
-import { sponsors } from "../sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import useTranslation from "@/hooks/useTranslation";
 
@@ -76,37 +75,37 @@ export function DataTable({
   });
 
   // Calculate sponsor placement positions
-  const sponsorPositions = useMemo(() => {
-    const examCount = filteredData.length;
-    const sponsorCount = sponsors.length;
+  // const sponsorPositions = useMemo(() => {
+  //   const examCount = filteredData.length;
+  //   const sponsorCount = sponsors.length;
 
-    if (examCount === 0 || sponsorCount === 0) return new Map();
+  //   if (examCount === 0 || sponsorCount === 0) return new Map();
 
-    const positions = new Map<number, number>();
+  //   const positions = new Map<number, number>();
 
-    if (examCount <= sponsorCount) {
-      for (let i = 0; i < Math.min(examCount - 1, sponsorCount); i++) {
-        positions.set(i, i);
-      }
-    } else {
-      const interval = Math.floor(examCount / (sponsorCount + 1));
+  //   if (examCount <= sponsorCount) {
+  //     for (let i = 0; i < Math.min(examCount - 1, sponsorCount); i++) {
+  //       positions.set(i, i);
+  //     }
+  //   } else {
+  //     const interval = Math.floor(examCount / (sponsorCount + 1));
 
-      for (let i = 0; i < sponsorCount; i++) {
-        const position = (i + 1) * interval - 1;
-        if (position < examCount - 1) {
-          positions.set(position, i);
-        }
-      }
-    }
+  //     for (let i = 0; i < sponsorCount; i++) {
+  //       const position = (i + 1) * interval - 1;
+  //       if (position < examCount - 1) {
+  //         positions.set(position, i);
+  //       }
+  //     }
+  //   }
 
-    return positions;
-  }, [filteredData.length, sponsors.length]);
+  //   return positions;
+  // }, [filteredData.length, sponsors.length]);
 
-  const getSponsorDescription = () => {
-    return language === "sv"
-      ? "Tack för ditt stöd till våra studenter!"
-      : "Thank you for supporting our students!";
-  };
+  // const getSponsorDescription = () => {
+  //   return language === "sv"
+  //     ? "Tack för ditt stöd till våra studenter!"
+  //     : "Thank you for supporting our students!";
+  // };
 
   return (
     <div className="w-full space-y-6 mt-10 mx-auto relative">
@@ -193,7 +192,7 @@ export function DataTable({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
-              table.getRowModel().rows.map((row, index) => (
+              table.getRowModel().rows.map((row) => (
                 <>
                   {/* Show sponsor banner at calculated positions */}
                   {/* {sponsorPositions.has(index) && sponsors.length > 0 && (

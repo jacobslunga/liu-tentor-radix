@@ -236,14 +236,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
         {/* Sponsor Banner */}
         <div className="hidden lg:block">
-          <SponsorHeaderBanner
-            sponsor={sponsors[0]}
-            description={
-              language === "sv"
-                ? "Sök sommarjobb"
-                : "Apply for summer internship"
-            }
-          />
+          <SponsorHeaderBanner sponsor={sponsors[0]} />
         </div>
       </div>
       <div className="flex items-center gap-3">

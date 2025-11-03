@@ -18,6 +18,7 @@ import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useTranslation } from "@/hooks/useTranslation";
+import { sponsors } from "@/components/sponsors/sponsorsData";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -166,12 +167,7 @@ const ExamSearchPage: FC = () => {
           <div className="w-full flex flex-col items-center justify-center">
             <div className="flex items-center justify-center flex-col col-span-1">
               <SponsorBanner
-                sponsor={{
-                  linkName: "",
-                  to: "https://www.opera.com",
-                  logo: "https://standoutcapital.com/wp-content/uploads/2022/04/Standout-Capital_Portfolio-Exsitec_Color_Logo_3x2.png",
-                  name: "Exsitec",
-                }}
+                sponsor={sponsors[0]}
                 description="Sök jobb hos Exsitec"
               />
 

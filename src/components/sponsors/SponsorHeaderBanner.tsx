@@ -1,42 +1,27 @@
 import { ExternalLink } from "lucide-react";
 import { FC } from "react";
 import { Sponsor } from "@/types/sponsor";
+import { Link } from "react-router-dom";
 
 interface Props {
   sponsor: Sponsor;
-  description?: string;
 }
 
-const SponsorHeaderBanner: FC<Props> = ({ sponsor, description }) => {
+const SponsorHeaderBanner: FC<Props> = ({ sponsor }) => {
   return (
-    <a
-      href={sponsor.to}
+    <Link
+      to={sponsor.to}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center gap-2.5 px-3 py-1.5 rounded-lg border border-border hover:border-primary/50 hover:bg-accent/50 transition-all duration-200"
+      className="group flex items-center text-white h-9 px-4 py-2 rounded-md bg-linear-90 from-[#7556C6] to-[#362795] transition-all hover:translate-x-0.5 hover:-translate-y-0.5 duration-200"
     >
-      {/* Logo */}
-      <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-white rounded-md p-1 border border-border">
-        <img
-          src={sponsor.logo}
-          alt={sponsor.name}
-          className="w-full h-full object-contain"
-        />
-      </div>
-
-      {/* Content */}
-      <div className="flex flex-col min-w-0">
-        {description && (
-          <p className="text-xs text-muted-foreground leading-tight">
-            {description}
-          </p>
-        )}
-        <p className="text-xs font-medium text-foreground group-hover:text-primary transition-colors flex items-center gap-1">
-          {sponsor.name}
-          <ExternalLink className="h-2.5 w-2.5" />
+      <div className="flex flex-row items-center justify-center min-w-0 gap-1">
+        <p className="text-sm font-normal transition-colors flex items-center">
+          Sök sommarjobb hos {sponsor.name}
         </p>
+        <ExternalLink className="h-4 w-4" />
       </div>
-    </a>
+    </Link>
   );
 };
 
