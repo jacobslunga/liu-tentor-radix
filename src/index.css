@@ -5,6 +5,10 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
+@theme {
+  --font-mono: monospace;
+}
+
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;

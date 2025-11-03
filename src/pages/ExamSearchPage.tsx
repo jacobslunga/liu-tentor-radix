@@ -17,6 +17,7 @@ import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useMetadata } from "@/hooks/useMetadata";
 import { sponsors } from "@/components/sponsors/sponsorsData";
 
 const LoadingSpinner = () => {

@@ -5,7 +5,7 @@ const sponsors: Sponsor[] = [
     name: "Exsitec",
     logo: "/sponsor-logos/exsitec.svg",
     linkName: "exsitec.com",
-    to: "https://bit.ly/3XosmHx",
+    to: "https://www.exsitec.com/",
   },
 ];
 
