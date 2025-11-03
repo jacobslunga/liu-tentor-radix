@@ -26,8 +26,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ChartBarIcon, ArrowsDownUpIcon } from "@phosphor-icons/react";
 import { Exam } from "@/types/exam";
-import { Sponsor } from "@/types/sponsor";
-import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getColumns } from "@/components/data-table/columns";
 import { sponsors } from "../sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
@@ -74,21 +72,6 @@ export function DataTable({
     state: { globalFilter: filter },
     onGlobalFilterChange: setFilter,
   });
-
-  const { avgPassRate, totalWithSolutions } = useMemo(() => {
-    if (data.length === 0) return { avgPassRate: 0, totalWithSolutions: 0 };
-
-    const totalPassRates = data.reduce(
-      (acc, exam) => acc + (exam?.pass_rate || 0),
-      0
-    );
-    const solutions = data.filter((exam) => exam.has_solution).length;
-
-    return {
-      avgPassRate: totalPassRates / data.length,
-      totalWithSolutions: solutions,
-    };
-  }, [data]);
 
   // Calculate sponsor placement positions
   const sponsorPositions = useMemo(() => {
@@ -140,21 +123,6 @@ export function DataTable({
         >
           {courseNameSwe}
         </h2>
-
-        <div className="flex flex-row items-center space-x-6 text-sm text-muted-foreground mt-1">
-          <div>
-            <span className="font-medium text-foreground">
-              {avgPassRate.toFixed(1)}%
-            </span>{" "}
-            {t("averagePassRate")}
-          </div>
-          <div>
-            <span className="font-medium text-foreground">
-              {totalWithSolutions}/{data.length}
-            </span>{" "}
-            {t("withSolution")}
-          </div>
-        </div>
 
         <div className="flex flex-row items-center justify-start gap-2 w-full">
           <Select
