@@ -5,7 +5,7 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --font-mono: monospace;
+  --font-mono: "Roboto Mono", monospace;
 }
 
 @layer utilities {

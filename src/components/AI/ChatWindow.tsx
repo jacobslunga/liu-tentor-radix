@@ -430,6 +430,24 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
         }
       );
 
+      /** LOCAL TEST RESPONSE */
+      // const response = await fetch(
+      //   `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       messages: [...messages, userMessage].map((msg) => ({
+      //         role: msg.role,
+      //         content: msg.content,
+      //       })),
+      //       giveDirectAnswer,
+      //     }),
+      //   }
+      // );
+
       if (!response.ok) {
         throw new Error("Failed to get response");
       }

@@ -1,5 +1,10 @@
 import { ArrowLeftIcon, CheckIcon } from "@primer/octicons-react";
-import { ChartColumnIncreasing, ChevronRight, Coffee } from "lucide-react";
+import {
+  ChartColumnIncreasing,
+  ChevronRight,
+  Coffee,
+  MessageCircleReply,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -246,6 +251,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           size="sm"
           className="hidden sm:flex"
         >
+          <MessageCircleReply className="w-4 h-4" />
           <span className="relative z-10 flex items-center gap-2">
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>

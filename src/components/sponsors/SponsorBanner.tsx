@@ -85,7 +85,7 @@ const SponsorBanner: FC<Props> = ({
       <div className="absolute inset-0 bg-linear-135 from-transparent via-purple-300/10 to-transparent bg-size-[150%_150%] animate-[wave_var(--wave-duration)_ease-in-out_infinite] opacity-70 group-hover:opacity-100" />
 
       <div className="relative flex items-center gap-4 z-10">
-        <div className="w-20 h-10 rounded p-1 flex items-center justify-center">
+        <div className="w-24 h-10 rounded p-1 flex items-center justify-center">
           {logo ? (
             <img
               src={logo}

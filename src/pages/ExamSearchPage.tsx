@@ -168,7 +168,7 @@ const ExamSearchPage: FC = () => {
             <div className="flex items-center justify-center flex-col col-span-1">
               <SponsorBanner
                 sponsor={sponsors[0]}
-                description="Sök jobb hos Exsitec"
+                description="Sök jobb hos Exsitec i sommar!"
               />
 
               <DataTable
