@@ -1,10 +1,5 @@
 import { ArrowLeftIcon, CheckIcon } from "@primer/octicons-react";
-import {
-  ChartColumnIncreasing,
-  ChevronRight,
-  Coffee,
-  MessageCircleReply,
-} from "lucide-react";
+import { ChartColumnIncreasing, ChevronRight, Coffee } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +22,7 @@ import { sponsors } from "./sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
+import { Kbd } from "./ui/kbd";
 
 interface Props {
   exams: Exam[];
@@ -251,7 +247,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           size="sm"
           className="hidden sm:flex"
         >
-          <MessageCircleReply className="w-4 h-4" />
+          <Kbd>{language === "sv" ? "Tryck C" : "Press C"}</Kbd>
           <span className="relative z-10 flex items-center gap-2">
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>

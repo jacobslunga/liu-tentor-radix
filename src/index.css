@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
+@plugin "@toolwind/corner-shape";
 
 @theme {
   --font-mono: "Roboto Mono", monospace;
@@ -67,6 +68,7 @@
 
   body {
     font-family:
+      "Inter",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

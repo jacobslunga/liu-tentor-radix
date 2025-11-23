@@ -646,7 +646,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                     variant="outline"
                     size="icon"
                     onClick={handleClose}
-                    className="absolute -top-16 left-2 z-30 hover:bg-accent shadow-md"
+                    className="absolute -top-16 left-2 z-30 hover:bg-accent"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </Button>
