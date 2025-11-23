@@ -29,7 +29,10 @@
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
+<<<<<<< HEAD
     "@toolwind/corner-shape": "^0.0.8-3",
+=======
+>>>>>>> b1f3cd9 (added the new squircle)
     "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
