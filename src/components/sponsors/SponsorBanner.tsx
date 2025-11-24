@@ -64,7 +64,7 @@ const SponsorBanner: FC<Props> = ({
     <Link
       to={to}
       target="_blank"
-      className="relative flex items-center w-full justify-between px-6 py-4 text-white duration-300 group rounded-md overflow-hidden"
+      className="relative flex items-center w-full justify-between px-6 py-4 text-white duration-300 group rounded-3xl corner-squircle overflow-hidden"
       style={
         {
           "--gradient-duration": `${animationTimings.gradient}s`,
