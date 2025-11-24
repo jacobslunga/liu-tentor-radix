@@ -689,8 +689,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 autoFocus
                 rows={1}
                 ref={inputRef}
-                className="text-base! resize-none max-h-[200px] overflow-y-auto"
-                style={{ fontSize: "16px" }}
+                className="text-base resize-none max-h-[200px] overflow-y-auto"
               />
               <InputGroupAddon align="block-end">
                 <div className="flex items-center gap-0 min-w-0 flex-1">

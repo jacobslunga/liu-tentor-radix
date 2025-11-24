@@ -13,7 +13,7 @@ const SponsorHeaderBanner: FC<Props> = ({ sponsor }) => {
       to={sponsor.to}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex items-center text-white h-9 px-4 py-2 rounded-md bg-linear-90 from-[#7556C6] to-[#362795]"
+      className="group flex items-center text-white h-9 px-4 py-2 rounded-full corner-squircle bg-linear-90 from-[#7556C6] to-[#362795]"
     >
       <div className="flex flex-row items-center justify-center min-w-0 gap-2">
         <p className="text-sm font-normal transition-colors flex items-center">
