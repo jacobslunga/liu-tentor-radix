@@ -1,4 +1,3 @@
-import ExamModePage from "@/pages/ExamModePage";
 import FAQPage from "@/pages/FaqPage";
 import FeedbackPage from "@/pages/FeedbackPage";
 import HomePage from "@/pages/HomePage";
@@ -23,8 +22,6 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "*", element: <NotFoundPage /> },
-      { path: "/exam-mode/:examId", element: <ExamModePage /> },
-      { path: "/sponsorer", element: <SponsorsPage /> },
       {
         path: "search",
         element: <SearchLayout />,
