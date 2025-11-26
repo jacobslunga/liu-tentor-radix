@@ -43,7 +43,6 @@ export function DataTable({
   data,
   courseCode,
   onSortChange,
-  courseNameEng,
   courseNameSwe,
 }: Props) {
   const navigate = useNavigate();
@@ -103,9 +102,7 @@ export function DataTable({
         {/* Course title */}
         <h2
           className={`font-semibold text-foreground ${
-            (courseNameSwe?.length ?? 0) > 40
-              ? "text-2xl"
-              : "text-4xl"
+            (courseNameSwe?.length ?? 0) > 40 ? "text-2xl" : "text-4xl"
           }`}
         >
           {courseNameSwe}

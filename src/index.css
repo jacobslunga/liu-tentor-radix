@@ -3,6 +3,7 @@
 
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
+@plugin "@toolwind/corner-shape";
 
 @theme {
   --font-mono: "Jetbrains Mono", monospace;

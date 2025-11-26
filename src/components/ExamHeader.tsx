@@ -1,5 +1,5 @@
 import { ArrowLeftIcon, CheckIcon } from "@primer/octicons-react";
-import { ChartColumnIncreasing, ChevronRight, Coffee } from "lucide-react";
+import { ChartColumnIncreasing, ChevronRight } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { Exam } from "@/types/exam";
-import { ExamModeDialog } from "@/components/ExamModeDialog";
-import { ExamModeManager } from "@/lib/examMode";
 import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
@@ -106,15 +104,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
     setSelectedExam(e);
     navigate(`/search/${courseCode}/${e.id}`);
     setIsDropdownOpen(false);
-  };
-
-  const handleStartExamMode = (duration: string) => {
-    const currentExam = exams.find((exam) => exam.id.toString() === examId);
-    if (currentExam) {
-      const durationMinutes = parseFloat(duration);
-      ExamModeManager.startExamSession(currentExam, durationMinutes);
-      navigate(`/exam-mode/${examId}`);
-    }
   };
 
   return (
@@ -267,16 +256,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
             {language === "sv" ? "Ingen statistik" : "No statistics"}
           </p>
         )}
-
-        <ExamModeDialog
-          trigger={
-            <Button variant="ghost" size="sm">
-              <Coffee />
-              Lock in
-            </Button>
-          }
-          onStartExam={handleStartExamMode}
-        />
 
         <SettingsDialog />
       </div>
