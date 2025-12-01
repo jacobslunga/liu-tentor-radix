@@ -2068,10 +2068,10 @@
     ],
 
     "@toolwind/corner-shape": [
-      "@toolwind/corner-shape@0.0.8-1",
+      "@toolwind/corner-shape@0.0.8-3",
       "",
       { "dependencies": { "@types/node": "^20.4.1" } },
-      "sha512-kPf9iO0ihJMHGK3+k/UJY1/v40dWPwha0vxWMivnU8xu8Kdst6/lV2ETVNctTQUJ1ZYFaEyjMt8+aExUCThLfQ==",
+      "sha512-MPIF81F2bhtXbzEeXF0vnL+PKpnopCHOzBspOkK8osMzWQvPUujZn2XZOMdsu4DF6wsVbbRYQtdsJr486HmIPQ==",
     ],
 
     "@types/babel__core": [

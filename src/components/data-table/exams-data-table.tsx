@@ -72,38 +72,20 @@ export function DataTable({
     onGlobalFilterChange: setFilter,
   });
 
-  // Calculate sponsor placement positions
-  // const sponsorPositions = useMemo(() => {
-  //   const examCount = filteredData.length;
-  //   const sponsorCount = sponsors.length;
+  const { avgPassRate, totalWithSolutions } = useMemo(() => {
+    if (data.length === 0) return { avgPassRate: 0, totalWithSolutions: 0 };
 
-  //   if (examCount === 0 || sponsorCount === 0) return new Map();
+    const totalPassRates = data.reduce(
+      (acc, exam) => acc + (exam?.pass_rate || 0),
+      0
+    );
+    const solutions = data.filter((exam) => exam.has_solution).length;
 
-  //   const positions = new Map<number, number>();
-
-  //   if (examCount <= sponsorCount) {
-  //     for (let i = 0; i < Math.min(examCount - 1, sponsorCount); i++) {
-  //       positions.set(i, i);
-  //     }
-  //   } else {
-  //     const interval = Math.floor(examCount / (sponsorCount + 1));
-
-  //     for (let i = 0; i < sponsorCount; i++) {
-  //       const position = (i + 1) * interval - 1;
-  //       if (position < examCount - 1) {
-  //         positions.set(position, i);
-  //       }
-  //     }
-  //   }
-
-  //   return positions;
-  // }, [filteredData.length, sponsors.length]);
-
-  // const getSponsorDescription = () => {
-  //   return language === "sv"
-  //     ? "Tack för ditt stöd till våra studenter!"
-  //     : "Thank you for supporting our students!";
-  // };
+    return {
+      avgPassRate: totalPassRates / data.length,
+      totalWithSolutions: solutions,
+    };
+  }, [data]);
 
   return (
     <div className="w-full space-y-6 mx-auto relative">
@@ -123,7 +105,23 @@ export function DataTable({
           {courseNameSwe}
         </h2>
 
-        <div className="flex flex-row items-center justify-start gap-2 w-full">
+        {/* New: Stats row */}
+        <div className="flex flex-row items-center space-x-6 text-sm text-muted-foreground mt-1">
+          <div>
+            <span className="font-medium text-foreground">
+              {avgPassRate.toFixed(1)}%
+            </span>{" "}
+            {t("averagePassRate")}
+          </div>
+          <div>
+            <span className="font-medium text-foreground">
+              {totalWithSolutions}/{data.length}
+            </span>{" "}
+            {t("withSolution")}
+          </div>
+        </div>
+
+        <div className="flex flex-row items-center justify-between w-full">
           <Select
             onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
           >
@@ -188,43 +186,24 @@ export function DataTable({
           <TableBody>
             {table.getRowModel().rows.length > 0 ? (
               table.getRowModel().rows.map((row) => (
-                <>
-                  {/* Show sponsor banner at calculated positions */}
-                  {/* {sponsorPositions.has(index) && sponsors.length > 0 && (
-                    <TableRow
-                      key={`sponsor-${index}`}
-                      className="hover:bg-transparent"
-                    >
-                      <TableCell colSpan={columns.length} className="p-0">
-                        <SponsorBanner
-                          sponsor={sponsors[sponsorPositions.get(index)!]}
-                          description={getSponsorDescription()}
-                          variant="table"
-                        />
-                      </TableCell>
-                    </TableRow>
-                  )} */}
-
-                  {/* Regular exam row */}
-                  <TableRow
-                    key={row.id}
-                    onClick={() =>
-                      navigate(
-                        `/search/${row.original.course_code}/${row.original.id}`
-                      )
-                    }
-                    className="group cursor-pointer transition-all border-t"
-                  >
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className="px-6 py-4">
-                        {flexRender(
-                          cell.column.columnDef.cell,
-                          cell.getContext()
-                        )}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                </>
+                <TableRow
+                  key={row.id}
+                  onClick={() =>
+                    navigate(
+                      `/search/${row.original.course_code}/${row.original.id}`
+                    )
+                  }
+                  className="group cursor-pointer transition-all border-t"
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id} className="px-6 py-4">
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))
             ) : (
               <TableRow>
