@@ -8,10 +8,9 @@ import OmOss from "@/pages/AboutUs";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import { RouteObject } from "react-router-dom";
 import SearchLayout from "@/layouts/SearchLayout";
-import SponsorsPage from "@/pages/SponsorsPage";
 import StatsSearchPage from "@/pages/StatsSearchPage";
 import TentaPage from "@/pages/ExamPage";
-import TentaSearchPage from "@/pages/ExamSearchPage";
+import ExamSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 import UpdatesPage from "@/pages/UpdatesPage";
 
@@ -26,7 +25,7 @@ const routes: RouteObject[] = [
         path: "search",
         element: <SearchLayout />,
         children: [
-          { path: ":courseCode", element: <TentaSearchPage /> },
+          { path: ":courseCode", element: <ExamSearchPage /> },
           { path: ":courseCode/stats", element: <StatsSearchPage /> },
           { path: ":courseCode/:examId", element: <TentaPage /> },
         ],

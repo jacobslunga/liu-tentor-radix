@@ -17,8 +17,6 @@ import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
 import SponsorHeaderBanner from "./sponsors/SponsorHeaderBanner";
 import { sponsors } from "./sponsors/sponsorsData";
-import SponsorHeaderBanner from "./sponsors/SponsorHeaderBanner";
-import { sponsors } from "./sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";

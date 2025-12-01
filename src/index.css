@@ -5,10 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
-@theme {
-  --font-mono: "Roboto Mono", monospace;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;

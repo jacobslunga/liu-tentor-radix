@@ -6,6 +6,7 @@ import { Sponsor } from "@/types/sponsor";
 interface Props {
   sponsor: Sponsor;
   description: string;
+  subtitle?: string;
   variant?: "default" | "table";
 }
 
@@ -13,6 +14,7 @@ const SponsorBanner: FC<Props> = ({
   sponsor: { logo, name, to },
   description,
   variant = "default",
+  subtitle,
 }) => {
   const animationTimings = useMemo(() => {
     const randomBetween = (min: number, max: number) =>
@@ -64,7 +66,7 @@ const SponsorBanner: FC<Props> = ({
     <Link
       to={to}
       target="_blank"
-      className="relative flex items-center w-full justify-between px-6 py-4 text-white duration-300 group rounded-3xl corner-squircle overflow-hidden"
+      className="relative flex items-center max-w-xl justify-between px-6 py-4 text-white duration-300 group rounded-3xl corner-squircle overflow-hidden"
       style={
         {
           "--gradient-duration": `${animationTimings.gradient}s`,
@@ -84,8 +86,8 @@ const SponsorBanner: FC<Props> = ({
       {/* Additional wave effect for more chaos */}
       <div className="absolute inset-0 bg-linear-135 from-transparent via-purple-300/10 to-transparent bg-size-[150%_150%] animate-[wave_var(--wave-duration)_ease-in-out_infinite] opacity-70 group-hover:opacity-100" />
 
-      <div className="relative flex items-center gap-4 z-10">
-        <div className="w-24 h-10 rounded p-1 flex items-center justify-center">
+      <div className="relative flex flex-col items-start gap-4 z-10">
+        <div className="w-32 h-10 rounded p-1 flex items-center justify-center">
           {logo ? (
             <img
               src={logo}
@@ -98,14 +100,17 @@ const SponsorBanner: FC<Props> = ({
             </span>
           )}
         </div>
-        <div className="flex flex-col">
-          <span className="text-xs font-medium opacity-90 group-hover:opacity-100">
-            Sponsor
-          </span>
+        <div className="flex flex-col items-start justify-center gap-1">
           <span className="text-sm font-medium">{description}</span>
+          <span className="text-xs font-normal text-white/70 text-left">
+            {subtitle}
+          </span>
+          <button className="rounded-xl mt-2 self-end flex flex-row items-center justify-center gap-1 py-2 px-5 cursor-pointer text-xs bg-white/10 hover:bg-white/20 transition-colors duration-200">
+            Besök
+            <ExternalLink className="group-hover:-translate-y-0.5 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+          </button>
         </div>
       </div>
-      <ExternalLink className="relative z-10 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
 
       <style>{`
         @keyframes gradient {

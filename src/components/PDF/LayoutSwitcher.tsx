@@ -69,7 +69,7 @@ export default function LayoutSwitcher() {
       style={{
         pointerEvents: isMouseActive || isHovering ? "auto" : "none",
       }}
-      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background rounded-full corner-squircle border p-1 space-x-1"
+      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background rounded-full border p-1 space-x-1"
     >
       {modes.map((mode) => {
         const isActive = layoutMode === mode.value;
@@ -77,12 +77,12 @@ export default function LayoutSwitcher() {
           <button
             key={mode.value}
             onClick={() => setLayoutMode(mode.value)}
-            className="relative px-3 py-1 text-xs flex items-center gap-1 rounded-full corner-squircle cursor-pointer"
+            className="relative px-3 py-1 text-xs flex items-center gap-1 rounded-full cursor-pointer"
           >
             {isActive && (
               <motion.div
                 layoutId="active-pill"
-                className="absolute inset-0 bg-primary rounded-full corner-squircle z-0"
+                className="absolute inset-0 bg-primary rounded-full z-0"
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
               />
             )}
