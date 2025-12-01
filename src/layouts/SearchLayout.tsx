@@ -3,7 +3,6 @@ import { Outlet, useLocation } from "react-router-dom";
 import Header from "@/components/Header";
 
 const isSearchUrl = (url: string) => {
-  // Only hide header on individual exam pages (with exam ID), not on course search pages
   const pattern = /^\/search\/[A-Z0-9]+\/\d+$/;
   return pattern.test(url);
 };
@@ -14,7 +13,7 @@ const SearchLayout = () => {
 
   return (
     <div className="flex flex-col min-h-screen w-full">
-      {shouldShowHeader && <Header />}
+      {shouldShowHeader && <Header />}{" "}
       <main className="flex grow flex-col max-w-full w-full">
         <Outlet />
       </main>

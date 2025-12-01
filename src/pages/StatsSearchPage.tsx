@@ -174,81 +174,53 @@ export default function StatsSearchPage() {
   return (
     <div className="w-full space-y-6 mt-10 mx-auto relative px-3 sm:px-4 md:px-6">
       {/* Sponsor Banner */}
-      <div className="max-w-5xl mx-auto">
-        <SponsorBanner
-          sponsor={sponsors[0]}
-          description="Sök till Exsitecs traineeprogram"
-          subtitle="Börja din karriär med vårt stora och långsiktiga traineeprogram där du får utbildning, stöd från en mentor och ansvar direkt inom IT"
-        />
-      </div>
 
       {/* Header - Narrow Container */}
-      <div className="max-w-5xl mx-auto gap-4 flex flex-col">
-        <div className="flex flex-row items-center space-x-2 mt-10">
-          <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
-          <Badge variant="outline">
-            {sorted.length} {language === "sv" ? "tentor" : "exams"}
-          </Badge>
-        </div>
+      <div className="max-w-5xl mx-auto gap-1 flex flex-col md:flex-row justify-between items-start mt-5">
+        <div className="flex flex-col items-start justify-start gap-6 order-2 md:order-1">
+          <div className="flex flex-row items-center space-x-2">
+            <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
+            <Badge variant="outline">
+              {sorted.length} {language === "sv" ? "tentor" : "exams"}
+            </Badge>
+          </div>
 
-        {/* Course title */}
-        <h2
-          className={`font-semibold text-foreground ${
-            ((language === "sv"
-              ? courseData?.course_name_swe
-              : courseData?.course_name_eng
-            )?.length ?? 0) > 40
-              ? "text-2xl"
-              : "text-4xl"
-          }`}
-        >
-          {language === "sv"
-            ? courseData?.course_name_swe
-            : courseData?.course_name_eng}
-        </h2>
+          {/* Course title */}
+          <div className="flex flex-row items-center justify-between w-full">
+            <h2
+              className={`font-semibold text-foreground ${
+                ((language === "sv"
+                  ? courseData?.course_name_swe
+                  : courseData?.course_name_eng
+                )?.length ?? 0) > 40
+                  ? "text-2xl"
+                  : "text-4xl"
+              }`}
+            >
+              {language === "sv"
+                ? courseData?.course_name_swe
+                : courseData?.course_name_eng}
+            </h2>
+          </div>
 
-        <div className="flex flex-row items-center justify-between w-full">
-          <p className="text-sm text-muted-foreground">
-            {language === "sv" ? "Kursstatistik" : "Course Statistics"}
-          </p>
-          <Link to={`/search/${courseCode}`}>
-            <Button variant="ghost">
+          <Link to={`/search/${courseCode}`} className="max-w-fit">
+            <Button variant="secondary">
               <FileText />
               {language === "sv" ? "Visa tentor" : "View exams"}
             </Button>
           </Link>
         </div>
 
-        {/* Stats Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv" ? "Totalt antal tentor" : "Total exams"}
-            </p>
-            <p className="text-2xl font-bold">{sorted.length}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv" ? "Totalt antal betyg" : "Total grades"}
-            </p>
-            <p className="text-2xl font-bold">{aggregate.grand}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv"
-                ? "Genomsnittlig godkänd %"
-                : "Average pass rate"}
-            </p>
-            <p className="text-2xl font-bold">
-              {passSeries.length > 0
-                ? (
-                    passSeries.reduce((sum, d) => sum + d.passRate, 0) /
-                    passSeries.length
-                  ).toFixed(1)
-                : "0.0"}
-              %
-            </p>
-          </div>
+        <div className="max-w-full w-full md:w-auto flex flex-col gap-1 items-center md:items-start justify-start order-1 md:order-2 mb-10 md:mb-0">
+          <span className="text-xs font-medium opacity-60 group-hover:opacity-100">
+            Sponsor
+          </span>
+          <SponsorBanner
+            sponsor={sponsors[0]}
+            description="Sök till Exsitecs traineeprogram"
+            subtitle="Börja din karriär med vårt stora och långsiktiga traineeprogram där du får utbildning, stöd från en mentor och ansvar direkt inom IT"
+            variant="link"
+          />
         </div>
       </div>
 

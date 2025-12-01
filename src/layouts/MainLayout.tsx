@@ -10,7 +10,7 @@ const MainLayout: React.FC = () => {
   const isExamPage = /^\/search\/[A-Z0-9]+\/[0-9]+$/.test(pathname);
 
   return (
-    <div className="flex flex-col w-full max-w-full min-h-screen bg-yellow overflow-x-hidden">
+    <div className="flex flex-col max-w-full min-h-screen">
       <main className="grow">
         <Outlet />
       </main>
