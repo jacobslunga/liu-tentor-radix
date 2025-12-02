@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { ArrowUpRightIcon } from "@primer/octicons-react";
+import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";

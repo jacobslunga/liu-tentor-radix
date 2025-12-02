@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import InlineRecentActivity from "@/components/InlineRecentActivity";
 import { Link } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { CircleNotchIcon } from "@phosphor-icons/react";
 import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
 import { UploadIcon } from "@primer/octicons-react";
@@ -41,7 +41,7 @@ export default function HomePage() {
     <div className="relative flex flex-col items-center justify-center w-full min-h-screen p-4 bg-background overflow-x-hidden">
       {isLoading ? (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+          <CircleNotchIcon className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
         </div>
       ) : (
         <>
