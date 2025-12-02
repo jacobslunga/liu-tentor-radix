@@ -16,11 +16,11 @@ const Header = () => {
       }}
     >
       <div
-        className="absolute inset-0 -z-10 backdrop-blur-[2px] bg-background/90"
+        className="absolute inset-0 -z-10 backdrop-blur-md bg-background/95"
         style={{
-          maskImage: "linear-gradient(to bottom, white 50%, transparent 100%)",
+          maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
           WebkitMaskImage:
-            "linear-gradient(to bottom, white 50%, transparent 100%)",
+            "linear-gradient(to bottom, black 50%, transparent 100%)",
         }}
       />
 

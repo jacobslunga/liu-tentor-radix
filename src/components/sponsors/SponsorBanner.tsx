@@ -2,6 +2,7 @@ import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { FC, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Sponsor } from "@/types/sponsor";
+import { supabase } from "@/supabase/supabaseClient";
 
 interface Props {
   sponsor: Sponsor;
@@ -28,11 +29,43 @@ const SponsorBanner: FC<Props> = ({
       shimmerHover: randomBetween(1, 1.5),
     };
   }, []);
+
+  const handleClick = async () => {
+    try {
+      // Get browser info
+      const browser = navigator.userAgent;
+
+      // Get IP address from external API
+      let ipAddress = null;
+      try {
+        const ipResponse = await fetch("https://api.ipify.org?format=json");
+        const ipData = await ipResponse.json();
+        ipAddress = ipData.ip;
+      } catch (error) {
+        console.error("Failed to fetch IP address:", error);
+      }
+
+      // Insert click record
+      const { error } = await supabase.from("company_clicks").insert({
+        company_id: "b25f6b22-6a2e-4fbf-9a5b-8ee107f0fcee",
+        browser,
+        ip_address: ipAddress,
+        link_name: "Exsitec traineeprogram 2025",
+      });
+
+      if (error) {
+        console.error("Failed to track click:", error);
+      }
+    } catch (error) {
+      console.error("Error tracking click:", error);
+    }
+  };
   if (variant === "link") {
     return (
       <Link
         to={to}
         target="_blank"
+        onClick={handleClick}
         className="relative flex items-center w-auto justify-between px-6 py-4 text-white duration-300 group rounded-3xl corner-squircle overflow-hidden"
         style={
           {
@@ -122,6 +155,7 @@ const SponsorBanner: FC<Props> = ({
     <Link
       to={to}
       target="_blank"
+      onClick={handleClick}
       className="relative flex items-center max-w-xl justify-between px-6 py-4 text-white duration-300 group rounded-3xl corner-squircle overflow-hidden"
       style={
         {
