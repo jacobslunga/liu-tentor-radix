@@ -1,7 +1,7 @@
-import { ExternalLink } from "lucide-react";
 import { FC } from "react";
 import { Sponsor } from "@/types/sponsor";
 import { Link } from "react-router-dom";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 
 interface Props {
   sponsor: Sponsor;
@@ -19,7 +19,10 @@ const SponsorHeaderBanner: FC<Props> = ({ sponsor }) => {
         <p className="text-sm font-medium transition-colors flex items-center">
           Sök till Exsitecs traineeprogram
         </p>
-        <ExternalLink className="h-4 w-4 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-200" />
+        <ArrowSquareOutIcon
+          weight="duotone"
+          className="h-4 w-4 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform duration-200"
+        />
       </div>
     </Link>
   );

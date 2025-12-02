@@ -1,4 +1,4 @@
-import { ExternalLink } from "lucide-react";
+import { ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { FC, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { Sponsor } from "@/types/sponsor";
@@ -71,7 +71,10 @@ const SponsorBanner: FC<Props> = ({
             <span className="text-xs font-medium">{description}</span>
           </div>
         </div>
-        <ExternalLink className="absolute right-2 top-2 z-10 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+        <ArrowSquareOutIcon
+          weight="duotone"
+          className="absolute right-2 top-2 z-10 w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200"
+        />
 
         <style>{`
         @keyframes gradient {
@@ -158,9 +161,12 @@ const SponsorBanner: FC<Props> = ({
           <span className="text-xs font-normal text-white/70 text-left">
             {subtitle}
           </span>
-          <button className="rounded-xl mt-2 self-end flex flex-row items-center justify-center gap-1 py-2 px-5 cursor-pointer text-xs bg-white/10 hover:bg-white/20 transition-colors duration-200">
+          <button className="rounded-xl corner-squircle mt-2 self-end flex flex-row items-center justify-center gap-1 py-2 px-5 cursor-pointer text-xs bg-white/10 hover:bg-white/20 transition-colors duration-200">
             Besök
-            <ExternalLink className="group-hover:-translate-y-0.5 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
+            <ArrowSquareOutIcon
+              weight="duotone"
+              className="group-hover:-translate-y-0.5 w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200"
+            />
           </button>
         </div>
       </div>

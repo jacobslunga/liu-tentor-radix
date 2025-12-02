@@ -1,5 +1,8 @@
-import { ArrowLeftIcon, CheckIcon } from "@primer/octicons-react";
-import { ChartColumnIncreasing, ChevronRight } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  CaretRightIcon,
+  CheckIcon,
+} from "@phosphor-icons/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ChartBarIcon } from "@phosphor-icons/react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -130,7 +134,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           onClick={() => navigate(`/search/${courseCode}`)}
           aria-label={t("goBack")}
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon weight="bold" className="w-5 h-5" />
         </Button>
 
         <div className="flex items-center space-x-4">
@@ -156,7 +160,8 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                       {selectedExam.exam_date}
                     </span>
                   </span>
-                  <ChevronRight
+                  <CaretRightIcon
+                    weight="bold"
                     className={`w-4 h-4 text-muted-foreground group-hover:rotate-90 ${
                       isDropdownOpen ? "rotate-90" : "rotate-0"
                     } transition-transform duration-200`}
@@ -212,7 +217,10 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                             </Badge>
                           )}
                           {done && (
-                            <CheckIcon className="w-4 h-4 text-green-500" />
+                            <CheckIcon
+                              weight="bold"
+                              className="w-4 h-4 text-green-500"
+                            />
                           )}
                         </div>
                       </DropdownMenuItem>
@@ -255,7 +263,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
             date={selectedExam.exam_date}
             trigger={
               <Button variant="ghost" size="sm">
-                <ChartColumnIncreasing />
+                <ChartBarIcon weight="bold" />
                 {language === "sv" ? "Statistik" : "Statistics"}
               </Button>
             }

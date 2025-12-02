@@ -15,7 +15,6 @@ const Footer: FC = () => {
       links: [
         { name: t("homeLink"), href: "/" },
         { name: "Om oss", href: "/om-oss" },
-        { name: "Sponsorer", href: "/sponsorer" },
       ],
     },
     {

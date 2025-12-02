@@ -1,9 +1,9 @@
 import {
-  DeviceDesktopIcon,
-  GearIcon,
-  MoonIcon,
+  GearSixIcon,
   SunIcon,
-} from "@primer/octicons-react";
+  MoonIcon,
+  MonitorIcon,
+} from "@phosphor-icons/react";
 import {
   Dialog,
   DialogContent,
@@ -63,17 +63,17 @@ const SettingsDialog: FC = () => {
     {
       id: "light",
       label: "Light",
-      icon: <SunIcon className="w-5 h-5" />,
+      icon: <SunIcon weight="bold" className="w-5 h-5" />,
     },
     {
       id: "dark",
       label: "Dark",
-      icon: <MoonIcon className="w-5 h-5" />,
+      icon: <MoonIcon weight="bold" className="w-5 h-5" />,
     },
     {
       id: "system",
       label: "System",
-      icon: <DeviceDesktopIcon className="w-5 h-5" />,
+      icon: <MonitorIcon weight="bold" className="w-5 h-5" />,
     },
   ];
 
@@ -103,7 +103,7 @@ const SettingsDialog: FC = () => {
     <Dialog>
       <DialogTrigger asChild>
         <Button variant="ghost" size="icon">
-          <GearIcon />
+          <GearSixIcon weight="bold" />
         </Button>
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg">

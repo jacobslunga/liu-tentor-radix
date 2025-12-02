@@ -22,10 +22,9 @@ import {
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
-import { ArrowSwitchIcon } from "@primer/octicons-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChartColumnIncreasing } from "lucide-react";
+import { ChartBarIcon, ArrowsDownUpIcon } from "@phosphor-icons/react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
 import { useLanguage } from "@/context/LanguageContext";
@@ -124,7 +123,7 @@ export function DataTable({
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-between w-full">
+        <div className="flex flex-row items-center justify-start gap-2 w-full">
           <Select
             onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
           >
@@ -147,7 +146,7 @@ export function DataTable({
 
           <Link to={`/search/${courseCode}/stats`}>
             <Button variant="ghost">
-              <ChartColumnIncreasing />
+              <ChartBarIcon weight="bold" />
               {language === "sv" ? "Statistik" : "Statistics"}
             </Button>
           </Link>
@@ -176,7 +175,10 @@ export function DataTable({
                         header.getContext()
                       )}
                       {header.id === "exam_date" && (
-                        <ArrowSwitchIcon className="h-4 w-4 rotate-90 text-muted-foreground" />
+                        <ArrowsDownUpIcon
+                          weight="bold"
+                          className="h-4 w-4 text-muted-foreground"
+                        />
                       )}
                     </div>
                   </TableHead>

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { CircleNotchIcon } from "@phosphor-icons/react";
 import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
-import { UploadIcon } from "@primer/octicons-react";
+import { UploadIcon } from "@phosphor-icons/react";
 import { useMetadata } from "@/hooks/useMetadata";
 import useTranslation from "@/hooks/useTranslation";
 
@@ -75,7 +75,7 @@ export default function HomePage() {
                     size="sm"
                     className="hidden md:flex flex-row items-center justify-center"
                   >
-                    <UploadIcon className="w-5 h-5" />
+                    <UploadIcon className="w-5 h-5" weight="duotone" />
                     {t("uploadTitle")}
                   </Button>
                 </Link>

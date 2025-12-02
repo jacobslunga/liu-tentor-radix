@@ -1,12 +1,12 @@
 import {
-  AlertCircle,
-  CheckCircle,
-  File,
-  Info,
-  Loader2,
-  UploadCloud,
-  X,
-} from "lucide-react";
+  WarningCircleIcon,
+  CheckCircleIcon,
+  UploadSimpleIcon,
+  FilePdfIcon,
+  XIcon,
+  InfoIcon,
+  CircleNotchIcon,
+} from "@phosphor-icons/react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -272,7 +272,7 @@ const UploadExamPage = () => {
         >
           <input {...getInputProps()} disabled={loading} />
           <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
-            <UploadCloud className="h-8 w-8" />
+            <UploadSimpleIcon weight="bold" className="h-8 w-8" />
             <p className="font-medium">{t("dragAndDrop")}</p>
           </div>
         </div>
@@ -289,7 +289,7 @@ const UploadExamPage = () => {
                   className="flex items-center justify-between text-sm p-2 bg-muted/50 rounded"
                 >
                   <div className="flex items-center gap-2 overflow-hidden">
-                    <File className="h-4 w-4 shrink-0" />
+                    <FilePdfIcon weight="bold" className="h-4 w-4 shrink-0" />
                     <span className="truncate">{file.name}</span>
                   </div>
                   <Button
@@ -298,7 +298,7 @@ const UploadExamPage = () => {
                     className="h-6 w-6"
                     onClick={() => removeFile(index)}
                   >
-                    <X className="h-4 w-4" />
+                    <XIcon weight="bold" className="h-4 w-4" />
                   </Button>
                 </div>
               ))}
@@ -310,10 +310,13 @@ const UploadExamPage = () => {
               size="lg"
             >
               {loading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <CircleNotchIcon
+                  weight="bold"
+                  className="h-5 w-5 animate-spin"
+                />
               ) : (
                 <>
-                  <UploadCloud className="h-5 w-5 mr-2" />
+                  <UploadSimpleIcon weight="bold" className="h-5 w-5 mr-2" />
                   {t("uploadButton")} ({files.length})
                 </>
               )}
@@ -322,7 +325,10 @@ const UploadExamPage = () => {
         )}
 
         <div className="p-4 bg-muted/50 border rounded-lg flex items-start gap-3 text-left">
-          <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-1" />
+          <InfoIcon
+            weight="bold"
+            className="h-4 w-4 text-muted-foreground shrink-0 mt-1"
+          />
           <p className="text-xs text-muted-foreground">
             {language === "sv"
               ? "Observera att uppladdade tentor granskas innan de blir tillgängliga. Se till att filnamnet innehåller ett datum (t.ex. 2024-01-15) för snabbare hantering."
@@ -335,9 +341,15 @@ const UploadExamPage = () => {
         <AlertDialogContent>
           <AlertDialogHeader className="text-center">
             {uploadStatus === "success" ? (
-              <CheckCircle className="text-green-500 h-12 w-12 mx-auto" />
+              <CheckCircleIcon
+                weight="bold"
+                className="text-green-500 h-12 w-12 mx-auto"
+              />
             ) : (
-              <AlertCircle className="text-red-500 h-12 w-12 mx-auto" />
+              <WarningCircleIcon
+                weight="bold"
+                className="text-red-500 h-12 w-12 mx-auto"
+              />
             )}
             <AlertDialogTitle className="text-xl">
               {uploadStatus === "success"
@@ -350,10 +362,10 @@ const UploadExamPage = () => {
                   ? "Tack! Din tenta har laddats upp och kommer granskas innan publicering."
                   : "Thank you! Your exam has been uploaded and will be reviewed before being published."
                 : language === "sv"
-                ? `Något gick fel. ${errorMessage || "Försök igen."}`
-                : `Something went wrong. ${
-                    errorMessage || "Please try again."
-                  }`}
+                  ? `Något gick fel. ${errorMessage || "Försök igen."}`
+                  : `Something went wrong. ${
+                      errorMessage || "Please try again."
+                    }`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

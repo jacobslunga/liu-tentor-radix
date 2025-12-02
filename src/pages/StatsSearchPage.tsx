@@ -10,7 +10,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { FileText, Loader2 } from "lucide-react";
+import { CircleNotchIcon, FilesIcon } from "@phosphor-icons/react";
 import { Link, useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
@@ -148,7 +148,10 @@ export default function StatsSearchPage() {
   if (isLoading)
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+        <CircleNotchIcon
+          weight="bold"
+          className="h-8 w-8 animate-spin text-muted-foreground mb-2"
+        />
         <p className="text-sm text-muted-foreground">
           {language === "sv" ? "Laddar statistik..." : "Loading statistics..."}
         </p>
@@ -205,7 +208,7 @@ export default function StatsSearchPage() {
 
           <Link to={`/search/${courseCode}`} className="max-w-fit">
             <Button variant="secondary">
-              <FileText />
+              <FilesIcon weight="bold" />
               {language === "sv" ? "Visa tentor" : "View exams"}
             </Button>
           </Link>

@@ -1,7 +1,7 @@
 import { FC, useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
-import { Mailbox } from "lucide-react";
+import { MailboxIcon } from "@phosphor-icons/react";
 import { Separator } from "@/components/ui/separator";
 import { useMetadata } from "@/hooks/useMetadata";
 import useTranslation from "@/hooks/useTranslation";
@@ -145,7 +145,7 @@ const PrivacyPolicy: FC = () => {
         </div>{" "}
         {/* Contact Section */}
         <div className="mt-10 pt-6 border-t flex flex-col items-center text-center space-y-3">
-          <Mailbox className="h-10 w-10 text-primary" />
+          <MailboxIcon weight="duotone" className="h-10 w-10 text-primary" />
           <h3 className="text-md font-medium">
             {t("contactUs") || "Contact Us"}
           </h3>
