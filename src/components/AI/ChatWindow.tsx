@@ -41,6 +41,7 @@ import {
   CaretRightIcon,
   CheckIcon,
   CopyIcon,
+  SquareIcon,
 } from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ExamWithSolutions } from "@/types/exam";
@@ -200,8 +201,8 @@ const MessageBubble = memo(
       <div
         className={`rounded-2xl p-3 ${
           message.role === "user"
-            ? "bg-secondary text-foreground max-w-[85%]"
-            : "bg-background w-full"
+            ? "bg-secondary text-foreground max-w-[75%]"
+            : "bg-background max-w-[90%]"
         }`}
       >
         {message.role === "assistant" ? (
@@ -252,7 +253,75 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const [width, setWidth] = useState(50);
   const [isResizing, setIsResizing] = useState(false);
   const chatWindowRef = useRef<HTMLDivElement>(null);
-  const [messages, setMessages] = useState<Message[]>([]);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const pendingUserMessageRef = useRef<string>("");
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "user",
+      content: "Förklara uppgift 1a om gränsvärden",
+    },
+    {
+      role: "assistant",
+      content: `### Uppgift 1a: Gränsvärde
+
+Vi ska beräkna följande gränsvärde:
+
+$$
+\\lim_{x \\to 0^+} \\frac{\\sin(\\sqrt{2x})}{e^{\\sqrt{3x}} - 1}
+$$
+
+**Steg 1:** Använd standardgränsvärden:
+- $\\lim_{u \\to 0} \\frac{\\sin u}{u} = 1$
+- $\\lim_{v \\to 0} \\frac{e^v - 1}{v} = 1$
+
+**Steg 2:** Låt $y = \\sqrt{2x}$ och $z = \\sqrt{3x}$, så får vi:
+
+$$
+\\frac{\\sin y}{y} \\cdot \\frac{y}{z} \\cdot \\frac{z}{e^z - 1}
+$$
+
+**Svar:** $\\sqrt{\\frac{2}{3}} = \\frac{\\sqrt{6}}{3}$
+
+Här är ett Python-script för att verifiera numeriskt:
+
+\`\`\`python
+import numpy as np
+
+def f(x):
+    return np.sin(np.sqrt(2*x)) / (np.exp(np.sqrt(3*x)) - 1)
+
+# Test med små värden
+for x in [0.1, 0.01, 0.001, 0.0001]:
+    print(f"f({x}) = {f(x):.6f}")
+
+print(f"Teoretiskt värde: {np.sqrt(2/3):.6f}")
+\`\`\``,
+    },
+    {
+      role: "user",
+      content: "Tack! Kan du förklara L'Hôpitals regel också?",
+    },
+    {
+      role: "assistant",
+      content: `### L'Hôpitals regel
+
+L'Hôpitals regel används när vi har **obestämda former** som $\\frac{0}{0}$ eller $\\frac{\\infty}{\\infty}$.
+
+**Regeln:** Om $\\lim_{x \\to a} f(x) = \\lim_{x \\to a} g(x) = 0$ (eller $\\pm\\infty$), då gäller:
+
+$$
+\\lim_{x \\to a} \\frac{f(x)}{g(x)} = \\lim_{x \\to a} \\frac{f'(x)}{g'(x)}
+$$
+
+**Exempel:** Beräkna $\\lim_{x \\to 0} \\frac{\\sin x}{x}$
+
+1. Vi har $\\frac{0}{0}$-form
+2. Derivera: $\\frac{\\cos x}{1}$
+3. **Svar:** $\\lim_{x \\to 0} \\cos x = 1$
+
+> **Tips:** Kontrollera alltid att du har en obestämd form innan du använder regeln!`,
+    },
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -408,10 +477,28 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     };
   }, [isResizing]);
 
+  const cancelGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    pendingUserMessageRef.current = "";
+    // Remove the empty assistant message if it exists
+    setMessages((prev) => {
+      const lastMessage = prev[prev.length - 1];
+      if (lastMessage?.role === "assistant" && !lastMessage.content.trim()) {
+        return prev.slice(0, -1);
+      }
+      return prev;
+    });
+    setIsLoading(false);
+  };
+
   const sendMessage = async () => {
     if (!input.trim() || isLoading) return;
 
     const userMessage: Message = { role: "user", content: input };
+    pendingUserMessageRef.current = input; // Store the message in case of cancel
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setIsLoading(true);
@@ -419,10 +506,32 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     isUserScrollingRef.current = false;
     scrollToBottom();
 
+    // Create new AbortController for this request
+    abortControllerRef.current = new AbortController();
+
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
+      const response = await fetch(
+        `https://hono-liutentor.onrender.com/chat/completion/${examDetail.exam.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [...messages, userMessage].map((msg) => ({
+              role: msg.role,
+              content: msg.content,
+            })),
+            giveDirectAnswer,
+          }),
+          signal: abortControllerRef.current?.signal,
+        }
+      );
+
+      /** LOCAL TEST RESPONSE */
       // const response = await fetch(
-      //   `https://hono-liutentor.onrender.com/chat/completion/${examDetail.exam.id}`,
+      //   `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
       //   {
       //     method: "POST",
       //     headers: {
@@ -437,24 +546,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       //     }),
       //   }
       // );
-
-      /** LOCAL TEST RESPONSE */
-      const response = await fetch(
-        `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            messages: [...messages, userMessage].map((msg) => ({
-              role: msg.role,
-              content: msg.content,
-            })),
-            giveDirectAnswer,
-          }),
-        }
-      );
 
       if (!response.ok) {
         throw new Error("Failed to get response");
@@ -499,6 +590,11 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
         }
       }
     } catch (error) {
+      // Check if it was an abort
+      if (error instanceof Error && error.name === "AbortError") {
+        // Cancelled by user - already handled in cancelGeneration
+        return;
+      }
       console.error("Error sending message:", error);
       setMessages((prev) => {
         const newMessages = [...prev];
@@ -510,6 +606,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       });
     } finally {
       setIsLoading(false);
+      pendingUserMessageRef.current = ""; // Clear pending message on success
+      abortControllerRef.current = null;
     }
   };
 
@@ -630,21 +728,23 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               </div>
             )}
 
-            {messages.map((message, index) => (
-              <div
-                key={index}
-                className={`flex ${
-                  message.role === "user" ? "justify-end" : "justify-start"
-                }`}
-              >
-                <MessageBubble
-                  message={message}
-                  isLoading={isLoading && index === messages.length - 1}
-                  language={language}
-                />
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
+            <div className="max-w-3xl mx-auto w-full space-y-4">
+              {messages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    message.role === "user" ? "justify-end" : "justify-start"
+                  }`}
+                >
+                  <MessageBubble
+                    message={message}
+                    isLoading={isLoading && index === messages.length - 1}
+                    language={language}
+                  />
+                </div>
+              ))}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
 
           {/* Input */}
@@ -769,11 +869,17 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 <InputGroupButton
                   variant="default"
                   size="icon-sm"
-                  disabled={!input.trim() || isLoading}
-                  onClick={sendMessage}
+                  disabled={!input.trim() && !isLoading}
+                  onClick={isLoading ? cancelGeneration : sendMessage}
                 >
-                  <ArrowUpIcon weight="bold" className="h-10 w-10" />
-                  <span className="sr-only">{t("aiChatSend")}</span>
+                  {isLoading ? (
+                    <SquareIcon weight="fill" className="h-4 w-4" />
+                  ) : (
+                    <ArrowUpIcon weight="bold" className="h-10 w-10" />
+                  )}
+                  <span className="sr-only">
+                    {isLoading ? "Cancel" : t("aiChatSend")}
+                  </span>
                 </InputGroupButton>
               </InputGroupAddon>
             </InputGroup>
