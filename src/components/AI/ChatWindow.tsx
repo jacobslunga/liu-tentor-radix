@@ -255,73 +255,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
   const pendingUserMessageRef = useRef<string>("");
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "user",
-      content: "Förklara uppgift 1a om gränsvärden",
-    },
-    {
-      role: "assistant",
-      content: `### Uppgift 1a: Gränsvärde
-
-Vi ska beräkna följande gränsvärde:
-
-$$
-\\lim_{x \\to 0^+} \\frac{\\sin(\\sqrt{2x})}{e^{\\sqrt{3x}} - 1}
-$$
-
-**Steg 1:** Använd standardgränsvärden:
-- $\\lim_{u \\to 0} \\frac{\\sin u}{u} = 1$
-- $\\lim_{v \\to 0} \\frac{e^v - 1}{v} = 1$
-
-**Steg 2:** Låt $y = \\sqrt{2x}$ och $z = \\sqrt{3x}$, så får vi:
-
-$$
-\\frac{\\sin y}{y} \\cdot \\frac{y}{z} \\cdot \\frac{z}{e^z - 1}
-$$
-
-**Svar:** $\\sqrt{\\frac{2}{3}} = \\frac{\\sqrt{6}}{3}$
-
-Här är ett Python-script för att verifiera numeriskt:
-
-\`\`\`python
-import numpy as np
-
-def f(x):
-    return np.sin(np.sqrt(2*x)) / (np.exp(np.sqrt(3*x)) - 1)
-
-# Test med små värden
-for x in [0.1, 0.01, 0.001, 0.0001]:
-    print(f"f({x}) = {f(x):.6f}")
-
-print(f"Teoretiskt värde: {np.sqrt(2/3):.6f}")
-\`\`\``,
-    },
-    {
-      role: "user",
-      content: "Tack! Kan du förklara L'Hôpitals regel också?",
-    },
-    {
-      role: "assistant",
-      content: `### L'Hôpitals regel
-
-L'Hôpitals regel används när vi har **obestämda former** som $\\frac{0}{0}$ eller $\\frac{\\infty}{\\infty}$.
-
-**Regeln:** Om $\\lim_{x \\to a} f(x) = \\lim_{x \\to a} g(x) = 0$ (eller $\\pm\\infty$), då gäller:
-
-$$
-\\lim_{x \\to a} \\frac{f(x)}{g(x)} = \\lim_{x \\to a} \\frac{f'(x)}{g'(x)}
-$$
-
-**Exempel:** Beräkna $\\lim_{x \\to 0} \\frac{\\sin x}{x}$
-
-1. Vi har $\\frac{0}{0}$-form
-2. Derivera: $\\frac{\\cos x}{1}$
-3. **Svar:** $\\lim_{x \\to 0} \\cos x = 1$
-
-> **Tips:** Kontrollera alltid att du har en obestämd form innan du använder regeln!`,
-    },
-  ]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
@@ -333,8 +267,6 @@ $$
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrollingRef = useRef(false);
-
-  console.log(messages);
 
   const examples = [
     "Förklara uppgift 7",
