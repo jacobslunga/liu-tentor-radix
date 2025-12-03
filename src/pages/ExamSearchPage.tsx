@@ -168,9 +168,10 @@ const ExamSearchPage: FC = () => {
         )}
 
         {!isLoading && !isError && formattedExams.length > 0 && (
-          <div className="w-full flex flex-col lg:flex-row gap-6 items-start justify-center">
-            {/* Table section - left side on desktop */}
-            <div className="w-auto max-w-full flex flex-col gap-4 order-2 lg:order-1">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_auto_1fr] w-full">
+            <div className="hidden lg:block"></div>
+
+            <div className="flex flex-col gap-4 order-2 lg:order-0">
               <DataTable
                 data={formattedExams}
                 courseCode={courseCode?.toUpperCase() ?? ""}
@@ -180,14 +181,12 @@ const ExamSearchPage: FC = () => {
                   setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
                 }
               />
-
               <Link to="/upload-exams">
                 <Button className="w-full z-50">{t("uploadMore")}</Button>
               </Link>
             </div>
 
-            {/* Sponsor banner - top on mobile, sticky right on desktop */}
-            <div className="w-full static lg:sticky top-20 lg:w-80 order-1 lg:order-2">
+            <div className="self-start lg:sticky top-20 lg:w-80 mt-6 lg:mt-0 order-1 lg:order-0">
               <div className="mb-2">
                 <span className="text-xs font-medium opacity-60">Sponsor</span>
               </div>
