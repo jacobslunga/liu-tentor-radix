@@ -47,12 +47,16 @@ import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
-const normalizeMath = (s: string) => {
-  let result = s.replace(/\\\[([\s\S]*?)\\\]/g, (_match, content) => {
-    return `\n$$${content}$$\n`;
+const normalizeMath = (content: string): string => {
+  let result = content;
+
+  result = result.replace(/\\\[([\s\S]*?)\\\]/g, (_match, inner) => {
+    return `\n$$${inner.trim()}$$\n`;
   });
 
-  result = result.replace(/\\\((.*?)\\\)/g, "$$$1$$");
+  result = result.replace(/\\\(([\s\S]*?)\\\)/g, (_match, inner) => {
+    return `$${inner.trim()}$`;
+  });
 
   return result;
 };
@@ -212,7 +216,9 @@ const MessageBubble = memo(
             <div className="prose prose-base dark:prose-invert max-w-none">
               <ReactMarkdown
                 remarkPlugins={[remarkMath, remarkGfm]}
-                rehypePlugins={[rehypeKatex]}
+                rehypePlugins={[
+                  [rehypeKatex, { strict: false, throwOnError: false }],
+                ]}
                 components={markdownComponents}
               >
                 {processedContent}
@@ -258,6 +264,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrollingRef = useRef(false);
+
+  console.log(messages);
 
   const examples = [
     "Förklara uppgift 7",
@@ -413,26 +421,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 
     setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
     try {
-      const response = await fetch(
-        `https://hono-liutentor.onrender.com/chat/completion/${examDetail.exam.id}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            messages: [...messages, userMessage].map((msg) => ({
-              role: msg.role,
-              content: msg.content,
-            })),
-            giveDirectAnswer,
-          }),
-        }
-      );
-
-      /** LOCAL TEST RESPONSE */
       // const response = await fetch(
-      //   `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
+      //   `https://hono-liutentor.onrender.com/chat/completion/${examDetail.exam.id}`,
       //   {
       //     method: "POST",
       //     headers: {
@@ -447,6 +437,24 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       //     }),
       //   }
       // );
+
+      /** LOCAL TEST RESPONSE */
+      const response = await fetch(
+        `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [...messages, userMessage].map((msg) => ({
+              role: msg.role,
+              content: msg.content,
+            })),
+            giveDirectAnswer,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to get response");
