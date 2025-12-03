@@ -47,12 +47,16 @@ import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
 
-const normalizeMath = (s: string) => {
-  let result = s.replace(/\\\[([\s\S]*?)\\\]/g, (_match, content) => {
-    return `\n$$${content}$$\n`;
+const normalizeMath = (content: string): string => {
+  let result = content;
+
+  result = result.replace(/\\\[([\s\S]*?)\\\]/g, (_match, inner) => {
+    return `\n$$${inner.trim()}$$\n`;
   });
 
-  result = result.replace(/\\\((.*?)\\\)/g, "$$$1$$");
+  result = result.replace(/\\\(([\s\S]*?)\\\)/g, (_match, inner) => {
+    return `$${inner.trim()}$`;
+  });
 
   return result;
 };
@@ -212,7 +216,9 @@ const MessageBubble = memo(
             <div className="prose prose-base dark:prose-invert max-w-none">
               <ReactMarkdown
                 remarkPlugins={[remarkMath, remarkGfm]}
-                rehypePlugins={[rehypeKatex]}
+                rehypePlugins={[
+                  [rehypeKatex, { strict: false, throwOnError: false }],
+                ]}
                 components={markdownComponents}
               >
                 {processedContent}
@@ -258,6 +264,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
   const isUserScrollingRef = useRef(false);
+
+  console.log(messages);
 
   const examples = [
     "Förklara uppgift 7",
