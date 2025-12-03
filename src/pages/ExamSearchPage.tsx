@@ -195,6 +195,7 @@ const ExamSearchPage: FC = () => {
                 sponsor={sponsors[0]}
                 description="Sök till Exsitecs traineeprogram"
                 subtitle="Börja din karriär med vårt stora och långsiktiga traineeprogram där du får utbildning, stöd från en mentor och ansvar direkt inom IT"
+                courseCode={courseCode || ""}
               />
             </div>
           </div>

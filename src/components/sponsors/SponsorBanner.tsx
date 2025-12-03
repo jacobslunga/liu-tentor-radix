@@ -8,6 +8,7 @@ interface Props {
   sponsor: Sponsor;
   description: string;
   subtitle?: string;
+  courseCode: string;
   variant?: "default" | "link";
 }
 
@@ -16,6 +17,7 @@ const SponsorBanner: FC<Props> = ({
   description,
   variant = "default",
   subtitle,
+  courseCode,
 }) => {
   const animationTimings = useMemo(() => {
     const randomBetween = (min: number, max: number) =>
@@ -51,6 +53,7 @@ const SponsorBanner: FC<Props> = ({
         browser,
         ip_address: ipAddress,
         link_name: "Exsitec traineeprogram 2025",
+        course_code: courseCode,
       });
 
       if (error) {
@@ -60,6 +63,7 @@ const SponsorBanner: FC<Props> = ({
       console.error("Error tracking click:", error);
     }
   };
+
   if (variant === "link") {
     return (
       <Link
