@@ -1,9 +1,18 @@
-import { Columns2, PanelRight } from "lucide-react";
+import {
+  SquareHalfIcon,
+  SquareSplitHorizontalIcon,
+} from "@phosphor-icons/react";
 import { useEffect, useRef, useState } from "react";
 
 import { motion } from "framer-motion";
 import useLayoutMode from "@/stores/LayoutModeStore";
 import useTranslation from "@/hooks/useTranslation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export default function LayoutSwitcher() {
   const { t } = useTranslation();
@@ -47,12 +56,12 @@ export default function LayoutSwitcher() {
     {
       value: "exam-with-facit",
       label: t("examAndFacit"),
-      icon: <Columns2 className="w-5 h-5" />,
+      icon: <SquareSplitHorizontalIcon weight="bold" className="w-5 h-5" />,
     },
     {
       value: "exam-only",
       label: t("examOnly"),
-      icon: <PanelRight className="w-5 h-5" />,
+      icon: <SquareHalfIcon weight="bold" className="w-5 h-5" />,
     },
   ];
 
@@ -69,33 +78,38 @@ export default function LayoutSwitcher() {
       style={{
         pointerEvents: isMouseActive || isHovering ? "auto" : "none",
       }}
-      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background rounded-full corner-squircle border p-1 space-x-1"
+      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background rounded-lg p-1"
     >
-      {modes.map((mode) => {
-        const isActive = layoutMode === mode.value;
-        return (
-          <button
-            key={mode.value}
-            onClick={() => setLayoutMode(mode.value)}
-            className="relative px-3 py-1 text-xs flex items-center gap-1 rounded-full corner-squircle cursor-pointer"
-          >
-            {isActive && (
-              <motion.div
-                layoutId="active-pill"
-                className="absolute inset-0 bg-primary rounded-full corner-squircle z-0"
-                transition={{ type: "spring", stiffness: 400, damping: 30 }}
-              />
-            )}
-            <span
-              className={`relative z-10 flex items-center gap-1 ${
-                isActive ? "text-primary-foreground" : "text-muted-foreground"
-              }`}
-            >
-              {mode.icon}
-            </span>
-          </button>
-        );
-      })}
+      <div className="flex items-center gap-0">
+        {modes.map((mode) => {
+          const isActive = layoutMode === mode.value;
+          return (
+            <TooltipProvider key={mode.value} delayDuration={0}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setLayoutMode(mode.value)}
+                    className={`flex border items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
+                      mode.value === "exam-with-facit"
+                        ? "rounded-l-md"
+                        : "rounded-r-md"
+                    } cursor-pointer ${
+                      isActive
+                        ? "bg-primary text-primary-foreground border-transparent"
+                        : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
+                    }`}
+                  >
+                    {mode.icon}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{mode.label}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          );
+        })}
+      </div>
     </motion.div>
   );
 }

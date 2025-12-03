@@ -1,5 +1,8 @@
-import { ArrowLeftIcon, CheckIcon } from "@primer/octicons-react";
-import { ChartColumnIncreasing, ChevronRight } from "lucide-react";
+import {
+  ArrowLeftIcon,
+  CaretRightIcon,
+  CheckIcon,
+} from "@phosphor-icons/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,6 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { ChartBarIcon } from "@phosphor-icons/react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,9 +19,12 @@ import Cookies from "js-cookie";
 import { Exam } from "@/types/exam";
 import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
+import SponsorHeaderBanner from "./sponsors/SponsorHeaderBanner";
+import { sponsors } from "./sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
+import { Kbd } from "./ui/kbd";
 
 interface Props {
   exams: Exam[];
@@ -127,7 +134,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           onClick={() => navigate(`/search/${courseCode}`)}
           aria-label={t("goBack")}
         >
-          <ArrowLeftIcon className="w-5 h-5" />
+          <ArrowLeftIcon weight="bold" className="w-5 h-5" />
         </Button>
 
         <div className="flex items-center space-x-4">
@@ -153,7 +160,8 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                       {selectedExam.exam_date}
                     </span>
                   </span>
-                  <ChevronRight
+                  <CaretRightIcon
+                    weight="bold"
                     className={`w-4 h-4 text-muted-foreground group-hover:rotate-90 ${
                       isDropdownOpen ? "rotate-90" : "rotate-0"
                     } transition-transform duration-200`}
@@ -209,7 +217,10 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                             </Badge>
                           )}
                           {done && (
-                            <CheckIcon className="w-4 h-4 text-green-500" />
+                            <CheckIcon
+                              weight="bold"
+                              className="w-4 h-4 text-green-500"
+                            />
                           )}
                         </div>
                       </DropdownMenuItem>
@@ -220,6 +231,11 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
             </DropdownMenu>
           )}
         </div>
+
+        {/* Sponsor Banner */}
+        <div className="hidden lg:block">
+          <SponsorHeaderBanner sponsor={sponsors[0]} />
+        </div>
       </div>
       <div className="flex items-center gap-3">
         <Button
@@ -228,6 +244,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           size="sm"
           className="hidden sm:flex"
         >
+          <Kbd>{language === "sv" ? "Tryck C" : "Press C"}</Kbd>
           <span className="relative z-10 flex items-center gap-2">
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>
@@ -246,7 +263,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
             date={selectedExam.exam_date}
             trigger={
               <Button variant="ghost" size="sm">
-                <ChartColumnIncreasing />
+                <ChartBarIcon weight="bold" />
                 {language === "sv" ? "Statistik" : "Statistics"}
               </Button>
             }

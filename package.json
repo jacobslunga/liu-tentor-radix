@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
+    "@phosphor-icons/react": "^2.1.10",
     "@primer/octicons-react": "^19.16.0",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-alert-dialog": "^1.1.15",
@@ -29,7 +30,7 @@
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.12",
-    "@toolwind/corner-shape": "0.0.8-1",
+    "@toolwind/corner-shape": "^0.0.8-3",
     "axios": "^1.11.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

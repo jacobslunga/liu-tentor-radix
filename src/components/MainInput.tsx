@@ -279,7 +279,7 @@ const MainInput: React.FC<MainInputProps> = ({ setFocusInput }) => {
           </SelectContent>
         </Select>
 
-        <div className="shrink-0 h-[25px] w-[1px] bg-foreground/10 ml-4" />
+        <div className="shrink-0 h-[25px] w-px bg-foreground/10 ml-4" />
 
         <input
           placeholder={

@@ -1,4 +1,4 @@
-import { AlertIcon, CheckIcon } from "@primer/octicons-react";
+import { WarningCircleIcon, CheckIcon } from "@phosphor-icons/react";
 import { FC, useEffect, useState } from "react";
 import {
   Form,
@@ -128,7 +128,7 @@ const FeedbackPage: FC = () => {
           {isSuccess ? (
             <div className="flex flex-col items-center gap-6 text-center">
               <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckIcon className="h-10 w-10 text-green-600" />
+                <CheckIcon weight="bold" className="h-10 w-10 text-green-600" />
               </div>
               <div>
                 <h2 className="text-2xl font-normal mb-2">
@@ -145,7 +145,10 @@ const FeedbackPage: FC = () => {
           ) : (
             <div className="flex flex-col items-center gap-6 text-center">
               <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
-                <AlertIcon className="h-10 w-10 text-red-600" />
+                <WarningCircleIcon
+                  weight="bold"
+                  className="h-10 w-10 text-red-600"
+                />
               </div>
               <div>
                 <h2 className="text-2xl font-normal mb-2">

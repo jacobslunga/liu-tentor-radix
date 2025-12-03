@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 
-import { MousePointerClick } from "lucide-react";
+import { CursorClickIcon } from "@phosphor-icons/react";
 import useTranslation from "@/hooks/useTranslation";
 
 interface Props {
@@ -21,7 +21,7 @@ const SolutionOverlay = ({ isBlurred }: Props) => {
           className="absolute inset-0 flex flex-col items-center justify-center bg-background/30 z-30"
         >
           <p className="font-medium text-center">{t("mouseOverDescription")}</p>
-          <MousePointerClick className="w-7 h-7 mt-2" />
+          <CursorClickIcon weight="regular" className="w-7 h-7 mt-2" />
         </motion.div>
       )}
     </AnimatePresence>

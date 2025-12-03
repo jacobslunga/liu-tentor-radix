@@ -32,16 +32,16 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import {
+  ChatCenteredIcon,
+  BookOpenIcon,
+  LightbulbFilamentIcon,
   ArrowUpIcon,
-  ArrowDown,
-  ChevronRight,
-  Loader2,
-  Check,
-  Copy,
-  Lightbulb,
-  BookOpen,
-  MessageSquare,
-} from "lucide-react";
+  CircleNotchIcon,
+  ArrowDownIcon,
+  CaretRightIcon,
+  CheckIcon,
+  CopyIcon,
+} from "@phosphor-icons/react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { ExamWithSolutions } from "@/types/exam";
 import { useLanguage } from "@/context/LanguageContext";
@@ -108,12 +108,12 @@ const CodeBlock = memo(
           >
             {copied ? (
               <>
-                <Check className="h-3 w-3 mr-1" />
+                <CheckIcon weight="bold" className="h-3 w-3 mr-1" />
                 {l === "sv" ? "Kopierat" : "Copied"}
               </>
             ) : (
               <>
-                <Copy className="h-3 w-3 mr-1" />
+                <CopyIcon weight="bold" className="h-3 w-3 mr-1" />
                 {l === "sv" ? "Kopiera" : "Copy"}
               </>
             )}
@@ -203,7 +203,7 @@ const MessageBubble = memo(
         {message.role === "assistant" ? (
           message.content === "" && isLoading ? (
             <div className="flex items-center gap-2">
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <CircleNotchIcon weight="bold" className="h-5 w-5 animate-spin" />
               <span className="text-sm text-muted-foreground">
                 {language === "sv" ? "Tänker..." : "Thinking..."}
               </span>
@@ -430,6 +430,24 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
         }
       );
 
+      /** LOCAL TEST RESPONSE */
+      // const response = await fetch(
+      //   `http://localhost:4330/chat/completion/${examDetail.exam.id}`,
+      //   {
+      //     method: "POST",
+      //     headers: {
+      //       "Content-Type": "application/json",
+      //     },
+      //     body: JSON.stringify({
+      //       messages: [...messages, userMessage].map((msg) => ({
+      //         role: msg.role,
+      //         content: msg.content,
+      //       })),
+      //       giveDirectAnswer,
+      //     }),
+      //   }
+      // );
+
       if (!response.ok) {
         throw new Error("Failed to get response");
       }
@@ -533,7 +551,10 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                       onClick={() => window.open("/feedback", "_blank")}
                       className="text-xs gap-1.5 h-8 px-2"
                     >
-                      <MessageSquare className="h-3.5 w-3.5" />
+                      <ChatCenteredIcon
+                        weight="duotone"
+                        className="h-3.5 w-3.5"
+                      />
                       {language === "sv" ? "Feedback" : "Feedback"}
                     </Button>
                   </TooltipTrigger>
@@ -628,9 +649,9 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                     variant="outline"
                     size="icon"
                     onClick={handleClose}
-                    className="absolute -top-16 left-2 z-30 hover:bg-accent shadow-md"
+                    className="absolute -top-16 left-2 z-30 hover:bg-accent"
                   >
-                    <ChevronRight className="h-5 w-5" />
+                    <CaretRightIcon weight="bold" className="h-5 w-5" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent side="right">
@@ -656,7 +677,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                       scrollToBottom("smooth");
                     }}
                   >
-                    <ArrowDown className="h-4 w-4" />
+                    <ArrowDownIcon weight="bold" className="h-4 w-4" />
                   </Button>
                 </motion.div>
               )}
@@ -671,8 +692,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                 autoFocus
                 rows={1}
                 ref={inputRef}
-                className="text-base! resize-none max-h-[200px] overflow-y-auto"
-                style={{ fontSize: "16px" }}
+                className="text-base resize-none max-h-[200px] overflow-y-auto"
               />
               <InputGroupAddon align="block-end">
                 <div className="flex items-center gap-0 min-w-0 flex-1">
@@ -692,7 +712,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                               : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
                           }`}
                         >
-                          <BookOpen className="h-3.5 w-3.5" />
+                          <BookOpenIcon weight="bold" className="h-3.5 w-3.5" />
                           {language === "sv" ? "Svar" : "Answer"}
                         </button>
                       </TooltipTrigger>
@@ -721,7 +741,10 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                               : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
                           }`}
                         >
-                          <Lightbulb className="h-3.5 w-3.5" />
+                          <LightbulbFilamentIcon
+                            weight="bold"
+                            className="h-3.5 w-3.5"
+                          />
                           {language === "sv" ? "Hints" : "Hints"}
                         </button>
                       </TooltipTrigger>
@@ -741,7 +764,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
                   disabled={!input.trim() || isLoading}
                   onClick={sendMessage}
                 >
-                  <ArrowUpIcon className="h-10 w-10" />
+                  <ArrowUpIcon weight="bold" className="h-10 w-10" />
                   <span className="sr-only">{t("aiChatSend")}</span>
                 </InputGroupButton>
               </InputGroupAddon>

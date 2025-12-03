@@ -17,7 +17,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { LogoIcon } from "./LogoIcon";
-import { Menu, ChevronDown } from "lucide-react";
+import { ListIcon, CaretDownIcon } from "@phosphor-icons/react";
 import { Separator } from "@/components/ui/separator";
 import { useLanguage } from "@/context/LanguageContext";
 import { useState } from "react";
@@ -110,7 +110,7 @@ export default function InfoHeader() {
                   className="gap-1"
                 >
                   {group.label}
-                  <ChevronDown className="h-4 w-4 opacity-50" />
+                  <CaretDownIcon weight="bold" className="h-4 w-4 opacity-50" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -141,7 +141,7 @@ export default function InfoHeader() {
         <Sheet open={open} onOpenChange={setOpen}>
           <SheetTrigger asChild className="md:hidden">
             <Button variant="ghost" size="icon">
-              <Menu className="h-5 w-5" />
+              <ListIcon weight="bold" className="h-5 w-5" />
               <span className="sr-only">Toggle menu</span>
             </Button>
           </SheetTrigger>

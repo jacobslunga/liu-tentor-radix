@@ -1,4 +1,4 @@
-import { Check, X } from "lucide-react";
+import { CheckIcon, XIcon } from "@phosphor-icons/react";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Exam } from "@/types/exam";
@@ -44,7 +44,11 @@ export const getColumns = (
               : "text-red-500"
           }`}
         >
-          {row.original.has_solution ? <Check size={20} /> : <X size={20} />}
+          {row.original.has_solution ? (
+            <CheckIcon weight="bold" size={20} />
+          ) : (
+            <XIcon weight="bold" size={20} />
+          )}
         </span>
       </div>
     ),

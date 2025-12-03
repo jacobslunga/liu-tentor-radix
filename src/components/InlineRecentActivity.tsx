@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { ArrowUpRightIcon } from "@primer/octicons-react";
+import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
@@ -71,7 +71,10 @@ const InlineRecentActivity = () => {
               <span className="text-foreground hover:text-foreground transition-colors">
                 {activity.courseCode}
               </span>
-              <ArrowUpRightIcon className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:-translate-y-[2px] group-hover:translate-x-1 transition-all duration-200" />
+              <ArrowUpRightIcon
+                weight="bold"
+                className="opacity-60 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-1 transition-all duration-200"
+              />
             </Button>
             {index < visibleActivities.length - 1 && (
               <span className="mx-2 text-foreground/20">|</span>

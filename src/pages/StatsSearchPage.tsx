@@ -10,10 +10,13 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { FileText, Loader2 } from "lucide-react";
+import { CircleNotchIcon, FilesIcon } from "@phosphor-icons/react";
 import { Link, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 
 import { Button } from "@/components/ui/button";
+import SponsorBanner from "@/components/sponsors/SponsorBanner";
+import { sponsors } from "@/components/sponsors/sponsorsData";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMemo } from "react";
@@ -145,7 +148,10 @@ export default function StatsSearchPage() {
   if (isLoading)
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+        <CircleNotchIcon
+          weight="bold"
+          className="h-8 w-8 animate-spin text-muted-foreground mb-2"
+        />
         <p className="text-sm text-muted-foreground">
           {language === "sv" ? "Laddar statistik..." : "Loading statistics..."}
         </p>
@@ -169,68 +175,65 @@ export default function StatsSearchPage() {
     );
 
   return (
-    <div className="w-full md:max-w-screen-xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 overflow-x-hidden">
-      {/* Header */}
-      <div className="mb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-          <div>
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv" ? "Kursstatistik" : "Course Statistics"}
-            </p>
-            <h1 className="text-2xl sm:text-3xl font-bold">{courseCode}</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
+    <div className="w-full space-y-6 mt-10 mx-auto relative px-3 sm:px-4 md:px-6">
+      {/* Sponsor Banner */}
+
+      {/* Header - Narrow Container */}
+      <div className="max-w-5xl mx-auto gap-1 flex flex-col md:flex-row justify-between items-start mt-5">
+        <div className="flex flex-col items-start justify-start gap-6 order-2 md:order-1">
+          <div className="flex flex-row items-center space-x-2">
+            <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
+            <Badge variant="outline">
+              {sorted.length} {language === "sv" ? "tentor" : "exams"}
+            </Badge>
+          </div>
+
+          {/* Course title */}
+          <div className="flex flex-row items-center justify-between w-full">
+            <h2
+              className={`font-semibold text-foreground ${
+                ((language === "sv"
+                  ? courseData?.course_name_swe
+                  : courseData?.course_name_eng
+                )?.length ?? 0) > 40
+                  ? "text-2xl"
+                  : "text-4xl"
+              }`}
+            >
               {language === "sv"
                 ? courseData?.course_name_swe
                 : courseData?.course_name_eng}
-            </p>
+            </h2>
           </div>
-          <Link to={`/search/${courseCode}`}>
-            <Button variant="outline" size="sm">
-              <FileText className="h-4 w-4" />
+
+          <Link to={`/search/${courseCode}`} className="max-w-fit">
+            <Button variant="secondary">
+              <FilesIcon weight="bold" />
               {language === "sv" ? "Visa tentor" : "View exams"}
             </Button>
           </Link>
         </div>
 
-        {/* Stats Summary Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv" ? "Totalt antal tentor" : "Total exams"}
-            </p>
-            <p className="text-2xl font-bold">{sorted.length}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv" ? "Totalt antal betyg" : "Total grades"}
-            </p>
-            <p className="text-2xl font-bold">{aggregate.grand}</p>
-          </div>
-          <div className="rounded-lg border bg-card p-4">
-            <p className="text-xs text-muted-foreground mb-0.5">
-              {language === "sv"
-                ? "Genomsnittlig godkänd %"
-                : "Average pass rate"}
-            </p>
-            <p className="text-2xl font-bold">
-              {passSeries.length > 0
-                ? (
-                    passSeries.reduce((sum, d) => sum + d.passRate, 0) /
-                    passSeries.length
-                  ).toFixed(1)
-                : "0.0"}
-              %
-            </p>
-          </div>
+        <div className="max-w-full w-full md:w-auto flex flex-col gap-1 items-center md:items-start justify-start order-1 md:order-2 mb-10 md:mb-0">
+          <span className="text-xs font-medium opacity-60 group-hover:opacity-100">
+            Sponsor
+          </span>
+          <SponsorBanner
+            sponsor={sponsors[0]}
+            description="Sök till Exsitecs traineeprogram"
+            subtitle="Börja din karriär med vårt stora och långsiktiga traineeprogram där du får utbildning, stöd från en mentor och ansvar direkt inom IT"
+            variant="link"
+            courseCode={courseCode || ""}
+          />
         </div>
       </div>
 
-      {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      {/* Charts - Stacked Vertically */}
+      <div className="flex flex-col gap-4 max-w-5xl mx-auto">
         {/* Pass Rate Over Time */}
-        <div className="lg:col-span-2 rounded-lg border bg-card p-4">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold mb-0.5">
+        <div className="rounded-2xl border border-border bg-background overflow-hidden">
+          <div className="p-6 bg-[#FAFAFA] dark:bg-secondary border-b border-border">
+            <h2 className="text-base font-semibold mb-1">
               {language === "sv" ? "Godkända över tid" : "Pass Rate Over Time"}
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -239,139 +242,143 @@ export default function StatsSearchPage() {
                 : "Percentage of passing grades per exam"}
             </p>
           </div>
-          <div className="h-[280px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={passSeries}>
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={c.border}
-                  opacity={0.3}
-                />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fill: c.fg, fontSize: 12 }}
-                  axisLine={{ stroke: c.border }}
-                  tickLine={false}
-                  minTickGap={20}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fill: c.fg, fontSize: 12 }}
-                  tickFormatter={(v) => `${v}%`}
-                  axisLine={{ stroke: c.border }}
-                  tickLine={false}
-                  width={45}
-                />
-                <Tooltip
-                  cursor={{ fill: "var(--muted)", opacity: 0.1 }}
-                  contentStyle={{
-                    backgroundColor: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "0.75rem",
-                    fontSize: "0.875rem",
-                    color: "var(--foreground)",
-                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                  }}
-                  itemStyle={{
-                    color: "var(--foreground)",
-                  }}
-                  labelStyle={{
-                    color: c.fg,
-                    fontWeight: 600,
-                    marginBottom: "4px",
-                  }}
-                  formatter={(v: any) => [
-                    `${v}%`,
-                    language === "sv" ? "Godkända" : "Pass Rate",
-                  ]}
-                />
-                <Bar dataKey="passRate" radius={[6, 6, 0, 0]}>
-                  {passSeries.map((d, i) => (
-                    <Cell key={i} fill={getBarColor(d.passRate)} />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
+          <div className="p-6">
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={passSeries}>
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={c.border}
+                    opacity={0.3}
+                  />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fill: c.fg, fontSize: 12 }}
+                    axisLine={{ stroke: c.border }}
+                    tickLine={false}
+                    minTickGap={20}
+                  />
+                  <YAxis
+                    domain={[0, 100]}
+                    tick={{ fill: c.fg, fontSize: 12 }}
+                    tickFormatter={(v) => `${v}%`}
+                    axisLine={{ stroke: c.border }}
+                    tickLine={false}
+                    width={45}
+                  />
+                  <Tooltip
+                    cursor={{ fill: "var(--muted)", opacity: 0.1 }}
+                    contentStyle={{
+                      backgroundColor: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "0.75rem",
+                      fontSize: "0.875rem",
+                      color: "var(--foreground)",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                    itemStyle={{
+                      color: "var(--foreground)",
+                    }}
+                    labelStyle={{
+                      color: c.fg,
+                      fontWeight: 600,
+                      marginBottom: "4px",
+                    }}
+                    formatter={(v: any) => [
+                      `${v}%`,
+                      language === "sv" ? "Godkända" : "Pass Rate",
+                    ]}
+                  />
+                  <Bar dataKey="passRate" radius={[6, 6, 0, 0]}>
+                    {passSeries.map((d, i) => (
+                      <Cell key={i} fill={getBarColor(d.passRate)} />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
         {/* Grade Distribution */}
-        <div className="rounded-lg border bg-card p-4">
-          <div className="mb-4">
-            <h2 className="text-lg font-semibold mb-0.5">
+        <div className="rounded-2xl border border-border bg-background overflow-hidden">
+          <div className="p-6 bg-[#FAFAFA] dark:bg-secondary border-b border-border">
+            <h2 className="text-base font-semibold mb-1">
               {language === "sv" ? "Betygsfördelning" : "Grade Distribution"}
             </h2>
             <p className="text-xs text-muted-foreground">
               {language === "sv" ? "Total fördelning" : "Total distribution"}
             </p>
           </div>
-          <div className="h-[200px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  dataKey="value"
-                  nameKey="label"
-                  data={aggregate.entries}
-                  outerRadius={75}
-                  innerRadius={45}
-                  paddingAngle={2}
-                  label={false}
-                  labelLine={false}
-                >
-                  {aggregate.entries.map((d) => (
-                    <Cell key={d.key} fill={d.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(v: any, _n: any, p: any) => [
-                    nf.format(v as number),
-                    `${language === "sv" ? "Betyg " : "Grade "}${
-                      p?.payload?.label ?? ""
-                    }`,
-                  ]}
-                  cursor={{ fill: "transparent" }}
-                  contentStyle={{
-                    backgroundColor: "var(--popover)",
-                    border: "1px solid var(--border)",
-                    borderRadius: "0.75rem",
-                    fontSize: "0.875rem",
-                    color: "var(--foreground)",
-                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                  }}
-                  itemStyle={{
-                    color: "var(--foreground)",
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="mt-3 space-y-1.5">
-            {aggregate.entries.map((d) => (
-              <div
-                key={d.key}
-                className="flex items-center justify-between py-1.5 px-2.5 rounded-md bg-muted/50"
-              >
-                <div className="flex items-center gap-2">
-                  <span
-                    className="inline-block w-2.5 h-2.5 rounded-full"
-                    style={{ background: d.color }}
+          <div className="p-6">
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    dataKey="value"
+                    nameKey="label"
+                    data={aggregate.entries}
+                    outerRadius={75}
+                    innerRadius={45}
+                    paddingAngle={2}
+                    label={false}
+                    labelLine={false}
+                  >
+                    {aggregate.entries.map((d) => (
+                      <Cell key={d.key} fill={d.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(v: any, _n: any, p: any) => [
+                      nf.format(v as number),
+                      `${language === "sv" ? "Betyg " : "Grade "}${
+                        p?.payload?.label ?? ""
+                      }`,
+                    ]}
+                    cursor={{ fill: "transparent" }}
+                    contentStyle={{
+                      backgroundColor: "var(--popover)",
+                      border: "1px solid var(--border)",
+                      borderRadius: "0.75rem",
+                      fontSize: "0.875rem",
+                      color: "var(--foreground)",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                    }}
+                    itemStyle={{
+                      color: "var(--foreground)",
+                    }}
                   />
-                  <span className="text-sm font-medium">
-                    {language === "sv"
-                      ? `Betyg ${d.label}`
-                      : `Grade ${d.label}`}
-                  </span>
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="mt-4 space-y-2">
+              {aggregate.entries.map((d) => (
+                <div
+                  key={d.key}
+                  className="flex items-center justify-between py-2 px-3 rounded-md bg-muted/50"
+                >
+                  <div className="flex items-center gap-2">
+                    <span
+                      className="inline-block w-2.5 h-2.5 rounded-full"
+                      style={{ background: d.color }}
+                    />
+                    <span className="text-sm font-medium">
+                      {language === "sv"
+                        ? `Betyg ${d.label}`
+                        : `Grade ${d.label}`}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2.5">
+                    <span className="text-xs text-muted-foreground">
+                      {nf.format(d.value)}
+                    </span>
+                    <span className="text-sm font-semibold min-w-11 text-right">
+                      {d.pct.toFixed(1)}%
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2.5">
-                  <span className="text-xs text-muted-foreground">
-                    {nf.format(d.value)}
-                  </span>
-                  <span className="text-sm font-semibold min-w-[44px] text-right">
-                    {d.pct.toFixed(1)}%
-                  </span>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </div>

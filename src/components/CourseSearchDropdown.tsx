@@ -1,9 +1,10 @@
-import { ClockFillIcon, XIcon } from "@primer/octicons-react";
+import { ClockFillIcon } from "@primer/octicons-react";
+import { XIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Cookies from "js-cookie";
-import { CornerUpRight, Search } from "lucide-react";
+import { ArrowBendUpRightIcon } from "@phosphor-icons/react";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import useSWR from "swr";
@@ -230,7 +231,8 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   return (
     <div className={`relative ${className}`}>
       <div className="relative flex items-center">
-        <Search
+        <MagnifyingGlassIcon
+          weight="bold"
           className={`${iconSizes[size]} text-muted-foreground absolute left-3 pointer-events-none z-10`}
         />
         <Input
@@ -250,6 +252,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
             aria-label="Clear search"
           >
             <XIcon
+              weight="bold"
               className={`${iconSizes[size]} text-muted-foreground hover:text-foreground transition-colors`}
             />
           </button>
@@ -261,7 +264,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className="absolute w-full left-0 mt-2 bg-background border border-border shadow-lg z-60 max-h-72 rounded-md overflow-y-auto text-sm"
+            className="absolute w-full left-0 mt-2 bg-background border border-border z-60 max-h-72 rounded-md overflow-y-auto text-sm"
           >
             {isLoading && (
               <div className="px-3 py-2 text-sm text-muted-foreground">
@@ -285,7 +288,10 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                   >
                     <ClockFillIcon className="w-4 h-4 mr-2 opacity-70" />
                     <span className="flex-1">{suggestion}</span>
-                    <CornerUpRight className="w-4 h-4 opacity-50" />
+                    <ArrowBendUpRightIcon
+                      weight="bold"
+                      className="w-4 h-4 opacity-50"
+                    />
                   </div>
                 ))}
               </>
@@ -311,7 +317,10 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
                     <span className="flex-1 font-normal">{suggestion}</span>
-                    <CornerUpRight className="w-4 h-4 opacity-50" />
+                    <ArrowBendUpRightIcon
+                      weight="bold"
+                      className="w-4 h-4 opacity-50"
+                    />
                   </div>
                 ))}
               </>

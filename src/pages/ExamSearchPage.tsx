@@ -5,18 +5,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { FC, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Loader2, Upload } from "lucide-react";
-import { FC, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
+import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
 import { useCourseExams } from "@/hooks/useCourseExams";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
+import { sponsors } from "@/components/sponsors/sponsorsData";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -129,53 +131,73 @@ const ExamSearchPage: FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background w-full overflow-x-hidden">
-      <div className="container mx-auto flex items-center justify-center px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+    <div className="bg-background w-full">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
         {isLoading && (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
-            <LoadingSpinner />
+          <div className="flex items-center justify-center">
+            <div className="flex flex-col items-center justify-center min-h-[60vh] px-6">
+              <LoadingSpinner />
+            </div>
           </div>
         )}
-
         {!isLoading && isError && (
-          <div className="flex items-center justify-center min-h-[60vh] px-4">
-            <ErrorCard
-              title={t("courseCodeNotFound")}
-              message={`${t("courseCodeNotFoundMessage")} "${courseCode}".`}
-              showUploadButton={true}
-            />
+          <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center min-h-[60vh] px-4">
+              <ErrorCard
+                title={t("courseCodeNotFound")}
+                message={`${t("courseCodeNotFoundMessage")} "${courseCode}".`}
+                showUploadButton={true}
+              />
+            </div>
           </div>
         )}
-
         {!isLoading && !isError && formattedExams.length === 0 && (
-          <div className="flex items-center justify-center min-h-[60vh] px-4">
-            <ErrorCard
-              title={t("noExamsFound")}
-              message={`${t("noExamsFoundMessage")} "${courseCode}".${
-                closest.length > 0
-                  ? ` ${t("didYouMean")} ${closest.join(", ")}?`
-                  : ""
-              }`}
-              showUploadButton={true}
-            />
+          <div className="flex items-center justify-center">
+            <div className="flex items-center justify-center min-h-[60vh] px-4">
+              <ErrorCard
+                title={t("noExamsFound")}
+                message={`${t("noExamsFoundMessage")} "${courseCode}".${
+                  closest.length > 0
+                    ? ` ${t("didYouMean")} ${closest.join(", ")}?`
+                    : ""
+                }`}
+                showUploadButton={true}
+              />
+            </div>
           </div>
         )}
 
         {!isLoading && !isError && formattedExams.length > 0 && (
-          <div className="w-full lg:w-auto flex items-center justify-center flex-col">
-            <DataTable
-              data={formattedExams}
-              courseCode={courseCode?.toUpperCase() ?? ""}
-              courseNameSwe={courseData?.course_name_swe || ""}
-              courseNameEng={courseData?.course_name_eng || ""}
-              onSortChange={() =>
-                setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
-              }
-            />
+          <div className="w-full flex flex-col lg:flex-row gap-6 items-start justify-center">
+            {/* Table section - left side on desktop */}
+            <div className="w-auto max-w-full flex flex-col gap-4 order-2 lg:order-1">
+              <DataTable
+                data={formattedExams}
+                courseCode={courseCode?.toUpperCase() ?? ""}
+                courseNameSwe={courseData?.course_name_swe || ""}
+                courseNameEng={courseData?.course_name_eng || ""}
+                onSortChange={() =>
+                  setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+                }
+              />
 
-            <Link to="/upload-exams">
-              <Button className="w-full z-50">{t("uploadMore")}</Button>
-            </Link>
+              <Link to="/upload-exams">
+                <Button className="w-full z-50">{t("uploadMore")}</Button>
+              </Link>
+            </div>
+
+            {/* Sponsor banner - top on mobile, sticky right on desktop */}
+            <div className="w-full static lg:sticky top-20 lg:w-80 order-1 lg:order-2">
+              <div className="mb-2">
+                <span className="text-xs font-medium opacity-60">Sponsor</span>
+              </div>
+              <SponsorBanner
+                sponsor={sponsors[0]}
+                description="Sök till Exsitecs traineeprogram"
+                subtitle="Börja din karriär med vårt stora och långsiktiga traineeprogram där du får utbildning, stöd från en mentor och ansvar direkt inom IT"
+                courseCode={courseCode || ""}
+              />
+            </div>
           </div>
         )}
       </div>

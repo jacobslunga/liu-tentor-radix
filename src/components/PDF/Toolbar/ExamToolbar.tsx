@@ -1,6 +1,11 @@
 import { FC, useState, useEffect, useRef } from "react";
-import { RotateCcw, RotateCw } from "lucide-react";
-import { DownloadIcon, PlusIcon, DashIcon } from "@primer/octicons-react";
+import {
+  DownloadIcon,
+  PlusIcon,
+  MinusIcon,
+  ArrowClockwiseIcon,
+  ArrowCounterClockwiseIcon,
+} from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -37,7 +42,7 @@ const ToolbarButton = ({
           onClick={onClick}
           className={className}
         >
-          <Icon size={17} />
+          <Icon weight="bold" size={17} />
         </Button>
       </TooltipTrigger>
       <TooltipContent side="right">
@@ -103,15 +108,15 @@ const ExamToolbar: FC<Props> = ({ pdfUrl }) => {
       transition={{ duration: 0.3 }}
     >
       <ToolbarButton icon={PlusIcon} onClick={zoomIn} tooltip="Zooma in" />
-      <ToolbarButton icon={DashIcon} onClick={zoomOut} tooltip="Zooma ut" />
+      <ToolbarButton icon={MinusIcon} onClick={zoomOut} tooltip="Zooma ut" />
       <Separator />
       <ToolbarButton
-        icon={RotateCcw}
+        icon={ArrowCounterClockwiseIcon}
         onClick={rotateLeft}
         tooltip="Rotera vänster"
       />
       <ToolbarButton
-        icon={RotateCw}
+        icon={ArrowClockwiseIcon}
         onClick={rotateRight}
         tooltip="Rotera höger"
       />

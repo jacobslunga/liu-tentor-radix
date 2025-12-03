@@ -9,12 +9,21 @@ const Header = () => {
 
   return (
     <header
-      className="bg-background top-0 z-50 h-20 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
+      className="sticky top-0 z-50 h-20 w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
       role="banner"
       style={{
         maxWidth: "100%",
       }}
     >
+      <div
+        className="absolute inset-0 -z-10 backdrop-blur-md bg-background/95"
+        style={{
+          maskImage: "linear-gradient(to bottom, black 50%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(to bottom, black 50%, transparent 100%)",
+        }}
+      />
+
       <Link
         to="/"
         className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"

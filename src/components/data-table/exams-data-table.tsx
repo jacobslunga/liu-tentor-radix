@@ -22,10 +22,9 @@ import {
 } from "@tanstack/react-table";
 import { useMemo, useState } from "react";
 
-import { ArrowSwitchIcon } from "@primer/octicons-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ChartColumnIncreasing } from "lucide-react";
+import { ChartBarIcon, ArrowsDownUpIcon } from "@phosphor-icons/react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
 import { useLanguage } from "@/context/LanguageContext";
@@ -89,8 +88,7 @@ export function DataTable({
   }, [data]);
 
   return (
-    <div className="w-full space-y-6 mt-10 mx-auto relative">
-      {/* Header */}
+    <div className="w-full space-y-6 mx-auto relative">
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
           <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
@@ -99,7 +97,6 @@ export function DataTable({
           </Badge>
         </div>
 
-        {/* Course title */}
         <h2
           className={`font-semibold text-foreground ${
             (courseNameSwe?.length ?? 0) > 40 ? "text-2xl" : "text-4xl"
@@ -124,7 +121,7 @@ export function DataTable({
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-between w-full">
+        <div className="flex flex-row items-center justify-start gap-2 w-full">
           <Select
             onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
           >
@@ -147,14 +144,13 @@ export function DataTable({
 
           <Link to={`/search/${courseCode}/stats`}>
             <Button variant="ghost">
-              <ChartColumnIncreasing />
+              <ChartBarIcon weight="bold" />
               {language === "sv" ? "Statistik" : "Statistics"}
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Table */}
       <div className="border border-border rounded-2xl bg-background overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-[#FAFAFA] dark:bg-secondary">
@@ -176,7 +172,10 @@ export function DataTable({
                         header.getContext()
                       )}
                       {header.id === "exam_date" && (
-                        <ArrowSwitchIcon className="h-4 w-4 rotate-90 text-muted-foreground" />
+                        <ArrowsDownUpIcon
+                          weight="bold"
+                          className="h-4 w-4 text-muted-foreground"
+                        />
                       )}
                     </div>
                   </TableHead>
