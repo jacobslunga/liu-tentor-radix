@@ -89,7 +89,6 @@ export function DataTable({
 
   return (
     <div className="w-full space-y-6 mx-auto relative">
-      {/* Header */}
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
           <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
@@ -98,7 +97,6 @@ export function DataTable({
           </Badge>
         </div>
 
-        {/* Course title */}
         <h2
           className={`font-semibold text-foreground ${
             (courseNameSwe?.length ?? 0) > 40 ? "text-2xl" : "text-4xl"
@@ -107,7 +105,6 @@ export function DataTable({
           {courseNameSwe}
         </h2>
 
-        {/* New: Stats row */}
         <div className="flex flex-row items-center space-x-6 text-sm text-muted-foreground mt-1">
           <div>
             <span className="font-medium text-foreground">
@@ -153,7 +150,6 @@ export function DataTable({
         </div>
       </div>
 
-      {/* Table */}
       <div className="border border-border rounded-2xl bg-background overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-[#FAFAFA] dark:bg-secondary">
