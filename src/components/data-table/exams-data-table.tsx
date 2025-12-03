@@ -121,7 +121,7 @@ export function DataTable({
           </div>
         </div>
 
-        <div className="flex flex-row items-center justify-between w-full">
+        <div className="flex flex-row items-center justify-start gap-2 w-full">
           <Select
             onValueChange={(v) => setSelectedExamType(v === "all" ? null : v)}
           >

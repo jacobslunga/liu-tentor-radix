@@ -21,7 +21,6 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "*", element: <NotFoundPage /> },
-      { path: "/sponsorer", element: <SponsorsPage /> },
       {
         path: "search",
         element: <SearchLayout />,
