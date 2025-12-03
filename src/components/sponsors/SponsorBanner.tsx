@@ -34,10 +34,8 @@ const SponsorBanner: FC<Props> = ({
 
   const handleClick = async () => {
     try {
-      // Get browser info
       const browser = navigator.userAgent;
 
-      // Get IP address from external API
       let ipAddress = null;
       try {
         const ipResponse = await fetch("https://api.ipify.org?format=json");
@@ -47,7 +45,6 @@ const SponsorBanner: FC<Props> = ({
         console.error("Failed to fetch IP address:", error);
       }
 
-      // Insert click record
       const { error } = await supabase.from("company_clicks").insert({
         company_id: "b25f6b22-6a2e-4fbf-9a5b-8ee107f0fcee",
         browser,

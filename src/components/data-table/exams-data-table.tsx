@@ -105,7 +105,6 @@ export function DataTable({
           }`}
         >
           {courseNameSwe}
-          {courseNameSwe}
         </h2>
 
         {/* New: Stats row */}
