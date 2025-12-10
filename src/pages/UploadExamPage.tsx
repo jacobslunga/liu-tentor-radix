@@ -237,13 +237,15 @@ const UploadExamPage = () => {
   });
 
   return (
-    <div className="min-h-screen bg-background flex flex-col items-center justify-start py-12 p-4 text-center">
-      <div className="w-full max-w-md mx-auto space-y-10">
-        <div className="space-y-4">
-          <h1 className="text-3xl font-medium">{t("uploadTitle")}</h1>
-          <p className="text-muted-foreground">{t("uploadDescription")}</p>
-        </div>
+    <div className="w-full max-w-2xl">
+      <h1 className="text-3xl font-medium text-foreground mb-2">
+        {t("uploadTitle")}
+      </h1>
+      <p className="text-sm text-muted-foreground mb-6">
+        {t("uploadDescription")}
+      </p>
 
+      <div className="space-y-6">
         <div className="space-y-2">
           <label
             htmlFor="course-code"
@@ -258,7 +260,7 @@ const UploadExamPage = () => {
             value={kurskod}
             onChange={(e) => setKurskod(e.target.value.toUpperCase())}
             disabled={loading}
-            className="w-full bg-transparent font-medium outline-none border-0 border-b-2 border-foreground/20 text-center text-5xl focus:ring-0 focus:border-primary transition-colors p-2 placeholder:text-muted-foreground/40"
+            className="w-full bg-transparent font-medium outline-none border-0 border-b-2 border-foreground/20 text-center text-4xl focus:ring-0 focus:border-primary transition-colors p-2 placeholder:text-muted-foreground/40"
           />
         </div>
 
