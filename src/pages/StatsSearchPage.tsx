@@ -191,7 +191,7 @@ export default function StatsSearchPage() {
           {/* Course title */}
           <div className="flex flex-row items-center justify-between w-full">
             <h2
-              className={`font-semibold text-foreground ${
+              className={`font-medium tracking-tight text-foreground ${
                 ((language === "sv"
                   ? courseData?.course_name_swe
                   : courseData?.course_name_eng
@@ -233,7 +233,7 @@ export default function StatsSearchPage() {
         {/* Pass Rate Over Time */}
         <div className="rounded-2xl border border-border bg-background overflow-hidden">
           <div className="p-6 bg-[#FAFAFA] dark:bg-secondary border-b border-border">
-            <h2 className="text-base font-semibold mb-1">
+            <h2 className="text-base font-medium mb-1">
               {language === "sv" ? "Godkända över tid" : "Pass Rate Over Time"}
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -303,7 +303,7 @@ export default function StatsSearchPage() {
         {/* Grade Distribution */}
         <div className="rounded-2xl border border-border bg-background overflow-hidden">
           <div className="p-6 bg-[#FAFAFA] dark:bg-secondary border-b border-border">
-            <h2 className="text-base font-semibold mb-1">
+            <h2 className="text-base font-medium mb-1">
               {language === "sv" ? "Betygsfördelning" : "Grade Distribution"}
             </h2>
             <p className="text-xs text-muted-foreground">
@@ -372,7 +372,7 @@ export default function StatsSearchPage() {
                     <span className="text-xs text-muted-foreground">
                       {nf.format(d.value)}
                     </span>
-                    <span className="text-sm font-semibold min-w-11 text-right">
+                    <span className="text-sm font-medium min-w-11 text-right">
                       {d.pct.toFixed(1)}%
                     </span>
                   </div>

@@ -247,7 +247,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           <span className="relative z-10 flex items-center gap-2">
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>
-          <Kbd className="bg-primary/10 text-primary border border-primary/20 font-semibold">
+          <Kbd className="bg-primary/10 text-primary border border-primary/20 font-medium">
             C
           </Kbd>
         </Button>
