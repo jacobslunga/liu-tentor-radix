@@ -5,6 +5,24 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
+@font-face {
+  font-family: "FF Mark";
+  src: url("/fonts/FF-Mark-Book.otf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "FF Mark";
+  src: url("/fonts/FF-Mark-Medium.otf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "FF Mark";
+  src: url("/fonts/FF-Mark-Bold.otf");
+  font-weight: 700;
+}
+
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -64,7 +82,7 @@
 
   body {
     font-family:
-      "Inter",
+      "FF Mark",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

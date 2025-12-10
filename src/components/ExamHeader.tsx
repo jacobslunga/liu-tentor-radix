@@ -242,12 +242,14 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           onClick={onToggleChat || (() => setIsChatOpen(true))}
           variant="outline"
           size="sm"
-          className="hidden sm:flex"
+          className="hidden sm:flex gap-2"
         >
-          <Kbd>{language === "sv" ? "Tryck C" : "Press C"}</Kbd>
           <span className="relative z-10 flex items-center gap-2">
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
           </span>
+          <Kbd className="bg-primary/10 text-primary border border-primary/20 font-semibold">
+            C
+          </Kbd>
         </Button>
 
         {selectedExam && selectedExam.statistics ? (

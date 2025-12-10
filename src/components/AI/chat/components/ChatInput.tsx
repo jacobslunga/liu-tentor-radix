@@ -71,7 +71,7 @@ export const ChatInput: FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="px-2 space-y-2 relative pb-2">
+    <div className="px-2 space-y-2 relative pb-2 max-w-3xl mx-auto w-full">
       {/* Navigation buttons for assistant messages - partially hidden under input */}
       {hasAssistantMessages && (
         <NavigationButtons

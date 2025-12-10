@@ -42,9 +42,17 @@ AssistantMessage.displayName = "AssistantMessage";
 
 export const MessageBubble: FC<MessageBubbleProps> = memo(
   ({ message, isLoading, language }) => {
+    const isUser = message.role === "user";
+
     return (
-      <div>
-        <div className="max-w-3xl mx-auto py-6 px-4">
+      <div
+        className={`max-w-3xl mx-auto w-full ${isUser ? "flex justify-end" : ""}`}
+      >
+        <div
+          className={`py-4 px-4 ${
+            isUser ? "bg-primary/10 rounded-2xl max-w-[85%] w-fit" : "w-full"
+          }`}
+        >
           {message.role === "assistant" ? (
             message.content === "" && isLoading ? (
               <div className="flex items-center gap-2">
