@@ -316,7 +316,8 @@ interface SponsorTranslations {
 
 // Main translations interface combining all sections
 export interface Translations
-  extends CommonTranslations,
+  extends
+    CommonTranslations,
     HomePageTranslations,
     ExamTranslations,
     PDFControlTranslations,
@@ -632,7 +633,7 @@ const translations: Record<Language, Translations> = {
     aiChatEmptyTitle: "Ställ en fråga om tentan!",
     aiChatEmptyDescription:
       "Jag kan hjälpa dig att förstå frågor och koncept från denna tenta.",
-    aiChatPlaceholder: "Fråga, sök eller chatta...",
+    aiChatPlaceholder: "Fråga vad som helst om tentan...",
     aiChatPoweredBy: "AI kan göra misstag, kontrollera alltid svar.",
     aiChatSend: "Skicka",
     aiChatThinking: "Tänker",
@@ -967,7 +968,7 @@ const translations: Record<Language, Translations> = {
     aiChatEmptyTitle: "Ask a question about the exam!",
     aiChatEmptyDescription:
       "I can help you understand questions and concepts from this exam.",
-    aiChatPlaceholder: "Ask, search or chat...",
+    aiChatPlaceholder: "Ask anything about the exam...",
     aiChatPoweredBy: "AI can make mistakes, always check responses.",
     aiChatSend: "Send",
     aiChatThinking: "Thinking",

@@ -108,57 +108,58 @@ const FeedbackPage: FC = () => {
   );
 
   return (
-    <div className="container max-w-3xl mx-auto px-4 py-12 grow">
-      <div className="relative w-full flex flex-col items-center mb-8">
-        <h1 className="text-3xl text-foreground font-medium text-center mb-4">
-          {t("feedbackTitle")}
-        </h1>
-        <p className="text-lg text-muted-foreground text-center max-w-xl">
-          {t("feedbackDescription")}
-        </p>
-      </div>
+    <div className="w-full max-w-2xl">
+      <h1 className="text-3xl font-medium text-foreground mb-2">
+        {t("feedbackTitle")}
+      </h1>
+      <p className="text-sm text-muted-foreground mb-6">
+        {t("feedbackDescription")}
+      </p>
 
       {/* Success/Error States */}
       {isSuccess !== null && (
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-card border border-border/40 rounded-lg p-8 shadow-sm"
+          className="py-8"
         >
           {isSuccess ? (
-            <div className="flex flex-col items-center gap-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center">
-                <CheckIcon weight="bold" className="h-10 w-10 text-green-600" />
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
+                <CheckIcon
+                  weight="bold"
+                  className="h-6 w-6 text-green-600 dark:text-green-400"
+                />
               </div>
               <div>
-                <h2 className="text-2xl font-normal mb-2">
+                <h2 className="text-xl font-medium mb-1">
                   {t("feedbackSuccessTitle") || "Thank you!"}
                 </h2>
-                <p className="text-foreground/80">
+                <p className="text-sm text-muted-foreground">
                   {t("feedbackSuccessMessage")}
                 </p>
               </div>
-              <Button>
+              <Button size="sm">
                 <Link to="/">{t("homeLink")}</Link>
               </Button>
             </div>
           ) : (
-            <div className="flex flex-col items-center gap-6 text-center">
-              <div className="w-16 h-16 rounded-full bg-red-100 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-4 text-center">
+              <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
                 <WarningCircleIcon
                   weight="bold"
-                  className="h-10 w-10 text-red-600"
+                  className="h-6 w-6 text-red-600 dark:text-red-400"
                 />
               </div>
               <div>
-                <h2 className="text-2xl font-normal mb-2">
+                <h2 className="text-xl font-medium mb-1">
                   {t("feedbackErrorTitle") || "Something went wrong"}
                 </h2>
-                <p className="text-foreground/80">
+                <p className="text-sm text-muted-foreground">
                   {t("feedbackErrorMessage")}
                 </p>
               </div>
-              <Button onClick={() => setIsSuccess(null)}>
+              <Button size="sm" onClick={() => setIsSuccess(null)}>
                 {t("tryAgainButton")}
               </Button>
             </div>
@@ -168,92 +169,96 @@ const FeedbackPage: FC = () => {
 
       {/* Form */}
       {isSuccess === null && (
-        <div className="bg-card border border-border/40 rounded-lg p-6 md:p-8 shadow-sm">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="space-y-5">
-                <FormField
-                  control={form.control}
-                  name="name"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("nameLegend")}</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t("namePlaceholder")} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("nameLegend")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("namePlaceholder")}
+                      className="h-9"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                <FormField
-                  control={form.control}
-                  name="liu_mail"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel isRequired>LiU Mail</FormLabel>
-                      <FormControl>
-                        <Input placeholder={t("emailPlaceholder")} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Format: liuid123@student.liu.se
-                      </p>
-                    </FormItem>
-                  )}
-                />
+            <FormField
+              control={form.control}
+              name="liu_mail"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel isRequired>LiU Mail</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("emailPlaceholder")}
+                      className="h-9"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Format: liuid123@student.liu.se
+                  </p>
+                </FormItem>
+              )}
+            />
 
-                <FormField
-                  control={form.control}
-                  name="partOfWebsite"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("partOfWebsiteLegend")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder={t("partOfWebsitePlaceholder")}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+            <FormField
+              control={form.control}
+              name="partOfWebsite"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("partOfWebsiteLegend")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder={t("partOfWebsitePlaceholder")}
+                      className="h-9"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-                <FormField
-                  control={form.control}
-                  name="message"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel isRequired>{t("messageLegend")}</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder={t("messagePlaceholder")}
-                          className="min-h-[150px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                      <p className="text-xs text-muted-foreground mt-1">
-                        Minimum 10 characters
-                      </p>
-                    </FormItem>
-                  )}
-                />
-              </div>
+            <FormField
+              control={form.control}
+              name="message"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel isRequired>{t("messageLegend")}</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder={t("messagePlaceholder")}
+                      className="min-h-[120px] resize-none"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Minimum 10 characters
+                  </p>
+                </FormItem>
+              )}
+            />
 
-              <div className="space-y-4 pt-2">
-                <p className="text-sm text-muted-foreground">
-                  <span className="text-destructive">*</span>{" "}
-                  {t("requiredField")}
-                </p>
-                <Button type="submit" className="w-full">
-                  {t("submitButton")}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
+            <div className="flex items-center justify-between pt-2">
+              <p className="text-xs text-muted-foreground">
+                <span className="text-destructive">*</span> {t("requiredField")}
+              </p>
+              <Button type="submit" size="sm">
+                {t("submitButton")}
+              </Button>
+            </div>
+          </form>
+        </Form>
       )}
     </div>
   );

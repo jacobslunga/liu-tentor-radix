@@ -32,7 +32,7 @@ const ExamPage: FC = () => {
 
   const handleToggleChat = useCallback(() => {
     setShowChatWindow((prev) => !prev);
-  }, [showChatWindow]);
+  }, [setShowChatWindow]);
 
   useHotkeys(
     "c",

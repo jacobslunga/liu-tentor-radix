@@ -39,7 +39,7 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
   const backgroundImage = useTransform(
     gradientOpacity,
     (o) =>
-      `linear-gradient(to right, transparent, oklch(0.6193 0.1154 172.06 / ${o}))`,
+      `linear-gradient(to right, transparent, oklch(0.6193 0.1154 172.06 / ${o}))`
   );
 
   return (
