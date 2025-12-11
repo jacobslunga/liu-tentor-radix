@@ -1,4 +1,4 @@
-import { FC, memo, useMemo } from "react";
+import { FC, memo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
@@ -6,7 +6,6 @@ import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { CircleNotchIcon } from "@phosphor-icons/react";
 import { Message } from "../types";
-import { normalizeMath } from "../utils";
 import { markdownComponents } from "./MarkdownComponents";
 
 interface MessageBubbleProps {
@@ -19,8 +18,6 @@ interface MessageBubbleProps {
 // Separate component for assistant messages to isolate markdown rendering
 const AssistantMessage: FC<{ content: string }> = memo(
   ({ content }) => {
-    const processedContent = useMemo(() => normalizeMath(content), [content]);
-
     return (
       <div className="prose prose-base dark:prose-invert max-w-none">
         <ReactMarkdown
@@ -30,7 +27,7 @@ const AssistantMessage: FC<{ content: string }> = memo(
           ]}
           components={markdownComponents}
         >
-          {processedContent}
+          {content}
         </ReactMarkdown>
       </div>
     );

@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { Message } from "../types";
 import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from "../constants";
 
@@ -12,7 +12,7 @@ interface UseChatMessagesReturn {
   isLoading: boolean;
   sendMessage: (content: string, giveDirectAnswer: boolean) => Promise<void>;
   cancelGeneration: () => void;
-  assistantMessageRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  assistantMessageRefs: React.RefObject<(HTMLDivElement | null)[]>;
   currentAssistantIndex: number;
   setCurrentAssistantIndex: React.Dispatch<React.SetStateAction<number>>;
   navigateToAssistantMessage: (
@@ -30,7 +30,20 @@ export const useChatMessages = ({
   const [currentAssistantIndex, setCurrentAssistantIndex] = useState(-1);
 
   const abortControllerRef = useRef<AbortController | null>(null);
-  const assistantMessageRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const assistantMessageRefs = useRef<(HTMLDivElement | null)[]>(
+    []
+  ) as React.RefObject<(HTMLDivElement | null)[]>;
+
+  const messagesRef = useRef<Message[]>(initialMessages);
+  const isLoadingRef = useRef<boolean>(false);
+
+  useEffect(() => {
+    messagesRef.current = messages;
+  }, [messages]);
+
+  useEffect(() => {
+    isLoadingRef.current = isLoading;
+  }, [isLoading]);
 
   const cancelGeneration = useCallback(() => {
     if (abortControllerRef.current) {
@@ -38,8 +51,8 @@ export const useChatMessages = ({
       abortControllerRef.current = null;
     }
     setMessages((prev) => {
-      const lastMessage = prev[prev.length - 1];
-      if (lastMessage?.role === "assistant" && !lastMessage.content.trim()) {
+      const last = prev[prev.length - 1];
+      if (last?.role === "assistant" && !last.content.trim()) {
         return prev.slice(0, -1);
       }
       return prev;
@@ -49,114 +62,126 @@ export const useChatMessages = ({
 
   const sendMessage = useCallback(
     async (content: string, giveDirectAnswer: boolean) => {
-      if (!content.trim() || isLoading) return;
+      if (!content.trim() || isLoadingRef.current) return;
 
       const userMessage: Message = { role: "user", content };
-      setMessages((prev) => [...prev, userMessage]);
+
+      const optimistic: Message[] = [
+        ...messagesRef.current,
+        userMessage,
+        { role: "assistant" as "assistant", content: "" },
+      ];
+      setMessages(optimistic);
+      messagesRef.current = optimistic;
+
       setIsLoading(true);
+      isLoadingRef.current = true;
 
       abortControllerRef.current = new AbortController();
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       try {
+        const conversationHistory = [
+          ...messagesRef.current.slice(0, -1),
+          userMessage,
+        ];
+
         const response = await fetch(`${CHAT_API_URL}/${examId}`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            messages: [...messages, userMessage].map((msg) => ({
-              role: msg.role,
-              content: msg.content,
+            messages: conversationHistory.map((m) => ({
+              role: m.role,
+              content: m.content,
             })),
             giveDirectAnswer,
           }),
-          signal: abortControllerRef.current?.signal,
+          signal: abortControllerRef.current.signal,
         });
 
-        if (!response.ok) {
-          throw new Error("Failed to get response");
-        }
+        if (!response.ok) throw new Error("Failed to get response");
 
         const reader = response.body?.getReader();
-        const decoder = new TextDecoder();
+        if (!reader)
+          throw new Error("Streaming not supported by server response");
+
+        const decoder = new TextDecoder("utf-8");
         let assistantMessage = "";
-        let lastUpdateTime = 0;
+        let lastUpdate = 0;
 
-        if (reader) {
-          while (true) {
-            const { done, value } = await reader.read();
-            if (done) {
-              setMessages((prev) => {
-                const newMessages = [...prev];
-                newMessages[newMessages.length - 1] = {
-                  role: "assistant",
-                  content: assistantMessage,
-                };
-                return newMessages;
-              });
-              break;
-            }
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
 
-            const chunk = decoder.decode(value);
-            assistantMessage += chunk;
+          assistantMessage += decoder.decode(value, { stream: true });
 
-            const now = Date.now();
-            if (now - lastUpdateTime >= STREAM_UPDATE_INTERVAL) {
-              lastUpdateTime = now;
-              setMessages((prev) => {
-                const newMessages = [...prev];
-                newMessages[newMessages.length - 1] = {
-                  role: "assistant",
-                  content: assistantMessage,
-                };
-                return newMessages;
-              });
-            }
+          const now = Date.now();
+          if (now - lastUpdate >= STREAM_UPDATE_INTERVAL) {
+            lastUpdate = now;
+            const updated = [...messagesRef.current];
+            updated[updated.length - 1] = {
+              role: "assistant",
+              content: assistantMessage,
+            };
+            setMessages(updated);
+            messagesRef.current = updated;
           }
         }
-      } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
+
+        const finalText =
+          assistantMessage.trim() === ""
+            ? "Jag kunde inte generera ett svar. Försök igen."
+            : assistantMessage;
+
+        const finalUpdated = [...messagesRef.current];
+        finalUpdated[finalUpdated.length - 1] = {
+          role: "assistant",
+          content: finalText,
+        };
+        setMessages(finalUpdated);
+        messagesRef.current = finalUpdated;
+      } catch (err: unknown) {
+        const errorIsAbort = err instanceof Error && err.name === "AbortError";
+        if (errorIsAbort) {
           return;
         }
-        console.error("Error sending message:", error);
-        setMessages((prev) => {
-          const newMessages = [...prev];
-          newMessages[newMessages.length - 1] = {
+        const updated = [...messagesRef.current];
+        if (
+          updated.length > 0 &&
+          updated[updated.length - 1].role === "assistant"
+        ) {
+          updated[updated.length - 1] = {
             role: "assistant",
             content: "Något gick fel. Försök igen senare.",
           };
-          return newMessages;
-        });
+        }
+        setMessages(updated);
+        messagesRef.current = updated;
       } finally {
-        setIsLoading(false);
         abortControllerRef.current = null;
+        setIsLoading(false);
+        isLoadingRef.current = false;
       }
     },
-    [examId, isLoading, messages]
+    [examId]
   );
 
   const navigateToAssistantMessage = useCallback(
     (direction: "up" | "down", targetIndex?: number) => {
-      const assistantIndices = messages
-        .map((msg, idx) => (msg.role === "assistant" ? idx : -1))
-        .filter((idx) => idx !== -1);
+      const assistantIndices = messagesRef.current
+        .map((m, i) => (m.role === "assistant" ? i : -1))
+        .filter((i) => i !== -1);
 
       if (assistantIndices.length === 0) return;
 
       let newIndex: number;
       let messageIndex: number;
 
-      // If targetIndex is provided (from dropdown), use it directly
-      if (targetIndex !== undefined) {
-        // Find which assistant message this corresponds to
-        const assistantPosition = assistantIndices.indexOf(targetIndex);
-        if (assistantPosition !== -1) {
-          newIndex = assistantPosition;
-          messageIndex = targetIndex;
-        } else {
-          return;
-        }
+      if (typeof targetIndex === "number") {
+        const pos = assistantIndices.indexOf(targetIndex);
+        if (pos === -1) return;
+        newIndex = pos;
+        messageIndex = targetIndex;
       } else {
-        // Normal up/down navigation
         if (direction === "up") {
           newIndex = currentAssistantIndex <= 0 ? 0 : currentAssistantIndex - 1;
         } else {
@@ -169,30 +194,20 @@ export const useChatMessages = ({
       }
 
       setCurrentAssistantIndex(newIndex);
+
       const element = assistantMessageRefs.current[messageIndex];
+      if (!element) return;
 
-      if (element) {
-        // Get the container and calculate scroll position with header offset
-        const container = element.closest(".overflow-y-auto");
-        if (container) {
-          const headerOffset = 70; // Account for fixed header
-          const elementPosition = element.offsetTop;
-          const offsetPosition = elementPosition - headerOffset;
-
-          container.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        } else {
-          // Fallback to scrollIntoView
-          element.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
-          });
-        }
+      const container = element.closest(".overflow-y-auto");
+      if (container) {
+        const headerOffset = 70;
+        const offset = element.offsetTop - headerOffset;
+        container.scrollTo({ top: offset, behavior: "smooth" });
+      } else {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
       }
     },
-    [messages, currentAssistantIndex]
+    [currentAssistantIndex]
   );
 
   return {
