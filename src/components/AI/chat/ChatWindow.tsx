@@ -128,10 +128,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
           <ChatHeader
             language={language}
             hasSolutions={hasSolutions}
-            messages={messages}
-            currentAssistantIndex={displayIndex}
             onClose={handleClose}
-            onNavigateToMessage={navigateToAssistantMessage}
           />
 
           <div
