@@ -22,9 +22,7 @@ import {
 } from "@phosphor-icons/react";
 import { Message } from "../types";
 
-// Helper to extract first line and truncate
 const getMessagePreview = (content: string, maxLength: number = 40): string => {
-  // Get first line, strip markdown headers
   const firstLine = content
     .split("\n")[0]
     .replace(/^#+\s*/, "")
@@ -50,7 +48,6 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   onClose,
   onNavigateToMessage,
 }) => {
-  // Get all assistant messages with their original indices for navigation
   const assistantMessages = useMemo(() => {
     return messages
       .map((msg, idx) => ({ message: msg, originalIndex: idx }))
@@ -61,29 +58,29 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   const showNavigation = totalAssistantMessages > 1;
 
   return (
-    <div className="flex-shrink-0 bg-background border-b border-border h-14 z-40">
+    <div className="shrink-0 bg-background border-b border-border h-14 z-40">
       <div className="px-3 py-2 flex items-center justify-between h-full">
-        {/* Close button */}
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-9 w-9 hover:bg-accent"
-              >
-                <CaretRightIcon weight="bold" className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>{language === "sv" ? "Stäng" : "Close"}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
-
-        {/* Center section: Context badges + Chat history dropdown */}
+        {/* Left section: Close button + Context badges + Chat history dropdown */}
         <div className="flex items-center gap-2">
+          {/* Close button */}
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="h-9 w-9 hover:bg-accent"
+                >
+                  <CaretRightIcon weight="bold" className="h-5 w-5" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{language === "sv" ? "Stäng" : "Close"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+
           {/* Context badges */}
           <div className="flex items-center gap-1.5">
             <div className="flex items-center gap-1.5 px-2.5 py-1 bg-secondary border border-border rounded-md">

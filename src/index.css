@@ -116,7 +116,7 @@
 
   @font-face {
     font-family: "Logo";
-    src: url("/fonts/DMSerifText-Regular.ttf");
+    src: "Libre Caslon Text";
     font-weight: 700;
   }
 
@@ -265,7 +265,7 @@
 }
 
 @theme {
-  --font-logo: "Logo";
+  --font-logo: "Libre Caslon Text", serif;
 }
 
 @theme inline {
