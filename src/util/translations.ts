@@ -583,11 +583,11 @@ const translations: Record<Language, Translations> = {
       "Vi förbehåller oss rätten att uppdatera denna policy när som helst. Eventuella ändringar kommer att publiceras på denna sida, och vi rekommenderar att du regelbundet granskar denna policy för att hålla dig uppdaterad.",
     privacyPolicySection7Title: "7. AI-assistent och konversationsintegritet",
     privacyPolicySection7Content:
-      "Vi erbjuder en AI-assistent powered by OpenAI för att hjälpa dig att förstå tentamaterial. Din integritet är vår högsta prioritet:",
+      "Vi erbjuder en AI-assistent powered by Gemini för att hjälpa dig att förstå tentamaterial. Din integritet är vår högsta prioritet:",
     privacyPolicySection7Item1:
       "Vi sparar inte dina konversationer: Inga chatthistorik eller frågor du ställer till AI:n lagras på våra servrar.",
     privacyPolicySection7Item2:
-      "Tillfällig bearbetning: Dina meddelanden skickas till OpenAI för bearbetning men lagras inte permanent av oss.",
+      "Tillfällig bearbetning: Dina meddelanden skickas till Gemini för bearbetning men lagras inte permanent av oss.",
     privacyPolicySection7Item3:
       "Ingen användarprofil: Vi bygger inte upp någon profil baserad på dina AI-konversationer eller använder dem för analys.",
     privacyPolicySection8Title: "8. Kontaktinformation",
@@ -918,11 +918,11 @@ const translations: Record<Language, Translations> = {
       "We reserve the right to update this policy at any time. Any changes will be published on this page, and we recommend that you regularly review this policy to stay informed.",
     privacyPolicySection7Title: "7. AI Assistant and conversation privacy",
     privacyPolicySection7Content:
-      "We offer an AI assistant powered by OpenAI to help you understand exam materials. Your privacy is our top priority:",
+      "We offer an AI assistant powered by Gemini to help you understand exam materials. Your privacy is our top priority:",
     privacyPolicySection7Item1:
       "We don't save your conversations: No chat history or questions you ask the AI are stored on our servers.",
     privacyPolicySection7Item2:
-      "Temporary processing: Your messages are sent to OpenAI for processing but are not permanently stored by us.",
+      "Temporary processing: Your messages are sent to Gemini for processing but are not permanently stored by us.",
     privacyPolicySection7Item3:
       "No user profiling: We do not build any profile based on your AI conversations or use them for analysis.",
     privacyPolicySection8Title: "8. Contact information",

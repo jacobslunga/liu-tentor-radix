@@ -178,8 +178,8 @@ export const AIIntroDialog: FC<AIIntroDialogProps> = ({ onGetStarted }) => {
           </div>
           <p className="text-[10px] text-muted-foreground/60 text-center mt-10">
             {language === "sv"
-              ? "Powered by OpenAI. AI kan göra misstag, kontrollera alltid viktiga svar."
-              : "Powered by OpenAI. AI can make mistakes, always verify important answers."}
+              ? "Powered by Gemini. AI kan göra misstag, kontrollera alltid viktiga svar."
+              : "Powered by Gemini. AI can make mistakes, always verify important answers."}
           </p>
         </div>
       </DialogContent>
