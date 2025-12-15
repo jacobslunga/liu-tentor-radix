@@ -1,12 +1,28 @@
 import { CodeBlock } from "./CodeBlock";
 
-// Memoized markdown components to prevent re-renders
 export const markdownComponents = {
   a: (props: any) => (
     <a {...props} rel="noopener noreferrer" className="underline" />
   ),
-  pre: ({ children }: any) => <>{children}</>,
-  code: CodeBlock,
+
+  pre: ({ children }: any) => {
+    const child = children?.props;
+    return (
+      <CodeBlock className={child?.className}>{child?.children}</CodeBlock>
+    );
+  },
+
+  code: ({ inline, children }: any) => {
+    if (inline) {
+      return (
+        <code className="bg-muted/50 text-foreground px-1 py-0.5 rounded text-base">
+          {children}
+        </code>
+      );
+    }
+    return null;
+  },
+
   p: (props: any) => <p {...props} className="my-2 text-base" />,
   ul: (props: any) => (
     <ul {...props} className="my-2 ml-4 list-disc text-base" />
