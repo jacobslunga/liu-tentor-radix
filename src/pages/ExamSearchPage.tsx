@@ -1,13 +1,6 @@
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { FC, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
@@ -19,6 +12,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
 import { sponsors } from "@/components/sponsors/sponsorsData";
+import { ExamUploader } from "@/components/upload/ExamUploader";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -30,35 +24,65 @@ const LoadingSpinner = () => {
   );
 };
 
-const ErrorCard: React.FC<{
-  title: string;
-  message: string;
-  showUploadButton?: boolean;
-}> = ({ title, message, showUploadButton = false }) => {
-  const { t } = useTranslation();
+const NotFoundState: React.FC<{
+  courseCode: string;
+  suggestions: string[];
+}> = ({ courseCode, suggestions }) => {
+  const { language } = useLanguage();
+
+  const texts = {
+    title:
+      language === "sv" ? "Inga tentor hittades för" : "No exams found for",
+    didYouMean: language === "sv" ? "Menade du:" : "Did you mean:",
+    beFirstTitle:
+      language === "sv"
+        ? "Var den första att ladda upp!"
+        : "Be the first to upload!",
+    beFirstDesc:
+      language === "sv"
+        ? "Hjälp framtida studenter genom att ladda upp tentor för denna kurs."
+        : "Help future students by uploading exams for this course.",
+  };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="text-center">
-        <CardTitle className="text-foreground text-xl">{title}</CardTitle>
-        <CardDescription className="text-base">{message}</CardDescription>
-      </CardHeader>
-      {showUploadButton && (
-        <CardContent className="pt-0 pb-6">
-          <div className="flex flex-col items-center space-y-3">
-            <p className="text-sm text-muted-foreground text-center">
-              {t("helpOtherStudentsMessage")}
-            </p>
-            <Link to="/upload-exams">
-              <Button className="flex items-center gap-2">
-                <Upload className="h-4 w-4" />
-                {t("uploadExams")}
-              </Button>
-            </Link>
+    <div className="w-full max-w-3xl mx-auto mt-8 animate-in fade-in duration-500">
+      <div className="text-center space-y-4 mb-10">
+        <h1 className="text-2xl font-medium text-foreground tracking-tight">
+          {texts.title}{" "}
+          <span className="font-bold text-primary">"{courseCode}"</span>
+        </h1>
+
+        {suggestions.length > 0 && (
+          <div className="flex flex-wrap items-center justify-center gap-2 text-sm text-muted-foreground">
+            <span>{texts.didYouMean}</span>
+            {suggestions.map((code) => (
+              <Link key={code} to={`/search/${code}`}>
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-secondary hover:opacity-70 text-foreground font-mono font-medium transition-opacity cursor-pointer">
+                  {code}
+                </span>
+              </Link>
+            ))}
           </div>
-        </CardContent>
-      )}
-    </Card>
+        )}
+      </div>
+
+      <div className="relative group rounded-2xl border-2 border-dashed border-muted-foreground/15 bg-card/50 p-8 sm:p-10 transition-all hover:border-primary/20 hover:bg-card/80">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <span className="bg-background px-4 py-1 text-xs font-semibold uppercase tracking-wider text-primary border rounded-full shadow-sm">
+            {language === "sv" ? "Bidra" : "Contribute"}
+          </span>
+        </div>
+
+        <div className="text-center mb-8 max-w-lg mx-auto">
+          <h2 className="text-xl font-semibold mb-2">{texts.beFirstTitle}</h2>
+          <p className="text-muted-foreground">{texts.beFirstDesc}</p>
+        </div>
+
+        <div className="max-w-xl mx-auto">
+          <ExamUploader prefilledCourseCode={courseCode} />
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -80,7 +104,10 @@ const ExamSearchPage: FC = () => {
     });
   }, [courseData, sortOrder]);
 
-  const closest = getClosestCourseCodes(courseCode || "", kurskodArray);
+  const closest = useMemo(
+    () => getClosestCourseCodes(courseCode || "", kurskodArray, 5),
+    [courseCode]
+  );
 
   const pageTitle = courseData
     ? `${courseCode} - ${
@@ -130,6 +157,8 @@ const ExamSearchPage: FC = () => {
     );
   }
 
+  const showNotFound = !isLoading && (isError || formattedExams.length === 0);
+
   return (
     <div className="bg-background w-full">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
@@ -140,30 +169,13 @@ const ExamSearchPage: FC = () => {
             </div>
           </div>
         )}
-        {!isLoading && isError && (
-          <div className="flex items-center justify-center">
-            <div className="flex items-center justify-center min-h-[60vh] px-4">
-              <ErrorCard
-                title={t("courseCodeNotFound")}
-                message={`${t("courseCodeNotFoundMessage")} "${courseCode}".`}
-                showUploadButton={true}
-              />
-            </div>
-          </div>
-        )}
-        {!isLoading && !isError && formattedExams.length === 0 && (
-          <div className="flex items-center justify-center">
-            <div className="flex items-center justify-center min-h-[60vh] px-4">
-              <ErrorCard
-                title={t("noExamsFound")}
-                message={`${t("noExamsFoundMessage")} "${courseCode}".${
-                  closest.length > 0
-                    ? ` ${t("didYouMean")} ${closest.join(", ")}?`
-                    : ""
-                }`}
-                showUploadButton={true}
-              />
-            </div>
+
+        {showNotFound && (
+          <div>
+            <NotFoundState
+              courseCode={courseCode || ""}
+              suggestions={closest}
+            />
           </div>
         )}
 

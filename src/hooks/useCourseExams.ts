@@ -30,7 +30,7 @@ export const useCourseExams = (courseCode: string) => {
   const { data, error, isLoading } = useSWR(
     courseCode ? API_ENDPOINTS.courseExams(courseCode) : null,
     fetcher,
-    { revalidateOnFocus: false }
+    { revalidateOnFocus: false, shouldRetryOnError: false }
   );
 
   return {
