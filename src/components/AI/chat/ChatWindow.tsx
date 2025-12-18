@@ -50,29 +50,44 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     onVisibleIndexChange: setCurrentAssistantIndex,
   });
 
-  // Local state
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
 
-  // Computed values
+  const lastScrollPosition = useRef<number | null>(null);
+
+  const handleClose = useCallback(() => {
+    if (messagesContainerRef.current) {
+      lastScrollPosition.current = messagesContainerRef.current.scrollTop;
+    }
+    onClose();
+  }, [onClose, messagesContainerRef]);
+
+  useEffect(() => {
+    if (
+      isOpen &&
+      messagesContainerRef.current &&
+      lastScrollPosition.current !== null
+    ) {
+      requestAnimationFrame(() => {
+        if (
+          messagesContainerRef.current &&
+          lastScrollPosition.current !== null
+        ) {
+          messagesContainerRef.current.scrollTop = lastScrollPosition.current;
+        }
+      });
+    }
+  }, [isOpen]);
+
   const hasSolutions = examDetail.solutions.length > 0;
   const totalAssistantMessages = messages.filter(
     (m) => m.role === "assistant"
   ).length;
-  // Only show navigation when there's more than 1 assistant message
   const hasMultipleAssistantMessages = totalAssistantMessages > 1;
 
-  // Use the scroll-detected index, falling back to navigation index
   const displayIndex =
     visibleAssistantIndex >= 0 ? visibleAssistantIndex : currentAssistantIndex;
 
-  // Handle close
-  const handleClose = useCallback(() => {
-    setInput("");
-    onClose();
-  }, [onClose]);
-
-  // Handle escape key
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -83,7 +98,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, handleClose]);
 
-  // Handle send message
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
     isUserScrollingRef.current = false;
@@ -119,7 +133,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
           className="fixed right-0 top-0 h-full bg-background border-l flex flex-col overflow-hidden z-50"
           style={{
             width: `${width}%`,
-            // GPU acceleration during resize for smoother performance
             willChange: isResizing ? "width" : "auto",
             contain: isResizing ? "layout style" : "none",
           }}

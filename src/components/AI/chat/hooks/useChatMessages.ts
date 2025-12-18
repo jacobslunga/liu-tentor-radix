@@ -21,6 +21,237 @@ interface UseChatMessagesReturn {
   ) => void;
 }
 
+// Demo messages for linear algebra (extended, markdown answers)
+// const DEMO_MESSAGES: Message[] = [
+//   {
+//     role: "user",
+//     content: "What is a vector space?",
+//   },
+//   {
+//     role: "assistant",
+//     content: `
+// ### Vector Space
+
+// A **vector space** is a set \\(V\\) together with two operations:
+
+// - **Vector addition**: \\(V \\times V \\to V\\)
+// - **Scalar multiplication**: \\(\\mathbb{F} \\times V \\to V\\), where \\(\\mathbb{F}\\) is a field (usually \\(\\mathbb{R}\\) or \\(\\mathbb{C}\\))
+
+// These operations must satisfy **eight axioms**, including:
+
+// 1. Closure under addition and scalar multiplication
+// 2. Associativity and commutativity of addition
+// 3. Existence of a zero vector \\(\\mathbf{0}\\)
+// 4. Existence of additive inverses
+// 5. Distributive properties
+
+// #### Examples
+// - \\(\\mathbb{R}^n\\) with usual addition and scalar multiplication
+// - The set of all polynomials of degree \\(\\le n\\)
+// - The set of all continuous functions on an interval
+
+// Vector spaces provide the foundational language for linear algebra and many applied fields such as physics, machine learning, and engineering.
+// `,
+//   },
+//   {
+//     role: "user",
+//     content: "Explain linear independence with an example.",
+//   },
+//   {
+//     role: "assistant",
+//     content: `
+// ### Linear Independence
+
+// A set of vectors \\(\\{v_1, v_2, \\dots, v_k\\}\\) is **linearly independent** if the equation
+
+// \\[
+// a_1 v_1 + a_2 v_2 + \\dots + a_k v_k = 0
+// \\]
+
+// has **only the trivial solution**:
+
+// \\[
+// a_1 = a_2 = \\dots = a_k = 0
+// \\]
+
+// #### Example (Independent)
+// The vectors
+// \\[
+// (1,0), (0,1)
+// \\]
+// in \\(\\mathbb{R}^2\\) are linearly independent because neither vector can be written as a multiple of the other.
+
+// #### Example (Dependent)
+// The vectors
+// \\[
+// (1,2), (2,4)
+// \\]
+// are linearly dependent since:
+// \\[
+// (2,4) = 2(1,2)
+// \\]
+
+// Linear independence is crucial for defining **bases** and **dimension**.
+// `,
+//   },
+//   {
+//     role: "user",
+//     content: "What is a basis and how is it related to dimension?",
+//   },
+//   {
+//     role: "assistant",
+//     content: `
+// ### Basis and Dimension
+
+// A **basis** of a vector space \\(V\\) is a set of vectors that:
+
+// 1. **Spans** the space (every vector in \\(V\\) can be written as a linear combination of them)
+// 2. Is **linearly independent**
+
+// #### Example
+// A basis for \\(\\mathbb{R}^3\\) is:
+// \\[
+// \\{(1,0,0), (0,1,0), (0,0,1)\\}
+// \\]
+
+// #### Dimension
+// The **dimension** of a vector space is the **number of vectors in any basis** of that space.
+
+// - \\(\\dim(\\mathbb{R}^2) = 2\\)
+// - \\(\\dim(P_3) = 4\\), where \\(P_3\\) is the space of polynomials of degree \\(\\le 3\\)
+
+// > All bases of a vector space have the same number of vectors — this is a fundamental theorem of linear algebra.
+// `,
+//   },
+//   {
+//     role: "user",
+//     content: "Explain matrix rank and its significance.",
+//   },
+//   {
+//     role: "assistant",
+//     content: `
+// ### Rank of a Matrix
+
+// The **rank** of a matrix is the dimension of its **column space** (or equivalently, its row space).
+
+// #### Ways to Interpret Rank
+// - Number of **linearly independent columns**
+// - Number of **leading pivots** after row reduction
+// - Dimension of the image of the linear transformation
+
+// #### Example
+// For the matrix:
+// \\[
+// A =
+// \\begin{pmatrix}
+// 1 & 2 \\\\
+// 2 & 4
+// \\end{pmatrix}
+// \\]
+
+// Row-reduction gives:
+// \\[
+// \\begin{pmatrix}
+// 1 & 2 \\\\
+// 0 & 0
+// \\end{pmatrix}
+// \\]
+
+// So:
+// \\[
+// \\text{rank}(A) = 1
+// \\]
+
+// #### Why Rank Matters
+// - Determines whether a system has **unique**, **infinitely many**, or **no solutions**
+// - Used in the **Rank–Nullity Theorem**
+// - Indicates whether a matrix is invertible
+// `,
+//   },
+//   {
+//     role: "user",
+//     content: "State and explain the Rank–Nullity Theorem.",
+//   },
+//   {
+//     role: "assistant",
+//     content: `
+// ### Rank–Nullity Theorem
+
+// Let \\(T: V \\to W\\) be a linear transformation between finite-dimensional vector spaces. Then:
+
+// \\[
+// \\dim(V) = \\text{rank}(T) + \\text{nullity}(T)
+// \\]
+
+// Where:
+// - **Rank** = dimension of the image (output space)
+// - **Nullity** = dimension of the kernel (solutions to \\(T(v)=0\\))
+
+// #### Interpretation
+// Every vector in \\(V\\) either:
+// - Contributes to the output (rank), or
+// - Gets mapped to zero (nullity)
+
+// #### Example
+// If:
+// - \\(\\dim(V) = 5\\)
+// - \\(\\text{rank}(T) = 3\\)
+
+// Then:
+// \\[
+// \\text{nullity}(T) = 2
+// \\]
+
+// This theorem is fundamental for understanding solution spaces of linear systems.
+// `,
+//   },
+//   {
+//     role: "user",
+//     content: "What are eigenvalues and eigenvectors?",
+//   },
+//   {
+//     role: "assistant",
+//     content: `
+// ### Eigenvalues and Eigenvectors
+
+// For a square matrix \\(A\\), a nonzero vector \\(v\\) is an **eigenvector** if:
+
+// \\[
+// Av = \\lambda v
+// \\]
+
+// where \\(\\lambda\\) is a scalar called the **eigenvalue**.
+
+// #### How to Find Eigenvalues
+// Solve the **characteristic equation**:
+// \\[
+// \\det(A - \\lambda I) = 0
+// \\]
+
+// #### Example
+// For:
+// \\[
+// A =
+// \\begin{pmatrix}
+// 2 & 0 \\\\
+// 0 & 3
+// \\end{pmatrix}
+// \\]
+
+// Eigenvalues are:
+// - \\(\\lambda = 2\\)
+// - \\(\\lambda = 3\\)
+
+// Eigenvectors corresponding to \\(\\lambda = 2\\) lie along the x-axis, and those for \\(\\lambda = 3\\) along the y-axis.
+
+// #### Why They Matter
+// - Describe invariant directions of a transformation
+// - Used in differential equations, PCA, quantum mechanics
+// - Key to matrix diagonalization
+// `,
+//   },
+// ];
+
 export const useChatMessages = ({
   examId,
   initialMessages = [],

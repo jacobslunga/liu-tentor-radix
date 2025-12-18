@@ -41,7 +41,6 @@ export const useScrollManager = ({
 
     // Throttle to 150ms
     if (timeSinceLastUpdate < 150) {
-      // Schedule update if not already scheduled
       if (pendingUpdateRef.current === null) {
         pendingUpdateRef.current = window.setTimeout(() => {
           pendingUpdateRef.current = null;
@@ -57,16 +56,14 @@ export const useScrollManager = ({
 
     const container = messagesContainerRef.current;
     const containerRect = container.getBoundingClientRect();
-    const headerOffset = 70; // Account for fixed header
+    const headerOffset = 70;
 
-    // Find assistant message refs (filter out nulls)
     const assistantRefs = assistantMessageRefs.current
       .map((ref, idx) => ({ ref, idx }))
       .filter(({ ref }) => ref !== null);
 
     if (assistantRefs.length === 0) return;
 
-    // Simple approach: find first assistant message whose top is near or above viewport top
     let bestIndex = 0;
 
     for (let i = 0; i < assistantRefs.length; i++) {
@@ -74,7 +71,6 @@ export const useScrollManager = ({
       if (!ref) continue;
 
       const rect = ref.getBoundingClientRect();
-      // If this message's top is above or at the header line, it's the current one
       if (rect.top <= containerRect.top + headerOffset + 50) {
         bestIndex = i;
       } else {
@@ -88,14 +84,9 @@ export const useScrollManager = ({
     }
   }, [assistantMessageRefs, visibleAssistantIndex, onVisibleIndexChange]);
 
-  // Initial scroll to bottom when opened
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => {
-        scrollToBottom("instant");
-      }, 100);
-    }
-  }, [isOpen]);
+  // --- REMOVED THE "Initial scroll to bottom" USEEFFECT FROM HERE ---
+  // We will handle the initial scroll logic in the parent component
+  // to avoid conflicts with position restoration.
 
   // Scroll tracking
   useEffect(() => {
@@ -120,7 +111,6 @@ export const useScrollManager = ({
       lastScrollTop = scrollTop;
       setShowScrollButton(!isNearBottom);
 
-      // Update visible assistant index on scroll (throttled)
       updateVisibleIndex();
     };
 
@@ -129,7 +119,6 @@ export const useScrollManager = ({
 
     return () => {
       container.removeEventListener("scroll", handleScroll);
-      // Clean up any pending timeout
       if (pendingUpdateRef.current !== null) {
         clearTimeout(pendingUpdateRef.current);
       }

@@ -1,4 +1,4 @@
-import { FC, useRef } from "react";
+import { FC, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   InputGroup,
@@ -42,6 +42,8 @@ interface ChatInputProps {
   onToggleAnswerMode: (direct: boolean) => void;
 }
 
+const STORAGE_KEY = "chat_input_draft"; // Key used for localStorage
+
 export const ChatInput: FC<ChatInputProps> = ({
   language,
   input,
@@ -62,6 +64,26 @@ export const ChatInput: FC<ChatInputProps> = ({
   onToggleAnswerMode,
 }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  // --- NEW LOGIC: Load draft on mount ---
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const savedDraft = localStorage.getItem(STORAGE_KEY);
+      // Only restore if we have a draft and the current input is empty
+      if (savedDraft && input === "") {
+        onInputChange(savedDraft);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only once on mount
+
+  // --- NEW LOGIC: Save draft on every keystroke ---
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      // If input is empty (e.g. after sending), this effectively clears the storage
+      localStorage.setItem(STORAGE_KEY, input);
+    }
+  }, [input]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
