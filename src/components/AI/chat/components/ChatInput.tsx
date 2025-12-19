@@ -17,8 +17,8 @@ import {
   BookOpenIcon,
   LightbulbFilamentIcon,
   ArrowUpIcon,
-  ArrowDownIcon,
   SquareIcon,
+  CaretDownIcon,
 } from "@phosphor-icons/react";
 import { NavigationButtons } from "./NavigationButtons";
 
@@ -65,22 +65,17 @@ export const ChatInput: FC<ChatInputProps> = ({
 }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  // --- NEW LOGIC: Load draft on mount ---
   useEffect(() => {
     if (typeof window !== "undefined") {
       const savedDraft = localStorage.getItem(STORAGE_KEY);
-      // Only restore if we have a draft and the current input is empty
       if (savedDraft && input === "") {
         onInputChange(savedDraft);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Run only once on mount
+  }, []);
 
-  // --- NEW LOGIC: Save draft on every keystroke ---
   useEffect(() => {
     if (typeof window !== "undefined") {
-      // If input is empty (e.g. after sending), this effectively clears the storage
       localStorage.setItem(STORAGE_KEY, input);
     }
   }, [input]);
@@ -94,7 +89,6 @@ export const ChatInput: FC<ChatInputProps> = ({
 
   return (
     <div className="px-2 space-y-2 relative pb-2 max-w-3xl mx-auto w-full">
-      {/* Navigation buttons for assistant messages - partially hidden under input */}
       {hasAssistantMessages && (
         <NavigationButtons
           language={language}
@@ -104,17 +98,17 @@ export const ChatInput: FC<ChatInputProps> = ({
         />
       )}
 
-      {/* Scroll to bottom button */}
       <AnimatePresence>
         {showScrollButton && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="absolute -top-14 left-1/2 -translate-x-1/2 z-20"
+            transition={{ ease: "easeInOut", duration: 0.2 }}
+            className="absolute -top-14 right-0 -translate-x-1/2 z-20"
           >
             <Button variant="outline" size="icon" onClick={onScrollToBottom}>
-              <ArrowDownIcon weight="bold" className="h-4 w-4" />
+              <CaretDownIcon weight="bold" className="h-4 w-4" />
             </Button>
           </motion.div>
         )}
