@@ -7,10 +7,10 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import {
-  ChatCenteredIcon,
   CaretRightIcon,
   FileTextIcon,
   CheckCircleIcon,
+  ChatCircleDotsIcon,
 } from "@phosphor-icons/react";
 
 interface ChatHeaderProps {
@@ -27,9 +27,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   return (
     <div className="shrink-0 bg-background border-b border-border h-14 z-40">
       <div className="px-3 py-2 flex items-center justify-between h-full">
-        {/* Left section: Close button + Context badges + Chat history dropdown */}
         <div className="flex items-center gap-2">
-          {/* Close button */}
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -48,7 +46,6 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
             </Tooltip>
           </TooltipProvider>
 
-          {/* Context badges */}
           <div className="flex items-center gap-1.5">
             <div className="flex items-center gap-1.5 px-2.5 py-1 bg-secondary border border-border rounded-md">
               <FileTextIcon
@@ -73,7 +70,6 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
           </div>
         </div>
 
-        {/* Feedback button */}
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -83,7 +79,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
                 onClick={() => window.open("/feedback", "_blank")}
                 className="text-xs gap-1.5 h-8 px-2"
               >
-                <ChatCenteredIcon weight="duotone" className="h-3.5 w-3.5" />
+                <ChatCircleDotsIcon weight="duotone" className="h-3.5 w-3.5" />
                 {language === "sv" ? "Feedback" : "Feedback"}
               </Button>
             </TooltipTrigger>

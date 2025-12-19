@@ -137,7 +137,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
             contain: isResizing ? "layout style" : "none",
           }}
         >
-          <ResizeHandle onStartResize={startResizing} />
+          <ResizeHandle onStartResize={startResizing} isResizing={isResizing} />
           <ChatHeader
             language={language}
             hasSolutions={hasSolutions}
