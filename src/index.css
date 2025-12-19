@@ -5,24 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
-@font-face {
-  font-family: "FF Mark";
-  src: url("/fonts/FF-Mark-Book.otf");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "FF Mark";
-  src: url("/fonts/FF-Mark-Medium.otf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "FF Mark";
-  src: url("/fonts/FF-Mark-Bold.otf");
-  font-weight: 700;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -201,14 +183,14 @@
   }
 
   .dark .react-pdf__Page__canvas {
-    filter: invert(0.838) hue-rotate(180deg) brightness(1.05) contrast(1.15)
+    filter: invert(0.925) hue-rotate(180deg) brightness(1) contrast(1)
       saturate(0.9);
-    background-color: white !important;
+    background-color: oklch(var(--background)) !important;
   }
 
   .dark .react-pdf__Page,
   .dark .react-pdf__Document {
-    background-color: hsl(var(--background)) !important;
+    background-color: oklch(var(--background)) !important;
   }
 
   .pdf-container::-webkit-scrollbar {
@@ -341,7 +323,7 @@
 }
 
 .dark {
-  --background: oklch(0.2376 0 0);
+  --background: oklch(0.1872 0.002 286.2);
   --foreground: oklch(0.9619 0 0);
   --card: oklch(0.2591 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -349,14 +331,14 @@
   --popover-foreground: oklch(0.985 0 0);
   --primary: oklch(0.8332 0.088 144.73);
   --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.3008 0 0);
+  --secondary: oklch(0.2386 0.0024 247.93);
   --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.3211 0 0);
+  --muted: oklch(0.2386 0 0);
   --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.3211 0 0);
+  --accent: oklch(0.2386 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.34 0 0);
+  --border: oklch(0.28 0 0);
   --input: oklch(0.2801 0 0);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.911 0.0453 168.18);

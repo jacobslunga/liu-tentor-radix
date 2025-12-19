@@ -78,7 +78,7 @@ export default function LayoutSwitcher() {
       style={{
         pointerEvents: isMouseActive || isHovering ? "auto" : "none",
       }}
-      className="fixed bottom-10 left-5 z-40 hidden md:flex bg-background rounded-lg p-1"
+      className="fixed bottom-10 left-5 z-40 hidden md:flex rounded-lg p-1"
     >
       <div className="flex items-center gap-0">
         {modes.map((mode) => {
