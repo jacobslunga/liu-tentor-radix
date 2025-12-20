@@ -42,8 +42,6 @@ interface ChatInputProps {
   onToggleAnswerMode: (direct: boolean) => void;
 }
 
-const STORAGE_KEY = "chat_input_draft"; // Key used for localStorage
-
 export const ChatInput: FC<ChatInputProps> = ({
   language,
   input,
@@ -66,19 +64,12 @@ export const ChatInput: FC<ChatInputProps> = ({
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const savedDraft = localStorage.getItem(STORAGE_KEY);
-      if (savedDraft && input === "") {
-        onInputChange(savedDraft);
-      }
+    if (inputRef.current) {
+      inputRef.current.focus();
+      const val = inputRef.current.value;
+      inputRef.current.setSelectionRange(val.length, val.length);
     }
   }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem(STORAGE_KEY, input);
-    }
-  }, [input]);
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -120,7 +111,6 @@ export const ChatInput: FC<ChatInputProps> = ({
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
-          autoFocus
           rows={1}
           ref={inputRef}
           className="text-base resize-none max-h-[200px] overflow-y-auto"

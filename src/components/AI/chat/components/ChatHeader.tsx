@@ -79,7 +79,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
                 onClick={() => window.open("/feedback", "_blank")}
                 className="text-xs gap-1.5 h-8 px-2"
               >
-                <ChatCircleDotsIcon weight="duotone" className="h-3.5 w-3.5" />
+                <ChatCircleDotsIcon weight="bold" className="h-3.5 w-3.5" />
                 {language === "sv" ? "Feedback" : "Feedback"}
               </Button>
             </TooltipTrigger>

@@ -8,15 +8,17 @@ import {
   ChatHeader,
   EmptyState,
   MessageList,
-  ChatInput,
   ResizeHandle,
 } from "./components";
+import { ChatInput } from "./";
 
 interface ChatWindowProps {
   examDetail: ExamWithSolutions;
   isOpen: boolean;
   onClose: () => void;
 }
+
+const STORAGE_KEY = "chat_input_draft";
 
 const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
@@ -50,10 +52,34 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     onVisibleIndexChange: setCurrentAssistantIndex,
   });
 
+  // State
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
+  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
 
   const lastScrollPosition = useRef<number | null>(null);
+
+  // --- Persistence Logic ---
+
+  // 1. Load draft on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        setInput(saved);
+      }
+      setIsDraftLoaded(true);
+    }
+  }, []);
+
+  // 2. Save draft on input change
+  useEffect(() => {
+    if (typeof window !== "undefined" && isDraftLoaded) {
+      localStorage.setItem(STORAGE_KEY, input);
+    }
+  }, [input, isDraftLoaded]);
+
+  // --- End Persistence Logic ---
 
   const handleClose = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -104,6 +130,9 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     scrollToBottom();
     sendMessage(input, giveDirectAnswer);
     setInput("");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(STORAGE_KEY);
+    }
   }, [
     input,
     isLoading,
@@ -113,7 +142,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     isUserScrollingRef,
   ]);
 
-  // Handle scroll to bottom
   const handleScrollToBottom = useCallback(() => {
     isUserScrollingRef.current = false;
     scrollToBottom("smooth");
@@ -157,31 +185,35 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               isLoading={isLoading}
               language={language}
               messagesEndRef={messagesEndRef}
-              onAssistantRefsReady={(refs) => {
-                assistantMessageRefs.current = refs;
+              onAssistantRefsReady={(
+                refs: Record<number, HTMLDivElement | null>
+              ) => {
+                assistantMessageRefs.current = Object.values(refs);
               }}
             />
           </div>
 
-          <ChatInput
-            language={language}
-            input={input}
-            isLoading={isLoading}
-            giveDirectAnswer={giveDirectAnswer}
-            showScrollButton={showScrollButton}
-            hasAssistantMessages={hasMultipleAssistantMessages}
-            currentAssistantIndex={displayIndex}
-            totalAssistantMessages={totalAssistantMessages}
-            placeholder={t("aiChatPlaceholder")}
-            poweredByText={t("aiChatPoweredBy")}
-            sendButtonLabel={t("aiChatSend")}
-            onInputChange={setInput}
-            onSend={handleSend}
-            onCancel={cancelGeneration}
-            onScrollToBottom={handleScrollToBottom}
-            onNavigate={navigateToAssistantMessage}
-            onToggleAnswerMode={setGiveDirectAnswer}
-          />
+          {isDraftLoaded && (
+            <ChatInput
+              language={language}
+              input={input}
+              isLoading={isLoading}
+              giveDirectAnswer={giveDirectAnswer}
+              showScrollButton={showScrollButton}
+              hasAssistantMessages={hasMultipleAssistantMessages}
+              currentAssistantIndex={displayIndex}
+              totalAssistantMessages={totalAssistantMessages}
+              placeholder={t("aiChatPlaceholder")}
+              poweredByText={t("aiChatPoweredBy")}
+              sendButtonLabel={t("aiChatSend")}
+              onInputChange={setInput}
+              onSend={handleSend}
+              onCancel={cancelGeneration}
+              onScrollToBottom={handleScrollToBottom}
+              onNavigate={navigateToAssistantMessage}
+              onToggleAnswerMode={setGiveDirectAnswer}
+            />
+          )}
         </motion.div>
       )}
     </AnimatePresence>
