@@ -20,7 +20,6 @@ import {
   SquareIcon,
   CaretDownIcon,
 } from "@phosphor-icons/react";
-import { NavigationButtons } from "./NavigationButtons";
 
 interface ChatInputProps {
   language: string;
@@ -28,9 +27,6 @@ interface ChatInputProps {
   isLoading: boolean;
   giveDirectAnswer: boolean;
   showScrollButton: boolean;
-  hasAssistantMessages: boolean;
-  currentAssistantIndex: number;
-  totalAssistantMessages: number;
   placeholder: string;
   poweredByText: string;
   sendButtonLabel: string;
@@ -48,9 +44,6 @@ export const ChatInput: FC<ChatInputProps> = ({
   isLoading,
   giveDirectAnswer,
   showScrollButton,
-  hasAssistantMessages,
-  currentAssistantIndex,
-  totalAssistantMessages,
   placeholder,
   poweredByText,
   sendButtonLabel,
@@ -58,7 +51,6 @@ export const ChatInput: FC<ChatInputProps> = ({
   onSend,
   onCancel,
   onScrollToBottom,
-  onNavigate,
   onToggleAnswerMode,
 }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -80,15 +72,6 @@ export const ChatInput: FC<ChatInputProps> = ({
 
   return (
     <div className="px-2 space-y-2 relative pb-2 max-w-3xl mx-auto w-full">
-      {hasAssistantMessages && (
-        <NavigationButtons
-          language={language}
-          currentIndex={currentAssistantIndex}
-          totalCount={totalAssistantMessages}
-          onNavigate={onNavigate}
-        />
-      )}
-
       <AnimatePresence>
         {showScrollButton && (
           <motion.div

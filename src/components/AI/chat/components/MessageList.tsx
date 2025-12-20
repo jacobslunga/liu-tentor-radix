@@ -12,16 +12,14 @@ interface MessageListProps {
 
 export const MessageList: FC<MessageListProps> = memo(
   ({ messages, isLoading, language, messagesEndRef, onAssistantRefsReady }) => {
-    // Store refs in a stable array
     const refsArray = useRef<(HTMLDivElement | null)[]>([]);
 
-    // Sync refs with parent after render
     useEffect(() => {
       onAssistantRefsReady(refsArray.current);
     }, [messages.length, onAssistantRefsReady]);
 
     return (
-      <div className="w-full">
+      <div className="w-full space-y-10">
         {messages.map((message, index) => {
           const isAssistant = message.role === "assistant";
 
