@@ -4,8 +4,8 @@ import remarkGfm from "remark-gfm";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
-import { CircleNotchIcon } from "@phosphor-icons/react";
 import { Message } from "../types";
+import { motion } from "framer-motion";
 import { markdownComponents } from "./MarkdownComponents";
 
 interface MessageBubbleProps {
@@ -15,11 +15,33 @@ interface MessageBubbleProps {
   index: number;
 }
 
-// Separate component for assistant messages to isolate markdown rendering
+const GridLoader = () => {
+  const delays = [0, 0.2, 0.6, 0.4];
+
+  return (
+    <div className="grid grid-cols-2 gap-0.5">
+      {[0, 1, 2, 3].map((index) => (
+        <motion.div
+          key={index}
+          className="h-1 w-1 rounded-full bg-foreground"
+          initial={{ opacity: 0.4 }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{
+            duration: 1.2,
+            repeat: Infinity,
+            delay: delays[index],
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
 const AssistantMessage: FC<{ content: string }> = memo(
   ({ content }) => {
     return (
-      <div className="prose prose-base dark:prose-invert max-w-none">
+      <div className="prose prose-base dark:prose-invert max-w-none w-full max-w-max">
         <ReactMarkdown
           remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[
@@ -40,24 +62,27 @@ AssistantMessage.displayName = "AssistantMessage";
 export const MessageBubble: FC<MessageBubbleProps> = memo(
   ({ message, isLoading, language }) => {
     const isUser = message.role === "user";
+    const isThinking =
+      message.role === "assistant" && message.content === "" && isLoading;
 
     return (
       <div
         className={`max-w-3xl mx-auto w-full ${isUser ? "flex justify-end" : ""}`}
       >
         <div
-          className={`py-4 px-4 ${
-            isUser ? "bg-primary/10 rounded-2xl max-w-[85%] w-fit" : "w-full"
+          className={`py-2 px-3 ${
+            isUser
+              ? `bg-primary/10 text-foreground/80 ${
+                  message.content.length > 100 ? "rounded-2xl" : "rounded-lg"
+                } max-w-[85%] w-fit`
+              : "w-full"
           }`}
         >
           {message.role === "assistant" ? (
-            message.content === "" && isLoading ? (
-              <div className="flex items-center gap-2">
-                <CircleNotchIcon
-                  weight="bold"
-                  className="h-5 w-5 animate-spin"
-                />
-                <span className="text-sm text-muted-foreground">
+            isThinking ? (
+              <div className="flex items-center gap-3 py-1">
+                <GridLoader />
+                <span className="text-sm font-medium text-muted-foreground animate-pulse">
                   {language === "sv" ? "Tänker..." : "Thinking..."}
                 </span>
               </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 interface UseScrollManagerProps {
   isOpen: boolean;
-  assistantMessageRefs: React.MutableRefObject<(HTMLDivElement | null)[]>;
+  assistantMessageRefs: React.RefObject<(HTMLDivElement | null)[]>;
   onVisibleIndexChange?: (index: number) => void;
 }
 
@@ -11,8 +11,7 @@ interface UseScrollManagerReturn {
   messagesContainerRef: React.RefObject<HTMLDivElement | null>;
   showScrollButton: boolean;
   scrollToBottom: (behavior?: ScrollBehavior) => void;
-  isUserScrollingRef: React.MutableRefObject<boolean>;
-  visibleAssistantIndex: number;
+  isUserScrollingRef: React.RefObject<boolean>;
 }
 
 export const useScrollManager = ({
@@ -26,7 +25,6 @@ export const useScrollManager = ({
   const [showScrollButton, setShowScrollButton] = useState(false);
   const [visibleAssistantIndex, setVisibleAssistantIndex] = useState(-1);
 
-  // Throttle refs
   const lastUpdateTimeRef = useRef(0);
   const pendingUpdateRef = useRef<number | null>(null);
 
@@ -34,12 +32,10 @@ export const useScrollManager = ({
     messagesEndRef.current?.scrollIntoView({ behavior });
   }, []);
 
-  // Throttled visible index update - only run every 150ms
   const updateVisibleIndex = useCallback(() => {
     const now = Date.now();
     const timeSinceLastUpdate = now - lastUpdateTimeRef.current;
 
-    // Throttle to 150ms
     if (timeSinceLastUpdate < 150) {
       if (pendingUpdateRef.current === null) {
         pendingUpdateRef.current = window.setTimeout(() => {
@@ -84,11 +80,6 @@ export const useScrollManager = ({
     }
   }, [assistantMessageRefs, visibleAssistantIndex, onVisibleIndexChange]);
 
-  // --- REMOVED THE "Initial scroll to bottom" USEEFFECT FROM HERE ---
-  // We will handle the initial scroll logic in the parent component
-  // to avoid conflicts with position restoration.
-
-  // Scroll tracking
   useEffect(() => {
     if (!isOpen) return;
 
@@ -131,6 +122,5 @@ export const useScrollManager = ({
     showScrollButton,
     scrollToBottom,
     isUserScrollingRef,
-    visibleAssistantIndex,
   };
 };

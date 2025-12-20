@@ -25,7 +25,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { language } = useLanguage();
   const chatWindowRef = useRef<HTMLDivElement>(null);
 
-  // Custom hooks
   const { width, isResizing, startResizing } = useResizablePanel();
   const {
     messages,
@@ -33,7 +32,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     sendMessage,
     cancelGeneration,
     assistantMessageRefs,
-    currentAssistantIndex,
     setCurrentAssistantIndex,
     navigateToAssistantMessage,
   } = useChatMessages({
@@ -45,23 +43,17 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     showScrollButton,
     scrollToBottom,
     isUserScrollingRef,
-    visibleAssistantIndex,
   } = useScrollManager({
     isOpen,
     assistantMessageRefs,
     onVisibleIndexChange: setCurrentAssistantIndex,
   });
 
-  // State
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
 
   const lastScrollPosition = useRef<number | null>(null);
-
-  // --- Persistence Logic ---
-
-  // 1. Load draft on mount
   useEffect(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -72,14 +64,11 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     }
   }, []);
 
-  // 2. Save draft on input change
   useEffect(() => {
     if (typeof window !== "undefined" && isDraftLoaded) {
       localStorage.setItem(STORAGE_KEY, input);
     }
   }, [input, isDraftLoaded]);
-
-  // --- End Persistence Logic ---
 
   const handleClose = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -106,13 +95,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   }, [isOpen]);
 
   const hasSolutions = examDetail.solutions.length > 0;
-  const totalAssistantMessages = messages.filter(
-    (m) => m.role === "assistant"
-  ).length;
-  const hasMultipleAssistantMessages = totalAssistantMessages > 1;
-
-  const displayIndex =
-    visibleAssistantIndex >= 0 ? visibleAssistantIndex : currentAssistantIndex;
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -200,9 +182,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               isLoading={isLoading}
               giveDirectAnswer={giveDirectAnswer}
               showScrollButton={showScrollButton}
-              hasAssistantMessages={hasMultipleAssistantMessages}
-              currentAssistantIndex={displayIndex}
-              totalAssistantMessages={totalAssistantMessages}
               placeholder={t("aiChatPlaceholder")}
               poweredByText={t("aiChatPoweredBy")}
               sendButtonLabel={t("aiChatSend")}
