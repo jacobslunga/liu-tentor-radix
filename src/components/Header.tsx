@@ -3,13 +3,30 @@ import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
 import useTranslation from "@/hooks/useTranslation";
+import { useEffect, useState } from "react";
 
 const Header = () => {
   const { t } = useTranslation();
+  const [showBorder, setShowBorder] = useState(false);
+
+  const handleScroll = () => {
+    if (window.scrollY > 0) {
+      setShowBorder(true);
+    } else {
+      setShowBorder(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
 
   return (
     <header
-      className="sticky top-0 z-50 h-14 bg-background w-full flex flex-row items-center justify-between md:justify-center px-5 md:px-10"
+      className={`sticky top-0 z-50 h-14 bg-background w-full flex flex-row items-center justify-between md:justify-center transition-colors duration-200 px-5 md:px-10 border-b ${showBorder ? "border-border" : "border-transparent"}`}
       role="banner"
       style={{
         maxWidth: "100%",

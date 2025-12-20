@@ -183,7 +183,7 @@ const ExamSearchPage: FC = () => {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_auto_1fr] w-full">
             <div className="hidden lg:block"></div>
 
-            <div className="flex flex-col gap-4 order-2 lg:order-0">
+            <div className="flex flex-col gap-0 order-2 lg:order-0">
               <DataTable
                 data={formattedExams}
                 courseCode={courseCode?.toUpperCase() ?? ""}

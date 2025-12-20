@@ -91,14 +91,21 @@ export function DataTable({
     <div className="w-full space-y-6 mx-auto relative">
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
-          <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
+          <h1
+            className="text-sm font-medium"
+            style={{
+              fontFamily: "Jetbrains Mono",
+            }}
+          >
+            {courseCode}
+          </h1>
           <Badge variant="outline">
             {data.length} {t("exams")}
           </Badge>
         </div>
 
         <h2
-          className={`font-medium tracking-tight text-foreground ${
+          className={`font-semibold tracking-tight text-foreground ${
             (courseNameSwe?.length ?? 0) > 40 ? "text-2xl" : "text-4xl"
           }`}
         >

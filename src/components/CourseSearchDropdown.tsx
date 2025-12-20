@@ -243,7 +243,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-2xl`}
+          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-xl`}
         />
         {courseCode && (
           <button
@@ -264,7 +264,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className="absolute w-full left-0 mt-2 bg-background border border-border z-60 max-h-72 rounded-2xl overflow-y-auto text-sm"
+            className="absolute w-full left-0 mt-2 bg-background border border-border z-60 max-h-72 rounded-xl overflow-y-auto text-sm"
           >
             {isLoading && (
               <div className="px-3 py-2 text-sm text-muted-foreground">
