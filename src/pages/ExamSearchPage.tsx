@@ -13,6 +13,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
 import { sponsors } from "@/components/sponsors/sponsorsData";
 import { ExamUploader } from "@/components/upload/ExamUploader";
+import { ExamSearchResults } from "@/components/ExamSearchResults";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -184,7 +185,7 @@ const ExamSearchPage: FC = () => {
             <div className="hidden lg:block"></div>
 
             <div className="flex flex-col gap-0 order-2 lg:order-0">
-              <DataTable
+              {/* <DataTable
                 data={formattedExams}
                 courseCode={courseCode?.toUpperCase() ?? ""}
                 courseNameSwe={courseData?.course_name_swe || ""}
@@ -192,6 +193,16 @@ const ExamSearchPage: FC = () => {
                 onSortChange={() =>
                   setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
                 }
+              /> */}
+              <ExamSearchResults
+                data={formattedExams}
+                courseCode={courseCode?.toUpperCase() ?? ""}
+                courseNameSwe={courseData?.course_name_swe || ""}
+                courseNameEng={courseData?.course_name_eng || ""}
+                onSortChange={() =>
+                  setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
+                }
+                sortOrder={sortOrder}
               />
               <Link to="/upload-exams">
                 <Button className="w-full z-50">{t("uploadMore")}</Button>
