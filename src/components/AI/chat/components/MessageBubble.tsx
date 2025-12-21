@@ -41,7 +41,7 @@ const GridLoader = () => {
 const AssistantMessage: FC<{ content: string }> = memo(
   ({ content }) => {
     return (
-      <div className="prose prose-base dark:prose-invert max-w-none w-full max-w-max">
+      <div className="prose prose-base dark:prose-invert max-w-none w-full">
         <ReactMarkdown
           remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[

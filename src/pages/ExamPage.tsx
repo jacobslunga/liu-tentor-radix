@@ -1,6 +1,5 @@
 import { FC, useEffect, useCallback } from "react";
 
-import { AIIntroDialog } from "@/components/AI/AIIntroDialog";
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/AI/ChatWindow";
 import ExamHeader from "@/components/ExamHeader";
@@ -100,7 +99,6 @@ const ExamPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <AIIntroDialog onGetStarted={() => setShowChatWindow(true)} />
       <ExamHeader
         exams={courseData.exams}
         setIsChatOpen={setShowChatWindow}
