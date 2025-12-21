@@ -19,8 +19,6 @@ import Cookies from "js-cookie";
 import { Exam } from "@/types/exam";
 import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
-import SponsorHeaderBanner from "./sponsors/SponsorHeaderBanner";
-import { sponsors } from "./sponsors/sponsorsData";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
@@ -230,11 +228,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
               </DropdownMenuContent>
             </DropdownMenu>
           )}
-        </div>
-
-        {/* Sponsor Banner */}
-        <div className="hidden lg:block">
-          <SponsorHeaderBanner sponsor={sponsors[0]} />
         </div>
       </div>
       <div className="flex items-center gap-3">
