@@ -1,7 +1,6 @@
 import { Outlet, useLocation } from "react-router-dom";
 import React from "react";
 
-import CookieBanner from "@/components/banners/CookieBanner";
 import Footer from "@/components/Footer";
 
 const MainLayout: React.FC = () => {
@@ -16,7 +15,6 @@ const MainLayout: React.FC = () => {
       </main>
 
       {!isExamPage && <Footer />}
-      <CookieBanner />
     </div>
   );
 };

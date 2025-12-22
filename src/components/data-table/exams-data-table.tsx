@@ -94,7 +94,7 @@ export function DataTable({
           <h1
             className="text-sm font-medium"
             style={{
-              fontFamily: "Jetbrains Mono",
+              fontFamily: "Google Sans Code, monospace",
             }}
           >
             {courseCode}
