@@ -3,30 +3,13 @@ import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
 import useTranslation from "@/hooks/useTranslation";
-import { useEffect, useState } from "react";
 
 const Header = () => {
   const { t } = useTranslation();
-  const [showBorder, setShowBorder] = useState(false);
-
-  const handleScroll = () => {
-    if (window.scrollY > 0) {
-      setShowBorder(true);
-    } else {
-      setShowBorder(false);
-    }
-  };
-
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <header
-      className={`sticky top-0 z-50 h-14 bg-background w-full flex flex-row items-center justify-between md:justify-center transition-colors duration-200 px-5 md:px-10 border-b ${showBorder ? "border-border" : "border-transparent"}`}
+      className="sticky top-0 z-50 h-14 bg-background w-full flex flex-row items-center justify-between md:justify-center transition-colors duration-200 px-5 md:px-10"
       role="banner"
       style={{
         maxWidth: "100%",
@@ -37,7 +20,12 @@ const Header = () => {
         className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
         aria-label={t("homeTitle")}
       >
-        <LogoIcon className="w-10 h-10" />
+        <div className="flex flex-row items-center justify-center space-x-2">
+          <LogoIcon className="w-10 h-10" />
+          <h1 className="text-xl font-semibold font-logo tracking-tight">
+            {t("homeTitle")}
+          </h1>
+        </div>
       </Link>
 
       <div

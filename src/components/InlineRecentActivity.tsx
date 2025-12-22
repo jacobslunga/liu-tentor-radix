@@ -35,9 +35,6 @@ const InlineRecentActivity = () => {
   }, []);
 
   useEffect(() => {
-    const cookieConsent = Cookies.get("cookieConsent");
-    if (cookieConsent !== "true") return;
-
     const storedVersion = Cookies.get("cookieVersion");
     if (storedVersion !== COOKIE_VERSION) {
       Cookies.remove(COOKIE_NAME);

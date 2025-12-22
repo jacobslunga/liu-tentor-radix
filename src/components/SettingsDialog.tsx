@@ -3,6 +3,7 @@ import {
   SunIcon,
   MoonIcon,
   MonitorIcon,
+  TextTIcon,
 } from "@phosphor-icons/react";
 import {
   Dialog,
@@ -12,7 +13,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { FC, JSX, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import {
   Select,
   SelectContent,
@@ -25,6 +26,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTheme } from "@/context/ThemeContext";
+import { useTextSize } from "@/context/TextSizeContext";
 import useTranslation from "@/hooks/useTranslation";
 
 type ShortcutAction =
@@ -39,6 +41,7 @@ type ShortcutAction =
 const SettingsDialog: FC = () => {
   const { t } = useTranslation();
   const { setTheme, theme } = useTheme();
+  const { textSize, setTextSize } = useTextSize();
   const { changeLanguage, languages, language } = useLanguage();
   const [_, setSystemPrefersDark] = useState(false);
 
@@ -55,11 +58,7 @@ const SettingsDialog: FC = () => {
     return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
-  const themeOptions: {
-    id: "light" | "dark" | "system";
-    label: string;
-    icon: JSX.Element;
-  }[] = [
+  const themeOptions = [
     {
       id: "light",
       label: "Light",
@@ -74,6 +73,24 @@ const SettingsDialog: FC = () => {
       id: "system",
       label: "System",
       icon: <MonitorIcon weight="bold" className="w-5 h-5" />,
+    },
+  ];
+
+  const textSizeOptions = [
+    {
+      id: "liten",
+      label: language === "sv" ? "Liten" : "Small",
+      icon: <TextTIcon weight="bold" className="w-4 h-4" />,
+    },
+    {
+      id: "standard",
+      label: "Standard",
+      icon: <TextTIcon weight="bold" className="w-5 h-5" />,
+    },
+    {
+      id: "stor",
+      label: language === "sv" ? "Stor" : "Large",
+      icon: <TextTIcon weight="bold" className="w-7 h-7" />,
     },
   ];
 
@@ -115,18 +132,39 @@ const SettingsDialog: FC = () => {
         {/* Theme Selector */}
         <div className="space-y-3">
           <h3 className="font-medium">{t("theme")}</h3>
-          <p className="text-sm text-muted-foreground">
-            {t("themeDescription")}
-          </p>
           <div className="flex gap-2">
             {themeOptions.map(({ id, label, icon }) => (
               <div
                 key={id}
-                onClick={() => setTheme(id)}
+                onClick={() => setTheme(id as any)}
                 className={cn(
-                  "flex-1 cursor-pointer rounded-md border border-border transition-all",
+                  "flex-1 cursor-pointer rounded-md border border-border transition-all select-none",
                   "flex flex-col items-center justify-center gap-2 py-4 hover:bg-primary/5 hover:border-primary",
                   theme === id
+                    ? "bg-primary/10 border-primary hover:bg-primary/10"
+                    : "bg-card"
+                )}
+              >
+                {icon}
+                <span className="text-sm font-medium">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="font-medium">
+            {language === "sv" ? "Textstorlek" : "Text Size"}
+          </h3>{" "}
+          <div className="flex gap-2">
+            {textSizeOptions.map(({ id, label, icon }) => (
+              <div
+                key={id}
+                onClick={() => setTextSize(id as any)}
+                className={cn(
+                  "flex-1 cursor-pointer rounded-md border border-border transition-all select-none",
+                  "flex flex-col items-center justify-center gap-2 py-4 hover:bg-primary/5 hover:border-primary",
+                  textSize === id
                     ? "bg-primary/10 border-primary hover:bg-primary/10"
                     : "bg-card"
                 )}

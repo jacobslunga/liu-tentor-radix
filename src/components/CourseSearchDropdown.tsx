@@ -61,9 +61,6 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   );
 
   const loadRecentSearches = useCallback(() => {
-    const cookieConsent = Cookies.get("cookieConsent");
-    if (cookieConsent !== "true") return;
-
     const storedVersion = Cookies.get("cookieVersion");
     const searches = Cookies.get("popularSearches");
 
@@ -93,9 +90,6 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   }, [loadRecentSearches]);
 
   const updateSearchCount = (course: string) => {
-    const cookieConsent = Cookies.get("cookieConsent");
-    if (cookieConsent !== "true") return;
-
     let searchesArray: RecentActivity[] = [];
     try {
       searchesArray = Cookies.get(COOKIE_NAME)

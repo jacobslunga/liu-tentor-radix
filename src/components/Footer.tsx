@@ -14,7 +14,7 @@ const Footer: FC = () => {
       title: language === "sv" ? "Sidor" : "Pages",
       links: [
         { name: t("homeLink"), href: "/" },
-        { name: "Om oss", href: "/om-oss" },
+        { name: language === "sv" ? "Om oss" : "About Us", href: "/om-oss" },
       ],
     },
     {

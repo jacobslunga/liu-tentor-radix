@@ -75,6 +75,7 @@ export default function HomePage() {
                 <Link to="/upload-exams">
                   <Button
                     variant="secondary"
+                    size="sm"
                     className="hidden md:flex flex-row items-center justify-center"
                   >
                     <UploadIcon className="w-5 h-5" weight="bold" />
