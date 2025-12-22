@@ -5,6 +5,7 @@ import React, {
   useRef,
   useState,
 } from "react";
+import Cookies from "js-cookie";
 import { ArrowUpIcon } from "@phosphor-icons/react";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useNavigate } from "react-router-dom";
@@ -87,10 +88,48 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
     overscan: 5,
   });
 
+  // Save selected course to recent activity cookie
+  const saveRecentActivity = (courseCode: string) => {
+    const COOKIE_NAME = "recentActivities_v3";
+    const COOKIE_VERSION = "1.2";
+    // Remove old cookie if version changed
+    const storedVersion = Cookies.get("cookieVersion");
+    if (storedVersion !== COOKIE_VERSION) {
+      Cookies.remove(COOKIE_NAME);
+      Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
+    }
+    let activities: any[] = [];
+    const cookie = Cookies.get(COOKIE_NAME);
+    if (cookie) {
+      try {
+        activities = JSON.parse(decodeURIComponent(cookie));
+      } catch (e) {
+        activities = [];
+      }
+    }
+    // Remove any previous entry for this course
+    activities = activities.filter((a) => a.courseCode !== courseCode);
+    // Add new activity to the front
+    activities.unshift({
+      courseCode,
+      courseName: courseCode, // No name available here
+      path:
+        searchMethod === "stats"
+          ? `/search/${courseCode}/stats`
+          : `/search/${courseCode}`,
+      timestamp: Date.now(),
+    });
+    // Limit to 10 recent
+    activities = activities.slice(0, 10);
+    Cookies.set(COOKIE_NAME, encodeURIComponent(JSON.stringify(activities)), {
+      expires: 365,
+    });
+  };
+
   const handleSelectCourse = (course: string) => {
     const searchCode = course.toUpperCase();
     if (!searchCode) return;
-
+    saveRecentActivity(searchCode);
     setCourseCode("");
     setShowSuggestions(false);
     navigate(

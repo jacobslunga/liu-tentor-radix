@@ -100,7 +100,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
   }, [isDropdownOpen, sorted, examId]);
 
   const completed = useMemo<Record<number, boolean>>(() => {
-    if (Cookies.get("cookieConsent") !== "true") return {};
     const c = Cookies.get("completedExams");
     return c ? JSON.parse(c) : {};
   }, []);

@@ -15,7 +15,6 @@ export const useResizablePanel = (): UseResizablePanelReturn => {
   const [width, setWidth] = useState(PANEL_DEFAULT_WIDTH);
   const [isResizing, setIsResizing] = useState(false);
 
-  // Use ref for width during resize to avoid triggering re-renders on every mouse move
   const widthRef = useRef(PANEL_DEFAULT_WIDTH);
   const rafRef = useRef<number | null>(null);
 
@@ -23,12 +22,10 @@ export const useResizablePanel = (): UseResizablePanelReturn => {
     const handleMouseMove = (e: MouseEvent) => {
       if (!isResizing) return;
 
-      // Cancel any pending animation frame
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
       }
 
-      // Use requestAnimationFrame for smooth updates
       rafRef.current = requestAnimationFrame(() => {
         const windowWidth = window.innerWidth;
         const newWidth = ((windowWidth - e.clientX) / windowWidth) * 100;
