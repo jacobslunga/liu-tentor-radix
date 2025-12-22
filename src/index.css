@@ -5,30 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
-@font-face {
-  font-family: "Open Sauce";
-  src: url("/fonts/OpenSauceSans-Regular.ttf");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "Open Sauce";
-  src: url("/fonts/OpenSauceSans-Medium.ttf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "Open Sauce";
-  src: url("/fonts/OpenSauceSans-SemiBold.ttf");
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "Open Sauce";
-  src: url("/fonts/OpenSauceSans-Bold.ttf");
-  font-weight: 700;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -88,7 +64,6 @@
 
   body {
     font-family:
-      "Open Sauce",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
