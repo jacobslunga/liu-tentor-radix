@@ -1,56 +1,87 @@
-import { FC, memo, useEffect, useRef } from "react";
+import { FC, memo, useEffect, useState, Suspense } from "react";
 import { Message } from "../types";
 import { MessageBubble } from "./MessageBubble";
+
+const BATCH = 20;
+const INITIAL_BATCH = 8;
+const TOP_THRESHOLD = 120;
 
 interface MessageListProps {
   messages: Message[];
   isLoading: boolean;
   language: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
-  onAssistantRefsReady: (refs: (HTMLDivElement | null)[]) => void;
+  messagesContainerRef: React.RefObject<HTMLDivElement | null>;
+  onMount?: () => void;
 }
 
 export const MessageList: FC<MessageListProps> = memo(
-  ({ messages, isLoading, language, messagesEndRef, onAssistantRefsReady }) => {
-    const refsArray = useRef<(HTMLDivElement | null)[]>([]);
+  ({
+    messages,
+    isLoading,
+    language,
+    messagesEndRef,
+    messagesContainerRef,
+    onMount,
+  }) => {
+    const [startIndex, setStartIndex] = useState(
+      Math.max(0, messages.length - INITIAL_BATCH)
+    );
 
+    // Notify parent when first batch mounts
     useEffect(() => {
-      onAssistantRefsReady(refsArray.current);
-    }, [messages.length, onAssistantRefsReady]);
+      onMount?.();
+    }, []);
+
+    // Expand batch when new messages arrive
+    useEffect(() => {
+      if (messages.length > startIndex + INITIAL_BATCH) {
+        const id = requestIdleCallback(() => {
+          setStartIndex(Math.max(0, messages.length - BATCH));
+        });
+        return () => cancelIdleCallback(id);
+      }
+    }, [messages.length]);
+
+    // Scroll to top load more
+    useEffect(() => {
+      const container = messagesContainerRef.current;
+      if (!container) return;
+      const onScroll = () => {
+        if (container.scrollTop <= TOP_THRESHOLD) {
+          setStartIndex((prev) => Math.max(0, prev - BATCH));
+        }
+      };
+      container.addEventListener("scroll", onScroll, { passive: true });
+      return () => container.removeEventListener("scroll", onScroll);
+    }, [messagesContainerRef]);
+
+    const visibleMessages = messages.slice(startIndex);
 
     return (
       <div className="w-full space-y-10">
-        {messages.map((message, index) => {
-          const isAssistant = message.role === "assistant";
-
+        {visibleMessages.map((message, index) => {
+          const realIndex = startIndex + index;
           return (
-            <div
-              key={index}
-              ref={
-                isAssistant
-                  ? (el) => {
-                      refsArray.current[index] = el;
-                    }
-                  : undefined
+            <Suspense
+              key={realIndex}
+              fallback={
+                <div className="h-12 bg-gray-200 rounded animate-pulse" />
               }
             >
               <MessageBubble
-                index={index}
+                index={realIndex}
                 message={message}
-                isLoading={isLoading && index === messages.length - 1}
+                isLoading={isLoading && realIndex === messages.length - 1}
                 language={language}
               />
-            </div>
+            </Suspense>
           );
         })}
         <div ref={messagesEndRef} />
       </div>
     );
-  },
-  (prevProps, nextProps) =>
-    prevProps.messages === nextProps.messages &&
-    prevProps.isLoading === nextProps.isLoading &&
-    prevProps.language === nextProps.language
+  }
 );
 
 MessageList.displayName = "MessageList";

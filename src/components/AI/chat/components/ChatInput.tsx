@@ -1,4 +1,4 @@
-import { FC, useRef, useEffect } from "react";
+import { FC, useRef, useEffect, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   InputGroup,
@@ -18,7 +18,8 @@ import {
   LightbulbFilamentIcon,
   ArrowUpIcon,
   SquareIcon,
-  CaretDownIcon,
+  ArrowsClockwiseIcon,
+  ArrowDownIcon,
 } from "@phosphor-icons/react";
 
 interface ChatInputProps {
@@ -30,13 +31,75 @@ interface ChatInputProps {
   placeholder: string;
   poweredByText: string;
   sendButtonLabel: string;
+  messagesCount: number;
   onInputChange: (value: string) => void;
   onSend: () => void;
   onCancel: () => void;
   onScrollToBottom: () => void;
-  onNavigate: (direction: "up" | "down") => void;
   onToggleAnswerMode: (direct: boolean) => void;
+  onResetConversation: () => void;
 }
+
+const ScrollToBottomButton = memo(
+  ({ show, onClick }: { show: boolean; onClick: () => void }) => (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ ease: "easeInOut", duration: 0.2 }}
+          className="absolute -top-14 right-0 -translate-x-1/2 z-20"
+        >
+          <Button variant="outline" size="icon" onClick={onClick}>
+            <ArrowDownIcon weight="bold" size={20} />
+          </Button>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+);
+
+const ResetConversationButton = memo(
+  ({
+    show,
+    onClick,
+    language,
+  }: {
+    show: boolean;
+    onClick: () => void;
+    language: string;
+  }) => (
+    <AnimatePresence>
+      {show && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ ease: "easeInOut", duration: 0.2 }}
+          className="absolute -top-14 left-0 translate-x-1/2 z-20"
+        >
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon" onClick={onClick}>
+                  <ArrowsClockwiseIcon size={20} weight="bold" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {language === "sv"
+                    ? "Återställ konversationen"
+                    : "Reset conversation"}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
+);
 
 export const ChatInput: FC<ChatInputProps> = ({
   language,
@@ -47,11 +110,13 @@ export const ChatInput: FC<ChatInputProps> = ({
   placeholder,
   poweredByText,
   sendButtonLabel,
+  messagesCount,
   onInputChange,
   onSend,
   onCancel,
   onScrollToBottom,
   onToggleAnswerMode,
+  onResetConversation,
 }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -72,21 +137,20 @@ export const ChatInput: FC<ChatInputProps> = ({
 
   return (
     <div className="px-2 space-y-2 relative pb-2 max-w-3xl mx-auto w-full">
-      <AnimatePresence>
-        {showScrollButton && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ ease: "easeInOut", duration: 0.2 }}
-            className="absolute -top-14 right-0 -translate-x-1/2 z-20"
-          >
-            <Button variant="outline" size="icon" onClick={onScrollToBottom}>
-              <CaretDownIcon weight="bold" className="h-4 w-4" />
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div className="absolute -top-7 h-14 bg-linear-to-t from-background via-background/50 to-transparent right-0 left-0 w-full" />
+
+      <ScrollToBottomButton
+        show={showScrollButton}
+        onClick={onScrollToBottom}
+      />
+      <ResetConversationButton
+        show={messagesCount > 30}
+        onClick={() => {
+          onResetConversation();
+          inputRef.current?.focus();
+        }}
+        language={language}
+      />
 
       <InputGroup className="z-40">
         <InputGroupTextarea
@@ -175,6 +239,7 @@ export const ChatInput: FC<ChatInputProps> = ({
           </InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
+
       <div className="flex flex-row items-center justify-between px-2 w-full mb-2">
         <p className="text-[10px] text-muted-foreground text-center">
           {poweredByText}
