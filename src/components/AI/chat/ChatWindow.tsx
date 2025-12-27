@@ -4,13 +4,9 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamWithSolutions } from "@/types/exam";
 import { useChatMessages, useResizablePanel, useScrollManager } from "./hooks";
-import {
-  ChatHeader,
-  EmptyState,
-  MessageList,
-  ResizeHandle,
-} from "./components";
-import { ChatInput } from "./";
+import { ChatHeader, EmptyState, ResizeHandle, ChatInput } from "./components";
+import { Loader2 } from "lucide-react";
+import { MessageList } from "./components/MessageList";
 
 interface ChatWindowProps {
   examDetail: ExamWithSolutions;
@@ -31,43 +27,34 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     isLoading,
     sendMessage,
     cancelGeneration,
-    assistantMessageRefs,
-    setCurrentAssistantIndex,
-    navigateToAssistantMessage,
+    resetConversation,
   } = useChatMessages({
     examId: examDetail.exam.id,
   });
+
   const {
     messagesEndRef,
     messagesContainerRef,
     showScrollButton,
     scrollToBottom,
     isUserScrollingRef,
-  } = useScrollManager({
-    isOpen,
-    assistantMessageRefs,
-    onVisibleIndexChange: setCurrentAssistantIndex,
-  });
+  } = useScrollManager({ isOpen });
 
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
+  const [isMessageListReady, setIsMessageListReady] = useState(false);
 
   const lastScrollPosition = useRef<number | null>(null);
+
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        setInput(saved);
-      }
-      setIsDraftLoaded(true);
-    }
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) setInput(saved);
+    setIsDraftLoaded(true);
   }, []);
 
   useEffect(() => {
-    if (typeof window !== "undefined" && isDraftLoaded) {
-      localStorage.setItem(STORAGE_KEY, input);
-    }
+    if (isDraftLoaded) localStorage.setItem(STORAGE_KEY, input);
   }, [input, isDraftLoaded]);
 
   const handleClose = useCallback(() => {
@@ -94,13 +81,9 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     }
   }, [isOpen]);
 
-  const hasSolutions = examDetail.solutions.length > 0;
-
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) {
-        handleClose();
-      }
+      if (e.key === "Escape" && isOpen) handleClose();
     };
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
@@ -112,9 +95,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     scrollToBottom();
     sendMessage(input, giveDirectAnswer);
     setInput("");
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    localStorage.removeItem(STORAGE_KEY);
   }, [
     input,
     isLoading,
@@ -129,6 +110,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     scrollToBottom("smooth");
   }, [scrollToBottom, isUserScrollingRef]);
 
+  const hasSolutions = examDetail.solutions.length > 0;
+
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
@@ -137,9 +120,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
           initial={{ x: "100%" }}
           animate={{ x: "0%" }}
           exit={{ x: "100%" }}
-          transition={{
-            x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
-          }}
+          transition={{ x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] } }}
           className="fixed right-0 top-0 h-full bg-background border-l flex flex-col overflow-hidden z-50"
           style={{
             width: `${width}%`,
@@ -158,6 +139,12 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
             ref={messagesContainerRef}
             className="flex-1 overflow-y-auto p-4 pb-20 space-y-4 relative min-h-0"
           >
+            {!isMessageListReady && (
+              <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
+                <Loader2 className="w-8 h-8 animate-spin" />
+              </div>
+            )}
+
             {messages.length === 0 && (
               <EmptyState language={language} hasSolutions={hasSolutions} />
             )}
@@ -167,11 +154,8 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               isLoading={isLoading}
               language={language}
               messagesEndRef={messagesEndRef}
-              onAssistantRefsReady={(
-                refs: Record<number, HTMLDivElement | null>
-              ) => {
-                assistantMessageRefs.current = Object.values(refs);
-              }}
+              messagesContainerRef={messagesContainerRef}
+              onMount={() => setIsMessageListReady(true)}
             />
           </div>
 
@@ -189,8 +173,9 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
               onSend={handleSend}
               onCancel={cancelGeneration}
               onScrollToBottom={handleScrollToBottom}
-              onNavigate={navigateToAssistantMessage}
               onToggleAnswerMode={setGiveDirectAnswer}
+              messagesCount={messages.length}
+              onResetConversation={resetConversation}
             />
           )}
         </motion.div>
