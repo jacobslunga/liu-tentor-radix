@@ -581,15 +581,15 @@ const translations: Record<Language, Translations> = {
     privacyPolicySection6Title: "6. Ändringar i denna policy",
     privacyPolicySection6Content:
       "Vi förbehåller oss rätten att uppdatera denna policy när som helst. Eventuella ändringar kommer att publiceras på denna sida, och vi rekommenderar att du regelbundet granskar denna policy för att hålla dig uppdaterad.",
-    privacyPolicySection7Title: "7. AI-assistent och konversationsintegritet",
+    privacyPolicySection7Title: "7. AI-assistent och datahantering",
     privacyPolicySection7Content:
-      "Vi erbjuder en AI-assistent powered by Gemini för att hjälpa dig att förstå tentamaterial. Din integritet är vår högsta prioritet:",
+      "Vi använder en AI-assistent för att hjälpa dig förstå tentamaterial. För att säkerställa kvaliteten och förbättra tjänsten gäller följande:",
     privacyPolicySection7Item1:
-      "Vi sparar inte dina konversationer: Inga chatthistorik eller frågor du ställer till AI:n lagras på våra servrar.",
+      "Anonymiserad lagring: Vi sparar konversationer i syfte att träna och förbättra AI:ns förståelse för specifika kurser.",
     privacyPolicySection7Item2:
-      "Tillfällig bearbetning: Dina meddelanden skickas till Gemini för bearbetning men lagras inte permanent av oss.",
+      "Ingen personlig koppling: Data lagras kopplat till ett anonymt ID. Vi sparar ingen personlig information som kan identifiera dig.",
     privacyPolicySection7Item3:
-      "Ingen användarprofil: Vi bygger inte upp någon profil baserad på dina AI-konversationer eller använder dem för analys.",
+      "Kvalitetssäkring: Vi analyserar anonymiserade konversationer för att motverka felaktig information och förbättra AI-modellen.",
     privacyPolicySection8Title: "8. Kontaktinformation",
     privacyPolicySection8Content:
       "Om du har några frågor om denna integritetspolicy eller hur dina uppgifter hanteras, vänligen kontakta oss på:",
@@ -916,15 +916,15 @@ const translations: Record<Language, Translations> = {
     privacyPolicySection6Title: "6. Changes to this policy",
     privacyPolicySection6Content:
       "We reserve the right to update this policy at any time. Any changes will be published on this page, and we recommend that you regularly review this policy to stay informed.",
-    privacyPolicySection7Title: "7. AI Assistant and conversation privacy",
+    privacyPolicySection7Title: "7. AI Assistant and Data Management",
     privacyPolicySection7Content:
-      "We offer an AI assistant powered by Gemini to help you understand exam materials. Your privacy is our top priority:",
+      "We use an AI assistant to help you understand exam materials. To ensure quality and improve the service, the following applies:",
     privacyPolicySection7Item1:
-      "We don't save your conversations: No chat history or questions you ask the AI are stored on our servers.",
+      "Anonymized Storage: We store conversations for the purpose of training and improving the AI's understanding of specific courses.",
     privacyPolicySection7Item2:
-      "Temporary processing: Your messages are sent to Gemini for processing but are not permanently stored by us.",
+      "No Personal Link: Data is stored linked to an anonymous ID. We do not store any personal information that can identify you.",
     privacyPolicySection7Item3:
-      "No user profiling: We do not build any profile based on your AI conversations or use them for analysis.",
+      "Quality Assurance: We analyze anonymized conversations to prevent incorrect information and improve the AI model.",
     privacyPolicySection8Title: "8. Contact information",
     privacyPolicySection8Content:
       "If you have any questions about this privacy policy or how your data is handled, please contact us at:",

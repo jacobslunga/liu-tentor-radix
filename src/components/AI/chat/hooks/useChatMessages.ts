@@ -78,7 +78,11 @@ export const useChatMessages = ({
       try {
         const response = await fetch(`${CHAT_API_URL}/${examId}`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "x-anonymous-user-id":
+              localStorage.getItem("liutentor_anonymous_id") || "unknown",
+          },
           body: JSON.stringify({
             messages: optimistic.slice(0, -1),
             giveDirectAnswer,

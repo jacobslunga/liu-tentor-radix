@@ -19,6 +19,14 @@ const MainLayout: React.FC = () => {
     } else {
       root.style.removeProperty("font-size");
     }
+
+    const storageKey = "liutentor_anonymous_id";
+    const existingId = localStorage.getItem(storageKey);
+
+    if (!existingId) {
+      const newId = crypto.randomUUID();
+      localStorage.setItem(storageKey, newId);
+    }
   }, [textSize]);
 
   return (
