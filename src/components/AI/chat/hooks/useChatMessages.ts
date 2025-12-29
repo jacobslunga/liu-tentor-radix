@@ -5,6 +5,9 @@ import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from "../constants";
 interface UseChatMessagesProps {
   examId: string | number;
   initialMessages?: Message[];
+  examUrl: string;
+  courseCode: string;
+  solutionUrl?: string | null;
 }
 
 export interface UseChatMessagesReturn {
@@ -17,6 +20,9 @@ export interface UseChatMessagesReturn {
 
 export const useChatMessages = ({
   examId,
+  examUrl,
+  courseCode,
+  solutionUrl,
   initialMessages = [],
 }: UseChatMessagesProps): UseChatMessagesReturn => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
@@ -86,6 +92,9 @@ export const useChatMessages = ({
           body: JSON.stringify({
             messages: optimistic.slice(0, -1),
             giveDirectAnswer,
+            examUrl,
+            courseCode,
+            solutionUrl: solutionUrl || undefined,
           }),
           signal: abortControllerRef.current.signal,
         });
@@ -140,7 +149,7 @@ export const useChatMessages = ({
         isLoadingRef.current = false;
       }
     },
-    [examId]
+    [examId, examUrl, courseCode, solutionUrl]
   );
 
   return {
