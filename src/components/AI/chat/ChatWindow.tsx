@@ -30,7 +30,13 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     resetConversation,
   } = useChatMessages({
     examId: examDetail.exam.id,
+    courseCode: examDetail.exam.course_code,
+    examUrl: examDetail.exam.pdf_url,
+    solutionUrl:
+      examDetail.solutions.length > 0 ? examDetail.solutions[0].pdf_url : null,
   });
+
+  console.log(examDetail);
 
   const {
     messagesEndRef,

@@ -23,6 +23,7 @@ const ExamPage: FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setShowChatWindow(false);
   }, []);
 
   const handleCloseChat = () => {
