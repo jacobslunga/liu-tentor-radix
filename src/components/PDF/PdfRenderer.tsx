@@ -19,6 +19,14 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
+/**
+ * Responsible for rendering any PDF based on pdfUrl
+ * @param pdfUrl        - External link or base64 representation
+ * @param scale         - Initial scale of the PDF
+ * @param rotation      - Initial rotation of the PDF
+ * @param rotation      - Number of pages in the PDF
+ * @param onLoadSuccess - Callback after rendering the PDF
+ */
 const PdfRenderer: FC<PdfRendererProps> = ({
   pdfUrl,
   scale = 1,
@@ -52,14 +60,14 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       <Document
         file={pdfUrl}
         onLoadSuccess={onLoadSuccess}
-        className="w-full h-full overflow-auto bg-background flex flex-col items-start"
+        className="pdf-container w-full h-full overflow-auto bg-background"
         loading={() => (
           <div className="w-full h-full flex items-center justify-center">
             <Loader2 className="animate-spin w-5 h-5" />
           </div>
         )}
       >
-        <div className="flex flex-col items-start gap-4 py-4 w-fit origin-top-left px-4">
+        <div className="flex flex-col items-center gap-4 py-4 min-w-fit mx-auto">
           {Array.from({ length: numPages || 0 }, (_, i) => (
             <Page
               key={i + 1}
