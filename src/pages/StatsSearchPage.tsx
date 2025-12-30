@@ -182,7 +182,7 @@ export default function StatsSearchPage() {
       <div className="max-w-5xl mx-auto gap-1 flex flex-col md:flex-row justify-between items-start mt-5">
         <div className="flex flex-col items-start justify-start gap-6 order-2 md:order-1">
           <div className="flex flex-row items-center space-x-2">
-            <h1 className="text-sm font-medium font-mono">{courseCode}</h1>
+            <h1 className="text-sm font-medium">{courseCode}</h1>
             <Badge variant="outline">
               {sorted.length} {language === "sv" ? "tentor" : "exams"}
             </Badge>
@@ -191,7 +191,7 @@ export default function StatsSearchPage() {
           {/* Course title */}
           <div className="flex flex-row items-center justify-between w-full">
             <h2
-              className={`font-medium tracking-tight text-foreground ${
+              className={`font-black font-logo tracking-tight text-foreground ${
                 ((language === "sv"
                   ? courseData?.course_name_swe
                   : courseData?.course_name_eng

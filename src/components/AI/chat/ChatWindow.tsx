@@ -36,8 +36,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
       examDetail.solutions.length > 0 ? examDetail.solutions[0].pdf_url : null,
   });
 
-  console.log(examDetail);
-
   const {
     messagesEndRef,
     messagesContainerRef,
@@ -53,6 +51,9 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 
   const lastScrollPosition = useRef<number | null>(null);
 
+  // ... [Keep your existing useEffects for Storage, Scroll restoration, Escape key] ...
+
+  // --- REINSERT YOUR USE EFFECTS HERE (Shortened for brevity) ---
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) setInput(saved);
@@ -94,6 +95,7 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, handleClose]);
+  // -------------------------------------------------------------
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
@@ -110,6 +112,24 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     scrollToBottom,
     isUserScrollingRef,
   ]);
+
+  // NEW: Handle clicking a suggestion from EmptyState
+  const handleSuggestionClick = useCallback(
+    (question: string) => {
+      if (isLoading) return;
+      isUserScrollingRef.current = false;
+      scrollToBottom();
+      // Directly send the message
+      sendMessage(question, giveDirectAnswer);
+    },
+    [
+      isLoading,
+      sendMessage,
+      scrollToBottom,
+      giveDirectAnswer,
+      isUserScrollingRef,
+    ]
+  );
 
   const handleScrollToBottom = useCallback(() => {
     isUserScrollingRef.current = false;
@@ -152,7 +172,11 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
             )}
 
             {messages.length === 0 && (
-              <EmptyState language={language} hasSolutions={hasSolutions} />
+              <EmptyState
+                language={language}
+                hasSolutions={hasSolutions}
+                onQuestionClick={handleSuggestionClick} // Pass the handler
+              />
             )}
 
             <MessageList
