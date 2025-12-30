@@ -49,7 +49,7 @@ const PrivacyPolicy: FC = () => {
 
   return (
     <div className="w-full max-w-3xl">
-      <h1 className="text-3xl font-medium text-foreground mb-1">
+      <h1 className="text-3xl font-black font-logo tracking-tight text-foreground mb-1">
         {t("privacyPolicyTitle")}
       </h1>
       <p className="text-xs text-muted-foreground mb-6">

@@ -20,12 +20,7 @@ const Header = () => {
         className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
         aria-label={t("homeTitle")}
       >
-        <div className="flex flex-row items-center justify-center space-x-2">
-          <LogoIcon className="w-10 h-10" />
-          <h1 className="text-xl font-semibold font-logo tracking-tight">
-            {t("homeTitle")}
-          </h1>
-        </div>
+        <LogoIcon className="w-10 h-10" />
       </Link>
 
       <div

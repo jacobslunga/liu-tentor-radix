@@ -64,7 +64,6 @@
 
   body {
     font-family:
-      "Inter",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -94,12 +93,6 @@
   .dark *::-moz-selection {
     background: oklch(0.8332 0.088 144.73 / 0.35);
     color: oklch(0.985 0 0);
-  }
-
-  @font-face {
-    font-family: "Logo";
-    src: "Libre Caslon Text";
-    font-weight: 700;
   }
 
   .kbd {
@@ -247,7 +240,7 @@
 }
 
 @theme {
-  --font-logo: "Libre Caslon Text", serif;
+  --font-logo: "Libre Baskerville", serif;
 }
 
 @theme inline {
@@ -291,7 +284,7 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(0.2 0 0);
+  --foreground: oklch(10.744% 0.0091 88.747);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -325,7 +318,7 @@
 
 .dark {
   --background: oklch(0.1872 0.002 286.2);
-  --foreground: oklch(0.9619 0 0);
+  --foreground: oklch(90.844% 0.00218 14.701);
   --card: oklch(0.2591 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.2591 0 0);
