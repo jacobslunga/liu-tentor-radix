@@ -1,5 +1,5 @@
-import { FC, useState, useEffect, useCallback, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { FC, useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamWithSolutions } from "@/types/exam";
@@ -12,11 +12,29 @@ interface ChatWindowProps {
   examDetail: ExamWithSolutions;
   isOpen: boolean;
   onClose: () => void;
+  variant?: "overlay" | "push";
 }
 
 const STORAGE_KEY = "chat_input_draft";
 
-const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
+const contentVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { duration: 0.2, ease: "easeOut" },
+  },
+  exit: {
+    opacity: 0,
+    transition: { duration: 0.1 },
+  },
+};
+
+const ChatWindow: FC<ChatWindowProps> = ({
+  examDetail,
+  isOpen,
+  onClose,
+  variant = "overlay",
+}) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const chatWindowRef = useRef<HTMLDivElement>(null);
@@ -51,9 +69,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
 
   const lastScrollPosition = useRef<number | null>(null);
 
-  // ... [Keep your existing useEffects for Storage, Scroll restoration, Escape key] ...
-
-  // --- REINSERT YOUR USE EFFECTS HERE (Shortened for brevity) ---
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) setInput(saved);
@@ -95,7 +110,6 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, handleClose]);
-  // -------------------------------------------------------------
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
@@ -113,13 +127,11 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
     isUserScrollingRef,
   ]);
 
-  // NEW: Handle clicking a suggestion from EmptyState
   const handleSuggestionClick = useCallback(
     (question: string) => {
       if (isLoading) return;
       isUserScrollingRef.current = false;
       scrollToBottom();
-      // Directly send the message
       sendMessage(question, giveDirectAnswer);
     },
     [
@@ -137,77 +149,130 @@ const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   }, [scrollToBottom, isUserScrollingRef]);
 
   const hasSolutions = examDetail.solutions.length > 0;
+  const isOverlay = variant === "overlay";
+
+  const parentVariants = useMemo((): Variants => {
+    const enterSettings = isResizing
+      ? { duration: 0 }
+      : {
+          type: "spring" as const,
+          bounce: 0,
+          duration: 0.2,
+          delayChildren: 0.1,
+          staggerChildren: 0.05,
+        };
+
+    const exitSettings = {
+      type: "spring" as const,
+      bounce: 0,
+      duration: 0.2,
+    };
+
+    if (isOverlay) {
+      return {
+        hidden: { x: "100%" },
+        visible: { x: "0%", transition: enterSettings },
+        exit: { x: "100%", transition: exitSettings },
+      };
+    } else {
+      return {
+        hidden: { width: 0, opacity: 0 },
+        visible: {
+          width: `${width}%`,
+          opacity: 1,
+          transition: enterSettings,
+        },
+        exit: {
+          width: 0,
+          opacity: 0,
+          transition: exitSettings,
+        },
+      };
+    }
+  }, [isOverlay, width, isResizing]);
 
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
           ref={chatWindowRef}
-          initial={{ x: "100%" }}
-          animate={{ x: "0%" }}
-          exit={{ x: "100%" }}
-          transition={{ x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] } }}
-          className="fixed right-0 top-0 h-full bg-background border-l flex flex-col overflow-hidden z-50"
+          variants={parentVariants}
+          initial="hidden"
+          animate="visible"
+          exit="exit"
+          className={`
+            bg-transparent flex flex-col z-50
+            ${isOverlay ? "fixed right-0 top-0 h-full shadow-xl" : "relative h-full"}
+          `}
           style={{
-            width: `${width}%`,
+            width: isOverlay ? `${width}%` : undefined,
             willChange: isResizing ? "width" : "auto",
             contain: isResizing ? "layout style" : "none",
           }}
         >
           <ResizeHandle onStartResize={startResizing} isResizing={isResizing} />
-          <ChatHeader
-            language={language}
-            hasSolutions={hasSolutions}
-            onClose={handleClose}
-          />
 
-          <div
-            ref={messagesContainerRef}
-            className="flex-1 overflow-y-auto p-4 pb-20 space-y-4 relative min-h-0"
-          >
-            {!isMessageListReady && (
-              <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-                <Loader2 className="w-8 h-8 animate-spin" />
-              </div>
-            )}
-
-            {messages.length === 0 && (
-              <EmptyState
+          <div className="flex-1 flex flex-col overflow-hidden bg-background border-l h-full w-full">
+            <motion.div variants={contentVariants}>
+              <ChatHeader
                 language={language}
                 hasSolutions={hasSolutions}
-                onQuestionClick={handleSuggestionClick} // Pass the handler
+                onClose={handleClose}
               />
-            )}
+            </motion.div>
 
-            <MessageList
-              messages={messages}
-              isLoading={isLoading}
-              language={language}
-              messagesEndRef={messagesEndRef}
-              messagesContainerRef={messagesContainerRef}
-              onMount={() => setIsMessageListReady(true)}
-            />
+            <motion.div
+              variants={contentVariants}
+              ref={messagesContainerRef}
+              className="flex-1 overflow-y-auto p-4 pb-10 space-y-4 relative min-h-0"
+            >
+              {!isMessageListReady && (
+                <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
+                  <Loader2 className="w-8 h-8 animate-spin" />
+                </div>
+              )}
+
+              {messages.length === 0 && (
+                <EmptyState
+                  language={language}
+                  hasSolutions={hasSolutions}
+                  onQuestionClick={handleSuggestionClick}
+                />
+              )}
+
+              <MessageList
+                messages={messages}
+                isLoading={isLoading}
+                language={language}
+                messagesEndRef={messagesEndRef}
+                messagesContainerRef={messagesContainerRef}
+                onMount={() => setIsMessageListReady(true)}
+              />
+            </motion.div>
+
+            {/* INPUT AREA */}
+            <motion.div variants={contentVariants}>
+              {isDraftLoaded && (
+                <ChatInput
+                  language={language}
+                  input={input}
+                  isLoading={isLoading}
+                  giveDirectAnswer={giveDirectAnswer}
+                  showScrollButton={showScrollButton}
+                  placeholder={t("aiChatPlaceholder")}
+                  poweredByText={t("aiChatPoweredBy")}
+                  sendButtonLabel={t("aiChatSend")}
+                  onInputChange={setInput}
+                  onSend={handleSend}
+                  onCancel={cancelGeneration}
+                  onScrollToBottom={handleScrollToBottom}
+                  onToggleAnswerMode={setGiveDirectAnswer}
+                  messagesCount={messages.length}
+                  onResetConversation={resetConversation}
+                />
+              )}
+            </motion.div>
           </div>
-
-          {isDraftLoaded && (
-            <ChatInput
-              language={language}
-              input={input}
-              isLoading={isLoading}
-              giveDirectAnswer={giveDirectAnswer}
-              showScrollButton={showScrollButton}
-              placeholder={t("aiChatPlaceholder")}
-              poweredByText={t("aiChatPoweredBy")}
-              sendButtonLabel={t("aiChatSend")}
-              onInputChange={setInput}
-              onSend={handleSend}
-              onCancel={cancelGeneration}
-              onScrollToBottom={handleScrollToBottom}
-              onToggleAnswerMode={setGiveDirectAnswer}
-              messagesCount={messages.length}
-              onResetConversation={resetConversation}
-            />
-          )}
         </motion.div>
       )}
     </AnimatePresence>

@@ -22,6 +22,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
+      // Logic checks showChatWindow, so functionality stops correctly
       if (!hasFacit || isManual || showChatWindow) return;
 
       const w = window.innerWidth;
@@ -85,7 +86,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
         </motion.div>
       )}
 
-      {hasFacit && !isFacitVisible && (
+      {hasFacit && !isFacitVisible && !showChatWindow && (
         <GradientIndicator facitPdfUrl={examDetail.solutions[0]?.pdf_url} />
       )}
     </div>

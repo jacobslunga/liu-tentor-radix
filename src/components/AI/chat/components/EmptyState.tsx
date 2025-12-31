@@ -22,7 +22,7 @@ export const EmptyState: FC<EmptyStateProps> = ({
     <div className="h-full flex flex-col items-center justify-center px-4 relative overflow-hidden">
       <div className="max-w-md w-full text-center relative z-10">
         {/* Title */}
-        <h2 className="font-logo text-2xl font-bold tracking-tight mb-3">
+        <h2 className="text-2xl font-semibold tracking-tight mb-3">
           {isSv ? "Ställ en fråga" : "Ask a question"}
         </h2>
 

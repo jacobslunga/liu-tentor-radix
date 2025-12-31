@@ -89,7 +89,7 @@ export default function UpdatesPage() {
   return (
     <div className="w-full max-w-3xl">
       {/* Header */}
-      <h1 className="text-3xl font-black font-logo tracking-tight text-foreground mb-2">
+      <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
         {language === "sv" ? "Uppdateringar" : "Updates"}
       </h1>
       <p className="text-sm text-muted-foreground mb-8">

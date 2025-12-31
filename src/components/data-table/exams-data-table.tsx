@@ -91,21 +91,20 @@ export function DataTable({
     <div className="w-full space-y-6 mx-auto relative">
       <div className="flex flex-col w-full space-y-4">
         <div className="flex flex-row items-center space-x-2">
-          <h1 className="text-sm font-medium">{courseCode}</h1>
+          <h1 className="text-sm font-semibold">{courseCode}</h1>
           <Badge variant="outline">
             {data.length} {t("exams")}
           </Badge>
         </div>
 
         <h2
-          className={`font-black font-logo tracking-tight text-foreground ${
+          className={`font-semibold tracking-tight text-foreground ${
             (courseNameSwe?.length ?? 0) > 40 ? "text-2xl" : "text-4xl"
           }`}
         >
           {courseNameSwe}
         </h2>
 
-        {/* New: Stats row */}
         <div className="flex flex-row items-center space-x-6 text-sm text-muted-foreground mt-1">
           <div>
             <span className="font-medium text-foreground">
@@ -159,7 +158,7 @@ export function DataTable({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={`px-6 py-4 cursor-pointer transition-all text-left ${
+                    className={`px-4 py-3 cursor-pointer transition-all text-left ${
                       header.id === "exam_date"
                         ? "hover:text-foreground hover:underline"
                         : ""
@@ -196,7 +195,7 @@ export function DataTable({
                   className="group cursor-pointer transition-all border-t"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id} className="px-6 py-4">
+                    <TableCell key={cell.id} className="px-4 py-2.5">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()

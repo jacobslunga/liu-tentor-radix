@@ -41,7 +41,7 @@ const GridLoader = () => {
 const AssistantMessage: FC<{ content: string }> = memo(
   ({ content }) => {
     return (
-      <div className="prose prose-base dark:prose-invert max-w-none w-full">
+      <div className="prose prose-base dark:prose-invert max-w-none w-full leading-7">
         <ReactMarkdown
           remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[
@@ -70,12 +70,10 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         className={`max-w-3xl mx-auto w-full ${isUser ? "flex justify-end" : ""}`}
       >
         <div
-          className={`py-2 px-3 ${
+          className={`${
             isUser
-              ? `bg-primary/10 text-foreground/80 ${
-                  message.content.length > 100 ? "rounded-2xl" : "rounded-lg"
-                } max-w-[85%] w-fit`
-              : "w-full"
+              ? "bg-secondary text-foreground px-5 py-2.5 rounded-3xl rounded-tr-sm max-w-[85%] w-fit"
+              : "w-full px-1 py-2"
           }`}
         >
           {message.role === "assistant" ? (
@@ -90,7 +88,9 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
               <AssistantMessage content={message.content} />
             )
           ) : (
-            <p className="text-base whitespace-pre-wrap">{message.content}</p>
+            <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
+              {message.content}
+            </p>
           )}
         </div>
       </div>
