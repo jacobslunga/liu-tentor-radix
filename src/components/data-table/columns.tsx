@@ -1,5 +1,10 @@
-import { CheckIcon, XIcon } from "@phosphor-icons/react";
-
+import {
+  ArrowSquareOutIcon,
+  CheckIcon,
+  DownloadSimpleIcon,
+  XIcon,
+} from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
 import { Exam } from "@/types/exam";
 import { ExamStatsDialog } from "@/components/ExamStatsDialog";
@@ -13,7 +18,7 @@ export const getColumns = (
     header: t("examName"),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center group-hover:underline font-medium ransition-colors">
+        <div className="flex items-center group-hover:underline font-medium transition-colors">
           {row.original.exam_name}
         </div>
       );
@@ -93,6 +98,64 @@ export const getColumns = (
             </span>
           }
         />
+      );
+    },
+  },
+  {
+    id: "actions",
+    header: "",
+    cell: ({ row }) => {
+      const pdfUrl = row.original.pdf_url;
+      const fileName = `${row.original.course_code}_${row.original.exam_date}.pdf`;
+
+      const handleDownload = async (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (!pdfUrl) return;
+
+        try {
+          const response = await fetch(pdfUrl);
+          const blob = await response.blob();
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          window.URL.revokeObjectURL(url);
+        } catch (error) {
+          console.error("Download failed, falling back to open", error);
+          window.open(pdfUrl, "_blank");
+        }
+      };
+
+      const handleOpen = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        if (pdfUrl) {
+          window.open(pdfUrl, "_blank", "noopener,noreferrer");
+        }
+      };
+
+      return (
+        <div className="flex items-center justify-end gap-1">
+          <Button
+            variant="ghost"
+            size="icon"
+            title="Open in new tab"
+            onClick={handleOpen}
+          >
+            <ArrowSquareOutIcon weight="bold" size={18} />
+          </Button>
+
+          <Button
+            variant="ghost"
+            size="icon"
+            title="Download PDF"
+            onClick={handleDownload}
+          >
+            <DownloadSimpleIcon weight="bold" size={18} />
+          </Button>
+        </div>
       );
     },
   },

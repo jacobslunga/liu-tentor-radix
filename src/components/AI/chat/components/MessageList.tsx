@@ -59,22 +59,24 @@ export const MessageList: FC<MessageListProps> = memo(
     const visibleMessages = messages.slice(startIndex);
 
     return (
-      <div className="w-full space-y-10">
+      <div className="w-full space-y-10 px-4">
         {visibleMessages.map((message, index) => {
           const realIndex = startIndex + index;
           return (
             <Suspense
               key={realIndex}
               fallback={
-                <div className="h-12 bg-gray-200 rounded animate-pulse" />
+                <div className="h-12 bg-gray-200 rounded animate-pulse max-w-3xl mx-auto" />
               }
             >
-              <MessageBubble
-                index={realIndex}
-                message={message}
-                isLoading={isLoading && realIndex === messages.length - 1}
-                language={language}
-              />
+              <div className="max-w-3xl mx-auto w-full">
+                <MessageBubble
+                  index={realIndex}
+                  message={message}
+                  isLoading={isLoading && realIndex === messages.length - 1}
+                  language={language}
+                />
+              </div>
             </Suspense>
           );
         })}

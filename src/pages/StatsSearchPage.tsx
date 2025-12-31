@@ -191,7 +191,7 @@ export default function StatsSearchPage() {
           {/* Course title */}
           <div className="flex flex-row items-center justify-between w-full">
             <h2
-              className={`font-black font-logo tracking-tight text-foreground ${
+              className={`font-semibold tracking-tight text-foreground ${
                 ((language === "sv"
                   ? courseData?.course_name_swe
                   : courseData?.course_name_eng

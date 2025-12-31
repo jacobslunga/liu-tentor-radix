@@ -43,7 +43,7 @@ const FAQPage = () => {
 
   return (
     <main className="w-full max-w-3xl">
-      <h1 className="text-3xl font-black font-logo tracking-tight text-foreground mb-2">
+      <h1 className="text-3xl font-semibold tracking-tight text-foreground mb-2">
         {language === "sv" ? "Vanliga frågor" : "Frequently Asked Questions"}
       </h1>
       <p className="text-sm text-muted-foreground mb-6">
