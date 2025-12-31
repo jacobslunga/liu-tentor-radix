@@ -1,10 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { Message } from "../types";
-import {
-  CHAT_API_URL,
-  CHAT_API_URL_LOCAL,
-  STREAM_UPDATE_INTERVAL,
-} from "../constants";
+import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from "../constants";
 
 interface UseChatMessagesProps {
   examId: string | number;
@@ -88,7 +84,7 @@ export const useChatMessages = ({
       try {
         const recentMessages = optimistic.slice(0, -1).slice(-10);
 
-        const response = await fetch(`${CHAT_API_URL_LOCAL}/${examId}`, {
+        const response = await fetch(`${CHAT_API_URL}/${examId}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
