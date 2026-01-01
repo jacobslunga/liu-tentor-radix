@@ -2,7 +2,7 @@ import CourseSearchDropdown from "@/components/CourseSearchDropdown";
 import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Header = () => {
   const { t } = useTranslation();

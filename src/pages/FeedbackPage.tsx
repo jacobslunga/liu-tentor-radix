@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 import { supabase } from "@/supabase/supabaseClient";
 import { useForm } from "react-hook-form";
 import { useMetadata } from "@/hooks/useMetadata";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

@@ -8,7 +8,7 @@ import { ArrowBendUpRightIcon } from "@phosphor-icons/react";
 import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import useSWR from "swr";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface RecentActivity {
   courseCode: string;

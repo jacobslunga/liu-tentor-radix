@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { motion } from "framer-motion";
 import useLayoutMode from "@/stores/LayoutModeStore";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 import {
   Tooltip,
   TooltipContent,

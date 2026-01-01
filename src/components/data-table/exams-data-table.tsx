@@ -28,7 +28,7 @@ import { ChartBarIcon, ArrowsDownUpIcon } from "@phosphor-icons/react";
 import { Exam } from "@/types/exam";
 import { getColumns } from "@/components/data-table/columns";
 import { useLanguage } from "@/context/LanguageContext";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   data: Exam[];

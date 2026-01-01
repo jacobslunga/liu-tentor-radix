@@ -45,5 +45,3 @@ export const useTranslation = () => {
     isEnglish,
   };
 };
-
-export default useTranslation;

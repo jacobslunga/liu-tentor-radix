@@ -17,7 +17,7 @@ import {
 
 import { motion } from "framer-motion";
 import usePdf from "@/hooks/usePdf";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 import { downloadFile } from "@/lib/utils";
 
 interface Props {

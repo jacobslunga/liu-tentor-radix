@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const Footer: FC = () => {
   const { language } = useLanguage();

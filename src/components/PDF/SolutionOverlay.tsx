@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 
 import { CursorClickIcon } from "@phosphor-icons/react";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   isBlurred: boolean;
