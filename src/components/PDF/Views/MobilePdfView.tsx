@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { FileText, BookOpen } from "lucide-react";
 import ExamPdf from "../ExamPdf";
 import SolutionPdf from "../SolutionPdf";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   examDetail: ExamWithSolutions;

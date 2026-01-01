@@ -1,7 +1,7 @@
 import { ExamUploader } from "@/components/upload/ExamUploader";
 import { useEffect } from "react";
 import { useMetadata } from "@/hooks/useMetadata";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const UploadExamPage = () => {
   const { t } = useTranslation();

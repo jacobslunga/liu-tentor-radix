@@ -109,7 +109,6 @@ const ExamPage: FC = () => {
       />
 
       <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
-        {/* REMOVED 'transition-all duration-300' here to prevent resize lag */}
         <div className="flex-1 flex flex-col min-w-0 h-full">
           <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
             <div className="flex-1 h-full relative">

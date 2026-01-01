@@ -22,7 +22,7 @@ import { kurskodArray } from "@/data/kurskoder";
 import { supabase } from "@/supabase/supabaseClient";
 import { useDropzone } from "react-dropzone";
 import { useLanguage } from "@/context/LanguageContext";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const parseDateFromFilename = (name: string): string | null => {
   const fullDateMatch = name.match(/(\d{4})[-_]?(\d{2})[-_]?(\d{2})/);

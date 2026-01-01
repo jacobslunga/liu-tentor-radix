@@ -8,7 +8,7 @@ import { LogoIcon } from "@/components/LogoIcon";
 import MainInput from "@/components/MainInput";
 import { UploadIcon } from "@phosphor-icons/react";
 import { useMetadata } from "@/hooks/useMetadata";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export default function HomePage() {
   const { t } = useTranslation();

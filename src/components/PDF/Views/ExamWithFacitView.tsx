@@ -24,7 +24,7 @@ import SolutionOverlay from "../SolutionOverlay";
 import SolutionPdf from "../SolutionPdf";
 import { usePanelScaling } from "@/hooks/usePanelScaling";
 import { useResizeHotkeys } from "@/hooks/useResizeHotkeys";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   examDetail: ExamWithSolutions;

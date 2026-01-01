@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { MailboxIcon } from "@phosphor-icons/react";
 import { Separator } from "@/components/ui/separator";
 import { useMetadata } from "@/hooks/useMetadata";
-import useTranslation from "@/hooks/useTranslation";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const PrivacyPolicy: FC = () => {
   const { t } = useTranslation();
