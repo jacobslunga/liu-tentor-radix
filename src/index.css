@@ -64,7 +64,6 @@
 
   body {
     font-family:
-      "Figtree",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -285,7 +284,7 @@
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);
-  --foreground: oklch(10.744% 0.0091 88.747);
+  --foreground: oklch(26.033% 0.00003 271.152);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);

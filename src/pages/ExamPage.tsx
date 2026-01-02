@@ -21,14 +21,14 @@ const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
   const { showChatWindow, setShowChatWindow } = useChatWindow();
 
+  const handleCloseChat = () => {
+    setShowChatWindow(false);
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setShowChatWindow(false);
   }, []);
-
-  const handleCloseChat = () => {
-    setShowChatWindow(false);
-  };
 
   const handleToggleChat = useCallback(() => {
     setShowChatWindow((prev) => !prev);
