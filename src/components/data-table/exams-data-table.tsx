@@ -98,7 +98,7 @@ export function DataTable({
         </div>
 
         <h2
-          className={`font-semibold tracking-tight text-foreground ${
+          className={`font-medium tracking-tight text-foreground ${
             (courseNameSwe?.length ?? 0) > 40 ? "text-2xl" : "text-4xl"
           }`}
         >
