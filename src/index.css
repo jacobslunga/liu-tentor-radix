@@ -5,30 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
-@font-face {
-  font-family: "Theinhardt";
-  src: url("/fonts/theinhardt-regular.ttf");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "Theinhardt";
-  src: url("/fonts/theinhardt-medium.ttf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "Theinhardt";
-  src: url("/fonts/theinhardt-medium.ttf");
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "Theinhardt";
-  src: url("/fonts/theinhardt-bold.ttf");
-  font-weight: 700;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -88,7 +64,6 @@
 
   body {
     font-family:
-      "Theinhardt",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
