@@ -21,6 +21,7 @@ export const useScrollManager = ({
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
+    setShowScrollButton(false);
     messagesEndRef.current?.scrollIntoView({ behavior });
   }, []);
 

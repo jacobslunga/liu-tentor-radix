@@ -3,8 +3,19 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamWithSolutions } from "@/types/exam";
-import { useChatMessages, useResizablePanel, useScrollManager } from "./hooks";
-import { ChatHeader, EmptyState, ResizeHandle, ChatInput } from "./components";
+import {
+  useChatMessages,
+  useResizablePanel,
+  useScrollManager,
+  useTextSelection,
+} from "./hooks";
+import {
+  ChatHeader,
+  EmptyState,
+  ResizeHandle,
+  ChatInput,
+  SelectionPopover,
+} from "./components";
 import { Loader2 } from "lucide-react";
 import { MessageList } from "./components/MessageList";
 
@@ -63,8 +74,25 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [isMessageListReady, setIsMessageListReady] = useState(false);
+  const [quotedContext, setQuotedContext] = useState("");
 
   const lastScrollPosition = useRef<number | null>(null);
+
+  const { selectedText, selectionPosition, clearSelection } = useTextSelection({
+    containerRef: messagesContainerRef,
+    minLength: 10,
+  });
+
+  const handleAskAboutSelection = useCallback(() => {
+    setQuotedContext(selectedText);
+    clearSelection();
+    // Clear the browser selection
+    window.getSelection()?.removeAllRanges();
+  }, [selectedText, clearSelection]);
+
+  const handleClearQuotedContext = useCallback(() => {
+    setQuotedContext("");
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -112,13 +140,21 @@ const ChatWindow: FC<ChatWindowProps> = ({
     if (!input.trim() || isLoading) return;
     isUserScrollingRef.current = false;
     scrollToBottom();
-    sendMessage(input, giveDirectAnswer);
+
+    // Include quoted context in the message if present
+    const messageToSend = quotedContext
+      ? `Regarding this: "${quotedContext}"\n\n${input}`
+      : input;
+
+    sendMessage(messageToSend, giveDirectAnswer);
     setInput("");
+    setQuotedContext("");
     localStorage.removeItem(STORAGE_KEY);
   }, [
     input,
     isLoading,
     giveDirectAnswer,
+    quotedContext,
     sendMessage,
     scrollToBottom,
     isUserScrollingRef,
@@ -213,7 +249,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
                 ref={messagesContainerRef}
                 className="absolute inset-0 overflow-y-auto"
               >
-                <div className="p-4 pb-48 space-y-4">
+                <div className="p-4 pb-48 space-y-4 relative">
                   {!isMessageListReady && (
                     <div className="flex items-center justify-center py-20">
                       <Loader2 className="w-8 h-8 animate-spin" />
@@ -227,6 +263,13 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     messagesEndRef={messagesEndRef}
                     messagesContainerRef={messagesContainerRef}
                     onMount={() => setIsMessageListReady(true)}
+                  />
+
+                  <SelectionPopover
+                    show={!!selectedText}
+                    position={selectionPosition}
+                    language={language}
+                    onAskAbout={handleAskAboutSelection}
                   />
                 </div>
               </motion.div>
@@ -245,11 +288,13 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     placeholder={t("aiChatPlaceholder")}
                     poweredByText={t("aiChatPoweredBy")}
                     sendButtonLabel={t("aiChatSend")}
+                    quotedContext={quotedContext}
                     onInputChange={setInput}
                     onSend={handleSend}
                     onCancel={cancelGeneration}
                     onScrollToBottom={handleScrollToBottom}
                     onToggleAnswerMode={setGiveDirectAnswer}
+                    onClearQuotedContext={handleClearQuotedContext}
                   />
                 )}
               </motion.div>

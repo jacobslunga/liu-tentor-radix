@@ -20,6 +20,7 @@ import {
   SquareIcon,
   ArrowDownIcon,
 } from "@phosphor-icons/react";
+import { QuotedContext } from "./QuotedContext";
 
 interface ChatInputProps {
   language: string;
@@ -30,11 +31,13 @@ interface ChatInputProps {
   placeholder: string;
   poweredByText: string;
   sendButtonLabel: string;
+  quotedContext?: string;
   onInputChange: (value: string) => void;
   onSend: () => void;
   onCancel: () => void;
   onScrollToBottom: () => void;
   onToggleAnswerMode: (direct: boolean) => void;
+  onClearQuotedContext?: () => void;
 }
 
 const ScrollToBottomButton = memo(
@@ -66,11 +69,13 @@ export const ChatInput: FC<ChatInputProps> = ({
   placeholder,
   poweredByText,
   sendButtonLabel,
+  quotedContext,
   onInputChange,
   onSend,
   onCancel,
   onScrollToBottom,
   onToggleAnswerMode,
+  onClearQuotedContext,
 }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -96,6 +101,16 @@ export const ChatInput: FC<ChatInputProps> = ({
           show={showScrollButton}
           onClick={onScrollToBottom}
         />
+
+        <AnimatePresence>
+          {quotedContext && onClearQuotedContext && (
+            <QuotedContext
+              text={quotedContext}
+              language={language}
+              onClear={onClearQuotedContext}
+            />
+          )}
+        </AnimatePresence>
 
         <InputGroup className="z-40">
           <InputGroupTextarea

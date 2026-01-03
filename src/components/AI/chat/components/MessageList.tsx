@@ -59,7 +59,7 @@ export const MessageList: FC<MessageListProps> = memo(
     const visibleMessages = messages.slice(startIndex);
 
     return (
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-8">
         {visibleMessages.map((message, index) => {
           const realIndex = startIndex + index;
           return (
