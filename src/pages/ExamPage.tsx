@@ -21,6 +21,11 @@ const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
   const { showChatWindow, setShowChatWindow } = useChatWindow();
 
+  const { courseCode = "", examId = "" } = useParams<{
+    courseCode: string;
+    examId: string;
+  }>();
+
   const handleCloseChat = () => {
     setShowChatWindow(false);
   };
@@ -28,7 +33,7 @@ const ExamPage: FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     setShowChatWindow(false);
-  }, []);
+  }, [examId]);
 
   const handleToggleChat = useCallback(() => {
     setShowChatWindow((prev) => !prev);
@@ -43,11 +48,6 @@ const ExamPage: FC = () => {
     { preventDefault: true },
     [handleToggleChat]
   );
-
-  const { courseCode = "", examId = "" } = useParams<{
-    courseCode: string;
-    examId: string;
-  }>();
 
   const {
     courseData,

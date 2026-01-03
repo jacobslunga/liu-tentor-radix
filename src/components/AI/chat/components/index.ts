@@ -6,3 +6,5 @@ export { EmptyState } from "./EmptyState";
 export { ChatInput } from "./ChatInput";
 export { ResizeHandle } from "./ResizeHandle";
 export { MessageList } from "./MessageList";
+export { SelectionPopover } from "./SelectionPopover";
+export { QuotedContext } from "./QuotedContext";
