@@ -15,7 +15,6 @@ export interface UseChatMessagesReturn {
   isLoading: boolean;
   sendMessage: (content: string, giveDirectAnswer: boolean) => Promise<void>;
   cancelGeneration: () => void;
-  resetConversation: () => void;
 }
 
 export const useChatMessages = ({
@@ -54,12 +53,6 @@ export const useChatMessages = ({
 
     setIsLoading(false);
   }, []);
-
-  const resetConversation = useCallback(() => {
-    cancelGeneration();
-    setMessages(initialMessages);
-    messagesRef.current = initialMessages;
-  }, [cancelGeneration, initialMessages]);
 
   const sendMessage = useCallback(
     async (content: string, giveDirectAnswer: boolean) => {
@@ -159,6 +152,5 @@ export const useChatMessages = ({
     isLoading,
     sendMessage,
     cancelGeneration,
-    resetConversation,
   };
 };

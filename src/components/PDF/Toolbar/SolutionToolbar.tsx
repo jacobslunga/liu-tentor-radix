@@ -1,4 +1,4 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC } from "react";
 import {
   DownloadIcon,
   PlusIcon,
@@ -14,8 +14,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
-import { motion } from "framer-motion";
 import usePdf from "@/hooks/usePdf";
 import { useTranslation } from "@/hooks/useTranslation";
 import { downloadFile } from "@/lib/utils";
@@ -39,7 +37,7 @@ const ToolbarButton = ({
     <Tooltip>
       <TooltipTrigger asChild>
         <Button
-          variant="secondary"
+          variant="outline"
           size="icon"
           onClick={onClick}
           className={className}
@@ -55,61 +53,11 @@ const ToolbarButton = ({
 );
 
 const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
-  const [isMouseActive, setIsMouseActive] = useState(true);
-  const [isHovering, setIsHovering] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isHoveringRef = useRef(isHovering);
-
   const { t } = useTranslation();
   const { zoomIn, zoomOut, rotateLeft, rotateRight } = usePdf("solution");
 
-  useEffect(() => {
-    isHoveringRef.current = isHovering;
-  }, [isHovering]);
-
-  useEffect(() => {
-    const handleMouseMove = () => {
-      setIsMouseActive(true);
-
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-
-      timeoutRef.current = setTimeout(() => {
-        if (!isHoveringRef.current) {
-          setIsMouseActive(false);
-        }
-      }, 1000);
-    };
-
-    handleMouseMove();
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
   return (
-    <motion.div
-      className="fixed top-20 right-5 flex flex-col space-y-2 z-40"
-      onMouseEnter={() => {
-        setIsHovering(true);
-        if (timeoutRef.current) {
-          clearTimeout(timeoutRef.current);
-        }
-      }}
-      onMouseLeave={() => {
-        setIsHovering(false);
-      }}
-      initial={{ opacity: 1 }}
-      animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="fixed top-1/2 -translate-y-1/2 right-5 flex flex-col space-y-2 z-40 opacity-20 hover:opacity-100 transition-opacity duration-300">
       <ToolbarButton icon={PlusIcon} onClick={zoomIn} tooltip={t("zoomIn")} />
       <ToolbarButton
         icon={MinusIcon}
@@ -133,7 +81,7 @@ const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
         onClick={() => downloadFile(pdfUrl)}
         tooltip={t("downloadFacit")}
       />
-    </motion.div>
+    </div>
   );
 };
 

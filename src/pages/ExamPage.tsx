@@ -141,7 +141,7 @@ const LoadingState = () => {
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center gap-2">
       <Loader2 className="w-10 h-10 animate-spin" />
-      <p className="font-medium text-foreground/70">Laddar tenta...</p>
+      <p className="font-normal text-foreground/70">Laddar tenta...</p>
     </div>
   );
 };

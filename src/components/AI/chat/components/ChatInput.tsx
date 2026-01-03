@@ -18,7 +18,6 @@ import {
   LightbulbFilamentIcon,
   ArrowUpIcon,
   SquareIcon,
-  ArrowsClockwiseIcon,
   ArrowDownIcon,
 } from "@phosphor-icons/react";
 
@@ -31,13 +30,11 @@ interface ChatInputProps {
   placeholder: string;
   poweredByText: string;
   sendButtonLabel: string;
-  messagesCount: number;
   onInputChange: (value: string) => void;
   onSend: () => void;
   onCancel: () => void;
   onScrollToBottom: () => void;
   onToggleAnswerMode: (direct: boolean) => void;
-  onResetConversation: () => void;
 }
 
 const ScrollToBottomButton = memo(
@@ -60,47 +57,6 @@ const ScrollToBottomButton = memo(
   )
 );
 
-const ResetConversationButton = memo(
-  ({
-    show,
-    onClick,
-    language,
-  }: {
-    show: boolean;
-    onClick: () => void;
-    language: string;
-  }) => (
-    <AnimatePresence>
-      {show && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          transition={{ ease: "easeInOut", duration: 0.2 }}
-          className="absolute -top-14 left-0 translate-x-1/2 z-20"
-        >
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button variant="outline" size="icon" onClick={onClick}>
-                  <ArrowsClockwiseIcon size={20} weight="bold" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>
-                  {language === "sv"
-                    ? "Återställ konversationen"
-                    : "Reset conversation"}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  )
-);
-
 export const ChatInput: FC<ChatInputProps> = ({
   language,
   input,
@@ -110,13 +66,11 @@ export const ChatInput: FC<ChatInputProps> = ({
   placeholder,
   poweredByText,
   sendButtonLabel,
-  messagesCount,
   onInputChange,
   onSend,
   onCancel,
   onScrollToBottom,
   onToggleAnswerMode,
-  onResetConversation,
 }) => {
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -136,23 +90,11 @@ export const ChatInput: FC<ChatInputProps> = ({
   };
 
   return (
-    // Added px-4 (or px-6) to ensure the input never touches the resize handle
-    <div className="px-4 space-y-2 relative pb-2 w-full">
-      {/* Centered container for max-width alignment */}
+    <div className="px-4 space-y-2 relative pb-2 w-full bg-background">
       <div className="max-w-3xl mx-auto w-full relative">
-        <div className="absolute -top-7 h-14 bg-linear-to-t from-background via-background/50 to-transparent right-0 left-0 w-full" />
-
         <ScrollToBottomButton
           show={showScrollButton}
           onClick={onScrollToBottom}
-        />
-        <ResetConversationButton
-          show={messagesCount > 30}
-          onClick={() => {
-            onResetConversation();
-            inputRef.current?.focus();
-          }}
-          language={language}
         />
 
         <InputGroup className="z-40">
@@ -243,7 +185,7 @@ export const ChatInput: FC<ChatInputProps> = ({
           </InputGroupAddon>
         </InputGroup>
 
-        <div className="flex flex-row items-center justify-between px-2 w-full mb-2">
+        <div className="flex flex-row items-center justify-between px-2 w-full mb-2 mt-2">
           <p className="text-[10px] text-muted-foreground text-center">
             {poweredByText}
           </p>
