@@ -40,19 +40,16 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const chatWindowRef = useRef<HTMLDivElement>(null);
 
   const { width, isResizing, startResizing } = useResizablePanel();
-  const {
-    messages,
-    isLoading,
-    sendMessage,
-    cancelGeneration,
-    resetConversation,
-  } = useChatMessages({
-    examId: examDetail.exam.id,
-    courseCode: examDetail.exam.course_code,
-    examUrl: examDetail.exam.pdf_url,
-    solutionUrl:
-      examDetail.solutions.length > 0 ? examDetail.solutions[0].pdf_url : null,
-  });
+  const { messages, isLoading, sendMessage, cancelGeneration } =
+    useChatMessages({
+      examId: examDetail.exam.id,
+      courseCode: examDetail.exam.course_code,
+      examUrl: examDetail.exam.pdf_url,
+      solutionUrl:
+        examDetail.solutions.length > 0
+          ? examDetail.solutions[0].pdf_url
+          : null,
+    });
 
   const {
     messagesEndRef,
@@ -126,22 +123,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     scrollToBottom,
     isUserScrollingRef,
   ]);
-
-  const handleSuggestionClick = useCallback(
-    (question: string) => {
-      if (isLoading) return;
-      isUserScrollingRef.current = false;
-      scrollToBottom();
-      sendMessage(question, giveDirectAnswer);
-    },
-    [
-      isLoading,
-      sendMessage,
-      scrollToBottom,
-      giveDirectAnswer,
-      isUserScrollingRef,
-    ]
-  );
 
   const handleScrollToBottom = useCallback(() => {
     isUserScrollingRef.current = false;
@@ -221,57 +202,58 @@ const ChatWindow: FC<ChatWindowProps> = ({
               />
             </motion.div>
 
-            <motion.div
-              variants={contentVariants}
-              ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto p-4 pb-10 space-y-4 relative min-h-0"
-            >
-              {!isMessageListReady && (
-                <div className="absolute inset-0 flex items-center justify-center bg-background/80 z-10">
-                  <Loader2 className="w-8 h-8 animate-spin" />
+            {messages.length === 0 && (
+              <EmptyState language={language} hasSolutions={hasSolutions} />
+            )}
+
+            {/* Messages area - takes full remaining height */}
+            <div className="flex-1 relative min-h-0">
+              <motion.div
+                variants={contentVariants}
+                ref={messagesContainerRef}
+                className="absolute inset-0 overflow-y-auto"
+              >
+                <div className="p-4 pb-48 space-y-4">
+                  {!isMessageListReady && (
+                    <div className="flex items-center justify-center py-20">
+                      <Loader2 className="w-8 h-8 animate-spin" />
+                    </div>
+                  )}
+
+                  <MessageList
+                    messages={messages}
+                    isLoading={isLoading}
+                    language={language}
+                    messagesEndRef={messagesEndRef}
+                    messagesContainerRef={messagesContainerRef}
+                    onMount={() => setIsMessageListReady(true)}
+                  />
                 </div>
-              )}
+              </motion.div>
 
-              {messages.length === 0 && (
-                <EmptyState
-                  language={language}
-                  hasSolutions={hasSolutions}
-                  onQuestionClick={handleSuggestionClick}
-                />
-              )}
-
-              <MessageList
-                messages={messages}
-                isLoading={isLoading}
-                language={language}
-                messagesEndRef={messagesEndRef}
-                messagesContainerRef={messagesContainerRef}
-                onMount={() => setIsMessageListReady(true)}
-              />
-            </motion.div>
-
-            {/* INPUT AREA */}
-            <motion.div variants={contentVariants}>
-              {isDraftLoaded && (
-                <ChatInput
-                  language={language}
-                  input={input}
-                  isLoading={isLoading}
-                  giveDirectAnswer={giveDirectAnswer}
-                  showScrollButton={showScrollButton}
-                  placeholder={t("aiChatPlaceholder")}
-                  poweredByText={t("aiChatPoweredBy")}
-                  sendButtonLabel={t("aiChatSend")}
-                  onInputChange={setInput}
-                  onSend={handleSend}
-                  onCancel={cancelGeneration}
-                  onScrollToBottom={handleScrollToBottom}
-                  onToggleAnswerMode={setGiveDirectAnswer}
-                  messagesCount={messages.length}
-                  onResetConversation={resetConversation}
-                />
-              )}
-            </motion.div>
+              <motion.div
+                variants={contentVariants}
+                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8"
+              >
+                {isDraftLoaded && (
+                  <ChatInput
+                    language={language}
+                    input={input}
+                    isLoading={isLoading}
+                    giveDirectAnswer={giveDirectAnswer}
+                    showScrollButton={showScrollButton && messages.length > 0}
+                    placeholder={t("aiChatPlaceholder")}
+                    poweredByText={t("aiChatPoweredBy")}
+                    sendButtonLabel={t("aiChatSend")}
+                    onInputChange={setInput}
+                    onSend={handleSend}
+                    onCancel={cancelGeneration}
+                    onScrollToBottom={handleScrollToBottom}
+                    onToggleAnswerMode={setGiveDirectAnswer}
+                  />
+                )}
+              </motion.div>
+            </div>
           </div>
         </motion.div>
       )}

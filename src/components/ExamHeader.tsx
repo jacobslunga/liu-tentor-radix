@@ -11,13 +11,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { FC, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { ChartBarIcon } from "@phosphor-icons/react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { Exam } from "@/types/exam";
-import { ExamStatsDialog } from "./ExamStatsDialog";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -243,31 +241,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
             C
           </Kbd>
         </Button>
-
-        {selectedExam && selectedExam.statistics ? (
-          <ExamStatsDialog
-            statistics={{
-              "3": selectedExam.statistics["3"] || 0,
-              "4": selectedExam.statistics["4"] || 0,
-              "5": selectedExam.statistics["5"] || 0,
-              U: selectedExam.statistics.U || 0,
-              G: selectedExam.statistics.G || 0,
-              pass_rate: selectedExam.pass_rate,
-            }}
-            date={selectedExam.exam_date}
-            trigger={
-              <Button variant="ghost" size="sm">
-                <ChartBarIcon weight="bold" />
-                {language === "sv" ? "Statistik" : "Statistics"}
-              </Button>
-            }
-          />
-        ) : (
-          <p className="text-xs">
-            {language === "sv" ? "Ingen statistik" : "No statistics"}
-          </p>
-        )}
-
         <SettingsDialog />
       </div>
     </motion.div>

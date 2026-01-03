@@ -1,30 +1,36 @@
 import { FC } from "react";
-import { ArrowRightIcon } from "@phosphor-icons/react";
+import { Badge } from "@/components/ui/badge";
 
 interface EmptyStateProps {
   language: string;
   hasSolutions: boolean;
-  onQuestionClick: (question: string) => void;
 }
 
-export const EmptyState: FC<EmptyStateProps> = ({
-  language,
-  hasSolutions,
-  onQuestionClick,
-}) => {
+export const EmptyState: FC<EmptyStateProps> = ({ language, hasSolutions }) => {
   const isSv = language === "sv";
 
-  const suggestions = isSv
-    ? ["Sammanfatta tentan", "Viktiga begrepp", "Lös uppgift 1"]
-    : ["Summarize exam", "Key concepts", "Solve problem 1"];
-
   return (
-    <div className="h-full flex flex-col items-center justify-center px-4 relative overflow-hidden">
+    <div className="h-full mb-40 flex flex-col items-center justify-center px-4 relative overflow-hidden">
       <div className="max-w-md w-full text-center relative z-10">
         {/* Title */}
-        <h2 className="text-2xl font-medium tracking-tight mb-3">
-          {isSv ? "Ställ en fråga" : "Ask a question"}
-        </h2>
+        <div className="flex items-center justify-center gap-2 mb-3">
+          <h2 className="text-2xl font-medium tracking-tight">
+            {isSv ? "Ställ en fråga" : "Ask a question"}
+          </h2>
+          <Badge
+            variant="secondary"
+            className="text-[10px] font-semibold uppercase tracking-wide"
+          >
+            Beta
+          </Badge>
+        </div>
+
+        {/* Beta disclaimer */}
+        <p className="text-xs text-muted-foreground/70 mb-4">
+          {isSv
+            ? "Detta är en ny funktion och kan innehålla fel. Dubbelkolla alltid svaren."
+            : "This is a new feature and may contain errors. Always double-check answers."}
+        </p>
 
         {/* Description */}
         <p className="text-sm text-muted-foreground leading-relaxed mb-6 max-w-sm mx-auto">
@@ -51,28 +57,6 @@ export const EmptyState: FC<EmptyStateProps> = ({
             </>
           )}
         </p>
-
-        {/* Suggested Questions - Small Pills Row */}
-        <div className="flex flex-row flex-wrap justify-center gap-2 mb-8">
-          {suggestions.map((question, index) => (
-            <button
-              key={index}
-              onClick={() => onQuestionClick(question)}
-              className="group cursor-pointer flex items-center px-3 py-1.5 text-xs font-medium bg-background border rounded-full hover:bg-secondary/50 hover:border-primary/30 transition-colors duration-200"
-            >
-              <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                {question}
-              </span>
-
-              <span className="overflow-hidden max-w-0 opacity-0 group-hover:max-w-5 group-hover:opacity-100 transition-all duration-300 ease-in-out">
-                <ArrowRightIcon
-                  weight="bold"
-                  className="w-3 h-3 ml-1.5 text-muted-foreground group-hover:text-foreground -translate-x-2 group-hover:translate-x-0 transition-transform duration-300"
-                />
-              </span>
-            </button>
-          ))}
-        </div>
 
         {/* Policy link */}
         <div className="flex justify-center">

@@ -80,7 +80,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
             isThinking ? (
               <div className="flex items-center gap-3 py-1">
                 <GridLoader />
-                <span className="text-sm font-medium text-muted-foreground animate-pulse">
+                <span className="text-sm font-normal text-muted-foreground animate-pulse">
                   {language === "sv" ? "Tänker..." : "Thinking..."}
                 </span>
               </div>
