@@ -86,7 +86,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const handleAskAboutSelection = useCallback(() => {
     setQuotedContext(selectedText);
     clearSelection();
-    // Clear the browser selection
     window.getSelection()?.removeAllRanges();
   }, [selectedText, clearSelection]);
 
@@ -141,7 +140,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     isUserScrollingRef.current = false;
     scrollToBottom();
 
-    // Include quoted context in the message if present
     const messageToSend = quotedContext
       ? `Regarding this: "${quotedContext}"\n\n${input}`
       : input;
@@ -276,27 +274,28 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
               <motion.div
                 variants={contentVariants}
-                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8"
+                className="absolute bottom-0 left-0 right-0 pointer-events-none pt-8 bg-linear-to-t from-background to-transparent"
               >
-                {isDraftLoaded && (
-                  <ChatInput
-                    language={language}
-                    input={input}
-                    isLoading={isLoading}
-                    giveDirectAnswer={giveDirectAnswer}
-                    showScrollButton={showScrollButton && messages.length > 0}
-                    placeholder={t("aiChatPlaceholder")}
-                    poweredByText={t("aiChatPoweredBy")}
-                    sendButtonLabel={t("aiChatSend")}
-                    quotedContext={quotedContext}
-                    onInputChange={setInput}
-                    onSend={handleSend}
-                    onCancel={cancelGeneration}
-                    onScrollToBottom={handleScrollToBottom}
-                    onToggleAnswerMode={setGiveDirectAnswer}
-                    onClearQuotedContext={handleClearQuotedContext}
-                  />
-                )}
+                <div className="pointer-events-auto">
+                  {isDraftLoaded && (
+                    <ChatInput
+                      language={language}
+                      input={input}
+                      isLoading={isLoading}
+                      giveDirectAnswer={giveDirectAnswer}
+                      showScrollButton={showScrollButton && messages.length > 0}
+                      placeholder={t("aiChatPlaceholder")}
+                      sendButtonLabel={t("aiChatSend")}
+                      quotedContext={quotedContext}
+                      onInputChange={setInput}
+                      onSend={handleSend}
+                      onCancel={cancelGeneration}
+                      onScrollToBottom={handleScrollToBottom}
+                      onToggleAnswerMode={setGiveDirectAnswer}
+                      onClearQuotedContext={handleClearQuotedContext}
+                    />
+                  )}
+                </div>
               </motion.div>
             </div>
           </div>
