@@ -22,7 +22,13 @@ export const useScrollManager = ({
 
   const scrollToBottom = useCallback((behavior: ScrollBehavior = "smooth") => {
     setShowScrollButton(false);
-    messagesEndRef.current?.scrollIntoView({ behavior });
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior,
+      });
+    }
   }, []);
 
   useEffect(() => {

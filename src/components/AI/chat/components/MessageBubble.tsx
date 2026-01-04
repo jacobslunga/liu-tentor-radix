@@ -67,7 +67,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
 
     return (
       <div
-        className={`max-w-3xl mx-auto w-full ${isUser ? "flex justify-end" : ""}`}
+        className={`max-w-2xl mx-auto w-full ${isUser ? "flex justify-end" : ""}`}
       >
         <div
           className={`${

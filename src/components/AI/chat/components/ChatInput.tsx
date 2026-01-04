@@ -95,8 +95,8 @@ export const ChatInput: FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="px-4 pb-4 space-y-3 relative w-full">
-      <div className="max-w-3xl mx-auto w-full relative">
+    <div className="px-4 pb-4 relative w-full">
+      <div className="max-w-2xl mx-auto w-full relative">
         <ScrollToBottomButton
           show={showScrollButton}
           onClick={onScrollToBottom}
@@ -132,7 +132,7 @@ export const ChatInput: FC<ChatInputProps> = ({
                         onToggleAnswerMode(true);
                         inputRef.current?.focus();
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-md cursor-pointer ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-full cursor-pointer ${
                         giveDirectAnswer
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
@@ -159,7 +159,7 @@ export const ChatInput: FC<ChatInputProps> = ({
                         onToggleAnswerMode(false);
                         inputRef.current?.focus();
                       }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-md cursor-pointer ${
+                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-full cursor-pointer ${
                         !giveDirectAnswer
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
@@ -200,7 +200,7 @@ export const ChatInput: FC<ChatInputProps> = ({
           </InputGroupAddon>
         </InputGroup>
 
-        <div className="flex flex-row items-center justify-between px-2 w-full mb-2 mt-2">
+        <div className="flex flex-row items-center justify-between px-2 w-full mt-2">
           <p className="text-[10px] text-muted-foreground text-center">
             {poweredByText}
           </p>
