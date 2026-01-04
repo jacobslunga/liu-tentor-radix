@@ -29,6 +29,7 @@ interface ChatInputProps {
   giveDirectAnswer: boolean;
   showScrollButton: boolean;
   placeholder: string;
+  poweredByText: string;
   sendButtonLabel: string;
   quotedContext?: string;
   onInputChange: (value: string) => void;
@@ -66,6 +67,7 @@ export const ChatInput: FC<ChatInputProps> = ({
   giveDirectAnswer,
   showScrollButton,
   placeholder,
+  poweredByText,
   sendButtonLabel,
   quotedContext,
   onInputChange,
@@ -93,7 +95,7 @@ export const ChatInput: FC<ChatInputProps> = ({
   };
 
   return (
-    <div className="px-4 space-y-2 relative w-full">
+    <div className="px-4 pb-4 space-y-3 relative w-full">
       <div className="max-w-3xl mx-auto w-full relative">
         <ScrollToBottomButton
           show={showScrollButton}
@@ -110,14 +112,14 @@ export const ChatInput: FC<ChatInputProps> = ({
           )}
         </AnimatePresence>
 
-        <InputGroup className="z-40 rounded-t-3xl rounded-b-none p-1.5 bg-background border border-border">
+        <InputGroup className="rounded-3xl bg-background p-1.5 dark:bg-secondary border border-border">
           <InputGroupTextarea
+            ref={inputRef}
             placeholder={placeholder}
             value={input}
             onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={handleKeyDown}
             rows={1}
-            ref={inputRef}
             className="text-base resize-none max-h-[200px] overflow-y-auto"
           />
           <InputGroupAddon align="block-end">
@@ -198,14 +200,14 @@ export const ChatInput: FC<ChatInputProps> = ({
           </InputGroupAddon>
         </InputGroup>
 
-        {/* <div className="flex flex-row items-center justify-between px-2 w-full mb-2 mt-2">
+        <div className="flex flex-row items-center justify-between px-2 w-full mb-2 mt-2">
           <p className="text-[10px] text-muted-foreground text-center">
             {poweredByText}
           </p>
           <p className="text-[10px] text-muted-foreground text-center">
             Shift + Enter för ny rad
           </p>
-        </div> */}
+        </div>
       </div>
     </div>
   );
