@@ -132,7 +132,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className="rounded-3xl bg-secondary p-1.5 dark:bg-secondary border border-border">
+          <InputGroup className="rounded-3xl bg-background p-1.5 dark:bg-secondary border border-border">
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
