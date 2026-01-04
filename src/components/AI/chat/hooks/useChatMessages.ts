@@ -14,7 +14,7 @@ export interface UseChatMessagesReturn {
   messages: Message[];
   isLoading: boolean;
   sendMessage: (content: string, giveDirectAnswer: boolean) => Promise<void>;
-  cancelGeneration: () => void;
+  cancelGeneration: () => string | null;
 }
 
 export const useChatMessages = ({
@@ -39,19 +39,48 @@ export const useChatMessages = ({
     isLoadingRef.current = isLoading;
   }, [isLoading]);
 
-  const cancelGeneration = useCallback(() => {
+  const cancelGeneration = useCallback((): string | null => {
     abortControllerRef.current?.abort();
     abortControllerRef.current = null;
 
+    let cancelledUserMessage: string | null = null;
+
     setMessages((prev) => {
       const last = prev[prev.length - 1];
-      if (last?.role === "assistant" && !last.content.trim()) {
-        return prev.slice(0, -1);
+      if (last?.role === "assistant") {
+        // Check if AI hasn't responded yet (empty assistant message)
+        if (!last.content.trim()) {
+          // Get the user message that was sent (second to last)
+          const userMsg = prev[prev.length - 2];
+          if (userMsg?.role === "user") {
+            cancelledUserMessage = userMsg.content;
+          }
+          // If this is the first message, show cancellation message
+          if (prev.length === 2) {
+            const updated = [...prev];
+            updated[updated.length - 1] = {
+              role: "assistant",
+              content: "> *Avbruten av användaren*",
+            };
+            return updated;
+          }
+          // Otherwise remove both the empty assistant message and the user message
+          return prev.slice(0, -2);
+        } else {
+          // AI has already generated some content, append cancellation notice
+          const updated = [...prev];
+          updated[updated.length - 1] = {
+            role: "assistant",
+            content: last.content.trim() + "\n\n> *Avbruten av användaren*",
+          };
+          return updated;
+        }
       }
       return prev;
     });
 
     setIsLoading(false);
+    return cancelledUserMessage;
   }, []);
 
   const sendMessage = useCallback(
@@ -130,7 +159,11 @@ export const useChatMessages = ({
 
         setMessages(final);
         messagesRef.current = final;
-      } catch {
+      } catch (error) {
+        // If aborted by user, don't show error - cancelGeneration handles cleanup
+        if (error instanceof Error && error.name === "AbortError") {
+          return;
+        }
         const updated = [...messagesRef.current];
         updated[updated.length - 1] = {
           role: "assistant",

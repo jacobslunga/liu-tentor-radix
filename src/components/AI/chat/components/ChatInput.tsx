@@ -1,4 +1,10 @@
-import { FC, useRef, useEffect, memo } from "react";
+import {
+  useRef,
+  useEffect,
+  memo,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   InputGroup,
@@ -60,155 +66,170 @@ const ScrollToBottomButton = memo(
   )
 );
 
-export const ChatInput: FC<ChatInputProps> = ({
-  language,
-  input,
-  isLoading,
-  giveDirectAnswer,
-  showScrollButton,
-  placeholder,
-  poweredByText,
-  sendButtonLabel,
-  quotedContext,
-  onInputChange,
-  onSend,
-  onCancel,
-  onScrollToBottom,
-  onToggleAnswerMode,
-  onClearQuotedContext,
-}) => {
-  const inputRef = useRef<HTMLTextAreaElement>(null);
+export interface ChatInputHandle {
+  focus: () => void;
+}
 
-  useEffect(() => {
-    if (inputRef.current) {
-      inputRef.current.focus();
-      const val = inputRef.current.value;
-      inputRef.current.setSelectionRange(val.length, val.length);
-    }
-  }, []);
+export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
+  (
+    {
+      language,
+      input,
+      isLoading,
+      giveDirectAnswer,
+      showScrollButton,
+      placeholder,
+      poweredByText,
+      sendButtonLabel,
+      quotedContext,
+      onInputChange,
+      onSend,
+      onCancel,
+      onScrollToBottom,
+      onToggleAnswerMode,
+      onClearQuotedContext,
+    },
+    ref
+  ) => {
+    const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      onSend();
-    }
-  };
+    useImperativeHandle(ref, () => ({
+      focus: () => {
+        inputRef.current?.focus();
+      },
+    }));
 
-  return (
-    <div className="px-4 pb-4 relative w-full">
-      <div className="max-w-2xl mx-auto w-full relative">
-        <ScrollToBottomButton
-          show={showScrollButton}
-          onClick={onScrollToBottom}
-        />
+    useEffect(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+        const val = inputRef.current.value;
+        inputRef.current.setSelectionRange(val.length, val.length);
+      }
+    }, []);
 
-        <AnimatePresence>
-          {quotedContext && onClearQuotedContext && (
-            <QuotedContext
-              text={quotedContext}
-              language={language}
-              onClear={onClearQuotedContext}
-            />
-          )}
-        </AnimatePresence>
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        onSend();
+      }
+    };
 
-        <InputGroup className="rounded-3xl bg-background p-1.5 dark:bg-secondary border border-border">
-          <InputGroupTextarea
-            ref={inputRef}
-            placeholder={placeholder}
-            value={input}
-            onChange={(e) => onInputChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            rows={1}
-            className="text-base resize-none max-h-[200px] overflow-y-auto"
+    return (
+      <div className="px-4 pb-4 relative w-full">
+        <div className="max-w-2xl mx-auto w-full relative">
+          <ScrollToBottomButton
+            show={showScrollButton}
+            onClick={onScrollToBottom}
           />
-          <InputGroupAddon align="block-end">
-            <div className="flex items-center gap-0 min-w-0 flex-1">
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => {
-                        onToggleAnswerMode(true);
-                        inputRef.current?.focus();
-                      }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-full cursor-pointer ${
-                        giveDirectAnswer
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
-                      }`}
-                    >
-                      <BookOpenIcon weight="bold" className="h-3.5 w-3.5" />
-                      {language === "sv" ? "Svar" : "Answer"}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>
-                      {language === "sv"
-                        ? "Få fullständiga svar och lösningar"
-                        : "Get complete answers and solutions"}
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => {
-                        onToggleAnswerMode(false);
-                        inputRef.current?.focus();
-                      }}
-                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-full cursor-pointer ${
-                        !giveDirectAnswer
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
-                      }`}
-                    >
-                      <LightbulbFilamentIcon
-                        weight="bold"
-                        className="h-3.5 w-3.5"
-                      />
-                      {language === "sv" ? "Hints" : "Hints"}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>
-                      {language === "sv"
-                        ? "Få ledtrådar och vägledning"
-                        : "Get hints and guidance"}
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            </div>
-            <InputGroupButton
-              variant="default"
-              size="icon-sm"
-              disabled={!input.trim() && !isLoading}
-              onClick={isLoading ? onCancel : onSend}
-            >
-              {isLoading ? (
-                <SquareIcon weight="fill" className="h-4 w-4" />
-              ) : (
-                <ArrowUpIcon weight="bold" className="h-10 w-10" />
-              )}
-              <span className="sr-only">
-                {isLoading ? "Cancel" : sendButtonLabel}
-              </span>
-            </InputGroupButton>
-          </InputGroupAddon>
-        </InputGroup>
 
-        <div className="flex flex-row items-center justify-between px-2 w-full mt-2">
-          <p className="text-[10px] text-muted-foreground text-center">
-            {poweredByText}
-          </p>
-          <p className="text-[10px] text-muted-foreground text-center">
-            Shift + Enter för ny rad
-          </p>
+          <AnimatePresence>
+            {quotedContext && onClearQuotedContext && (
+              <QuotedContext
+                text={quotedContext}
+                language={language}
+                onClear={onClearQuotedContext}
+              />
+            )}
+          </AnimatePresence>
+
+          <InputGroup className="rounded-3xl bg-secondary p-1.5 dark:bg-secondary border border-border">
+            <InputGroupTextarea
+              ref={inputRef}
+              placeholder={placeholder}
+              value={input}
+              onChange={(e) => onInputChange(e.target.value)}
+              onKeyDown={handleKeyDown}
+              rows={1}
+              className="text-base resize-none max-h-[200px] overflow-y-auto"
+            />
+            <InputGroupAddon align="block-end">
+              <div className="flex items-center gap-0 min-w-0 flex-1">
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => {
+                          onToggleAnswerMode(true);
+                          inputRef.current?.focus();
+                        }}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-full cursor-pointer ${
+                          giveDirectAnswer
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
+                        }`}
+                      >
+                        <BookOpenIcon weight="bold" className="h-3.5 w-3.5" />
+                        {language === "sv" ? "Svar" : "Answer"}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {language === "sv"
+                          ? "Få fullständiga svar och lösningar"
+                          : "Get complete answers and solutions"}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                <TooltipProvider delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <button
+                        onClick={() => {
+                          onToggleAnswerMode(false);
+                          inputRef.current?.focus();
+                        }}
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-full cursor-pointer ${
+                          !giveDirectAnswer
+                            ? "bg-primary text-primary-foreground border-primary"
+                            : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
+                        }`}
+                      >
+                        <LightbulbFilamentIcon
+                          weight="bold"
+                          className="h-3.5 w-3.5"
+                        />
+                        {language === "sv" ? "Hints" : "Hints"}
+                      </button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {language === "sv"
+                          ? "Få ledtrådar och vägledning"
+                          : "Get hints and guidance"}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+              <InputGroupButton
+                variant="default"
+                size="icon-sm"
+                disabled={!input.trim() && !isLoading}
+                onClick={isLoading ? onCancel : onSend}
+              >
+                {isLoading ? (
+                  <SquareIcon weight="fill" className="h-4 w-4" />
+                ) : (
+                  <ArrowUpIcon weight="bold" className="h-10 w-10" />
+                )}
+                <span className="sr-only">
+                  {isLoading ? "Cancel" : sendButtonLabel}
+                </span>
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+
+          <div className="flex flex-row items-center justify-between px-2 w-full mt-2">
+            <p className="text-[10px] text-muted-foreground text-center">
+              {poweredByText}
+            </p>
+            <p className="text-[10px] text-muted-foreground text-center">
+              Shift + Enter för ny rad
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  }
+);
