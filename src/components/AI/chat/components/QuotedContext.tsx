@@ -20,7 +20,7 @@ export const QuotedContext: FC<QuotedContextProps> = memo(
         transition={{ duration: 0.15, ease: "easeOut" }}
         className="mb-2"
       >
-        <div className="bg-secondary/50 border border-border rounded-lg p-3 relative group">
+        <div className="bg-secondary border border-border rounded-lg p-3 relative group">
           <div className="flex items-start gap-2">
             <div className="w-1 h-full min-h-5 bg-primary rounded-full shrink-0" />
             <div className="flex-1 min-w-0">
