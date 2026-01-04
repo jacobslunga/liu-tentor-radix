@@ -232,7 +232,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           onClick={onToggleChat || (() => setIsChatOpen(true))}
           variant="outline"
           size="sm"
-          className="hidden sm:flex gap-2"
+          className="hidden lg:flex gap-2"
         >
           <span className="relative z-10 flex items-center gap-2">
             {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
