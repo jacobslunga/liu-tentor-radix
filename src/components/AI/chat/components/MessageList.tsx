@@ -36,10 +36,10 @@ export const MessageList: FC<MessageListProps> = memo(
     // Expand batch when new messages arrive
     useEffect(() => {
       if (messages.length > startIndex + INITIAL_BATCH) {
-        const id = requestIdleCallback(() => {
+        const timeout = setTimeout(() => {
           setStartIndex(Math.max(0, messages.length - BATCH));
-        });
-        return () => cancelIdleCallback(id);
+        }, 0);
+        return () => clearTimeout(timeout);
       }
     }, [messages.length]);
 
@@ -76,7 +76,7 @@ export const MessageList: FC<MessageListProps> = memo(
             </Suspense>
           );
         })}
-        <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} className="h-4" />
       </div>
     );
   }
