@@ -274,28 +274,27 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
               <motion.div
                 variants={contentVariants}
-                className="absolute bottom-0 left-0 right-0 pointer-events-none pt-8 bg-linear-to-t from-background to-transparent"
+                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8"
               >
-                <div className="pointer-events-auto">
-                  {isDraftLoaded && (
-                    <ChatInput
-                      language={language}
-                      input={input}
-                      isLoading={isLoading}
-                      giveDirectAnswer={giveDirectAnswer}
-                      showScrollButton={showScrollButton && messages.length > 0}
-                      placeholder={t("aiChatPlaceholder")}
-                      sendButtonLabel={t("aiChatSend")}
-                      quotedContext={quotedContext}
-                      onInputChange={setInput}
-                      onSend={handleSend}
-                      onCancel={cancelGeneration}
-                      onScrollToBottom={handleScrollToBottom}
-                      onToggleAnswerMode={setGiveDirectAnswer}
-                      onClearQuotedContext={handleClearQuotedContext}
-                    />
-                  )}
-                </div>
+                {isDraftLoaded && (
+                  <ChatInput
+                    language={language}
+                    input={input}
+                    isLoading={isLoading}
+                    giveDirectAnswer={giveDirectAnswer}
+                    showScrollButton={showScrollButton && messages.length > 0}
+                    placeholder={t("aiChatPlaceholder")}
+                    sendButtonLabel={t("aiChatSend")}
+                    poweredByText={t("aiChatPoweredBy")}
+                    quotedContext={quotedContext}
+                    onInputChange={setInput}
+                    onSend={handleSend}
+                    onCancel={cancelGeneration}
+                    onScrollToBottom={handleScrollToBottom}
+                    onToggleAnswerMode={setGiveDirectAnswer}
+                    onClearQuotedContext={handleClearQuotedContext}
+                  />
+                )}
               </motion.div>
             </div>
           </div>
