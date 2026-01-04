@@ -15,6 +15,7 @@ import {
   ResizeHandle,
   ChatInput,
   SelectionPopover,
+  type ChatInputHandle,
 } from "./components";
 import { Loader2 } from "lucide-react";
 import { MessageList } from "./components/MessageList";
@@ -49,6 +50,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const { t } = useTranslation();
   const { language } = useLanguage();
   const chatWindowRef = useRef<HTMLDivElement>(null);
+  const chatInputRef = useRef<ChatInputHandle>(null);
 
   const { width, isResizing, startResizing } = useResizablePanel();
   const { messages, isLoading, sendMessage, cancelGeneration } =
@@ -162,6 +164,14 @@ const ChatWindow: FC<ChatWindowProps> = ({
     isUserScrollingRef.current = false;
     scrollToBottom("smooth");
   }, [scrollToBottom, isUserScrollingRef]);
+
+  const handleCancel = useCallback(() => {
+    const cancelledMessage = cancelGeneration();
+    if (cancelledMessage) {
+      setInput(cancelledMessage);
+      chatInputRef.current?.focus();
+    }
+  }, [cancelGeneration]);
 
   const hasSolutions = examDetail.solutions.length > 0;
   const isOverlay = variant === "overlay";
@@ -278,6 +288,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
               >
                 {isDraftLoaded && (
                   <ChatInput
+                    ref={chatInputRef}
                     language={language}
                     input={input}
                     isLoading={isLoading}
@@ -289,7 +300,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     quotedContext={quotedContext}
                     onInputChange={setInput}
                     onSend={handleSend}
-                    onCancel={cancelGeneration}
+                    onCancel={handleCancel}
                     onScrollToBottom={handleScrollToBottom}
                     onToggleAnswerMode={setGiveDirectAnswer}
                     onClearQuotedContext={handleClearQuotedContext}

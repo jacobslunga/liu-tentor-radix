@@ -3,7 +3,7 @@ export { markdownComponents } from "./MarkdownComponents";
 export { MessageBubble } from "./MessageBubble";
 export { ChatHeader } from "./ChatHeader";
 export { EmptyState } from "./EmptyState";
-export { ChatInput } from "./ChatInput";
+export { ChatInput, type ChatInputHandle } from "./ChatInput";
 export { ResizeHandle } from "./ResizeHandle";
 export { MessageList } from "./MessageList";
 export { SelectionPopover } from "./SelectionPopover";
