@@ -121,7 +121,7 @@ export default function InfoSidebar() {
             className="flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity"
           >
             <LogoIcon className="w-7 h-7" />
-            <span className="font-black text-lg font-logo tracking-tight">
+            <span className="font-medium text-lg font-logo tracking-tight">
               LiU Tentor
             </span>
           </Link>

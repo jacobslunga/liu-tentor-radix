@@ -107,10 +107,15 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       }
     }, []);
 
+    const MAX_INPUT_LENGTH = 4000;
+    const isInputTooLong = input.length >= MAX_INPUT_LENGTH;
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
-        onSend();
+        if (!isInputTooLong) {
+          onSend();
+        }
       }
     };
 
@@ -137,7 +142,13 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               ref={inputRef}
               placeholder={placeholder}
               value={input}
-              onChange={(e) => onInputChange(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= MAX_INPUT_LENGTH) {
+                  onInputChange(e.target.value);
+                } else {
+                  // Optionally, we could show a toast or other feedback here
+                }
+              }}
               onKeyDown={handleKeyDown}
               rows={1}
               className="text-base resize-none max-h-[200px] overflow-y-auto"
@@ -205,7 +216,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               <InputGroupButton
                 variant="default"
                 size="icon-sm"
-                disabled={!input.trim() && !isLoading}
+                disabled={(!input.trim() && !isLoading) || isInputTooLong}
                 onClick={isLoading ? onCancel : onSend}
               >
                 {isLoading ? (
@@ -219,6 +230,14 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               </InputGroupButton>
             </InputGroupAddon>
           </InputGroup>
+
+          {isInputTooLong && (
+            <div className="text-xs text-red-500 mt-2 text-center">
+              {language === "sv"
+                ? `Maximal längd är ${MAX_INPUT_LENGTH} tecken. Ditt meddelande är för långt.`
+                : `Maximum length is ${MAX_INPUT_LENGTH} characters. Your message is too long.`}
+            </div>
+          )}
 
           <div className="flex flex-row items-center justify-between px-2 w-full mt-2">
             <p className="text-[10px] text-muted-foreground text-center">
