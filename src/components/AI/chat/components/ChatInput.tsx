@@ -132,7 +132,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className="rounded-3xl bg-background p-1.5 dark:bg-secondary border border-border">
+          <InputGroup className="rounded-3xl corner-squircle bg-background p-1.5 dark:bg-secondary border border-border">
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
@@ -152,7 +152,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                           onToggleAnswerMode(true);
                           inputRef.current?.focus();
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-full cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-full corner-squircle cursor-pointer ${
                           giveDirectAnswer
                             ? "bg-primary text-primary-foreground border-primary"
                             : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
@@ -179,7 +179,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                           onToggleAnswerMode(false);
                           inputRef.current?.focus();
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-full cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-full corner-squircle cursor-pointer ${
                           !giveDirectAnswer
                             ? "bg-primary text-primary-foreground border-primary"
                             : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"

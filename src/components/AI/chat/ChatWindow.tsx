@@ -9,16 +9,13 @@ import {
   useScrollManager,
   useTextSelection,
 } from "./hooks";
-import {
-  ChatHeader,
-  EmptyState,
-  ResizeHandle,
-  ChatInput,
-  SelectionPopover,
-  type ChatInputHandle,
-} from "./components";
-import { Loader2 } from "lucide-react";
+import { ChatHeader } from "./components/ChatHeader";
+import { SelectionPopover } from "./components/SelectionPopover";
+import { EmptyState } from "./components/EmptyState";
 import { MessageList } from "./components/MessageList";
+import { ChatInput, ChatInputHandle } from "./components/ChatInput";
+import { ResizeHandle } from "./components/ResizeHandle";
+import { Loader2 } from "lucide-react";
 
 interface ChatWindowProps {
   examDetail: ExamWithSolutions;
