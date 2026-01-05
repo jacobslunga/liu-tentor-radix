@@ -1,7 +1,7 @@
 import { FC, useEffect, useCallback } from "react";
 
 import { Button } from "@/components/ui/button";
-import ChatWindow from "@/components/AI/ChatWindow";
+import ChatWindow from "@/components/AI/chat/ChatWindow";
 import ExamHeader from "@/components/ExamHeader";
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";

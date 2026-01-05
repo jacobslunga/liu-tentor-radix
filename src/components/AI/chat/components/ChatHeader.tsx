@@ -49,7 +49,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
           <Tooltip>
             <TooltipTrigger asChild>
               <div
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-default transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full corner-squircle text-xs font-medium cursor-default transition-colors ${
                   hasSolutions
                     ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                     : "bg-muted/50 text-muted-foreground"

@@ -150,7 +150,7 @@ export function DataTable({
         </div>
       </div>
 
-      <div className="border border-border rounded-2xl bg-background overflow-hidden">
+      <div className="border border-border rounded-2xl corner-squircle bg-background overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-[#FAFAFA] dark:bg-secondary">
             {table.getHeaderGroups().map((headerGroup) => (
