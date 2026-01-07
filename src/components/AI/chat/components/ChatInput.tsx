@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import {
-  BookOpenIcon,
   LightbulbFilamentIcon,
   ArrowUpIcon,
   SquareIcon,
@@ -137,7 +136,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className="rounded-3xl corner-squircle bg-background p-1.5 dark:bg-secondary border border-border">
+          <InputGroup className="rounded-3xl bg-background p-1.5 dark:bg-secondary border border-border">
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
@@ -154,65 +153,56 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               className="text-base resize-none max-h-[200px] overflow-y-auto"
             />
             <InputGroupAddon align="block-end">
-              <div className="flex items-center gap-0 min-w-0 flex-1">
+              <div className="flex items-center gap-2 min-w-0 flex-1">
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <button
                         onClick={() => {
-                          onToggleAnswerMode(true);
+                          onToggleAnswerMode(!giveDirectAnswer);
                           inputRef.current?.focus();
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-l rounded-l-full corner-squircle cursor-pointer ${
-                          giveDirectAnswer
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
-                        }`}
-                      >
-                        <BookOpenIcon weight="bold" className="h-3.5 w-3.5" />
-                        {language === "sv" ? "Svar" : "Answer"}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {language === "sv"
-                          ? "Få fullständiga svar och lösningar"
-                          : "Get complete answers and solutions"}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => {
-                          onToggleAnswerMode(false);
-                          inputRef.current?.focus();
-                        }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors border-y border-r rounded-r-full corner-squircle cursor-pointer ${
+                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all rounded-full cursor-pointer border ${
                           !giveDirectAnswer
                             ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
+                            : "bg-transparent text-muted-foreground border-dashed border-muted-foreground/50 hover:border-muted-foreground hover:bg-accent/50"
                         }`}
                       >
                         <LightbulbFilamentIcon
-                          weight="bold"
+                          weight={!giveDirectAnswer ? "fill" : "bold"}
                           className="h-3.5 w-3.5"
                         />
                         {language === "sv" ? "Hints" : "Hints"}
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      <p>
-                        {language === "sv"
-                          ? "Få ledtrådar och vägledning"
-                          : "Get hints and guidance"}
+                    <TooltipContent
+                      side="top"
+                      align="start"
+                      className="flex flex-col gap-0.5"
+                    >
+                      <p className="font-medium">
+                        {!giveDirectAnswer
+                          ? language === "sv"
+                            ? "Hints är på"
+                            : "Hints enabled"
+                          : language === "sv"
+                            ? "Hints är av"
+                            : "Hints disabled"}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {!giveDirectAnswer
+                          ? language === "sv"
+                            ? "Du får pedagogiska ledtrådar istället för svar."
+                            : "You'll get pedagogical guidance instead of answers."
+                          : language === "sv"
+                            ? "Klicka för att få vägledning steg-för-steg."
+                            : "Click to get step-by-step guidance."}
                       </p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
+
               <InputGroupButton
                 variant="default"
                 size="icon-sm"
@@ -222,7 +212,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                 {isLoading ? (
                   <SquareIcon weight="fill" className="h-4 w-4" />
                 ) : (
-                  <ArrowUpIcon weight="bold" className="h-10 w-10" />
+                  <ArrowUpIcon weight="bold" className="h-5 w-5" />
                 )}
                 <span className="sr-only">
                   {isLoading ? "Cancel" : sendButtonLabel}

@@ -27,29 +27,20 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
   return (
     <div className="shrink-0 flex items-center justify-between p-3 z-40">
       <div className="flex items-center gap-2">
-        <TooltipProvider delayDuration={0}>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={onClose}
-                className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/50"
-              >
-                <CaretRightIcon weight="bold" className="h-5 w-5" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="right">
-              <p>{language === "sv" ? "Stäng" : "Close"}</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={onClose}
+          className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/50"
+        >
+          <CaretRightIcon weight="bold" className="h-5 w-5" />
+        </Button>
 
         <TooltipProvider delayDuration={200}>
           <Tooltip>
             <TooltipTrigger asChild>
               <div
-                className={`flex items-center gap-1.5 px-3 py-1 rounded-full corner-squircle text-xs font-medium cursor-default transition-colors ${
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-default transition-colors ${
                   hasSolutions
                     ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                     : "bg-muted/50 text-muted-foreground"
@@ -63,7 +54,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
                 <span>{language === "sv" ? "Lösning" : "Solution"}</span>
               </div>
             </TooltipTrigger>
-            <TooltipContent side="bottom">
+            <TooltipContent side="bottom" align="start">
               <p>
                 {hasSolutions
                   ? language === "sv"
@@ -91,7 +82,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
               <span>Feedback</span>
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="left">
+          <TooltipContent side="bottom" align="end">
             <p>
               {language === "sv"
                 ? "Ge feedback om AI-chatten"

@@ -78,7 +78,7 @@ export default function LayoutSwitcher() {
       style={{
         pointerEvents: isMouseActive || isHovering ? "auto" : "none",
       }}
-      className="fixed bottom-10 left-5 z-40 hidden md:flex rounded-2xl corner-squircle p-1"
+      className="fixed bottom-10 left-5 z-40 hidden md:flex rounded-lg p-1"
     >
       <div className="flex items-center gap-0">
         {modes.map((mode) => {
@@ -89,10 +89,10 @@ export default function LayoutSwitcher() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setLayoutMode(mode.value)}
-                    className={`flex border corner-squircle items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
+                    className={`flex border items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-colors ${
                       mode.value === "exam-with-facit"
-                        ? "rounded-l-2xl"
-                        : "rounded-r-2xl"
+                        ? "rounded-l-lg"
+                        : "rounded-r-lg"
                     } cursor-pointer ${
                       isActive
                         ? "bg-primary text-primary-foreground border-transparent"
