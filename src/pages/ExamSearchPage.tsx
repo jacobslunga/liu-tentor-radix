@@ -194,7 +194,9 @@ const ExamSearchPage: FC = () => {
                 }
               />
               <Link to="/upload-exams">
-                <Button className="w-full z-50">{t("uploadMore")}</Button>
+                <Button variant="secondary" className="w-full z-50">
+                  {t("uploadMore")}
+                </Button>
               </Link>
             </div>
 

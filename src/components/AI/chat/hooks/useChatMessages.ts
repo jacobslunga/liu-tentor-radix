@@ -48,14 +48,11 @@ export const useChatMessages = ({
     setMessages((prev) => {
       const last = prev[prev.length - 1];
       if (last?.role === "assistant") {
-        // Check if AI hasn't responded yet (empty assistant message)
         if (!last.content.trim()) {
-          // Get the user message that was sent (second to last)
           const userMsg = prev[prev.length - 2];
           if (userMsg?.role === "user") {
             cancelledUserMessage = userMsg.content;
           }
-          // If this is the first message, show cancellation message
           if (prev.length === 2) {
             const updated = [...prev];
             updated[updated.length - 1] = {
@@ -64,10 +61,8 @@ export const useChatMessages = ({
             };
             return updated;
           }
-          // Otherwise remove both the empty assistant message and the user message
           return prev.slice(0, -2);
         } else {
-          // AI has already generated some content, append cancellation notice
           const updated = [...prev];
           updated[updated.length - 1] = {
             role: "assistant",
