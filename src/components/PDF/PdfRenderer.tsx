@@ -67,7 +67,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
           </div>
         )}
       >
-        <div className="flex flex-col items-center gap-4 py-4 min-w-fit mx-auto">
+        <div className="flex flex-col items-center justify-center gap-4 py-4 w-fit min-w-full">
           {Array.from({ length: numPages || 0 }, (_, i) => (
             <Page
               key={i + 1}
