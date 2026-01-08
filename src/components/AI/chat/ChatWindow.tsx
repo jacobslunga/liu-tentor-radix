@@ -13,7 +13,11 @@ import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
 import { EmptyState } from "./components/EmptyState";
 import { MessageList } from "./components/MessageList";
-import { ChatInput, ChatInputHandle } from "./components/ChatInput";
+import {
+  ChatInput,
+  ChatInputHandle,
+  ModelProvider,
+} from "./components/ChatInput";
 import { ResizeHandle } from "./components/ResizeHandle";
 import { Loader2 } from "lucide-react";
 
@@ -25,6 +29,7 @@ interface ChatWindowProps {
 }
 
 const STORAGE_KEY = "chat_input_draft";
+const MODEL_STORAGE_KEY = "chat_model_preference";
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
@@ -71,6 +76,9 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
+
+  const [selectedModel, setSelectedModel] = useState<ModelProvider>("google");
+
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [isMessageListReady, setIsMessageListReady] = useState(false);
   const [quotedContext, setQuotedContext] = useState("");
@@ -93,14 +101,22 @@ const ChatWindow: FC<ChatWindowProps> = ({
   }, []);
 
   useEffect(() => {
-    const saved = localStorage.getItem(STORAGE_KEY);
-    if (saved) setInput(saved);
+    const savedInput = localStorage.getItem(STORAGE_KEY);
+    const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+
+    if (savedInput) setInput(savedInput);
+    if (savedModel) setSelectedModel(savedModel as ModelProvider);
+
     setIsDraftLoaded(true);
   }, []);
 
   useEffect(() => {
     if (isDraftLoaded) localStorage.setItem(STORAGE_KEY, input);
   }, [input, isDraftLoaded]);
+
+  useEffect(() => {
+    if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModel);
+  }, [selectedModel, isDraftLoaded]);
 
   const handleClose = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -144,6 +160,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
       : input;
 
     sendMessage(messageToSend, giveDirectAnswer);
+
     setInput("");
     setQuotedContext("");
     localStorage.removeItem(STORAGE_KEY);
@@ -151,6 +168,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
     input,
     isLoading,
     giveDirectAnswer,
+    selectedModel,
     quotedContext,
     sendMessage,
     scrollToBottom,
@@ -247,7 +265,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
               <EmptyState language={language} hasSolutions={hasSolutions} />
             )}
 
-            {/* Messages area - takes full remaining height */}
             <div className="flex-1 relative min-h-0">
               <motion.div
                 variants={contentVariants}
@@ -295,6 +312,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     sendButtonLabel={t("aiChatSend")}
                     poweredByText={t("aiChatPoweredBy")}
                     quotedContext={quotedContext}
+                    selectedModel={selectedModel}
+                    onModelChange={setSelectedModel}
                     onInputChange={setInput}
                     onSend={handleSend}
                     onCancel={handleCancel}

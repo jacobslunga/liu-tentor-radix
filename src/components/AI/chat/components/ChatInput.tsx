@@ -18,6 +18,14 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectGroup,
+  SelectLabel,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import {
   LightbulbFilamentIcon,
@@ -26,6 +34,9 @@ import {
   ArrowDownIcon,
 } from "@phosphor-icons/react";
 import { QuotedContext } from "./QuotedContext";
+import { useTheme } from "@/context/ThemeContext";
+
+export type ModelProvider = "openai" | "claude" | "google";
 
 interface ChatInputProps {
   language: string;
@@ -37,6 +48,8 @@ interface ChatInputProps {
   poweredByText: string;
   sendButtonLabel: string;
   quotedContext?: string;
+  selectedModel: ModelProvider;
+  onModelChange: (model: ModelProvider) => void;
   onInputChange: (value: string) => void;
   onSend: () => void;
   onCancel: () => void;
@@ -44,6 +57,46 @@ interface ChatInputProps {
   onToggleAnswerMode: (direct: boolean) => void;
   onClearQuotedContext?: () => void;
 }
+
+const ProviderLogo = ({
+  provider,
+  showLabel = true,
+}: {
+  provider: ModelProvider;
+  showLabel?: boolean;
+}) => {
+  const { effectiveTheme } = useTheme();
+  const isDark = effectiveTheme === "dark";
+
+  const logos = {
+    openai: isDark
+      ? "/llm-logos/openai-white.svg"
+      : "/llm-logos/openai-black.svg",
+    claude: "/llm-logos/claude.svg.png",
+    google: "/llm-logos/gemini.png",
+  };
+
+  const fallbackLabels = {
+    openai: "OpenAI",
+    claude: "Claude",
+    google: "Google",
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <div className="relative h-5 w-5 overflow-hidden rounded-sm shrink-0">
+        <img
+          src={logos[provider]}
+          alt={provider}
+          className="h-full w-full object-contain"
+        />
+      </div>
+      {showLabel && (
+        <span className="truncate">{fallbackLabels[provider]}</span>
+      )}
+    </div>
+  );
+};
 
 const ScrollToBottomButton = memo(
   ({ show, onClick }: { show: boolean; onClick: () => void }) => (
@@ -81,6 +134,8 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       poweredByText,
       sendButtonLabel,
       quotedContext,
+      selectedModel,
+      onModelChange,
       onInputChange,
       onSend,
       onCancel,
@@ -144,8 +199,6 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               onChange={(e) => {
                 if (e.target.value.length <= MAX_INPUT_LENGTH) {
                   onInputChange(e.target.value);
-                } else {
-                  // Optionally, we could show a toast or other feedback here
                 }
               }}
               onKeyDown={handleKeyDown}
@@ -154,6 +207,51 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             />
             <InputGroupAddon align="block-end">
               <div className="flex items-center gap-2 min-w-0 flex-1">
+                <Select
+                  value={selectedModel}
+                  onValueChange={(val) => {
+                    onModelChange(val as ModelProvider);
+                    inputRef.current?.focus();
+                  }}
+                >
+                  <SelectTrigger className="h-8 w-fit gap-2 rounded-full border-dashed bg-transparent px-2 text-xs font-medium text-muted-foreground hover:bg-accent/50 shadow-none focus:ring-0 outline-none ring-0 focus:outline-none">
+                    <ProviderLogo provider={selectedModel} showLabel={false} />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectLabel className="text-[10px] text-muted-foreground px-2 py-1.5 font-medium">
+                        {language === "sv" ? "Modell" : "Model"}
+                      </SelectLabel>
+
+                      <SelectItem value="google">
+                        <div className="flex flex-col">
+                          <ProviderLogo provider="google" showLabel={true} />
+                          <span className="text-xs text-muted-foreground ml-7">
+                            gemini-2.5-flash
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="openai">
+                        <div className="flex flex-col">
+                          <ProviderLogo provider="openai" showLabel={true} />
+                          <span className="text-xs text-muted-foreground ml-7">
+                            gpt-5
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="claude">
+                        <div className="flex flex-col">
+                          <ProviderLogo provider="claude" showLabel={true} />
+                          <span className="text-xs text-muted-foreground ml-7">
+                            haiku 3.5
+                          </span>
+                        </div>
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+
                 <TooltipProvider delayDuration={0}>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -162,7 +260,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                           onToggleAnswerMode(!giveDirectAnswer);
                           inputRef.current?.focus();
                         }}
-                        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium transition-all rounded-full cursor-pointer border ${
+                        className={`flex h-8 items-center gap-2 px-3 text-xs font-medium transition-all rounded-full cursor-pointer border ${
                           !giveDirectAnswer
                             ? "bg-primary text-primary-foreground border-primary"
                             : "bg-transparent text-muted-foreground border-dashed border-muted-foreground/50 hover:border-muted-foreground hover:bg-accent/50"
@@ -172,7 +270,9 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                           weight={!giveDirectAnswer ? "fill" : "bold"}
                           className="h-3.5 w-3.5"
                         />
-                        {language === "sv" ? "Hints" : "Hints"}
+                        <span className="hidden sm:inline">
+                          {language === "sv" ? "Hints" : "Hints"}
+                        </span>
                       </button>
                     </TooltipTrigger>
                     <TooltipContent
