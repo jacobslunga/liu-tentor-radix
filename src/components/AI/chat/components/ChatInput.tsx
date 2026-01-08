@@ -36,7 +36,7 @@ import {
 import { QuotedContext } from "./QuotedContext";
 import { useTheme } from "@/context/ThemeContext";
 
-export type ModelProvider = "openai" | "claude" | "google";
+export type ModelProvider = "openai" | "claude" | "google" | "mistral";
 
 interface ChatInputProps {
   language: string;
@@ -68,18 +68,20 @@ const ProviderLogo = ({
   const { effectiveTheme } = useTheme();
   const isDark = effectiveTheme === "dark";
 
-  const logos = {
+  const logos: Record<ModelProvider, string> = {
     openai: isDark
       ? "/llm-logos/openai-white.svg"
       : "/llm-logos/openai-black.svg",
     claude: "/llm-logos/claude.svg.png",
     google: "/llm-logos/gemini.png",
+    mistral: "/llm-logos/mistral.png",
   };
 
-  const fallbackLabels = {
+  const fallbackLabels: Record<ModelProvider, string> = {
     openai: "OpenAI",
     claude: "Claude",
     google: "Google",
+    mistral: "Mistral",
   };
 
   return (
@@ -221,7 +223,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                   <SelectContent>
                     <SelectGroup>
                       <SelectLabel className="text-[10px] text-muted-foreground px-2 py-1.5 font-medium">
-                        {language === "sv" ? "Modell" : "Model"}
+                        {language === "sv" ? "Välj modell" : "Pick model"}
                       </SelectLabel>
 
                       <SelectItem value="google">
@@ -245,6 +247,14 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                           <ProviderLogo provider="claude" showLabel={true} />
                           <span className="text-xs text-muted-foreground ml-7">
                             haiku 3.5
+                          </span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="mistral">
+                        <div className="flex flex-col">
+                          <ProviderLogo provider="mistral" showLabel={true} />
+                          <span className="text-xs text-muted-foreground ml-7">
+                            mistral-small-3.2
                           </span>
                         </div>
                       </SelectItem>
