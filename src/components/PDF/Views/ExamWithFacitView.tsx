@@ -22,7 +22,6 @@ import { ImperativePanelHandle } from "react-resizable-panels";
 import { Link } from "react-router-dom";
 import SolutionOverlay from "../SolutionOverlay";
 import SolutionPdf from "../SolutionPdf";
-import { usePanelScaling } from "@/hooks/usePanelScaling";
 import { useResizeHotkeys } from "@/hooks/useResizeHotkeys";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -36,8 +35,6 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
 
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
-  const updateExamScale = usePanelScaling("exam");
-  const updateSolutionScale = usePanelScaling("solution");
 
   useResizeHotkeys(leftPanelRef);
 
@@ -50,7 +47,6 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         ref={leftPanelRef}
         defaultSize={55}
         minSize={20}
-        onResize={updateExamScale}
         className="bg-background"
       >
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
@@ -62,7 +58,6 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         ref={rightPanelRef}
         defaultSize={45}
         minSize={20}
-        onResize={updateSolutionScale}
         className="relative bg-background"
         onMouseEnter={() => setIsFacitBlurred(false)}
         onMouseLeave={() => setIsFacitBlurred(true)}
