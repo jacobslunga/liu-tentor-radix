@@ -13,11 +13,7 @@ import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
 import { EmptyState } from "./components/EmptyState";
 import { MessageList } from "./components/MessageList";
-import {
-  ChatInput,
-  ChatInputHandle,
-  ModelProvider,
-} from "./components/ChatInput";
+import { ChatInput, ChatInputHandle } from "./components/ChatInput";
 import { ResizeHandle } from "./components/ResizeHandle";
 import { Loader2 } from "lucide-react";
 
@@ -29,7 +25,7 @@ interface ChatWindowProps {
 }
 
 const STORAGE_KEY = "chat_input_draft";
-const MODEL_STORAGE_KEY = "chat_model_preference";
+const MODEL_STORAGE_KEY = "chat_model_id_preference";
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
@@ -55,6 +51,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const chatInputRef = useRef<ChatInputHandle>(null);
 
   const { width, isResizing, startResizing } = useResizablePanel();
+
   const { messages, isLoading, sendMessage, cancelGeneration } =
     useChatMessages({
       examId: examDetail.exam.id,
@@ -77,7 +74,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
 
-  const [selectedModel, setSelectedModel] = useState<ModelProvider>("google");
+  const [selectedModelId, setSelectedModelId] =
+    useState<string>("gemini-1.5-pro");
 
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [isMessageListReady, setIsMessageListReady] = useState(false);
@@ -102,10 +100,10 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   useEffect(() => {
     const savedInput = localStorage.getItem(STORAGE_KEY);
-    const savedModel = localStorage.getItem(MODEL_STORAGE_KEY);
+    const savedModelId = localStorage.getItem(MODEL_STORAGE_KEY);
 
     if (savedInput) setInput(savedInput);
-    if (savedModel) setSelectedModel(savedModel as ModelProvider);
+    if (savedModelId) setSelectedModelId(savedModelId);
 
     setIsDraftLoaded(true);
   }, []);
@@ -115,8 +113,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
   }, [input, isDraftLoaded]);
 
   useEffect(() => {
-    if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModel);
-  }, [selectedModel, isDraftLoaded]);
+    if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModelId);
+  }, [selectedModelId, isDraftLoaded]);
 
   const handleClose = useCallback(() => {
     if (messagesContainerRef.current) {
@@ -159,7 +157,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
       ? `Regarding this: "${quotedContext}"\n\n${input}`
       : input;
 
-    sendMessage(messageToSend, giveDirectAnswer);
+    sendMessage(messageToSend, giveDirectAnswer, selectedModelId);
 
     setInput("");
     setQuotedContext("");
@@ -168,7 +166,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
     input,
     isLoading,
     giveDirectAnswer,
-    selectedModel,
+    selectedModelId,
     quotedContext,
     sendMessage,
     scrollToBottom,
@@ -312,8 +310,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     sendButtonLabel={t("aiChatSend")}
                     poweredByText={t("aiChatPoweredBy")}
                     quotedContext={quotedContext}
-                    selectedModel={selectedModel}
-                    onModelChange={setSelectedModel}
+                    selectedModelId={selectedModelId}
+                    onModelChange={setSelectedModelId}
                     onInputChange={setInput}
                     onSend={handleSend}
                     onCancel={handleCancel}

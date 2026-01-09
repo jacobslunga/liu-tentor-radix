@@ -4,6 +4,8 @@ import {
   memo,
   forwardRef,
   useImperativeHandle,
+  useState,
+  useMemo,
 } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -18,27 +20,139 @@ import {
   TooltipContent,
   TooltipProvider,
 } from "@/components/ui/tooltip";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectGroup,
-  SelectLabel,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import {
   LightbulbFilamentIcon,
   ArrowUpIcon,
   SquareIcon,
   ArrowDownIcon,
+  CheckIcon,
+  LightningIcon,
+  BrainIcon,
+  SparkleIcon,
 } from "@phosphor-icons/react";
 import { QuotedContext } from "./QuotedContext";
 import { useTheme } from "@/context/ThemeContext";
+import { cn } from "@/lib/utils";
 
 export type ModelProvider = "openai" | "claude" | "google" | "mistral";
 
-interface ChatInputProps {
+export interface Model {
+  id: string;
+  name: string;
+  provider: ModelProvider;
+  description: string;
+  badge?: string;
+  icon?: React.ReactNode;
+}
+
+const getModels = (language: string): Model[] => {
+  const isSv = language === "sv";
+
+  return [
+    {
+      id: "gemini-1.5-pro",
+      name: "Gemini 1.5 Pro",
+      provider: "google",
+      description: isSv
+        ? "Komplext resonemang & lång kontext"
+        : "Complex reasoning & long context",
+      badge: "Pro",
+    },
+    {
+      id: "gemini-1.5-flash",
+      name: "Gemini 1.5 Flash",
+      provider: "google",
+      description: isSv
+        ? "Snabb, multimodal och effektiv"
+        : "Fast, multimodal, and efficient",
+      badge: isSv ? "Snabb" : "Flash",
+    },
+    {
+      id: "gpt-4o",
+      name: "GPT-4o",
+      provider: "openai",
+      description: isSv
+        ? "Flaggskeppsintelligens & snabbhet"
+        : "Flagship intelligence & speed",
+      badge: isSv ? "Ny" : "New",
+    },
+    {
+      id: "o1-preview",
+      name: "o1 Preview",
+      provider: "openai",
+      description: isSv
+        ? "Avancerat resonemang & STEM"
+        : "Advanced reasoning & STEM",
+      badge: isSv ? "Resonemang" : "Reasoning",
+    },
+    {
+      id: "gpt-4o-mini",
+      name: "GPT-4o Mini",
+      provider: "openai",
+      description: isSv
+        ? "Snabba uppgifter & vardags-AI"
+        : "Fast tasks & everyday AI",
+    },
+    {
+      id: "claude-3-5-sonnet",
+      name: "Claude 3.5 Sonnet",
+      provider: "claude",
+      description: isSv
+        ? "Bäst i klassen på kodning & nyans"
+        : "Best-in-class coding & nuance",
+      badge: isSv ? "Populär" : "Popular",
+    },
+    {
+      id: "claude-3-opus",
+      name: "Claude 3 Opus",
+      provider: "claude",
+      description: isSv
+        ? "Djupt tänkande & kreativt skrivande"
+        : "Deep thinking & creative writing",
+    },
+    {
+      id: "claude-3-5-haiku",
+      name: "Claude 3.5 Haiku",
+      provider: "claude",
+      description: isSv
+        ? "Blixtsnabb & responsiv"
+        : "Lightning fast & responsive",
+    },
+    {
+      id: "mistral-large-latest",
+      name: "Mistral Large 2",
+      provider: "mistral",
+      description: isSv
+        ? "Toppklassig öppen modell"
+        : "Top-tier open weight model",
+    },
+    {
+      id: "codestral-latest",
+      name: "Codestral",
+      provider: "mistral",
+      description: isSv
+        ? "Specialiserad för kodgenerering"
+        : "Specialized for code generation",
+      badge: isSv ? "Kod" : "Code",
+    },
+  ];
+};
+
+export interface ChatInputProps {
   language: string;
   input: string;
   isLoading: boolean;
@@ -48,8 +162,8 @@ interface ChatInputProps {
   poweredByText: string;
   sendButtonLabel: string;
   quotedContext?: string;
-  selectedModel: ModelProvider;
-  onModelChange: (model: ModelProvider) => void;
+  selectedModelId: string;
+  onModelChange: (modelId: string) => void;
   onInputChange: (value: string) => void;
   onSend: () => void;
   onCancel: () => void;
@@ -60,10 +174,10 @@ interface ChatInputProps {
 
 const ProviderLogo = ({
   provider,
-  showLabel = true,
+  className,
 }: {
   provider: ModelProvider;
-  showLabel?: boolean;
+  className?: string;
 }) => {
   const { effectiveTheme } = useTheme();
   const isDark = effectiveTheme === "dark";
@@ -77,25 +191,18 @@ const ProviderLogo = ({
     mistral: "/llm-logos/mistral.png",
   };
 
-  const fallbackLabels: Record<ModelProvider, string> = {
-    openai: "OpenAI",
-    claude: "Claude",
-    google: "Google",
-    mistral: "Mistral",
-  };
-
   return (
-    <div className="flex items-center gap-2">
-      <div className="relative h-5 w-5 overflow-hidden rounded-sm shrink-0">
-        <img
-          src={logos[provider]}
-          alt={provider}
-          className="h-full w-full object-contain"
-        />
-      </div>
-      {showLabel && (
-        <span className="truncate">{fallbackLabels[provider]}</span>
+    <div
+      className={cn(
+        "relative h-5 w-5 overflow-hidden rounded-sm shrink-0",
+        className
       )}
+    >
+      <img
+        src={logos[provider]}
+        alt={provider}
+        className="h-full w-full object-contain"
+      />
     </div>
   );
 };
@@ -120,6 +227,152 @@ const ScrollToBottomButton = memo(
   )
 );
 
+const ModelSelector = ({
+  selectedModelId,
+  language,
+  onSelect,
+}: {
+  selectedModelId: string;
+  language: string;
+  onSelect: (id: string) => void;
+}) => {
+  const [open, setOpen] = useState(false);
+  const selectedItemRef = useRef<HTMLDivElement>(null);
+
+  const isSv = language === "sv";
+  const models = useMemo(() => getModels(language), [language]);
+  const selectedModel =
+    models.find((m) => m.id === selectedModelId) || models[0];
+
+  useEffect(() => {
+    if (open && selectedItemRef.current) {
+      setTimeout(() => {
+        selectedItemRef.current?.scrollIntoView({ block: "center" });
+      }, 100);
+    }
+  }, [open]);
+
+  const groupedModels = useMemo(() => {
+    const groups: Record<string, Model[]> = {};
+    models.forEach((m) => {
+      if (!groups[m.provider]) groups[m.provider] = [];
+      groups[m.provider].push(m);
+    });
+    return groups;
+  }, [models]);
+
+  return (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <button
+          className="flex items-center gap-2 h-8 px-2 rounded-full border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+          aria-label={isSv ? "Välj modell" : "Select model"}
+        >
+          <ProviderLogo provider={selectedModel.provider} />
+          <span className="text-xs font-medium text-muted-foreground truncate max-w-[100px] hidden sm:inline-block">
+            {selectedModel.name}
+          </span>
+          <ArrowDownIcon className="w-3 h-3 text-muted-foreground opacity-50" />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent
+        className="w-[340px] p-0"
+        align="start"
+        side="top"
+        sideOffset={10}
+      >
+        <Command>
+          <CommandInput
+            placeholder={isSv ? "Sök modeller..." : "Search models..."}
+            className="h-10"
+          />
+
+          <CommandList className="max-h-[300px] overflow-y-auto custom-scrollbar">
+            <CommandEmpty>
+              {isSv ? "Ingen modell hittades." : "No model found."}
+            </CommandEmpty>
+            {Object.entries(groupedModels).map(([provider, providerModels]) => (
+              <CommandGroup
+                key={provider}
+                heading={provider.charAt(0).toUpperCase() + provider.slice(1)}
+              >
+                {providerModels.map((model) => (
+                  <CommandItem
+                    key={model.id}
+                    ref={selectedModelId === model.id ? selectedItemRef : null}
+                    value={`${model.name} ${model.provider} ${model.badge}`}
+                    onSelect={() => {
+                      onSelect(model.id);
+                      setOpen(false);
+                    }}
+                    className="flex items-start gap-3 py-3 cursor-pointer aria-selected:bg-accent"
+                  >
+                    <div className="mt-0.5 shrink-0">
+                      <ProviderLogo
+                        provider={model.provider}
+                        className="h-5 w-5"
+                      />
+                    </div>
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium text-foreground">
+                          {model.name}
+                        </span>
+                        {model.badge && (
+                          <span className="inline-flex items-center rounded-sm bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                            {(model.badge === "Flash" ||
+                              model.badge === "Snabb") && (
+                              <LightningIcon className="mr-1 h-3 w-3" />
+                            )}
+                            {(model.badge === "Reasoning" ||
+                              model.badge === "Resonemang") && (
+                              <BrainIcon className="mr-1 h-3 w-3" />
+                            )}
+                            {(model.badge === "New" ||
+                              model.badge === "Ny") && (
+                              <SparkleIcon className="mr-1 h-3 w-3" />
+                            )}
+                            {model.badge}
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-muted-foreground line-clamp-1">
+                        {model.description}
+                      </span>
+                    </div>
+                    {selectedModelId === model.id && (
+                      <CheckIcon className="h-4 w-4 text-primary shrink-0 mt-1" />
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            ))}
+          </CommandList>
+          <div className="p-2 border-t bg-muted/50 text-[10px] text-muted-foreground text-center">
+            {isSv ? (
+              <span>
+                Tryck{" "}
+                <kbd className="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono font-medium opacity-100">
+                  ↵
+                </kbd>{" "}
+                för att välja
+              </span>
+            ) : (
+              <span>
+                Press{" "}
+                <kbd className="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono font-medium opacity-100">
+                  ↵
+                </kbd>{" "}
+                to select
+              </span>
+            )}
+          </div>
+        </Command>
+      </PopoverContent>
+    </Popover>
+  );
+};
+
 export interface ChatInputHandle {
   focus: () => void;
 }
@@ -136,7 +389,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       poweredByText,
       sendButtonLabel,
       quotedContext,
-      selectedModel,
+      selectedModelId,
       onModelChange,
       onInputChange,
       onSend,
@@ -193,7 +446,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className="rounded-3xl bg-background p-1.5 dark:bg-secondary border border-border">
+          <InputGroup className="rounded-3xl bg-background p-2 shadow-sm dark:bg-secondary border border-border focus-within:ring-1 focus-within:ring-primary/20 transition-all">
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
@@ -205,147 +458,108 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               }}
               onKeyDown={handleKeyDown}
               rows={1}
-              className="text-base resize-none max-h-[200px] overflow-y-auto"
+              className="text-base resize-none max-h-[200px] overflow-y-auto py-2 px-1"
             />
-            <InputGroupAddon align="block-end">
-              <div className="flex items-center gap-2 min-w-0 flex-1">
-                <Select
-                  value={selectedModel}
-                  onValueChange={(val) => {
-                    onModelChange(val as ModelProvider);
-                    inputRef.current?.focus();
-                  }}
-                >
-                  <SelectTrigger className="h-8 w-fit gap-2 rounded-full border-dashed bg-transparent px-2 text-xs font-medium text-muted-foreground hover:bg-accent/50 shadow-none focus:ring-0 outline-none ring-0 focus:outline-none">
-                    <ProviderLogo provider={selectedModel} showLabel={false} />
-                  </SelectTrigger>
 
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel className="text-[10px] text-muted-foreground px-2 py-1.5 font-medium">
-                        {language === "sv" ? "Välj modell" : "Pick model"}
-                      </SelectLabel>
+            <InputGroupAddon
+              align="block-end"
+              className="w-full pt-2 border-t border-border/40 mt-1"
+            >
+              <div className="flex items-center justify-between w-full gap-2">
+                <div className="flex items-center gap-1.5">
+                  <ModelSelector
+                    selectedModelId={selectedModelId}
+                    language={language}
+                    onSelect={(id) => {
+                      onModelChange(id);
+                      setTimeout(() => inputRef.current?.focus(), 100);
+                    }}
+                  />
 
-                      <SelectItem value="google">
-                        <div className="flex flex-col">
-                          <ProviderLogo provider="google" showLabel={true} />
-                          <span className="text-xs text-muted-foreground ml-7">
-                            gemini-2.5-flash
-                          </span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="openai">
-                        <div className="flex flex-col">
-                          <ProviderLogo provider="openai" showLabel={true} />
-                          <span className="text-xs text-muted-foreground ml-7">
-                            gpt-5
-                          </span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="claude">
-                        <div className="flex flex-col">
-                          <ProviderLogo provider="claude" showLabel={true} />
-                          <span className="text-xs text-muted-foreground ml-7">
-                            haiku 3.5
-                          </span>
-                        </div>
-                      </SelectItem>
-                      <SelectItem value="mistral">
-                        <div className="flex flex-col">
-                          <ProviderLogo provider="mistral" showLabel={true} />
-                          <span className="text-xs text-muted-foreground ml-7">
-                            mistral-small-3.2
-                          </span>
-                        </div>
-                      </SelectItem>
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  <div className="h-4 w-px bg-border mx-1" />
 
-                <TooltipProvider delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => {
-                          onToggleAnswerMode(!giveDirectAnswer);
-                          inputRef.current?.focus();
-                        }}
-                        className={`flex h-8 items-center gap-2 px-3 text-xs font-medium transition-all rounded-full cursor-pointer border ${
-                          !giveDirectAnswer
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "bg-transparent text-muted-foreground border-dashed border-muted-foreground/50 hover:border-muted-foreground hover:bg-accent/50"
-                        }`}
+                  <TooltipProvider delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <button
+                          onClick={() => {
+                            onToggleAnswerMode(!giveDirectAnswer);
+                            inputRef.current?.focus();
+                          }}
+                          className={cn(
+                            "flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium transition-all rounded-full cursor-pointer border select-none",
+                            !giveDirectAnswer
+                              ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
+                              : "bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground"
+                          )}
+                        >
+                          <LightbulbFilamentIcon
+                            weight={!giveDirectAnswer ? "fill" : "regular"}
+                            className="h-4 w-4"
+                          />
+                          <span className="hidden sm:inline">
+                            {language === "sv" ? "Hints" : "Hints"}
+                          </span>
+                        </button>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="top"
+                        align="start"
+                        className="flex flex-col gap-0.5"
                       >
-                        <LightbulbFilamentIcon
-                          weight={!giveDirectAnswer ? "fill" : "bold"}
-                          className="h-3.5 w-3.5"
-                        />
-                        <span className="hidden sm:inline">
-                          {language === "sv" ? "Hints" : "Hints"}
-                        </span>
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="top"
-                      align="start"
-                      className="flex flex-col gap-0.5"
-                    >
-                      <p className="font-medium">
-                        {!giveDirectAnswer
-                          ? language === "sv"
-                            ? "Hints är på"
-                            : "Hints enabled"
-                          : language === "sv"
-                            ? "Hints är av"
-                            : "Hints disabled"}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {!giveDirectAnswer
-                          ? language === "sv"
-                            ? "Du får pedagogiska ledtrådar istället för svar."
-                            : "You'll get pedagogical guidance instead of answers."
-                          : language === "sv"
-                            ? "Klicka för att få vägledning steg-för-steg."
-                            : "Click to get step-by-step guidance."}
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
+                        <p className="font-medium">
+                          {!giveDirectAnswer
+                            ? language === "sv"
+                              ? "Hints är på"
+                              : "Hints enabled"
+                            : language === "sv"
+                              ? "Hints är av"
+                              : "Hints disabled"}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {!giveDirectAnswer
+                            ? language === "sv"
+                              ? "Du får pedagogiska ledtrådar."
+                              : "You'll get guidance."
+                            : language === "sv"
+                              ? "Klicka för vägledning."
+                              : "Click to get guidance."}
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
 
-              <InputGroupButton
-                variant="default"
-                size="icon-sm"
-                disabled={(!input.trim() && !isLoading) || isInputTooLong}
-                onClick={isLoading ? onCancel : onSend}
-              >
-                {isLoading ? (
-                  <SquareIcon weight="fill" className="h-4 w-4" />
-                ) : (
-                  <ArrowUpIcon weight="bold" className="h-5 w-5" />
-                )}
-                <span className="sr-only">
-                  {isLoading ? "Cancel" : sendButtonLabel}
-                </span>
-              </InputGroupButton>
+                <InputGroupButton
+                  variant="default"
+                  size="icon-sm"
+                  disabled={(!input.trim() && !isLoading) || isInputTooLong}
+                  onClick={isLoading ? onCancel : onSend}
+                  className="rounded-full h-8 w-8 shrink-0"
+                >
+                  {isLoading ? (
+                    <SquareIcon weight="fill" className="h-3.5 w-3.5" />
+                  ) : (
+                    <ArrowUpIcon weight="bold" className="h-4 w-4" />
+                  )}
+                  <span className="sr-only">
+                    {isLoading ? "Cancel" : sendButtonLabel}
+                  </span>
+                </InputGroupButton>
+              </div>
             </InputGroupAddon>
           </InputGroup>
 
           {isInputTooLong && (
-            <div className="text-xs text-red-500 mt-2 text-center">
+            <div className="text-xs text-red-500 mt-2 text-center animate-pulse">
               {language === "sv"
-                ? `Maximal längd är ${MAX_INPUT_LENGTH} tecken. Ditt meddelande är för långt.`
-                : `Maximum length is ${MAX_INPUT_LENGTH} characters. Your message is too long.`}
+                ? `Maximal längd är ${MAX_INPUT_LENGTH} tecken.`
+                : `Maximum length is ${MAX_INPUT_LENGTH} characters.`}
             </div>
           )}
 
-          <div className="flex flex-row items-center justify-between px-2 w-full mt-2">
-            <p className="text-[10px] text-muted-foreground text-center">
-              {poweredByText}
-            </p>
-            <p className="text-[10px] text-muted-foreground text-center">
-              Shift + Enter för ny rad
-            </p>
+          <div className="flex flex-row items-center justify-center gap-4 w-full mt-2 opacity-60 hover:opacity-100 transition-opacity">
+            <p className="text-[10px] text-muted-foreground">{poweredByText}</p>
           </div>
         </div>
       </div>

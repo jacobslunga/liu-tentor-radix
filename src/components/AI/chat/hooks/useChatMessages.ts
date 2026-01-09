@@ -13,7 +13,11 @@ interface UseChatMessagesProps {
 export interface UseChatMessagesReturn {
   messages: Message[];
   isLoading: boolean;
-  sendMessage: (content: string, giveDirectAnswer: boolean) => Promise<void>;
+  sendMessage: (
+    content: string,
+    giveDirectAnswer: boolean,
+    selectedModelId: string
+  ) => Promise<void>;
   cancelGeneration: () => string | null;
 }
 
