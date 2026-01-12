@@ -2,7 +2,7 @@ import "react-pdf/dist/Page/TextLayer.css";
 import "react-pdf/dist/Page/AnnotationLayer.css";
 
 import { Document, Page, pdfjs } from "react-pdf";
-import { useState, type FC } from "react";
+import { useState, useMemo, type FC } from "react";
 import { useTheme } from "@/context/ThemeContext";
 import { Loader2 } from "lucide-react";
 
@@ -19,30 +19,27 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-/**
- * Responsible for rendering any PDF based on pdfUrl
- * @param pdfUrl        - External link or base64 representation
- * @param scale         - Initial scale of the PDF
- * @param rotation      - Initial rotation of the PDF
- * @param rotation      - Number of pages in the PDF
- * @param onLoadSuccess - Callback after rendering the PDF
- */
 const PdfRenderer: FC<PdfRendererProps> = ({
   pdfUrl,
   scale = 1,
-  rotation = 1,
+  rotation = 0,
   numPages,
   onLoadSuccess,
 }) => {
-  if (!pdfUrl) {
-    return null;
-  }
+  if (!pdfUrl) return null;
 
   const { effectiveTheme } = useTheme();
-
   const [pageRotations, setPageRotations] = useState<Record<number, number>>(
     {}
   );
+
+  const isSafari = useMemo(() => {
+    return (
+      /^((?!chrome|android).)*safari/i.test(navigator.userAgent) ||
+      (/iPad|iPhone|iPod/.test(navigator.userAgent) &&
+        !(window as any).MSStream)
+    );
+  }, []);
 
   const handlePageLoadSuccess = (
     page: pdfjs.PDFPageProxy,
@@ -51,6 +48,16 @@ const PdfRenderer: FC<PdfRendererProps> = ({
     const nativeRotation = page.rotate || 0;
     setPageRotations((prev) => ({ ...prev, [pageNumber]: nativeRotation }));
   };
+
+  if (isSafari) {
+    return (
+      <div className="w-full h-full bg-background overflow-hidden">
+        <object data={pdfUrl} type="application/pdf" className="w-full h-full">
+          <iframe src={pdfUrl} className="w-full h-full" title="PDF document" />
+        </object>
+      </div>
+    );
+  }
 
   return (
     <div
