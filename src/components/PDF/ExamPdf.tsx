@@ -4,6 +4,7 @@ import usePdf from "@/hooks/usePdf";
 import ExamToolbar from "./Toolbar/ExamToolbar";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useChatWindow } from "@/context/ChatWindowContext";
+import { useIsSafari } from "@/hooks/useIsSafari";
 
 interface Props {
   pdfUrl: string | null;
@@ -11,6 +12,7 @@ interface Props {
 
 const ExamPdf: FC<Props> = ({ pdfUrl }) => {
   const { showChatWindow } = useChatWindow();
+  const isSafari = useIsSafari();
 
   const {
     numPages,
@@ -28,7 +30,6 @@ const ExamPdf: FC<Props> = ({ pdfUrl }) => {
     []
   );
 
-  // Key handling for + and - requires custom logic
   const keyboardActions = useMemo(
     () => ({
       "+": () => {
@@ -50,14 +51,15 @@ const ExamPdf: FC<Props> = ({ pdfUrl }) => {
     };
     window.addEventListener("keydown", handleKeyDown, { passive: true });
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [keyboardActions]);
+  }, [keyboardActions, showChatWindow]);
 
   useHotkeys("l", rotateLeft);
   useHotkeys("r", rotateRight);
 
   return (
     <>
-      <ExamToolbar pdfUrl={pdfUrl} />
+      {!isSafari && <ExamToolbar pdfUrl={pdfUrl} />}
+
       <PdfRenderer
         scale={scale}
         rotation={rotation}
