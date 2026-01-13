@@ -1,6 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
-import { Message } from "../types";
 import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from "../constants";
+import { Message } from "../types";
 
 interface UseChatMessagesProps {
   examId: string | number;
@@ -83,7 +83,11 @@ export const useChatMessages = ({
   }, []);
 
   const sendMessage = useCallback(
-    async (content: string, giveDirectAnswer: boolean) => {
+    async (
+      content: string,
+      giveDirectAnswer: boolean,
+      selectedModelId: string
+    ) => {
       if (!content.trim() || isLoadingRef.current) return;
 
       const userMessage: Message = { role: "user", content };
@@ -118,6 +122,7 @@ export const useChatMessages = ({
             examUrl,
             courseCode,
             solutionUrl: solutionUrl || undefined,
+            modelId: selectedModelId,
           }),
           signal: abortControllerRef.current.signal,
         });
@@ -159,7 +164,6 @@ export const useChatMessages = ({
         setMessages(final);
         messagesRef.current = final;
       } catch (error) {
-        // If aborted by user, don't show error - cancelGeneration handles cleanup
         if (error instanceof Error && error.name === "AbortError") {
           return;
         }

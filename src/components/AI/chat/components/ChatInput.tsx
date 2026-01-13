@@ -40,22 +40,18 @@ import {
   SquareIcon,
   ArrowDownIcon,
   CheckIcon,
-  LightningIcon,
-  BrainIcon,
-  SparkleIcon,
 } from "@phosphor-icons/react";
 import { QuotedContext } from "./QuotedContext";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 
-export type ModelProvider = "openai" | "claude" | "google" | "mistral";
+export type ModelProvider = "openAI" | "google";
 
 export interface Model {
   id: string;
   name: string;
   provider: ModelProvider;
   description: string;
-  badge?: string;
   icon?: React.ReactNode;
 }
 
@@ -64,90 +60,36 @@ const getModels = (language: string): Model[] => {
 
   return [
     {
+      id: "gemini-2.5-flash",
+      name: "Gemini 2.5 Flash",
+      provider: "google",
+      description: isSv
+        ? "Googles snabba multimodala modell"
+        : "Google's fast multimodal model",
+    },
+    {
       id: "gemini-1.5-pro",
       name: "Gemini 1.5 Pro",
       provider: "google",
       description: isSv
-        ? "Komplext resonemang & lång kontext"
-        : "Complex reasoning & long context",
-      badge: "Pro",
+        ? "Googles snabbaste multimodala modell"
+        : "Google's fastest multimodal model",
     },
     {
-      id: "gemini-1.5-flash",
-      name: "Gemini 1.5 Flash",
-      provider: "google",
+      id: "gpt-5",
+      name: "GPT-5",
+      provider: "openAI",
       description: isSv
-        ? "Snabb, multimodal och effektiv"
-        : "Fast, multimodal, and efficient",
-      badge: isSv ? "Snabb" : "Flash",
+        ? "Flaggskeppsmodell, mångsidig & exakt"
+        : "Flagship model, versatile & accurate",
     },
     {
-      id: "gpt-4o",
-      name: "GPT-4o",
-      provider: "openai",
+      id: "gpt-4.1",
+      name: "GPT-4.1",
+      provider: "openAI",
       description: isSv
-        ? "Flaggskeppsintelligens & snabbhet"
-        : "Flagship intelligence & speed",
-      badge: isSv ? "Ny" : "New",
-    },
-    {
-      id: "o1-preview",
-      name: "o1 Preview",
-      provider: "openai",
-      description: isSv
-        ? "Avancerat resonemang & STEM"
-        : "Advanced reasoning & STEM",
-      badge: isSv ? "Resonemang" : "Reasoning",
-    },
-    {
-      id: "gpt-4o-mini",
-      name: "GPT-4o Mini",
-      provider: "openai",
-      description: isSv
-        ? "Snabba uppgifter & vardags-AI"
-        : "Fast tasks & everyday AI",
-    },
-    {
-      id: "claude-3-5-sonnet",
-      name: "Claude 3.5 Sonnet",
-      provider: "claude",
-      description: isSv
-        ? "Bäst i klassen på kodning & nyans"
-        : "Best-in-class coding & nuance",
-      badge: isSv ? "Populär" : "Popular",
-    },
-    {
-      id: "claude-3-opus",
-      name: "Claude 3 Opus",
-      provider: "claude",
-      description: isSv
-        ? "Djupt tänkande & kreativt skrivande"
-        : "Deep thinking & creative writing",
-    },
-    {
-      id: "claude-3-5-haiku",
-      name: "Claude 3.5 Haiku",
-      provider: "claude",
-      description: isSv
-        ? "Blixtsnabb & responsiv"
-        : "Lightning fast & responsive",
-    },
-    {
-      id: "mistral-large-latest",
-      name: "Mistral Large 2",
-      provider: "mistral",
-      description: isSv
-        ? "Toppklassig öppen modell"
-        : "Top-tier open weight model",
-    },
-    {
-      id: "codestral-latest",
-      name: "Codestral",
-      provider: "mistral",
-      description: isSv
-        ? "Specialiserad för kodgenerering"
-        : "Specialized for code generation",
-      badge: isSv ? "Kod" : "Code",
+        ? "Blixtsnabb resonemang & logik"
+        : "Lightning fast reasoning & logic",
     },
   ];
 };
@@ -183,12 +125,10 @@ const ProviderLogo = ({
   const isDark = effectiveTheme === "dark";
 
   const logos: Record<ModelProvider, string> = {
-    openai: isDark
+    openAI: isDark
       ? "/llm-logos/openai-white.svg"
       : "/llm-logos/openai-black.svg",
-    claude: "/llm-logos/claude.svg.png",
     google: "/llm-logos/gemini.png",
-    mistral: "/llm-logos/mistral.png",
   };
 
   return (
@@ -300,7 +240,7 @@ const ModelSelector = ({
                   <CommandItem
                     key={model.id}
                     ref={selectedModelId === model.id ? selectedItemRef : null}
-                    value={`${model.name} ${model.provider} ${model.badge}`}
+                    value={`${model.name} ${model.provider}`}
                     onSelect={() => {
                       onSelect(model.id);
                       setOpen(false);
@@ -318,23 +258,6 @@ const ModelSelector = ({
                         <span className="text-sm font-medium text-foreground">
                           {model.name}
                         </span>
-                        {model.badge && (
-                          <span className="inline-flex items-center rounded-sm bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
-                            {(model.badge === "Flash" ||
-                              model.badge === "Snabb") && (
-                              <LightningIcon className="mr-1 h-3 w-3" />
-                            )}
-                            {(model.badge === "Reasoning" ||
-                              model.badge === "Resonemang") && (
-                              <BrainIcon className="mr-1 h-3 w-3" />
-                            )}
-                            {(model.badge === "New" ||
-                              model.badge === "Ny") && (
-                              <SparkleIcon className="mr-1 h-3 w-3" />
-                            )}
-                            {model.badge}
-                          </span>
-                        )}
                       </div>
                       <span className="text-[10px] text-muted-foreground line-clamp-1">
                         {model.description}
@@ -348,25 +271,6 @@ const ModelSelector = ({
               </CommandGroup>
             ))}
           </CommandList>
-          <div className="p-2 border-t bg-muted/50 text-[10px] text-muted-foreground text-center">
-            {isSv ? (
-              <span>
-                Tryck{" "}
-                <kbd className="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono font-medium opacity-100">
-                  ↵
-                </kbd>{" "}
-                för att välja
-              </span>
-            ) : (
-              <span>
-                Press{" "}
-                <kbd className="pointer-events-none inline-flex h-4 select-none items-center gap-1 rounded border bg-muted px-1 font-mono font-medium opacity-100">
-                  ↵
-                </kbd>{" "}
-                to select
-              </span>
-            )}
-          </div>
         </Command>
       </PopoverContent>
     </Popover>

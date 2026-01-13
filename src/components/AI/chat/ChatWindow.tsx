@@ -75,7 +75,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
 
   const [selectedModelId, setSelectedModelId] =
-    useState<string>("gemini-1.5-pro");
+    useState<string>("gemini-2.5-flash");
 
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [isMessageListReady, setIsMessageListReady] = useState(false);
