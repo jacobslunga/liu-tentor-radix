@@ -24,8 +24,8 @@ const updates: Update[] = [
       en: "AI Chat Window",
     },
     description: {
-      sv: "Få hjälp med tentorna direkt i gränssnittet med vår nya AI-chatt som drivs av Gemini.",
-      en: "Get help with exams directly in the interface with our new AI chat powered by Gemini.",
+      sv: "Få hjälp med tentorna direkt i gränssnittet med vår nya AI-chatt som drivs av Gemini och OpenAI.",
+      en: "Get help with exams directly in the interface with our new AI chat powered by Gemini and OpenAI.",
     },
   },
   {
