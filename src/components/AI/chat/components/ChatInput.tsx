@@ -44,14 +44,21 @@ import {
 import { QuotedContext } from "./QuotedContext";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 export type ModelProvider = "openAI" | "google";
+
+export interface ModelBadge {
+  sv: string;
+  en: string;
+}
 
 export interface Model {
   id: string;
   name: string;
   provider: ModelProvider;
   description: string;
+  badge?: ModelBadge;
   icon?: React.ReactNode;
 }
 
@@ -60,16 +67,20 @@ const getModels = (language: string): Model[] => {
 
   return [
     {
-      id: "gemini-2.5-flash",
-      name: "Gemini 2.5 Flash",
+      id: "gemini-2.5-pro",
+      name: "Gemini 2.5 Pro",
       provider: "google",
       description: isSv
-        ? "Googles snabba multimodala modell"
-        : "Google's fast multimodal model",
+        ? "Googles bästa multimodala modell"
+        : "Google's best multimodal model",
+      badge: {
+        sv: "Bäst för matte (långsam)",
+        en: "Best for math (slow)",
+      },
     },
     {
-      id: "gemini-1.5-pro",
-      name: "Gemini 1.5 Pro",
+      id: "gemini-2.5-flash",
+      name: "Gemini 2.5 Flash",
       provider: "google",
       description: isSv
         ? "Googles snabbaste multimodala modell"
@@ -90,6 +101,10 @@ const getModels = (language: string): Model[] => {
       description: isSv
         ? "Blixtsnabb resonemang & logik"
         : "Lightning fast reasoning & logic",
+      badge: {
+        sv: "Snabbast",
+        en: "Fastest",
+      },
     },
   ];
 };
@@ -258,6 +273,17 @@ const ModelSelector = ({
                         <span className="text-sm font-medium text-foreground">
                           {model.name}
                         </span>
+
+                        {model.badge && (
+                          <Badge
+                            variant="secondary"
+                            className="px-1.5 py-0.5 text-[10px]"
+                          >
+                            {language === "sv"
+                              ? model.badge.sv
+                              : model.badge.en}
+                          </Badge>
+                        )}
                       </div>
                       <span className="text-[10px] text-muted-foreground line-clamp-1">
                         {model.description}
