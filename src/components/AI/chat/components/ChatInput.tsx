@@ -94,18 +94,6 @@ const getModels = (language: string): Model[] => {
         ? "Flaggskeppsmodell, mångsidig & exakt"
         : "Flagship model, versatile & accurate",
     },
-    {
-      id: "gpt-4.1",
-      name: "GPT-4.1",
-      provider: "openAI",
-      description: isSv
-        ? "Blixtsnabb resonemang & logik"
-        : "Lightning fast reasoning & logic",
-      badge: {
-        sv: "Snabbast",
-        en: "Fastest",
-      },
-    },
   ];
 };
 
@@ -376,7 +364,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className="rounded-3xl bg-background p-2 shadow-sm dark:bg-secondary border border-border focus-within:ring-1 focus-within:ring-primary/20 transition-all">
+          <InputGroup className="rounded-3xl bg-background p-2 shadow-sm dark:bg-secondary border border-border transition-all">
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
@@ -391,10 +379,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               className="text-base resize-none max-h-[200px] overflow-y-auto py-2 px-1"
             />
 
-            <InputGroupAddon
-              align="block-end"
-              className="w-full pt-2 border-t border-border/40 mt-1"
-            >
+            <InputGroupAddon align="block-end" className="w-full">
               <div className="flex items-center justify-between w-full gap-2">
                 <div className="flex items-center gap-1.5">
                   <ModelSelector
@@ -405,8 +390,6 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                       setTimeout(() => inputRef.current?.focus(), 100);
                     }}
                   />
-
-                  <div className="h-4 w-px bg-border mx-1" />
 
                   <TooltipProvider delayDuration={0}>
                     <Tooltip>
