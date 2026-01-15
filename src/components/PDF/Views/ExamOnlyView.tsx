@@ -22,13 +22,19 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      // Logic checks showChatWindow, so functionality stops correctly
       if (!hasFacit || isManual || showChatWindow) return;
 
       const w = window.innerWidth;
       const threshold = w * 0.9;
 
+      const topSafeZone = 120;
+
       if (e.clientX > threshold) {
+        if (e.clientY < topSafeZone) {
+          setIsFacitVisible(false);
+          return;
+        }
+
         setIsFacitVisible(true);
         return;
       }
@@ -49,6 +55,12 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
     },
     [hasFacit, isManual, showChatWindow]
   );
+
+  useEffect(() => {
+    if (showChatWindow) {
+      setIsFacitVisible(false);
+    }
+  }, [showChatWindow, setIsFacitVisible]);
 
   useEffect(() => {
     window.addEventListener("mousemove", handleMouseMove, { passive: true });

@@ -30,7 +30,6 @@ import {
   Command,
   CommandEmpty,
   CommandGroup,
-  CommandInput,
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
@@ -45,6 +44,7 @@ import { QuotedContext } from "./QuotedContext";
 import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
+import { ChevronDownIcon } from "@primer/octicons-react";
 
 export type ModelProvider = "openAI" | "google";
 
@@ -67,8 +67,8 @@ const getModels = (language: string): Model[] => {
 
   return [
     {
-      id: "gemini-2.5-pro",
-      name: "Gemini 2.5 Pro",
+      id: "gemini-3-pro-preview",
+      name: "Gemini 3 Pro",
       provider: "google",
       description: isSv
         ? "Googles bästa multimodala modell"
@@ -76,6 +76,18 @@ const getModels = (language: string): Model[] => {
       badge: {
         sv: "Bäst för matte (långsam)",
         en: "Best for math (slow)",
+      },
+    },
+    {
+      id: "gemini-2.5-pro",
+      name: "Gemini 2.5 Pro",
+      provider: "google",
+      description: isSv
+        ? "Googles bästa multimodala modell"
+        : "Google's best multimodal model",
+      badge: {
+        sv: "Bra för matte (långsam)",
+        en: "Good for math (slow)",
       },
     },
     {
@@ -215,7 +227,7 @@ const ModelSelector = ({
           <span className="text-xs font-medium text-muted-foreground truncate max-w-[100px] hidden sm:inline-block">
             {selectedModel.name}
           </span>
-          <ArrowDownIcon className="w-3 h-3 text-muted-foreground opacity-50" />
+          <ChevronDownIcon className="w-3 h-3 text-muted-foreground opacity-50" />
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -225,11 +237,6 @@ const ModelSelector = ({
         sideOffset={10}
       >
         <Command>
-          <CommandInput
-            placeholder={isSv ? "Sök modeller..." : "Search models..."}
-            className="h-10"
-          />
-
           <CommandList className="max-h-[300px] overflow-y-auto custom-scrollbar">
             <CommandEmpty>
               {isSv ? "Ingen modell hittades." : "No model found."}
