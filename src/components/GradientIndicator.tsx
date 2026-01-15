@@ -20,14 +20,23 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
       const w = window.innerWidth;
-      const trigger = w * 0.7;
-      if (e.clientX > trigger) {
-        const ratio = (e.clientX - trigger) / (w - trigger);
-        spring.set(Math.min(Math.max(ratio, 0), 1));
+      const xTrigger = w * 0.7;
+
+      const topSafeZone = 150;
+
+      if (e.clientX > xTrigger) {
+        const xRatio = (e.clientX - xTrigger) / (w - xTrigger);
+        const clampedX = Math.min(Math.max(xRatio, 0), 1);
+
+        const yRatio = e.clientY / topSafeZone;
+        const clampedY = Math.min(Math.max(yRatio, 0), 1);
+
+        spring.set(clampedX * clampedY);
       } else {
         spring.set(0);
       }
     };
+
     window.addEventListener("mousemove", onMouseMove);
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [spring]);
