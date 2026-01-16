@@ -26,46 +26,47 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
       const w = window.innerWidth;
       const threshold = w * 0.9;
-
       const topSafeZone = 120;
 
-      if (e.clientX > threshold) {
-        if (e.clientY < topSafeZone) {
-          setIsFacitVisible(false);
+      if (isFacitVisible && panelRef.current) {
+        const rect = panelRef.current.getBoundingClientRect();
+        const isInsidePanel =
+          e.clientX >= rect.left &&
+          e.clientX <= rect.right &&
+          e.clientY >= rect.top &&
+          e.clientY <= rect.bottom;
+
+        if (isInsidePanel) {
           return;
+        }
+      }
+
+      if (e.clientX > threshold) {
+        if (!isFacitVisible) {
+          if (e.clientY < topSafeZone) {
+            return;
+          }
         }
 
         setIsFacitVisible(true);
         return;
       }
 
-      if (panelRef.current) {
-        const rect = panelRef.current.getBoundingClientRect();
-        if (
-          e.clientX >= rect.left &&
-          e.clientX <= rect.right &&
-          e.clientY >= rect.top &&
-          e.clientY <= rect.bottom
-        ) {
-          return;
-        }
-      }
-
       setIsFacitVisible(false);
     },
-    [hasFacit, isManual, showChatWindow]
+    [hasFacit, isManual, showChatWindow, isFacitVisible]
   );
+
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [handleMouseMove]);
 
   useEffect(() => {
     if (showChatWindow) {
       setIsFacitVisible(false);
     }
   }, [showChatWindow, setIsFacitVisible]);
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [handleMouseMove]);
 
   useHotkeys("e", () => {
     setIsFacitVisible((prev) => !prev);

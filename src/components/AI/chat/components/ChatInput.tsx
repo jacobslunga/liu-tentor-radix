@@ -383,7 +383,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
               }}
               onKeyDown={handleKeyDown}
               rows={1}
-              className="text-base resize-none max-h-[200px] overflow-y-auto py-2 px-1"
+              className="text-base font-medium resize-none max-h-[200px] overflow-y-auto py-2 px-1"
             />
 
             <InputGroupAddon align="block-end" className="w-full">
