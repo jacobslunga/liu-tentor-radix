@@ -23,7 +23,7 @@ export const markdownComponents = {
     return null;
   },
 
-  p: (props: any) => <p {...props} className="my-2 text-base font-medium" />,
+  p: (props: any) => <p {...props} className="my-2 text-base" />,
   ul: (props: any) => (
     <ul {...props} className="my-2 ml-4 list-disc text-base" />
   ),
