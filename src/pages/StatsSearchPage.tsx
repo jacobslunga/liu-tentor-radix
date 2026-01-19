@@ -68,9 +68,9 @@ export default function StatsSearchPage() {
     () =>
       [...exams].sort(
         (a, b) =>
-          new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime(),
+          new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime()
       ),
-    [exams],
+    [exams]
   );
 
   const passSeries = useMemo(
@@ -79,7 +79,7 @@ export default function StatsSearchPage() {
         date: new Date(e.exam_date).toISOString().slice(0, 10),
         passRate: Number(e.pass_rate ?? 0),
       })),
-    [sorted],
+    [sorted]
   );
 
   const aggregate = useMemo(() => {
@@ -116,7 +116,7 @@ export default function StatsSearchPage() {
 
   const nf = useMemo(
     () => new Intl.NumberFormat(language === "sv" ? "sv-SE" : "en-US"),
-    [language],
+    [language]
   );
 
   const pageTitle = courseData
@@ -176,7 +176,7 @@ export default function StatsSearchPage() {
     <div className="bg-background min-h-screen w-full">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col lg:flex-row justify-center items-start gap-6">
-          <div className="w-full lg:w-[260px] flex-shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
+          <div className="w-full lg:w-[260px] shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
             <div className="space-y-3">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-xs font-semibold">{courseCode}</span>
@@ -186,7 +186,7 @@ export default function StatsSearchPage() {
               </div>
 
               <h1
-                className={`${titleFontSize} font-semibold leading-snug text-foreground break-words`}
+                className={`${titleFontSize} font-semibold leading-snug text-foreground wrap-break-word`}
               >
                 {courseName}
               </h1>
@@ -270,6 +270,13 @@ export default function StatsSearchPage() {
                           borderRadius: "8px",
                           fontSize: "12px",
                           boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                          color: "var(--popover-foreground)",
+                        }}
+                        itemStyle={{ color: "var(--popover-foreground)" }}
+                        labelStyle={{
+                          color: "var(--popover-foreground)",
+                          fontWeight: 600,
+                          marginBottom: "0.25rem",
                         }}
                         formatter={(v: any) => [
                           `${v}%`,
@@ -337,7 +344,9 @@ export default function StatsSearchPage() {
                           border: "1px solid var(--border)",
                           borderRadius: "8px",
                           fontSize: "12px",
+                          color: "var(--popover-foreground)",
                         }}
+                        itemStyle={{ color: "var(--popover-foreground)" }}
                       />
                     </PieChart>
                   </ResponsiveContainer>
@@ -378,7 +387,7 @@ export default function StatsSearchPage() {
             </div>
           </div>
 
-          <div className="w-full lg:w-[260px] flex-shrink-0 flex flex-col gap-4 lg:sticky lg:top-24 order-3">
+          <div className="w-full lg:w-[260px] shrink-0 flex flex-col gap-4 lg:sticky lg:top-24 order-3">
             <div className="hidden lg:block text-xs font-semibold text-muted-foreground mb-1">
               Sponsorer
             </div>
