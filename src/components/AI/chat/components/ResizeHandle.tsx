@@ -4,26 +4,32 @@ import { GripVertical } from "lucide-react";
 interface ResizeHandleProps {
   onStartResize: () => void;
   isResizing?: boolean;
+  side: "left" | "right";
 }
 
 export const ResizeHandle: FC<ResizeHandleProps> = ({
   onStartResize,
   isResizing = false,
+  side,
 }) => {
   return (
     <div
-      className="absolute left-0 top-0 bottom-0 w-5 -translate-x-1/2 z-50 cursor-col-resize flex items-center justify-center group touch-none select-none outline-none"
+      className={`absolute top-0 bottom-0 w-5 z-50 cursor-col-resize flex items-center justify-center group touch-none select-none outline-none
+        ${side === "right" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"}
+      `}
       onMouseDown={(e) => {
         e.preventDefault();
         onStartResize();
       }}
     >
+      {/* The visual line */}
       <div
         className={`absolute inset-y-0 w-px transition-colors duration-200 ${
           isResizing ? "bg-primary" : "bg-transparent group-hover:bg-primary/50"
         }`}
       />
 
+      {/* The Grip Icon Box */}
       <div
         className={`
           relative flex h-8 w-4 items-center justify-center rounded-sm border shadow-sm transition-all duration-200

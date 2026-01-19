@@ -11,11 +11,14 @@ interface UseResizablePanelReturn {
   startResizing: () => void;
 }
 
-export const useResizablePanel = (): UseResizablePanelReturn => {
-  const [width, setWidth] = useState(PANEL_DEFAULT_WIDTH);
+export const useResizablePanel = (
+  initialWidth = PANEL_DEFAULT_WIDTH,
+  side: "left" | "right" = "right",
+): UseResizablePanelReturn => {
+  const [width, setWidth] = useState(initialWidth);
   const [isResizing, setIsResizing] = useState(false);
 
-  const widthRef = useRef(PANEL_DEFAULT_WIDTH);
+  const widthRef = useRef(initialWidth);
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -28,11 +31,19 @@ export const useResizablePanel = (): UseResizablePanelReturn => {
 
       rafRef.current = requestAnimationFrame(() => {
         const windowWidth = window.innerWidth;
-        const newWidth = ((windowWidth - e.clientX) / windowWidth) * 100;
+        let newWidthPercentage = 0;
+
+        if (side === "right") {
+          newWidthPercentage = ((windowWidth - e.clientX) / windowWidth) * 100;
+        } else {
+          newWidthPercentage = (e.clientX / windowWidth) * 100;
+        }
+
         const constrainedWidth = Math.min(
-          Math.max(newWidth, PANEL_MIN_WIDTH),
-          PANEL_MAX_WIDTH
+          Math.max(newWidthPercentage, PANEL_MIN_WIDTH),
+          PANEL_MAX_WIDTH,
         );
+
         widthRef.current = constrainedWidth;
         setWidth(constrainedWidth);
       });
@@ -63,8 +74,10 @@ export const useResizablePanel = (): UseResizablePanelReturn => {
       }
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
     };
-  }, [isResizing]);
+  }, [isResizing, side]);
 
   const startResizing = useCallback(() => setIsResizing(true), []);
 
