@@ -61,10 +61,6 @@
     border-color: hsl(var(--border));
   }
 
-  html {
-    scrollbar-gutter: stable both-edges;
-  }
-
   body {
     font-family:
       "Inter",
