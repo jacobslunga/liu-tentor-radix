@@ -25,15 +25,13 @@ export const MessageList: FC<MessageListProps> = memo(
     onMount,
   }) => {
     const [startIndex, setStartIndex] = useState(
-      Math.max(0, messages.length - INITIAL_BATCH)
+      Math.max(0, messages.length - INITIAL_BATCH),
     );
 
-    // Notify parent when first batch mounts
     useEffect(() => {
       onMount?.();
     }, []);
 
-    // Expand batch when new messages arrive
     useEffect(() => {
       if (messages.length > startIndex + INITIAL_BATCH) {
         const timeout = setTimeout(() => {
@@ -43,7 +41,6 @@ export const MessageList: FC<MessageListProps> = memo(
       }
     }, [messages.length]);
 
-    // Scroll to top load more
     useEffect(() => {
       const container = messagesContainerRef.current;
       if (!container) return;
@@ -79,7 +76,7 @@ export const MessageList: FC<MessageListProps> = memo(
         <div ref={messagesEndRef} className="h-4" />
       </div>
     );
-  }
+  },
 );
 
 MessageList.displayName = "MessageList";

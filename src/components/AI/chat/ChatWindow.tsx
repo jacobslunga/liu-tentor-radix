@@ -26,6 +26,7 @@ interface ChatWindowProps {
 
 const STORAGE_KEY = "chat_input_draft";
 const MODEL_STORAGE_KEY = "chat_model_id_preference";
+const SIDE_STORAGE_KEY = "chat_window_side_preference";
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
@@ -50,7 +51,25 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
 
-  const { width, isResizing, startResizing } = useResizablePanel();
+  const [side, setSide] = useState<"left" | "right">("right");
+  const [isSideLoaded, setIsSideLoaded] = useState(false);
+
+  useEffect(() => {
+    const savedSide = localStorage.getItem(SIDE_STORAGE_KEY) as
+      | "left"
+      | "right"
+      | null;
+    if (savedSide) setSide(savedSide);
+    setIsSideLoaded(true);
+  }, []);
+
+  const toggleSide = useCallback(() => {
+    const newSide = side === "right" ? "left" : "right";
+    setSide(newSide);
+    localStorage.setItem(SIDE_STORAGE_KEY, newSide);
+  }, [side]);
+
+  const { width, isResizing, startResizing } = useResizablePanel(35, side);
 
   const { messages, isLoading, sendMessage, cancelGeneration } =
     useChatMessages({
@@ -189,6 +208,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const hasSolutions = examDetail.solutions.length > 0;
   const isOverlay = variant === "overlay";
 
+  // --- Adjusted Parent Variants for Direction ---
   const parentVariants = useMemo((): Variants => {
     const enterSettings = isResizing
       ? { duration: 0 }
@@ -207,10 +227,12 @@ const ChatWindow: FC<ChatWindowProps> = ({
     };
 
     if (isOverlay) {
+      // Logic for sliding in/out based on side
+      const xHidden = side === "right" ? "100%" : "-100%";
       return {
-        hidden: { x: "100%" },
+        hidden: { x: xHidden },
         visible: { x: "0%", transition: enterSettings },
-        exit: { x: "100%", transition: exitSettings },
+        exit: { x: xHidden, transition: exitSettings },
       };
     } else {
       return {
@@ -227,20 +249,31 @@ const ChatWindow: FC<ChatWindowProps> = ({
         },
       };
     }
-  }, [isOverlay, width, isResizing]);
+  }, [isOverlay, width, isResizing, side]); // Added side dependency
+
+  if (!isSideLoaded) return null; // Avoid hydration mismatch or jumping
+
+  // Calculate CSS classes based on side
+  const positionClasses = isOverlay
+    ? side === "right"
+      ? "fixed right-0 top-0 h-full shadow-xl"
+      : "fixed left-0 top-0 h-full shadow-xl"
+    : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
+  // ^ Important: In 'push' mode, we use order-first to move it to the visual left
 
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
           ref={chatWindowRef}
+          key={`chat-window-${side}`} // Key change triggers clean animation when side switches
           variants={parentVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           className={`
             bg-transparent flex flex-col z-50
-            ${isOverlay ? "fixed right-0 top-0 h-full shadow-xl" : "relative h-full"}
+            ${positionClasses}
           `}
           style={{
             width: isOverlay ? `${width}%` : undefined,
@@ -248,14 +281,22 @@ const ChatWindow: FC<ChatWindowProps> = ({
             contain: isResizing ? "layout style" : "none",
           }}
         >
-          <ResizeHandle onStartResize={startResizing} isResizing={isResizing} />
+          <ResizeHandle
+            onStartResize={startResizing}
+            isResizing={isResizing}
+            side={side} // Pass side
+          />
 
-          <div className="flex-1 flex flex-col overflow-hidden bg-background border-l h-full w-full">
+          <div
+            className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? "" : "border-l"}`}
+          >
             <motion.div variants={contentVariants}>
               <ChatHeader
                 language={language}
                 hasSolutions={hasSolutions}
                 onClose={handleClose}
+                side={side} // Pass side
+                onToggleSide={toggleSide} // Pass toggle
               />
             </motion.div>
 
@@ -263,6 +304,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
               <EmptyState language={language} hasSolutions={hasSolutions} />
             )}
 
+            {/* Rest of the component remains exactly the same */}
             <div className="flex-1 relative min-h-0">
               <motion.div
                 variants={contentVariants}
