@@ -8,30 +8,6 @@
 @import "tailwindcss";
 @plugin "@toolwind/corner-shape";
 
-@font-face {
-  font-family: "FK Grotesk";
-  src: url("/fonts/FKGroteskNeue-Bold.otf");
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "FK Grotesk";
-  src: url("/fonts/FKGroteskNeue-Medium.otf");
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "FK Grotesk";
-  src: url("/fonts/FKGroteskNeue-Medium.otf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "FK Grotesk";
-  src: url("/fonts/FKGroteskNeue-Regular.otf");
-  font-weight: 400;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -87,7 +63,7 @@
 
   body {
     font-family:
-      "FK Grotesk",
+      "IBM Plex Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -125,7 +101,7 @@
     padding: 0.2rem 0.4rem;
     border-radius: 0.2rem;
     font-size: 0.9rem;
-    font-family: monospace;
+    font-family: "IBM Plex Mono", monospace;
   }
 
   textarea {
@@ -272,7 +248,7 @@
 }
 
 @theme {
-  --font-logo: "Newsreader", serif;
+  --font-logo: "IBM Plex Serif", serif;
 }
 
 @theme inline {
