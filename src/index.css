@@ -8,6 +8,30 @@
 @import "tailwindcss";
 @plugin "@toolwind/corner-shape";
 
+@font-face {
+  font-family: "FK Grotesk";
+  src: url("/fonts/FKGroteskNeue-Bold.otf");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "FK Grotesk";
+  src: url("/fonts/FKGroteskNeue-Medium.otf");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "FK Grotesk";
+  src: url("/fonts/FKGroteskNeue-Medium.otf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "FK Grotesk";
+  src: url("/fonts/FKGroteskNeue-Regular.otf");
+  font-weight: 400;
+}
+
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -63,7 +87,7 @@
 
   body {
     font-family:
-      "Inter",
+      "FK Grotesk",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
