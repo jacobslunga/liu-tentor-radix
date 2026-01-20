@@ -63,7 +63,7 @@
 
   body {
     font-family:
-      "IBM Plex Sans",
+      "Golos Text",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -248,7 +248,7 @@
 }
 
 @theme {
-  --font-logo: "IBM Plex Serif", serif;
+  --font-logo: "DM Serif Text", serif;
 }
 
 @theme inline {
