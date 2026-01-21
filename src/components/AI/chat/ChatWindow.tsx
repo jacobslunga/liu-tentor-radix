@@ -69,7 +69,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
     localStorage.setItem(SIDE_STORAGE_KEY, newSide);
   }, [side]);
 
-  const { width, isResizing, startResizing } = useResizablePanel(35, side);
+  const { width, isResizing, startResizing } = useResizablePanel();
 
   const { messages, isLoading, sendMessage, cancelGeneration } =
     useChatMessages({
@@ -208,7 +208,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const hasSolutions = examDetail.solutions.length > 0;
   const isOverlay = variant === "overlay";
 
-  // --- Adjusted Parent Variants for Direction ---
   const parentVariants = useMemo((): Variants => {
     const enterSettings = isResizing
       ? { duration: 0 }
@@ -227,7 +226,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     };
 
     if (isOverlay) {
-      // Logic for sliding in/out based on side
       const xHidden = side === "right" ? "100%" : "-100%";
       return {
         hidden: { x: xHidden },
@@ -249,24 +247,22 @@ const ChatWindow: FC<ChatWindowProps> = ({
         },
       };
     }
-  }, [isOverlay, width, isResizing, side]); // Added side dependency
+  }, [isOverlay, width, isResizing, side]);
 
-  if (!isSideLoaded) return null; // Avoid hydration mismatch or jumping
+  if (!isSideLoaded) return null;
 
-  // Calculate CSS classes based on side
   const positionClasses = isOverlay
     ? side === "right"
       ? "fixed right-0 top-0 h-full shadow-xl"
       : "fixed left-0 top-0 h-full shadow-xl"
     : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
-  // ^ Important: In 'push' mode, we use order-first to move it to the visual left
 
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
           ref={chatWindowRef}
-          key={`chat-window-${side}`} // Key change triggers clean animation when side switches
+          key={`chat-window-${side}`}
           variants={parentVariants}
           initial="hidden"
           animate="visible"
