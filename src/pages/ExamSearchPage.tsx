@@ -156,7 +156,7 @@ const ExamSearchPage: FC = () => {
 
         {!isLoading && !isError && sortedExams.length > 0 && (
           <div className="flex flex-col lg:flex-row justify-center items-start gap-10">
-            <div className="w-full lg:w-[260px] flex-shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
+            <div className="w-full lg:w-[260px] shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-semibold">{courseCode}</span>
@@ -260,7 +260,7 @@ const ExamSearchPage: FC = () => {
               />
             </div>
 
-            <div className="w-full lg:w-[300px] flex-shrink-0 flex flex-col gap-4 lg:sticky lg:top-24 order-3">
+            <div className="w-full lg:w-[300px] shrink-0 flex flex-col gap-4 lg:sticky lg:top-24 order-3">
               <div className="hidden lg:block text-xs font-semibold text-muted-foreground mb-1">
                 Sponsorer
               </div>
@@ -268,16 +268,9 @@ const ExamSearchPage: FC = () => {
                 <SponsorBanner
                   key={sponsor.id}
                   sponsor={sponsor}
-                  description={
-                    sponsor.name === "Skill"
-                      ? "Code Summer Camp"
-                      : "Sök till Exsitecs traineeprogram"
-                  }
-                  subtitle={
-                    sponsor.name === "Skill"
-                      ? "Bli programmeringscoach för barn 7-17 år i sommar!"
-                      : "Börja din karriär med vårt stora och långsiktiga traineeprogram"
-                  }
+                  title={sponsor.title}
+                  subtitle={sponsor.subtitle}
+                  body={sponsor.body}
                   courseCode={courseCode || ""}
                 />
               ))}

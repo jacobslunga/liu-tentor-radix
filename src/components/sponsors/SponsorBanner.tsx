@@ -6,15 +6,17 @@ import { supabase } from "@/supabase/supabaseClient";
 
 interface Props {
   sponsor: Sponsor;
-  description: string;
+  title: string;
   subtitle?: string;
+  body: string;
   courseCode: string;
 }
 
 const SponsorBanner: FC<Props> = ({
   sponsor: { logo, logoDark, name, to, id },
-  description,
+  body,
   subtitle,
+  title,
   courseCode,
 }) => {
   const handleClick = async () => {
@@ -34,7 +36,7 @@ const SponsorBanner: FC<Props> = ({
         company_id: id,
         browser,
         ip_address: ipAddress,
-        link_name: `${name} - ${description}`,
+        link_name: `${name} - ${title}`,
         course_code: courseCode,
       });
     } catch (error) {
@@ -47,9 +49,9 @@ const SponsorBanner: FC<Props> = ({
       to={to}
       target="_blank"
       onClick={handleClick}
-      className="relative flex flex-col w-full overflow-hidden duration-300 transition-all group rounded-2xl p-4 bg-background border border-transparent hover:border-primary/50"
+      className="relative flex flex-col w-full overflow-hidden duration-300 transition-all group rounded-2xl p-5 bg-background border hover:border-primary/50"
     >
-      <div className="relative z-10 flex flex-col gap-3">
+      <div className="relative z-10 flex flex-col gap-4">
         <div className="flex items-start justify-between">
           <div className="flex h-7 w-24 items-center justify-start overflow-hidden">
             {logo ? (
@@ -61,7 +63,6 @@ const SponsorBanner: FC<Props> = ({
                     logoDark ? "dark:hidden" : ""
                   }`}
                 />
-
                 {logoDark && (
                   <img
                     src={logoDark}
@@ -83,13 +84,20 @@ const SponsorBanner: FC<Props> = ({
           />
         </div>
 
-        <div className="flex flex-col gap-1">
-          <h3 className="text-sm font-semibold leading-tight text-foreground">
-            {description}
+        <div className="flex flex-col gap-1.5">
+          <h3 className="text-base font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
+            {title}
           </h3>
+
           {subtitle && (
-            <p className="text-xs leading-snug text-muted-foreground">
+            <p className="text-sm font-medium text-foreground/90 leading-snug">
               {subtitle}
+            </p>
+          )}
+
+          {body && (
+            <p className="text-xs leading-relaxed text-muted-foreground mt-1">
+              {body}
             </p>
           )}
         </div>

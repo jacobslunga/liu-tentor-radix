@@ -5,4 +5,7 @@ export interface Sponsor {
   logoDark?: string;
   linkName: string;
   to: string;
+  title: string;
+  subtitle?: string;
+  body: string;
 }
