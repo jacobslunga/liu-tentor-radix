@@ -68,9 +68,9 @@ export default function StatsSearchPage() {
     () =>
       [...exams].sort(
         (a, b) =>
-          new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime()
+          new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime(),
       ),
-    [exams]
+    [exams],
   );
 
   const passSeries = useMemo(
@@ -79,7 +79,7 @@ export default function StatsSearchPage() {
         date: new Date(e.exam_date).toISOString().slice(0, 10),
         passRate: Number(e.pass_rate ?? 0),
       })),
-    [sorted]
+    [sorted],
   );
 
   const aggregate = useMemo(() => {
@@ -116,7 +116,7 @@ export default function StatsSearchPage() {
 
   const nf = useMemo(
     () => new Intl.NumberFormat(language === "sv" ? "sv-SE" : "en-US"),
-    [language]
+    [language],
   );
 
   const pageTitle = courseData
@@ -395,16 +395,9 @@ export default function StatsSearchPage() {
               <SponsorBanner
                 key={sponsor.id}
                 sponsor={sponsor}
-                description={
-                  sponsor.name === "Skill"
-                    ? "Code Summer Camp"
-                    : "Sök till Exsitecs traineeprogram"
-                }
-                subtitle={
-                  sponsor.name === "Skill"
-                    ? "Bli programmeringscoach för barn 7-17 år i sommar!"
-                    : "Börja din karriär med vårt stora och långsiktiga traineeprogram"
-                }
+                title={sponsor.title}
+                subtitle={sponsor.subtitle}
+                body={sponsor.body}
                 courseCode={courseCode || ""}
               />
             ))}
