@@ -46,7 +46,7 @@ const ExamPage: FC = () => {
       handleToggleChat();
     },
     { preventDefault: true },
-    [handleToggleChat]
+    [handleToggleChat],
   );
 
   const {
@@ -60,6 +60,8 @@ const ExamPage: FC = () => {
     isError: detailError,
   } = useExamDetails(Number(examId));
 
+  console.log(examDetail);
+
   const pageTitle =
     examDetail && courseData
       ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${
@@ -70,7 +72,7 @@ const ExamPage: FC = () => {
   const pageDescription =
     examDetail && courseData
       ? `Se tenta för ${courseCode} från ${formatExamDate(
-          examDetail.exam.exam_date
+          examDetail.exam.exam_date,
         )} - ${courseData.course_name_eng}`
       : `Tenta för ${courseCode}`;
 

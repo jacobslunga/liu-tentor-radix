@@ -13,6 +13,7 @@ import TentaPage from "@/pages/ExamPage";
 import ExamSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 import UpdatesPage from "@/pages/UpdatesPage";
+import LockInModePage from "@/pages/LockInModePage";
 
 const routes: RouteObject[] = [
   {
@@ -21,6 +22,9 @@ const routes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: "*", element: <NotFoundPage /> },
+
+      { path: "lock-in-mode/:examId", element: <LockInModePage /> },
+
       {
         path: "search",
         element: <SearchLayout />,

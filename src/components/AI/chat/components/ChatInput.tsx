@@ -41,12 +41,11 @@ import {
   CheckIcon,
 } from "@phosphor-icons/react";
 import { QuotedContext } from "./QuotedContext";
-import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { ChevronDownIcon } from "@primer/octicons-react";
 
-export type ModelProvider = "openAI" | "google";
+export type ModelProvider = "google";
 
 export interface ModelBadge {
   sv: string;
@@ -98,14 +97,6 @@ const getModels = (language: string): Model[] => {
         ? "Googles snabbaste multimodala modell"
         : "Google's fastest multimodal model",
     },
-    {
-      id: "gpt-5",
-      name: "GPT-5",
-      provider: "openAI",
-      description: isSv
-        ? "Flaggskeppsmodell, mångsidig & exakt"
-        : "Flagship model, versatile & accurate",
-    },
   ];
 };
 
@@ -136,13 +127,7 @@ const ProviderLogo = ({
   provider: ModelProvider;
   className?: string;
 }) => {
-  const { effectiveTheme } = useTheme();
-  const isDark = effectiveTheme === "dark";
-
   const logos: Record<ModelProvider, string> = {
-    openAI: isDark
-      ? "/llm-logos/openai-white.svg"
-      : "/llm-logos/openai-black.svg",
     google: "/llm-logos/gemini.png",
   };
 
@@ -150,7 +135,7 @@ const ProviderLogo = ({
     <div
       className={cn(
         "relative h-5 w-5 overflow-hidden rounded-sm shrink-0",
-        className
+        className,
       )}
     >
       <img
@@ -179,7 +164,7 @@ const ScrollToBottomButton = memo(
         </motion.div>
       )}
     </AnimatePresence>
-  )
+  ),
 );
 
 const ModelSelector = ({
@@ -323,7 +308,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       onToggleAnswerMode,
       onClearQuotedContext,
     },
-    ref
+    ref,
   ) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -410,7 +395,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                             "flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium transition-all rounded-full cursor-pointer border select-none",
                             !giveDirectAnswer
                               ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
-                              : "bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground"
+                              : "bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground",
                           )}
                         >
                           <LightbulbFilamentIcon
@@ -427,7 +412,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                         align="start"
                         className="flex flex-col gap-0.5"
                       >
-                        <p className="font-medium">
+                        <p className="font-semibold">
                           {!giveDirectAnswer
                             ? language === "sv"
                               ? "Hints är på"
@@ -484,5 +469,5 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         </div>
       </div>
     );
-  }
+  },
 );

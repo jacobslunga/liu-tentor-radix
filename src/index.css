@@ -8,6 +8,30 @@
 @import "tailwindcss";
 @plugin "@toolwind/corner-shape";
 
+@font-face {
+  font-family: "Neufile";
+  src: url("/fonts/NeufileGrotesk-Bold.otf");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Neufile";
+  src: url("/fonts/NeufileGrotesk-Semibold.otf");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Neufile";
+  src: url("/fonts/NeufileGrotesk-Medium.otf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Neufile";
+  src: url("/fonts/NeufileGrotesk-Regular.otf");
+  font-weight: 400;
+}
+
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -63,7 +87,7 @@
 
   body {
     font-family:
-      "Inter",
+      "Neufile",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -101,7 +125,7 @@
     padding: 0.2rem 0.4rem;
     border-radius: 0.2rem;
     font-size: 0.9rem;
-    font-family: monospace;
+    font-family: "Fira Code", monospace;
   }
 
   textarea {
@@ -248,7 +272,8 @@
 }
 
 @theme {
-  --font-logo: "Newsreader", serif;
+  --font-logo: "DM Serif Text", serif;
+  --font-mono: "Fira Code", monospace;
 }
 
 @theme inline {
@@ -299,7 +324,7 @@
   --popover-foreground: oklch(0.145 0 0);
   --primary: oklch(0.6193 0.1154 172.06);
   --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(97.893% 0.00298 264.796);
+  --secondary: oklch(97% 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);

@@ -79,7 +79,7 @@ export const CodeBlock: FC<CodeBlockProps> = memo(
               fontSize: "0.85rem",
               lineHeight: "1.6",
               borderRadius: 0,
-              fontFamily: "monospace",
+              fontFamily: "Fira Code, monospace",
             }}
             showLineNumbers={false}
             wrapLines={false}
@@ -98,7 +98,7 @@ export const CodeBlock: FC<CodeBlockProps> = memo(
         </div>
       </div>
     );
-  }
+  },
 );
 
 CodeBlock.displayName = "CodeBlock";

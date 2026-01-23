@@ -96,7 +96,7 @@ export default function InfoSidebar() {
                   "block px-2 py-1.5 text-sm rounded-md transition-colors",
                   isCurrentPath(link.to)
                     ? "bg-secondary text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
                 )}
               >
                 {link.label}
@@ -135,7 +135,7 @@ export default function InfoSidebar() {
         <div className="flex items-center justify-between px-4 h-14">
           <Link to="/" className="flex items-center gap-2">
             <LogoIcon className="w-7 h-7" />
-            <span className="font-semibold text-lg font-logo text-foreground/80 tracking-tight">
+            <span className="font-medium text-lg font-logo text-foreground/80 tracking-tight">
               LiU Tentor
             </span>
           </Link>
@@ -151,7 +151,7 @@ export default function InfoSidebar() {
               <SheetHeader>
                 <SheetTitle className="flex items-center gap-2">
                   <LogoIcon className="w-7 h-7" />
-                  <span className="font-semibold text-lg font-logo text-foreground/80 tracking-tight">
+                  <span className="font-medium text-lg font-logo text-foreground/80 tracking-tight">
                     LiU Tentor
                   </span>
                 </SheetTitle>

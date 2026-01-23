@@ -54,7 +54,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
 
       setIsFacitVisible(false);
     },
-    [hasFacit, isManual, showChatWindow, isFacitVisible]
+    [hasFacit, isManual, showChatWindow, isFacitVisible],
   );
 
   useEffect(() => {

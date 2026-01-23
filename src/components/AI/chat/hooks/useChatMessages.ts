@@ -16,7 +16,7 @@ export interface UseChatMessagesReturn {
   sendMessage: (
     content: string,
     giveDirectAnswer: boolean,
-    selectedModelId: string
+    selectedModelId: string,
   ) => Promise<void>;
   cancelGeneration: () => string | null;
 }
@@ -86,7 +86,7 @@ export const useChatMessages = ({
     async (
       content: string,
       giveDirectAnswer: boolean,
-      selectedModelId: string
+      selectedModelId: string,
     ) => {
       if (!content.trim() || isLoadingRef.current) return;
 
@@ -180,7 +180,7 @@ export const useChatMessages = ({
         isLoadingRef.current = false;
       }
     },
-    [examId, examUrl, courseCode, solutionUrl]
+    [examId, examUrl, courseCode, solutionUrl],
   );
 
   return {
