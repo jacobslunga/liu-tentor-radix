@@ -125,7 +125,7 @@
     padding: 0.2rem 0.4rem;
     border-radius: 0.2rem;
     font-size: 0.9rem;
-    font-family: "IBM Plex Mono", monospace;
+    font-family: "Fira Code", monospace;
   }
 
   textarea {
@@ -273,6 +273,7 @@
 
 @theme {
   --font-logo: "DM Serif Text", serif;
+  --font-mono: "Fira Code", monospace;
 }
 
 @theme inline {

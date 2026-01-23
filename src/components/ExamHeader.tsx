@@ -1,6 +1,7 @@
 import {
   ArrowLeftIcon,
   CaretRightIcon,
+  ChatDotsIcon,
   CheckIcon,
 } from "@phosphor-icons/react";
 import {
@@ -20,7 +21,8 @@ import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
-import { Kbd } from "./ui/kbd";
+import { LockInMenu } from "./lock-in-mode/LockInMenu";
+import { LockInModeManager } from "@/lib/lockInMode";
 
 interface Props {
   exams: Exam[];
@@ -106,6 +108,15 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
     setSelectedExam(e);
     navigate(`/search/${courseCode}/${e.id}`);
     setIsDropdownOpen(false);
+  };
+
+  const handleStartLockIn = (durationStr: string) => {
+    if (!selectedExam) return;
+
+    const duration = parseInt(durationStr);
+    const session = LockInModeManager.startExamSession(selectedExam, duration);
+
+    navigate(`/lock-in-mode/${session.examId}`);
   };
 
   return (
@@ -227,20 +238,20 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           )}
         </div>
       </div>
-      <div className="flex items-center gap-3">
+
+      <div className="flex items-center gap-2">
         <Button
           onClick={onToggleChat || (() => setIsChatOpen(true))}
           variant="outline"
           size="sm"
-          className="hidden lg:flex gap-2"
+          className="hidden lg:flex gap-2 rounded-full"
         >
-          <span className="relative z-10 flex items-center gap-2">
-            {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
-          </span>
-          <Kbd className="bg-primary/10 text-primary border border-primary/20 font-medium">
-            C
-          </Kbd>
+          <ChatDotsIcon weight="bold" />
+          {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
         </Button>
+
+        <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />
+
         <SettingsDialog />
       </div>
     </motion.div>
