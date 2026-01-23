@@ -39,7 +39,7 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
 
   return (
     <div className="w-fit max-w-full">
-      <div className="border border-border rounded-2xl bg-background dark:bg-secondary overflow-hidden">
+      <div className="border border-border rounded-2xl bg-background overflow-hidden">
         <Table className="w-auto">
           <TableHeader className="bg-muted/30">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -60,7 +60,7 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
                     <div className="flex items-center gap-1.5">
                       {flexRender(
                         header.column.columnDef.header,
-                        header.getContext()
+                        header.getContext(),
                       )}
                       {header.id === "exam_date" && (
                         <ArrowsDownUpIcon
@@ -81,10 +81,10 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
                   key={row.id}
                   onClick={() =>
                     navigate(
-                      `/search/${row.original.course_code}/${row.original.id}`
+                      `/search/${row.original.course_code}/${row.original.id}`,
                     )
                   }
-                  className="cursor-pointer hover:bg-primary/5 transition-colors border-b border-border/40 last:border-0"
+                  className="cursor-pointer hover:bg-secondary transition-colors border-b border-border/40 last:border-0"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -93,7 +93,7 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
-                        cell.getContext()
+                        cell.getContext(),
                       )}
                     </TableCell>
                   ))}

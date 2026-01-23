@@ -11,14 +11,14 @@ import { ExamStatsDialog } from "@/components/ExamStatsDialog";
 import { Translations } from "@/util/translations";
 
 export const getColumns = (
-  t: (key: keyof Translations) => string
+  t: (key: keyof Translations) => string,
 ): ColumnDef<Exam, any>[] => [
   {
     id: "exam_name",
     header: t("examName"),
     cell: ({ row }) => {
       return (
-        <div className="flex items-center group-hover:underline font-medium transition-colors">
+        <div className="flex items-center group-hover:underline font-semibold transition-colors">
           {row.original.exam_name}
         </div>
       );

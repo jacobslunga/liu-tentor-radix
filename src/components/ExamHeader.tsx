@@ -49,9 +49,9 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
     () =>
       [...exams].sort(
         (a, b) =>
-          new Date(b.exam_date).getTime() - new Date(a.exam_date).getTime()
+          new Date(b.exam_date).getTime() - new Date(a.exam_date).getTime(),
       ),
-    [exams]
+    [exams],
   );
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       const container = scrollRef.current;
       if (!container) return;
       const el = container.querySelector(
-        '[data-current="true"]'
+        '[data-current="true"]',
       ) as HTMLElement | null;
       if (el) {
         el.scrollIntoView({ block: "center" });
@@ -141,14 +141,14 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                   className="flex flex-row items-center px-3 transition-colors group"
                 >
                   <span>
-                    <span className="font-medium">
+                    <span className="font-semibold">
                       {selectedExam.exam_name.length > 20
                         ? `${selectedExam.exam_name
                             .slice(0, 20)
                             .replace(selectedExam.exam_date, "")}...`
                         : selectedExam.exam_name.replace(
                             selectedExam.exam_date,
-                            ""
+                            "",
                           )}
                     </span>
                     <span className="font-normal">

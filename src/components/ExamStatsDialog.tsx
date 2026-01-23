@@ -83,7 +83,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <DialogHeader>
-          <DialogTitle className="text-lg font-medium text-foreground">
+          <DialogTitle className="text-lg text-foreground">
             Tentastatistik
             <span className="block text-sm font-normal text-muted-foreground">
               Betygsfördelning {date}
