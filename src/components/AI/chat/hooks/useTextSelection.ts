@@ -18,6 +18,8 @@ export const useTextSelection = ({
     text: "",
     position: null,
   });
+
+  const isSelectingRef = useRef(false);
   const timeoutRef = useRef<number | null>(null);
 
   const clearSelection = useCallback(() => {
@@ -29,7 +31,6 @@ export const useTextSelection = ({
     if (!container) return;
 
     const windowSelection = window.getSelection();
-
     if (
       !windowSelection ||
       windowSelection.rangeCount === 0 ||
@@ -40,42 +41,36 @@ export const useTextSelection = ({
     }
 
     const selectedText = windowSelection.toString().trim();
-
     if (selectedText.length < minLength) {
       setSelection({ text: "", position: null });
       return;
     }
 
     const range = windowSelection.getRangeAt(0);
-
     const commonAncestor = range.commonAncestorContainer;
     const ancestorElement =
       commonAncestor.nodeType === Node.TEXT_NODE
         ? commonAncestor.parentElement
         : (commonAncestor as HTMLElement);
 
-    if (!ancestorElement) {
+    if (!ancestorElement || !container.contains(ancestorElement)) {
       setSelection({ text: "", position: null });
       return;
     }
 
-    // Must be inside the container
-    if (!container.contains(ancestorElement)) {
+    const messageElement = ancestorElement.closest("[data-message-content]");
+    if (!messageElement) {
       setSelection({ text: "", position: null });
       return;
     }
 
-    // Check if selection is within an assistant message (prose class)
-    const proseElement = ancestorElement.closest(".prose");
-    if (!proseElement) {
-      setSelection({ text: "", position: null });
-      return;
-    }
-
-    // Get position in viewport coordinates
     const rect = range.getBoundingClientRect();
 
-    // Position the button slightly above the selection, centered horizontally
+    if (rect.top < 0 || rect.bottom > window.innerHeight) {
+      setSelection({ text: "", position: null });
+      return;
+    }
+
     setSelection({
       text: selectedText,
       position: {
@@ -86,48 +81,44 @@ export const useTextSelection = ({
   }, [containerRef, minLength]);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleMouseUp = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = window.setTimeout(() => {
-        checkSelection();
-      }, 10);
-    };
-
     const handleMouseDown = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
-      if (target.closest("[data-selection-popover]")) {
-        return;
-      }
+      if (target.closest("[data-selection-popover]")) return;
+
+      isSelectingRef.current = true;
       setSelection({ text: "", position: null });
     };
 
-    container.addEventListener("mouseup", handleMouseUp);
-    container.addEventListener("mousedown", handleMouseDown);
+    const handleMouseUp = () => {
+      isSelectingRef.current = false;
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(checkSelection, 10);
+    };
 
     const handleSelectionChange = () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-      timeoutRef.current = window.setTimeout(() => {
-        checkSelection();
-      }, 50);
+      if (isSelectingRef.current) return;
+
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      timeoutRef.current = window.setTimeout(checkSelection, 100);
     };
+
+    document.addEventListener("mousedown", handleMouseDown);
+    document.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("selectionchange", handleSelectionChange);
 
-    return () => {
-      container.removeEventListener("mouseup", handleMouseUp);
-      container.removeEventListener("mousedown", handleMouseDown);
-      document.removeEventListener("selectionchange", handleSelectionChange);
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+    const handleScroll = () => {
+      if (selection.text) clearSelection();
     };
-  }, [containerRef, checkSelection]);
+    window.addEventListener("scroll", handleScroll, { capture: true });
+
+    return () => {
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("selectionchange", handleSelectionChange);
+      window.removeEventListener("scroll", handleScroll, { capture: true });
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [checkSelection, selection.text, clearSelection]);
 
   return {
     selectedText: selection.text,

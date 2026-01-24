@@ -7,6 +7,7 @@ import "katex/dist/katex.min.css";
 import { Message } from "../types";
 import { motion } from "framer-motion";
 import { markdownComponents } from "./MarkdownComponents";
+import { useThrottle } from "../hooks/useThrottle";
 
 interface MessageBubbleProps {
   message: Message;
@@ -54,7 +55,7 @@ const AssistantMessage: FC<{ content: string }> = memo(
       </div>
     );
   },
-  (prevProps, nextProps) => prevProps.content === nextProps.content
+  (prev, next) => prev.content === next.content,
 );
 
 AssistantMessage.displayName = "AssistantMessage";
@@ -64,6 +65,8 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
     const isUser = message.role === "user";
     const isThinking =
       message.role === "assistant" && message.content === "" && isLoading;
+
+    const throttledContent = useThrottle(message.content, 150);
 
     return (
       <div
@@ -75,6 +78,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
               ? "bg-primary/10 text-foreground px-5 py-2.5 rounded-3xl max-w-[85%] w-fit"
               : "w-full px-1 py-2"
           }`}
+          data-message-content
         >
           {message.role === "assistant" ? (
             isThinking ? (
@@ -85,7 +89,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
                 </span>
               </div>
             ) : (
-              <AssistantMessage content={message.content} />
+              <AssistantMessage content={throttledContent} />
             )
           ) : (
             <p className="text-[15px] leading-relaxed whitespace-pre-wrap">
@@ -100,7 +104,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
     prevProps.message.content === nextProps.message.content &&
     prevProps.message.role === nextProps.message.role &&
     prevProps.isLoading === nextProps.isLoading &&
-    prevProps.language === nextProps.language
+    prevProps.language === nextProps.language,
 );
 
 MessageBubble.displayName = "MessageBubble";

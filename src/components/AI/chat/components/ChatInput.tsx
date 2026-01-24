@@ -42,7 +42,6 @@ import {
 } from "@phosphor-icons/react";
 import { QuotedContext } from "./QuotedContext";
 import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
 import { ChevronDownIcon } from "@primer/octicons-react";
 
 export type ModelProvider = "google";
@@ -57,7 +56,6 @@ export interface Model {
   name: string;
   provider: ModelProvider;
   description: string;
-  badge?: ModelBadge;
   icon?: React.ReactNode;
 }
 
@@ -72,10 +70,6 @@ const getModels = (language: string): Model[] => {
       description: isSv
         ? "Googles bästa multimodala modell"
         : "Google's best multimodal model",
-      badge: {
-        sv: "Bäst för matte (långsam)",
-        en: "Best for math (slow)",
-      },
     },
     {
       id: "gemini-2.5-pro",
@@ -84,10 +78,6 @@ const getModels = (language: string): Model[] => {
       description: isSv
         ? "Googles bästa multimodala modell"
         : "Google's best multimodal model",
-      badge: {
-        sv: "Bra för matte (långsam)",
-        en: "Good for math (slow)",
-      },
     },
     {
       id: "gemini-2.5-flash",
@@ -253,17 +243,6 @@ const ModelSelector = ({
                         <span className="text-sm font-medium text-foreground">
                           {model.name}
                         </span>
-
-                        {model.badge && (
-                          <Badge
-                            variant="secondary"
-                            className="px-1.5 py-0.5 text-[10px]"
-                          >
-                            {language === "sv"
-                              ? model.badge.sv
-                              : model.badge.en}
-                          </Badge>
-                        )}
                       </div>
                       <span className="text-[10px] text-muted-foreground line-clamp-1">
                         {model.description}
@@ -325,6 +304,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         inputRef.current.setSelectionRange(val.length, val.length);
       }
     }, []);
+
+    useEffect(() => {
+      if (quotedContext && inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [quotedContext]);
 
     const MAX_INPUT_LENGTH = 4000;
     const isInputTooLong = input.length >= MAX_INPUT_LENGTH;

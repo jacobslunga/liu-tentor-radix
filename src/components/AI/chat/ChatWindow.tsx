@@ -3,12 +3,8 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamWithSolutions } from "@/types/exam";
-import {
-  useChatMessages,
-  useResizablePanel,
-  useScrollManager,
-  useTextSelection,
-} from "./hooks";
+import { VirtuosoHandle } from "react-virtuoso";
+import { useResizablePanel, useTextSelection } from "./hooks";
 import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
 import { EmptyState } from "./components/EmptyState";
@@ -16,6 +12,7 @@ import { MessageList } from "./components/MessageList";
 import { ChatInput, ChatInputHandle } from "./components/ChatInput";
 import { ResizeHandle } from "./components/ResizeHandle";
 import { Loader2 } from "lucide-react";
+import { useChatState } from "@/context/ChatContext";
 
 interface ChatWindowProps {
   examDetail: ExamWithSolutions;
@@ -48,11 +45,32 @@ const ChatWindow: FC<ChatWindowProps> = ({
 }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
+
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const virtuosoRef = useRef<VirtuosoHandle>(null);
 
   const [side, setSide] = useState<"left" | "right">("right");
   const [isSideLoaded, setIsSideLoaded] = useState(false);
+  const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
+  const [showScrollButton, setShowScrollButton] = useState(false);
+
+  const { messages, isLoading, sendMessage, cancelGeneration } = useChatState();
+
+  const { width, isResizing, startResizing } = useResizablePanel();
+
+  const { selectedText, selectionPosition, clearSelection } = useTextSelection({
+    containerRef: messagesContainerRef,
+    minLength: 10,
+  });
+
+  const [input, setInput] = useState("");
+  const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
+  const [selectedModelId, setSelectedModelId] =
+    useState<string>("gemini-2.5-flash");
+  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
+  const [quotedContext, setQuotedContext] = useState("");
 
   useEffect(() => {
     const savedSide = localStorage.getItem(SIDE_STORAGE_KEY) as
@@ -63,67 +81,11 @@ const ChatWindow: FC<ChatWindowProps> = ({
     setIsSideLoaded(true);
   }, []);
 
-  const toggleSide = useCallback(() => {
-    const newSide = side === "right" ? "left" : "right";
-    setSide(newSide);
-    localStorage.setItem(SIDE_STORAGE_KEY, newSide);
-  }, [side]);
-
-  const { width, isResizing, startResizing } = useResizablePanel();
-
-  const { messages, isLoading, sendMessage, cancelGeneration } =
-    useChatMessages({
-      examId: examDetail.exam.id,
-      courseCode: examDetail.exam.course_code,
-      examUrl: examDetail.exam.pdf_url,
-      solutionUrl:
-        examDetail.solutions.length > 0
-          ? examDetail.solutions[0].pdf_url
-          : null,
-    });
-
-  const {
-    messagesEndRef,
-    messagesContainerRef,
-    showScrollButton,
-    scrollToBottom,
-    isUserScrollingRef,
-  } = useScrollManager({ isOpen });
-
-  const [input, setInput] = useState("");
-  const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
-
-  const [selectedModelId, setSelectedModelId] =
-    useState<string>("gemini-2.5-flash");
-
-  const [isDraftLoaded, setIsDraftLoaded] = useState(false);
-  const [isMessageListReady, setIsMessageListReady] = useState(false);
-  const [quotedContext, setQuotedContext] = useState("");
-
-  const lastScrollPosition = useRef<number | null>(null);
-
-  const { selectedText, selectionPosition, clearSelection } = useTextSelection({
-    containerRef: messagesContainerRef,
-    minLength: 10,
-  });
-
-  const handleAskAboutSelection = useCallback(() => {
-    setQuotedContext(selectedText);
-    clearSelection();
-    window.getSelection()?.removeAllRanges();
-  }, [selectedText, clearSelection]);
-
-  const handleClearQuotedContext = useCallback(() => {
-    setQuotedContext("");
-  }, []);
-
   useEffect(() => {
     const savedInput = localStorage.getItem(STORAGE_KEY);
     const savedModelId = localStorage.getItem(MODEL_STORAGE_KEY);
-
     if (savedInput) setInput(savedInput);
     if (savedModelId) setSelectedModelId(savedModelId);
-
     setIsDraftLoaded(true);
   }, []);
 
@@ -135,42 +97,60 @@ const ChatWindow: FC<ChatWindowProps> = ({
     if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModelId);
   }, [selectedModelId, isDraftLoaded]);
 
+  const prevMessagesLength = useRef(messages.length);
+
+  useEffect(() => {
+    if (messages.length > prevMessagesLength.current) {
+      const lastMessage = messages[messages.length - 1];
+      const secondLastMessage = messages[messages.length - 2];
+
+      if (secondLastMessage?.role === "user") {
+        virtuosoRef.current?.scrollToIndex({
+          index: messages.length - 2,
+          align: "start",
+          behavior: "smooth",
+        });
+      } else if (lastMessage?.role === "user") {
+        virtuosoRef.current?.scrollToIndex({
+          index: messages.length - 1,
+          align: "start",
+          behavior: "smooth",
+        });
+      }
+    }
+    prevMessagesLength.current = messages.length;
+  }, [messages.length]);
+
+  const toggleSide = useCallback(() => {
+    const newSide = side === "right" ? "left" : "right";
+    setSide(newSide);
+    localStorage.setItem(SIDE_STORAGE_KEY, newSide);
+  }, [side]);
+
+  const handleAskAboutSelection = useCallback(() => {
+    setQuotedContext(selectedText);
+    clearSelection();
+    window.getSelection()?.removeAllRanges();
+  }, [selectedText, clearSelection]);
+
+  const handleClearQuotedContext = useCallback(() => {
+    setQuotedContext("");
+  }, []);
+
   const handleClose = useCallback(() => {
-    if (messagesContainerRef.current) {
-      lastScrollPosition.current = messagesContainerRef.current.scrollTop;
-    }
     onClose();
-  }, [onClose, messagesContainerRef]);
+  }, [onClose]);
 
-  useEffect(() => {
-    if (
-      isOpen &&
-      messagesContainerRef.current &&
-      lastScrollPosition.current !== null
-    ) {
-      requestAnimationFrame(() => {
-        if (
-          messagesContainerRef.current &&
-          lastScrollPosition.current !== null
-        ) {
-          messagesContainerRef.current.scrollTop = lastScrollPosition.current;
-        }
-      });
-    }
-  }, [isOpen]);
-
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && isOpen) handleClose();
-    };
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [isOpen, handleClose]);
+  const handleScrollToBottom = useCallback(() => {
+    virtuosoRef.current?.scrollToIndex({
+      index: messages.length - 1,
+      align: "end",
+      behavior: "smooth",
+    });
+  }, [messages.length]);
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
-    isUserScrollingRef.current = false;
-    scrollToBottom();
 
     const messageToSend = quotedContext
       ? `Regarding this: "${quotedContext}"\n\n${input}`
@@ -188,14 +168,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
     selectedModelId,
     quotedContext,
     sendMessage,
-    scrollToBottom,
-    isUserScrollingRef,
   ]);
-
-  const handleScrollToBottom = useCallback(() => {
-    isUserScrollingRef.current = false;
-    scrollToBottom("smooth");
-  }, [scrollToBottom, isUserScrollingRef]);
 
   const handleCancel = useCallback(() => {
     const cancelledMessage = cancelGeneration();
@@ -204,6 +177,14 @@ const ChatWindow: FC<ChatWindowProps> = ({
       chatInputRef.current?.focus();
     }
   }, [cancelGeneration]);
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) handleClose();
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [isOpen, handleClose]);
 
   const hasSolutions = examDetail.solutions.length > 0;
   const isOverlay = variant === "overlay";
@@ -216,14 +197,9 @@ const ChatWindow: FC<ChatWindowProps> = ({
           bounce: 0,
           duration: 0.2,
           delayChildren: 0.1,
-          staggerChildren: 0.05,
         };
 
-    const exitSettings = {
-      type: "spring" as const,
-      bounce: 0,
-      duration: 0.2,
-    };
+    const exitSettings = { type: "spring" as const, bounce: 0, duration: 0.2 };
 
     if (isOverlay) {
       const xHidden = side === "right" ? "100%" : "-100%";
@@ -235,27 +211,25 @@ const ChatWindow: FC<ChatWindowProps> = ({
     } else {
       return {
         hidden: { width: 0, opacity: 0 },
-        visible: {
-          width: `${width}%`,
-          opacity: 1,
-          transition: enterSettings,
-        },
-        exit: {
-          width: 0,
-          opacity: 0,
-          transition: exitSettings,
-        },
+        visible: { width: `${width}%`, opacity: 1, transition: enterSettings },
+        exit: { width: 0, opacity: 0, transition: exitSettings },
       };
     }
   }, [isOverlay, width, isResizing, side]);
-
-  if (!isSideLoaded) return null;
 
   const positionClasses = isOverlay
     ? side === "right"
       ? "fixed right-0 top-0 h-full shadow-xl"
       : "fixed left-0 top-0 h-full shadow-xl"
     : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
+
+  const handleAnimationComplete = (definition: any) => {
+    if (definition === "visible") {
+      setShouldRenderMessages(true);
+    }
+  };
+
+  if (!isSideLoaded) return null;
 
   return (
     <AnimatePresence mode="wait">
@@ -267,10 +241,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
           initial="hidden"
           animate="visible"
           exit="exit"
-          className={`
-            bg-transparent flex flex-col z-50
-            ${positionClasses}
-          `}
+          onAnimationComplete={handleAnimationComplete}
+          className={`bg-transparent flex flex-col z-50 ${positionClasses}`}
           style={{
             width: isOverlay ? `${width}%` : undefined,
             willChange: isResizing ? "width" : "auto",
@@ -280,7 +252,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
           <ResizeHandle
             onStartResize={startResizing}
             isResizing={isResizing}
-            side={side} // Pass side
+            side={side}
           />
 
           <div
@@ -291,8 +263,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
                 language={language}
                 hasSolutions={hasSolutions}
                 onClose={handleClose}
-                side={side} // Pass side
-                onToggleSide={toggleSide} // Pass toggle
+                side={side}
+                onToggleSide={toggleSide}
               />
             </motion.div>
 
@@ -300,41 +272,33 @@ const ChatWindow: FC<ChatWindowProps> = ({
               <EmptyState language={language} hasSolutions={hasSolutions} />
             )}
 
-            {/* Rest of the component remains exactly the same */}
-            <div className="flex-1 relative min-h-0">
-              <motion.div
-                variants={contentVariants}
-                ref={messagesContainerRef}
-                className="absolute inset-0 overflow-y-auto"
-              >
-                <div className="p-4 pb-48 space-y-4 relative">
-                  {!isMessageListReady && (
-                    <div className="flex items-center justify-center py-20">
-                      <Loader2 className="w-8 h-8 animate-spin" />
-                    </div>
-                  )}
-
+            <div className="flex-1 relative min-h-0 flex flex-col">
+              <div ref={messagesContainerRef} className="absolute inset-0">
+                {shouldRenderMessages ? (
                   <MessageList
                     messages={messages}
                     isLoading={isLoading}
                     language={language}
-                    messagesEndRef={messagesEndRef}
-                    messagesContainerRef={messagesContainerRef}
-                    onMount={() => setIsMessageListReady(true)}
+                    virtuosoRef={virtuosoRef}
+                    onScroll={(isAtBottom) => setShowScrollButton(!isAtBottom)}
                   />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center">
+                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                  </div>
+                )}
+              </div>
 
-                  <SelectionPopover
-                    show={!!selectedText}
-                    position={selectionPosition}
-                    language={language}
-                    onAskAbout={handleAskAboutSelection}
-                  />
-                </div>
-              </motion.div>
+              <SelectionPopover
+                show={!!selectedText}
+                position={selectionPosition}
+                language={language}
+                onAskAbout={handleAskAboutSelection}
+              />
 
               <motion.div
                 variants={contentVariants}
-                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8"
+                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8 z-10"
               >
                 {isDraftLoaded && (
                   <ChatInput
