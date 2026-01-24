@@ -305,6 +305,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       }
     }, []);
 
+    useEffect(() => {
+      if (quotedContext && inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, [quotedContext]);
+
     const MAX_INPUT_LENGTH = 4000;
     const isInputTooLong = input.length >= MAX_INPUT_LENGTH;
 

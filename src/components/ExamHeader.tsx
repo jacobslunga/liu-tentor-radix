@@ -23,6 +23,8 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 import { LockInMenu } from "./lock-in-mode/LockInMenu";
 import { LockInModeManager } from "@/lib/lockInMode";
+import { useChatState } from "@/context/ChatContext";
+import { Loader2 } from "lucide-react";
 
 interface Props {
   exams: Exam[];
@@ -118,6 +120,14 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
     navigate(`/lock-in-mode/${session.examId}`);
   };
+
+  let isLoading = false;
+  try {
+    const chatState = useChatState();
+    isLoading = chatState.isLoading;
+  } catch (e) {
+    isLoading = false;
+  }
 
   return (
     <motion.div
@@ -244,10 +254,19 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           onClick={onToggleChat || (() => setIsChatOpen(true))}
           variant="outline"
           size="sm"
-          className="hidden lg:flex gap-2 rounded-full"
+          className="hidden lg:flex gap-2 rounded-full transition-all duration-200"
         >
-          <ChatDotsIcon weight="bold" />
-          {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
+          {isLoading ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>{language === "sv" ? "Tänker..." : "Thinking..."}</span>
+            </>
+          ) : (
+            <>
+              <ChatDotsIcon weight="bold" />
+              {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
+            </>
+          )}
         </Button>
 
         <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />

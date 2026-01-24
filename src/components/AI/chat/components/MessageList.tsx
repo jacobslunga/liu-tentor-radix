@@ -21,7 +21,7 @@ export const MessageList: FC<MessageListProps> = memo(
         initialTopMostItemIndex={messages.length - 1}
         alignToBottom={false}
         followOutput={false}
-        atBottomThreshold={100}
+        atBottomThreshold={60}
         atBottomStateChange={(isAtBottom) => {
           onScroll?.(isAtBottom);
         }}

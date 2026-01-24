@@ -61,8 +61,6 @@ const ExamPage: FC = () => {
     isError: detailError,
   } = useExamDetails(Number(examId));
 
-  console.log(examDetail);
-
   const pageTitle =
     examDetail && courseData
       ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${
@@ -105,13 +103,13 @@ const ExamPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <ExamHeader
-        exams={courseData.exams}
-        setIsChatOpen={setShowChatWindow}
-        onToggleChat={handleToggleChat}
-      />
-
       <ChatProvider examDetail={examDetail}>
+        <ExamHeader
+          exams={courseData.exams}
+          setIsChatOpen={setShowChatWindow}
+          onToggleChat={handleToggleChat}
+        />
+
         <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
           <div className="flex-1 flex flex-col min-w-0 h-full">
             <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
