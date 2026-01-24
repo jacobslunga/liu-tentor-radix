@@ -3,12 +3,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamWithSolutions } from "@/types/exam";
-import {
-  useChatMessages,
-  useResizablePanel,
-  useScrollManager,
-  useTextSelection,
-} from "./hooks";
+import { useResizablePanel, useScrollManager, useTextSelection } from "./hooks";
 import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
 import { EmptyState } from "./components/EmptyState";
@@ -16,6 +11,7 @@ import { MessageList } from "./components/MessageList";
 import { ChatInput, ChatInputHandle } from "./components/ChatInput";
 import { ResizeHandle } from "./components/ResizeHandle";
 import { Loader2 } from "lucide-react";
+import { useChatState } from "@/context/ChatContext";
 
 interface ChatWindowProps {
   examDetail: ExamWithSolutions;
@@ -53,6 +49,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const [side, setSide] = useState<"left" | "right">("right");
   const [isSideLoaded, setIsSideLoaded] = useState(false);
+  const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
 
   useEffect(() => {
     const savedSide = localStorage.getItem(SIDE_STORAGE_KEY) as
@@ -71,16 +68,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const { width, isResizing, startResizing } = useResizablePanel();
 
-  const { messages, isLoading, sendMessage, cancelGeneration } =
-    useChatMessages({
-      examId: examDetail.exam.id,
-      courseCode: examDetail.exam.course_code,
-      examUrl: examDetail.exam.pdf_url,
-      solutionUrl:
-        examDetail.solutions.length > 0
-          ? examDetail.solutions[0].pdf_url
-          : null,
-    });
+  const { messages, isLoading, sendMessage, cancelGeneration } = useChatState();
 
   const {
     messagesEndRef,
@@ -192,6 +180,15 @@ const ChatWindow: FC<ChatWindowProps> = ({
     isUserScrollingRef,
   ]);
 
+  useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => setShouldRenderMessages(true), 300);
+      return () => clearTimeout(timer);
+    } else {
+      setShouldRenderMessages(false);
+    }
+  }, [isOpen]);
+
   const handleScrollToBottom = useCallback(() => {
     isUserScrollingRef.current = false;
     scrollToBottom("smooth");
@@ -249,13 +246,13 @@ const ChatWindow: FC<ChatWindowProps> = ({
     }
   }, [isOverlay, width, isResizing, side]);
 
-  if (!isSideLoaded) return null;
-
   const positionClasses = isOverlay
     ? side === "right"
       ? "fixed right-0 top-0 h-full shadow-xl"
       : "fixed left-0 top-0 h-full shadow-xl"
     : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
+
+  if (!isSideLoaded) return null;
 
   return (
     <AnimatePresence mode="wait">
@@ -280,7 +277,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
           <ResizeHandle
             onStartResize={startResizing}
             isResizing={isResizing}
-            side={side} // Pass side
+            side={side}
           />
 
           <div
@@ -291,8 +288,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
                 language={language}
                 hasSolutions={hasSolutions}
                 onClose={handleClose}
-                side={side} // Pass side
-                onToggleSide={toggleSide} // Pass toggle
+                side={side}
+                onToggleSide={toggleSide}
               />
             </motion.div>
 
@@ -300,7 +297,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
               <EmptyState language={language} hasSolutions={hasSolutions} />
             )}
 
-            {/* Rest of the component remains exactly the same */}
             <div className="flex-1 relative min-h-0">
               <motion.div
                 variants={contentVariants}
@@ -314,14 +310,20 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     </div>
                   )}
 
-                  <MessageList
-                    messages={messages}
-                    isLoading={isLoading}
-                    language={language}
-                    messagesEndRef={messagesEndRef}
-                    messagesContainerRef={messagesContainerRef}
-                    onMount={() => setIsMessageListReady(true)}
-                  />
+                  {shouldRenderMessages ? (
+                    <MessageList
+                      messages={messages}
+                      isLoading={isLoading}
+                      language={language}
+                      messagesEndRef={messagesEndRef}
+                      messagesContainerRef={messagesContainerRef}
+                      onMount={() => setIsMessageListReady(true)}
+                    />
+                  ) : (
+                    <div className="p-4">
+                      <Loader2 className="animate-spin" />
+                    </div>
+                  )}
 
                   <SelectionPopover
                     show={!!selectedText}

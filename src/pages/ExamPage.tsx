@@ -16,6 +16,7 @@ import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useChatWindow } from "@/context/ChatWindowContext";
+import { ChatProvider } from "@/context/ChatContext";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
@@ -110,27 +111,29 @@ const ExamPage: FC = () => {
         onToggleChat={handleToggleChat}
       />
 
-      <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
-        <div className="flex-1 flex flex-col min-w-0 h-full">
-          <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
-            <div className="flex-1 h-full relative">
-              {layoutMode === "exam-only" ? (
-                <ExamOnlyView examDetail={examDetail} />
-              ) : (
-                <ExamWithFacitView examDetail={examDetail} />
-              )}
-              <LayoutSwitcher />
+      <ChatProvider examDetail={examDetail}>
+        <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
+          <div className="flex-1 flex flex-col min-w-0 h-full">
+            <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
+              <div className="flex-1 h-full relative">
+                {layoutMode === "exam-only" ? (
+                  <ExamOnlyView examDetail={examDetail} />
+                ) : (
+                  <ExamWithFacitView examDetail={examDetail} />
+                )}
+                <LayoutSwitcher />
+              </div>
             </div>
           </div>
-        </div>
 
-        <ChatWindow
-          examDetail={examDetail}
-          isOpen={showChatWindow}
-          onClose={handleCloseChat}
-          variant={chatVariant}
-        />
-      </div>
+          <ChatWindow
+            examDetail={examDetail}
+            isOpen={showChatWindow}
+            onClose={handleCloseChat}
+            variant={chatVariant}
+          />
+        </div>
+      </ChatProvider>
 
       <MobilePdfView examDetail={examDetail} />
     </div>
