@@ -8,30 +8,6 @@
 @import "tailwindcss";
 @plugin "@toolwind/corner-shape";
 
-@font-face {
-  font-family: "Neufile";
-  src: url("/fonts/NeufileGrotesk-Bold.otf");
-  font-weight: 700;
-}
-
-@font-face {
-  font-family: "Neufile";
-  src: url("/fonts/NeufileGrotesk-Semibold.otf");
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "Neufile";
-  src: url("/fonts/NeufileGrotesk-Medium.otf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "Neufile";
-  src: url("/fonts/NeufileGrotesk-Regular.otf");
-  font-weight: 400;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -87,7 +63,6 @@
 
   body {
     font-family:
-      "Neufile",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
