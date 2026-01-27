@@ -5,6 +5,10 @@ import {
   Search as SearchIcon,
   Upload as UploadIcon,
   BarChart as ChartIcon,
+  Filter,
+  CheckCircle2,
+  TrendingUp,
+  FileText,
 } from "lucide-react";
 import {
   Select,
@@ -26,7 +30,6 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
 import { sponsors } from "@/components/sponsors/sponsorsData";
-import { Separator } from "@/components/ui/separator";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -134,12 +137,6 @@ const ExamSearchPage: FC = () => {
   });
 
   const courseName = courseData?.course_name_swe;
-  const titleFontSize =
-    (courseName?.length || 0) > 50
-      ? "text-lg"
-      : (courseName?.length || 0) > 17
-        ? "text-2xl"
-        : "text-3xl";
 
   if (courseCode === "TFYA86")
     return <div className="p-20 text-center">Borttaget på begäran</div>;
@@ -148,109 +145,115 @@ const ExamSearchPage: FC = () => {
 
   return (
     <div className="bg-background min-h-screen w-full">
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 md:px-8 py-8 max-w-[1400px]">
         {isLoading && <LoadingSpinner />}
         {showNotFound && (
           <NotFoundState courseCode={courseCode || ""} suggestions={closest} />
         )}
 
         {!isLoading && !isError && sortedExams.length > 0 && (
-          <div className="flex flex-col lg:flex-row justify-center items-start gap-10">
-            <div className="w-auto shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
-              <div className="space-y-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-semibold">{courseCode}</span>
-                  <span className="text-xs text-muted-foreground">
-                    {stats.total} {t("exams").toLowerCase()}
+          <div className="grid grid-cols-1 lg:grid-cols-[max-content_260px] gap-8 items-start lg:justify-center">
+            <div className="flex flex-col gap-6 w-full lg:w-auto min-w-0">
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
+                  <span className="font-semibold text-primary/80">
+                    {courseCode}
                   </span>
+                  <span>/</span>
+                  <span>Tentor & Statistik</span>
                 </div>
 
-                <h1
-                  className={`${titleFontSize} font-semibold leading-snug text-foreground`}
-                >
-                  {courseName}
-                </h1>
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                  <h1 className="text-3xl font-bold text-foreground">
+                    {courseName}
+                  </h1>
+                </div>
 
-                <Separator />
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm mt-1">
+                  <Badge variant="secondary">
+                    <TrendingUp className="w-4 h-4" />
+                    <span className="font-semibold">{stats.avgPassRate}%</span>
+                    <span className="opacity-80">{t("averagePassRate")}</span>
+                  </Badge>
 
-                <div className="flex w-full items-center justify-between gap-4 sm:gap-6 py-2">
-                  <div className="flex flex-col min-w-[120px]">
-                    <span className="text-base sm:text-lg font-semibold">
-                      {stats.avgPassRate}%
+                  <Badge variant="secondary">
+                    <CheckCircle2 className="w-4 h-4" />
+                    <span className="font-semibold">{stats.withSolutions}</span>
+                    <span className="opacity-80">{t("withSolution")}</span>
+                  </Badge>
+
+                  <Badge variant="secondary">
+                    <FileText className="w-4 h-4" />
+                    <span className="font-semibold">{stats.total}</span>
+                    <span className="opacity-80">
+                      {t("exams").toLowerCase()}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">
-                      {t("averagePassRate")}
-                    </span>
-                  </div>
-                  <div className="hidden sm:block w-px h-8 bg-border" />
-                  <div className="flex flex-col min-w-[120px] items-end sm:items-start">
-                    <span className="text-base sm:text-lg font-semibold">
-                      {stats.withSolutions}
-                      <span className="text-muted-foreground/60 text-xs sm:text-sm font-normal">
-                        /{stats.total}
-                      </span>
-                    </span>
-                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">
-                      {t("withSolution")}
-                    </span>
-                  </div>
+                  </Badge>
                 </div>
               </div>
 
-              <div className="space-y-3 pt-2">
-                <div className="relative">
-                  <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
+                <div className="relative flex-1 min-w-[200px]">
+                  <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
-                    placeholder={language === "sv" ? "Sök..." : "Search..."}
+                    placeholder={
+                      language === "sv"
+                        ? "Sök på datum, kod..."
+                        : "Search date, code..."
+                    }
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9"
+                    className="pl-9 bg-background rounded-full"
                   />
                 </div>
-                <Select
-                  onValueChange={(v) =>
-                    setSelectedExamType(v === "all" ? null : v)
-                  }
-                >
-                  <SelectTrigger className="w-full bg-card">
-                    <SelectValue
-                      placeholder={
-                        language === "sv" ? "Alla typer" : "All types"
-                      }
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">
-                      {language === "sv" ? "Alla typer" : "All types"}
-                    </SelectItem>
-                    {[...examTypes].map((type) => (
-                      <SelectItem key={type} value={type}>
-                        {type}
+
+                <div className="flex gap-2">
+                  <Select
+                    onValueChange={(v) =>
+                      setSelectedExamType(v === "all" ? null : v)
+                    }
+                  >
+                    <SelectTrigger className="h-10 w-[140px] bg-background">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Filter className="h-3.5 w-3.5" />
+                        <SelectValue
+                          placeholder={language === "sv" ? "Alla" : "All"}
+                        />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">
+                        {language === "sv" ? "Alla typer" : "All types"}
                       </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                      {[...examTypes].map((type) => (
+                        <SelectItem key={type} value={type}>
+                          {type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Link to="/upload-exams">
+                    <Button variant="default">
+                      <UploadIcon className="h-4 w-4" />
+                      <span className="hidden sm:inline">
+                        {t("uploadMore")}
+                      </span>
+                      <span className="sm:hidden">Ladda upp</span>
+                    </Button>
+                  </Link>
+                  <Link to={`/search/${courseCode}/stats`}>
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="h-10 w-10"
+                    >
+                      <ChartIcon className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                </div>
               </div>
 
-              <Separator />
-
-              <div className="flex flex-col gap-2 pt-2">
-                <Link to="/upload-exams">
-                  <Button variant="default" size="sm" className="w-full">
-                    <UploadIcon className="mr-2 h-4 w-4" />
-                    {t("uploadMore")}
-                  </Button>
-                </Link>
-                <Link to={`/search/${courseCode}/stats`}>
-                  <Button variant="secondary" size="sm" className="w-full">
-                    <ChartIcon className="mr-2 h-4 w-4" />
-                    {language === "sv" ? "Statistik" : "Statistics"}
-                  </Button>
-                </Link>
-              </div>
-            </div>
-
-            <div className="order-2 w-full lg:w-auto min-w-0 max-w-full">
               <DataTable
                 data={filteredExams}
                 globalFilter={searchQuery}
@@ -260,20 +263,22 @@ const ExamSearchPage: FC = () => {
               />
             </div>
 
-            <div className="w-full lg:w-[300px] shrink-0 flex flex-col gap-4 lg:sticky lg:top-24 order-3">
-              <div className="hidden lg:block text-xs font-semibold text-muted-foreground mb-1">
-                Sponsorer
+            <div className="hidden lg:flex flex-col gap-4 sticky top-24 w-[260px]">
+              <div className="flex items-center justify-between text-xs font-medium text-muted-foreground/60">
+                <span>Sponsorer</span>
               </div>
-              {sponsors.map((sponsor) => (
-                <SponsorBanner
-                  key={sponsor.id}
-                  sponsor={sponsor}
-                  title={sponsor.title}
-                  subtitle={sponsor.subtitle}
-                  body={sponsor.body}
-                  courseCode={courseCode || ""}
-                />
-              ))}
+              <div className="flex flex-col gap-3">
+                {sponsors.map((sponsor) => (
+                  <SponsorBanner
+                    key={sponsor.id}
+                    sponsor={sponsor}
+                    title={sponsor.title}
+                    subtitle={sponsor.subtitle}
+                    body={sponsor.body}
+                    courseCode={courseCode || ""}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         )}

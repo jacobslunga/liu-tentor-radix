@@ -9,7 +9,7 @@ const Header = () => {
 
   return (
     <header
-      className="sticky top-0 z-50 h-14 bg-background/85 backdrop-blur-[5px] w-full flex flex-row items-center justify-between md:justify-center transition-colors duration-200 px-5 md:px-10"
+      className="sticky top-0 z-50 h-14 bg-background w-full flex flex-row items-center justify-between md:justify-center transition-colors duration-200 px-5 md:px-10"
       role="banner"
       style={{
         maxWidth: "100%",
