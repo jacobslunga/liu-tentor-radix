@@ -38,7 +38,7 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
   });
 
   return (
-    <div className="w-full lg:w-auto min-w-[500px]">
+    <div className="w-full lg:w-auto">
       <div className="border border-border rounded-2xl bg-background overflow-hidden">
         <Table className="w-full">
           <TableHeader className="bg-muted/30">

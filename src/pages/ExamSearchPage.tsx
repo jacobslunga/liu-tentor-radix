@@ -164,7 +164,7 @@ const ExamSearchPage: FC = () => {
                 </div>
 
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                  <h1 className="text-3xl font-bold text-foreground">
+                  <h1 className="text-2xl sm:text-3xl font-bold text-foreground wrap-break-word max-w-3xl leading-tight text-balance">
                     {courseName}
                   </h1>
                 </div>
