@@ -156,7 +156,7 @@ const ExamSearchPage: FC = () => {
 
         {!isLoading && !isError && sortedExams.length > 0 && (
           <div className="flex flex-col lg:flex-row justify-center items-start gap-10">
-            <div className="w-full lg:w-[260px] shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
+            <div className="w-auto shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="text-xs font-semibold">{courseCode}</span>
@@ -173,24 +173,24 @@ const ExamSearchPage: FC = () => {
 
                 <Separator />
 
-                <div className="flex items-center gap-6 py-2">
-                  <div className="flex flex-col">
-                    <span className="text-lg font-semibold">
+                <div className="flex w-full items-center justify-between gap-4 sm:gap-6 py-2">
+                  <div className="flex flex-col min-w-[120px]">
+                    <span className="text-base sm:text-lg font-semibold">
                       {stats.avgPassRate}%
                     </span>
-                    <span className="text-[10px] text-muted-foreground font-medium">
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">
                       {t("averagePassRate")}
                     </span>
                   </div>
-                  <div className="w-px h-8 bg-border" />
-                  <div className="flex flex-col">
-                    <span className="text-lg font-semibold">
+                  <div className="hidden sm:block w-px h-8 bg-border" />
+                  <div className="flex flex-col min-w-[120px] items-end sm:items-start">
+                    <span className="text-base sm:text-lg font-semibold">
                       {stats.withSolutions}
-                      <span className="text-muted-foreground/60 text-sm font-normal">
+                      <span className="text-muted-foreground/60 text-xs sm:text-sm font-normal">
                         /{stats.total}
                       </span>
                     </span>
-                    <span className="text-[10px] text-muted-foreground font-medium">
+                    <span className="text-[9px] sm:text-[10px] text-muted-foreground font-medium">
                       {t("withSolution")}
                     </span>
                   </div>
