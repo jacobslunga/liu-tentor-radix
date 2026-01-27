@@ -49,7 +49,7 @@ const SponsorBanner: FC<Props> = ({
       to={to}
       target="_blank"
       onClick={handleClick}
-      className="relative flex flex-col w-full overflow-hidden duration-300 transition-all group rounded-2xl p-5 bg-background border hover:border-primary/50"
+      className="relative flex flex-col w-full overflow-hidden duration-300 transition-all group rounded-2xl p-4 bg-background border hover:border-primary/50"
     >
       <div className="relative z-10 flex flex-col gap-4">
         <div className="flex items-start justify-between">
@@ -85,18 +85,18 @@ const SponsorBanner: FC<Props> = ({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <h3 className="text-base font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-sm font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
             {title}
           </h3>
 
           {subtitle && (
-            <p className="text-sm font-medium text-foreground/90 leading-snug">
+            <p className="text-xs font-medium text-foreground/90 leading-snug">
               {subtitle}
             </p>
           )}
 
           {body && (
-            <p className="text-xs leading-relaxed text-muted-foreground mt-1">
+            <p className="text-[10px] leading-relaxed text-muted-foreground mt-1">
               {body}
             </p>
           )}

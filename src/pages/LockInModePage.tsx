@@ -65,7 +65,6 @@ const LockInModePage: React.FC = () => {
   });
 
   const returnToNormalExam = () => {
-    // FIX: Read fresh session data for redirect to avoid stale state issues
     const currentSession = LockInModeManager.getCurrentSession() || session;
 
     if (currentSession?.courseCode && currentSession?.examId) {
@@ -93,20 +92,17 @@ const LockInModePage: React.FC = () => {
       const remaining = LockInModeManager.getTimeRemaining();
       setTimeRemaining(remaining);
 
-      // FIX 1: Sync pause state inside the loop to catch changes from other tabs
-      setIsPaused(LockInModeManager.isPaused());
+      const managerPausedState = LockInModeManager.isPaused();
+      if (managerPausedState !== isPaused) {
+        setIsPaused(managerPausedState);
+      }
 
       if (remaining <= 0) {
         setShowTimeUpDialog(true);
-        // FIX 2: Do NOT call handleExpiredSession here.
-        // Calling it removes the key, causing MainLayout to kick the user
-        // out immediately if they Alt-Tab (window.focus check).
-
         if (timerRef.current) clearInterval(timerRef.current);
       }
     };
 
-    // Run once immediately
     updateTimer();
 
     timerRef.current = setInterval(updateTimer, 1000);
@@ -114,7 +110,7 @@ const LockInModePage: React.FC = () => {
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [session]);
+  }, [session, isPaused]);
 
   const zoomIn = useCallback(
     () => setScale((p) => Math.min(p + 0.15, 3.0)),
@@ -137,6 +133,8 @@ const LockInModePage: React.FC = () => {
     } else {
       LockInModeManager.pauseSession();
     }
+
+    setIsPaused(!isPaused);
   };
 
   const confirmFinishExam = () => {

@@ -38,9 +38,9 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
   });
 
   return (
-    <div className="w-fit max-w-full">
+    <div className="w-full lg:w-auto min-w-[500px]">
       <div className="border border-border rounded-2xl bg-background overflow-hidden">
-        <Table className="w-auto">
+        <Table className="w-full">
           <TableHeader className="bg-muted/30">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
@@ -50,7 +50,7 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={`px-4 py-3 h-10 text-xs font-semibold text-muted-foreground whitespace-nowrap ${
+                    className={`px-4 py-3 h-10 text-xs font-medium text-muted-foreground whitespace-nowrap ${
                       header.id === "exam_date"
                         ? "cursor-pointer hover:text-foreground transition-colors"
                         : ""

@@ -63,6 +63,7 @@
 
   body {
     font-family:
+      "Lato",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -100,55 +101,11 @@
     padding: 0.2rem 0.4rem;
     border-radius: 0.2rem;
     font-size: 0.9rem;
-    font-family: "Fira Code", monospace;
+    font-family: monospace;
   }
 
   textarea {
     resize: none;
-  }
-
-  /* Mesh background animation for glassmorphism cards */
-  @keyframes meshMove {
-    0% {
-      background-position:
-        0% 0%,
-        0% 0%,
-        0% 0%,
-        0% 0%,
-        0% 0%;
-    }
-    25% {
-      background-position:
-        100% 50%,
-        50% 100%,
-        25% 75%,
-        25% 25%,
-        75% 75%;
-    }
-    50% {
-      background-position:
-        50% 100%,
-        100% 50%,
-        75% 25%,
-        50% 50%,
-        25% 25%;
-    }
-    75% {
-      background-position:
-        25% 50%,
-        75% 25%,
-        50% 75%,
-        75% 75%,
-        50% 50%;
-    }
-    100% {
-      background-position:
-        0% 0%,
-        0% 0%,
-        0% 0%,
-        0% 0%,
-        0% 0%;
-    }
   }
 
   .react-pdf__Page__canvas {
@@ -248,7 +205,7 @@
 
 @theme {
   --font-logo: "DM Serif Text", serif;
-  --font-mono: "Fira Code", monospace;
+  --font-mono: monospace;
 }
 
 @theme inline {

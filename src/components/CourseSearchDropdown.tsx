@@ -57,7 +57,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     {
       dedupingInterval: 1000 * 60 * 60 * 24,
       revalidateOnFocus: false,
-    }
+    },
   );
 
   const loadRecentSearches = useCallback(() => {
@@ -75,9 +75,9 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       const uniqueCourses = Array.from(
         new Set(
           parsedSearches.map((item: { courseCode: string }) =>
-            item.courseCode.toUpperCase()
-          )
-        )
+            item.courseCode.toUpperCase(),
+          ),
+        ),
       ).slice(0, 4);
       setRecentSearches(uniqueCourses as string[]);
     } catch (error) {
@@ -100,7 +100,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     }
 
     const existingIndex = searchesArray.findIndex(
-      (item) => item.courseCode === course
+      (item) => item.courseCode === course,
     );
 
     if (existingIndex !== -1) {
@@ -130,8 +130,8 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     if (courseCode.trim()) {
       setSuggestions(
         courseCodes.filter((code) =>
-          code.toUpperCase().includes(courseCode.toUpperCase())
-        )
+          code.toUpperCase().includes(courseCode.toUpperCase()),
+        ),
       );
       setShowSuggestions(true);
       setSelectedIndex(-1);
@@ -164,7 +164,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     } else if (e.key === "ArrowDown") {
       const newIndex = Math.min(
         selectedIndex + 1,
-        recentSearches.length + suggestions.length - 1
+        recentSearches.length + suggestions.length - 1,
       );
       setSelectedIndex(newIndex);
       scrollToSuggestion(newIndex);
@@ -237,7 +237,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-xl`}
+          className={`w-full bg-secondary ${sizeClasses[size]} pl-10 pr-10 rounded-full`}
         />
         {courseCode && (
           <button
