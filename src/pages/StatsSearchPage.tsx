@@ -178,11 +178,12 @@ export default function StatsSearchPage() {
         <div className="flex flex-col lg:flex-row justify-center items-start gap-6">
           <div className="w-full lg:w-[260px] shrink-0 flex flex-col gap-6 lg:sticky lg:top-24 order-1">
             <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs font-semibold">{courseCode}</span>
-                <span className="text-xs text-muted-foreground">
-                  {sorted.length} {language === "sv" ? "tentor" : "exams"}
+              <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
+                <span className="font-semibold text-primary/80">
+                  {courseCode}
                 </span>
+                <span>/</span>
+                <span>Statistik</span>
               </div>
 
               <h1
@@ -198,7 +199,9 @@ export default function StatsSearchPage() {
                 <span>{language === "sv" ? "Sammanfattning" : "Summary"}</span>
               </div>
               <div className="flex justify-between items-baseline">
-                <span className="text-2xl font-bold">{aggregate.grand}</span>
+                <span className="text-2xl font-semibold">
+                  {aggregate.grand}
+                </span>
                 <span className="text-xs text-muted-foreground">
                   {language === "sv" ? "Totalt betygssatta" : "Total graded"}
                 </span>
