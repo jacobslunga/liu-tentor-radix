@@ -85,7 +85,7 @@ const SponsorBanner: FC<Props> = ({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <h3 className="text-sm font-bold leading-tight text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-sm font-semibold leading-tight text-foreground group-hover:text-primary transition-colors">
             {title}
           </h3>
 

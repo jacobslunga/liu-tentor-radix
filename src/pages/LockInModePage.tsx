@@ -320,7 +320,9 @@ const LockInModePage: React.FC = () => {
             <div className="p-4 rounded-full bg-yellow-500/10 mb-2">
               <Pause className="w-16 h-16 text-yellow-500 fill-current" />
             </div>
-            <h2 className="text-4xl font-bold tracking-tight">{t.paused}</h2>
+            <h2 className="text-4xl font-semibold tracking-tight">
+              {t.paused}
+            </h2>
             <div className="flex flex-col items-center gap-2">
               <p className="text-muted-foreground text-lg">
                 {examDetail.exam.course_code}
