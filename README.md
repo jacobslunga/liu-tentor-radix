@@ -45,20 +45,20 @@ The backend API is available at: https://github.com/jacobslunga/fast-api-liu-ten
 
 ## Contributing
 
-Tack för att du vill bidra! Nedan följer våra riktlinjer för hur vi vill att bidrag görs via Git och pull requests.
+Thanks for wanting to contribute! Below are our guidelines for how we want contributions to be made via Git and pull requests.
 
-### Branch-namn
+### Branch Naming
 
-- Använd korta, tydliga, gemener och bindestreck. Exempel:
+- Use short, clear, lowercase names with hyphens. Examples:
   - `feature/add-search-by-code`
   - `fix/pdf-rendering`
   - `chore/update-deps`
   - `docs/readme-improvements`
   - `hotfix/login-error`
 
-### Arbetsflöde (git)
+### Git Workflow
 
-1. Hämta senaste `main` och skapa din branch:
+1. Fetch the latest `main` and create your branch:
 
    ```bash
    git checkout main
@@ -66,32 +66,32 @@ Tack för att du vill bidra! Nedan följer våra riktlinjer för hur vi vill att
    git checkout -b feature/short-description
    ```
 
-2. Implementera din ändring i feature-branchen. Commit-meddelanden bör vara korta och beskrivande. Vi rekommenderar konventioner som "type(scope): message" (t.ex. `feat(search): add course-code autocomplete`).
+2. Implement your changes in the feature branch. Commit messages should be short and descriptive. We recommend conventions like "type(scope): message" (e.g., `feat(search): add course-code autocomplete`).
 
-3. Pusha din branch till remote:
+3. Push your branch to remote:
 
    ```bash
    git push -u origin feature/short-description
    ```
 
-4. Öppna en Pull Request mot `main` i GitHub. I PR-beskrivningen:
-   - Beskriv vad som ändras och varför.
-   - Referera eventuella issues.
-   - Lägg till skärmdumpar eller GIF om det är UI-ändringar.
-   - Lista eventuella migrationssteg eller konfigurationsändringar.
+4. Open a Pull Request against `main` on GitHub. In the PR description:
+   - Describe what is being changed and why.
+   - Reference any related issues.
+   - Add screenshots or GIFs for UI changes.
+   - List any migration steps or configuration changes.
 
-5. Be om minst en review (två för större ändringar). När PR:en är godkänd, squash-merge eller merge enligt repo-standard.
+5. Request at least one review (two for larger changes). Once the PR is approved, squash-merge or merge according to the repo standard.
 
-### Kodstil & commits
+### Code Style & Commits
 
-- Använd TypeScript-typer där det går.
-- Följ befintliga kodkonventioner i projektet.
-- Skriv tydliga commit-meddelanden; kort rad 1, eventuellt en längre beskrivning efter en tom rad.
+- Use TypeScript types wherever possible.
+- Follow existing code conventions in the project.
+- Write clear commit messages; short first line, optionally a longer description after a blank line.
 
-### Licens och upphovsrätt
+### License and Copyright
 
-Genom att bidra accepterar du att dina ändringar inkluderas i projektet under samma licens som repositoryt (se `LICENSE` om tillämpligt). Om du är osäker, fråga en repo-administratör.
+By contributing, you agree that your changes will be included in the project under the same license as the repository (see `LICENSE` if applicable). If you're unsure, ask a repo administrator.
 
-## Kontakt
+## Contact
 
-Om du har frågor om hur man bidrar, öppna ett issue eller kontakta repo-ägaren.
+If you have questions about how to contribute, open an issue or contact the repo owner.
