@@ -16,7 +16,6 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import ExamPdf from "../ExamPdf";
-import { ExamWithSolutions } from "@/types/exam";
 import { FileQuestion } from "lucide-react";
 import { ImperativePanelHandle } from "react-resizable-panels";
 import { Link } from "react-router-dom";
@@ -24,9 +23,10 @@ import SolutionOverlay from "../SolutionOverlay";
 import SolutionPdf from "../SolutionPdf";
 import { useResizeHotkeys } from "@/hooks/useResizeHotkeys";
 import { useTranslation } from "@/hooks/useTranslation";
+import type { ExamDetailPayload } from "@/api";
 
 interface Props {
-  examDetail: ExamWithSolutions;
+  examDetail: ExamDetailPayload;
 }
 
 const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
@@ -62,9 +62,9 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         onMouseEnter={() => setIsFacitBlurred(false)}
         onMouseLeave={() => setIsFacitBlurred(true)}
       >
-        {examDetail.solutions.length > 0 ? (
+        {examDetail.solution ? (
           <>
-            <SolutionPdf pdfUrl={examDetail.solutions[0]?.pdf_url} />
+            <SolutionPdf pdfUrl={examDetail.solution.pdf_url} />
             <SolutionOverlay isBlurred={isFacitBlurred} />
           </>
         ) : (

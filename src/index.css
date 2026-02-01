@@ -5,9 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
-@import "tailwindcss";
-@plugin "@toolwind/corner-shape";
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;

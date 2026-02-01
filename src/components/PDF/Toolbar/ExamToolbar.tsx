@@ -1,10 +1,11 @@
-import { FC } from "react";
+import { FC, ComponentType } from "react";
 import {
   DownloadIcon,
   PlusIcon,
   MinusIcon,
   ArrowClockwiseIcon,
   ArrowCounterClockwiseIcon,
+  IconProps,
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -27,7 +28,7 @@ const ToolbarButton = ({
   tooltip,
   className,
 }: {
-  icon: any;
+  icon: ComponentType<IconProps>;
   onClick: () => void;
   tooltip: string;
   className?: string;

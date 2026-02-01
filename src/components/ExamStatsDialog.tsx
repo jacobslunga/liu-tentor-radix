@@ -134,7 +134,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
                     itemStyle={{
                       color: "var(--foreground)",
                     }}
-                    formatter={(value: any, name: any) => [
+                    formatter={(value: number, name: string) => [
                       `${value} studenter`,
                       `Betyg ${name}`,
                     ]}

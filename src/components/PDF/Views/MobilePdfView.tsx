@@ -1,19 +1,19 @@
-import { ExamWithSolutions } from "@/types/exam";
 import { FC, useState } from "react";
 import { BookOpen } from "lucide-react";
 import ExamPdf from "../ExamPdf";
 import SolutionPdf from "../SolutionPdf";
 import { useTranslation } from "@/hooks/useTranslation";
 import { Drawer, DrawerContent, DrawerHeader } from "@/components/ui/drawer";
+import type { ExamDetailPayload } from "@/api";
 
 interface Props {
-  examDetail: ExamWithSolutions;
+  examDetail: ExamDetailPayload;
 }
 
 const MobilePdfView: FC<Props> = ({ examDetail }) => {
   const { t } = useTranslation();
   const [showSolution, setShowSolution] = useState(false);
-  const hasSolution = examDetail.solutions.length > 0;
+  const hasSolution = examDetail.solution !== null;
 
   return (
     <div className="flex lg:hidden flex-col h-screen w-full bg-background relative">
@@ -36,8 +36,8 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
           <DrawerHeader className="border-b px-4 py-3 flex items-center justify-between bg-background z-50"></DrawerHeader>
 
           <div className="flex-1 overflow-hidden relative bg-background">
-            {examDetail.solutions[0] && (
-              <SolutionPdf pdfUrl={examDetail.solutions[0].pdf_url} />
+            {examDetail.solution && (
+              <SolutionPdf pdfUrl={examDetail.solution.pdf_url} />
             )}
           </div>
 

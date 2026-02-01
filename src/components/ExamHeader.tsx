@@ -16,14 +16,14 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
-import { Exam } from "@/types/exam";
+import type { Exam } from "@/api";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 import { LockInMenu } from "./lock-in-mode/LockInMenu";
 import { LockInModeManager } from "@/lib/lockInMode";
-import { useChatState } from "@/context/ChatContext";
+import { useChatState } from "@/hooks/useChatState";
 import { Loader2 } from "lucide-react";
 
 interface Props {

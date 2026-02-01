@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { sponsors } from "@/components/sponsors/sponsorsData";
-import { useCourseExams } from "@/hooks/useCourseExams";
+import { useCourseExams, type ExamStatistics } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMemo } from "react";
 import { useMetadata } from "@/hooks/useMetadata";
@@ -40,7 +40,6 @@ export default function StatsSearchPage() {
   const { courseCode } = useParams<StatsSearchPageParams>();
   const { language } = useLanguage();
   const { courseData, isLoading, isError } = useCourseExams(courseCode || "");
-  const exams = courseData?.exams ?? [];
 
   const c = {
     fg: cssVar("--foreground"),
@@ -64,14 +63,13 @@ export default function StatsSearchPage() {
     return c.destructive;
   };
 
-  const sorted = useMemo(
-    () =>
-      [...exams].sort(
-        (a, b) =>
-          new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime(),
-      ),
-    [exams],
-  );
+  const sorted = useMemo(() => {
+    const exams = courseData?.exams ?? [];
+    return [...exams].sort(
+      (a, b) =>
+        new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime(),
+    );
+  }, [courseData?.exams]);
 
   const passSeries = useMemo(
     () =>
@@ -91,7 +89,7 @@ export default function StatsSearchPage() {
       "5": 0,
     };
     sorted.forEach((e) => {
-      const s: any = e.statistics || {};
+      const s: ExamStatistics = e.statistics || {};
       totals.U += Number(s.U || 0);
       totals.G += Number(s.G || 0);
       totals["3"] += Number(s["3"] || 0);
@@ -119,12 +117,10 @@ export default function StatsSearchPage() {
     [language],
   );
 
+  const courseName = courseData?.courseName ?? "";
+
   const pageTitle = courseData
-    ? `Statistik för ${courseCode} - ${
-        language === "sv"
-          ? courseData.course_name_swe
-          : courseData.course_name_eng
-      }`
+    ? `Statistik för ${courseCode} - ${courseName}`
     : `${courseCode}`;
 
   useMetadata({
@@ -135,11 +131,10 @@ export default function StatsSearchPage() {
     canonical: `${window.location.origin}/course/${courseCode}/stats`,
   });
 
-  const courseName = courseData?.course_name_swe;
   const titleFontSize =
-    (courseData?.course_name_swe?.length || 0) > 50
+    courseName.length > 50
       ? "text-lg"
-      : (courseData?.course_name_swe?.length || 0) > 17
+      : courseName.length > 17
         ? "text-2xl"
         : "text-3xl";
 
@@ -281,7 +276,7 @@ export default function StatsSearchPage() {
                           fontWeight: 600,
                           marginBottom: "0.25rem",
                         }}
-                        formatter={(v: any) => [
+                        formatter={(v: number) => [
                           `${v}%`,
                           language === "sv" ? "Godkända" : "Pass Rate",
                         ]}
@@ -336,8 +331,12 @@ export default function StatsSearchPage() {
                         ))}
                       </Pie>
                       <Tooltip
-                        formatter={(v: any, _n: any, p: any) => [
-                          nf.format(v as number),
+                        formatter={(
+                          v: number,
+                          _n: string,
+                          p: { payload?: { label?: string } },
+                        ) => [
+                          nf.format(v),
                           `${language === "sv" ? "Betyg " : "Grade "}${
                             p?.payload?.label ?? ""
                           }`,

@@ -14,7 +14,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { ArrowsDownUpIcon } from "@phosphor-icons/react";
-import { Exam } from "@/types/exam";
+import type { Exam } from "@/api";
 import { getColumns } from "@/components/data-table/columns";
 import { useTranslation } from "@/hooks/useTranslation";
 

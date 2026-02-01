@@ -27,7 +27,7 @@ import {
 
 import PdfRenderer from "@/components/PDF/PdfRenderer";
 import { LockInModeManager } from "@/lib/lockInMode";
-import { useExamDetails } from "@/hooks/useExamDetail";
+import { useExamDetail } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
 
@@ -57,14 +57,14 @@ const LockInModePage: React.FC = () => {
     examDetail,
     isLoading: detailLoading,
     isError: detailError,
-  } = useExamDetails(Number(examId));
+  } = useExamDetail(Number(examId));
 
   useMetadata({
     title: `Locked In | ${examDetail ? examDetail.exam.course_code : "Exam"}`,
     robots: "noindex, nofollow",
   });
 
-  const returnToNormalExam = () => {
+  const returnToNormalExam = useCallback(() => {
     const currentSession = LockInModeManager.getCurrentSession() || session;
 
     if (currentSession?.courseCode && currentSession?.examId) {
@@ -77,13 +77,13 @@ const LockInModePage: React.FC = () => {
     } else {
       navigate("/", { replace: true });
     }
-  };
+  }, [navigate, session]);
 
   useEffect(() => {
     if (!session || session.examId !== examId) {
       returnToNormalExam();
     }
-  }, [session, examId, navigate]);
+  }, [session, examId, navigate, returnToNormalExam]);
 
   useEffect(() => {
     if (!session) return;
