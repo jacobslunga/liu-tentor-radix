@@ -14,7 +14,7 @@ export const ResizeHandle: FC<ResizeHandleProps> = ({
 }) => {
   return (
     <div
-      className={`absolute top-0 bottom-0 w-5 z-50 cursor-col-resize flex items-center justify-center group touch-none select-none outline-none
+      className={`absolute top-0 bottom-0 w-5 z-60 cursor-col-resize flex items-center justify-center group touch-none select-none outline-none
         ${side === "right" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"}
       `}
       onMouseDown={(e) => {

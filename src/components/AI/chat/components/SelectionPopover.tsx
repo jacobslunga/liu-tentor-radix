@@ -27,7 +27,7 @@ export const SelectionPopover: FC<SelectionPopoverProps> = memo(
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.1, ease: "easeOut" }}
-            className="fixed z-[9999] pointer-events-auto"
+            className="fixed z-9999 pointer-events-auto"
             style={{
               left: position.x,
               top: Math.max(0, position.y),

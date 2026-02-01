@@ -12,7 +12,6 @@ import {
   CheckCircleIcon,
   ChatCircleDotsIcon,
   XCircleIcon,
-  SidebarSimpleIcon,
 } from "@phosphor-icons/react";
 
 interface ChatHeaderProps {
@@ -20,11 +19,10 @@ interface ChatHeaderProps {
   hasSolution: boolean;
   onClose: () => void;
   side: "left" | "right";
-  onToggleSide: () => void;
 }
 
 export const ChatHeader: FC<ChatHeaderProps> = memo(
-  ({ language, hasSolution, onClose, side, onToggleSide }) => {
+  ({ language, hasSolution, onClose, side }) => {
     return (
       <div className="shrink-0 flex items-center justify-between p-3 z-40">
         <div className="flex items-center gap-2">
@@ -75,7 +73,7 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
         </div>
 
         <div className="flex items-center gap-1">
-          <TooltipProvider delayDuration={0}>
+          {/* <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
@@ -98,7 +96,7 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
                 </p>
               </TooltipContent>
             </Tooltip>
-          </TooltipProvider>
+          </TooltipProvider> */}
 
           {/* Feedback Button */}
           <TooltipProvider delayDuration={0}>
