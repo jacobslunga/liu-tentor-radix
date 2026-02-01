@@ -98,12 +98,18 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
       Cookies.remove(COOKIE_NAME);
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
     }
-    let activities: any[] = [];
+    interface RecentActivity {
+      courseCode: string;
+      courseName: string;
+      path: string;
+      timestamp: number;
+    }
+    let activities: RecentActivity[] = [];
     const cookie = Cookies.get(COOKIE_NAME);
     if (cookie) {
       try {
         activities = JSON.parse(decodeURIComponent(cookie));
-      } catch (e) {
+      } catch {
         activities = [];
       }
     }

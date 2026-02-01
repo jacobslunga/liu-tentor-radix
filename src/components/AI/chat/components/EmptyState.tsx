@@ -2,7 +2,6 @@ import { FC } from "react";
 
 interface EmptyStateProps {
   language: string;
-  hasSolutions: boolean;
 }
 
 export const EmptyState: FC<EmptyStateProps> = ({ language }) => {

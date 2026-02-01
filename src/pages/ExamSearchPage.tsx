@@ -25,7 +25,7 @@ import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { ExamUploader } from "@/components/upload/ExamUploader";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
-import { useCourseExams } from "@/hooks/useCourseExams";
+import { useCourseExams } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
@@ -85,13 +85,14 @@ const ExamSearchPage: FC = () => {
   const [selectedExamType, setSelectedExamType] = useState<string | null>(null);
 
   const sortedExams = useMemo(() => {
-    if (!courseData?.exams) return [];
-    return [...courseData.exams].sort((a, b) => {
+    const exams = courseData?.exams ?? [];
+    if (exams.length === 0) return [];
+    return [...exams].sort((a, b) => {
       return sortOrder === "desc"
         ? new Date(b.exam_date).getTime() - new Date(a.exam_date).getTime()
         : new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime();
     });
-  }, [courseData, sortOrder]);
+  }, [courseData?.exams, sortOrder]);
 
   const filteredExams = useMemo(() => {
     if (!selectedExamType || selectedExamType === "all") return sortedExams;
@@ -125,7 +126,7 @@ const ExamSearchPage: FC = () => {
   );
 
   const pageTitle = courseData
-    ? `${courseCode} - ${language === "sv" ? courseData.course_name_swe : courseData.course_name_eng} | Tentor`
+    ? `${courseCode} - ${courseData.courseName} | Tentor`
     : `${courseCode} | Tentor`;
 
   useMetadata({
@@ -136,7 +137,7 @@ const ExamSearchPage: FC = () => {
     canonical: `${window.location.origin}/course/${courseCode}`,
   });
 
-  const courseName = courseData?.course_name_swe;
+  const courseName = courseData?.courseName;
 
   if (courseCode === "TFYA86")
     return <div className="p-20 text-center">Borttaget på begäran</div>;

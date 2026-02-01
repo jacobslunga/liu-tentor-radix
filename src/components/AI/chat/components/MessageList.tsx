@@ -1,4 +1,4 @@
-import { FC, memo } from "react";
+import { FC, memo, useMemo } from "react";
 import { Virtuoso, VirtuosoHandle } from "react-virtuoso";
 import { Message } from "../types";
 import { MessageBubble } from "./MessageBubble";
@@ -13,6 +13,13 @@ interface MessageListProps {
 
 export const MessageList: FC<MessageListProps> = memo(
   ({ messages, isLoading, language, virtuosoRef, onScroll }) => {
+    const components = useMemo(
+      () => ({
+        Footer: () => <div className="h-48" />,
+      }),
+      [],
+    );
+
     return (
       <Virtuoso
         ref={virtuosoRef}
@@ -22,14 +29,14 @@ export const MessageList: FC<MessageListProps> = memo(
         alignToBottom={false}
         followOutput={false}
         atBottomThreshold={60}
+        increaseViewportBy={{ top: 500, bottom: 500 }}
         atBottomStateChange={(isAtBottom) => {
           onScroll?.(isAtBottom);
         }}
-        components={{
-          Footer: () => <div className="h-48" />,
-        }}
+        components={components}
+        computeItemKey={(index) => `msg-${index}`}
         itemContent={(index, message) => (
-          <div className="mb-8 px-4">
+          <div className="mb-8 px-4" style={{ contain: "layout style" }}>
             <MessageBubble
               index={index}
               message={message}

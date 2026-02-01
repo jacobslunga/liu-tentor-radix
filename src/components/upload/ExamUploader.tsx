@@ -188,9 +188,9 @@ export const ExamUploader = ({
           throw new Error(`Database Error: ${dbError.message}`);
         }
         successCount++;
-      } catch (error: any) {
+      } catch (error) {
         console.error("Upload failed:", error);
-        setErrorMessage(error.message);
+        setErrorMessage(error instanceof Error ? error.message : "Unknown error");
         break;
       }
     }

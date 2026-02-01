@@ -1,4 +1,4 @@
-import { Exam } from "@/types/exam";
+import { Exam } from "@/api";
 
 export interface LockInModeState {
   isActive: boolean;
@@ -94,6 +94,7 @@ export class LockInModeManager {
 
       return session;
     } catch (error) {
+      console.error(error);
       localStorage.removeItem(EXAM_MODE_KEY);
       return null;
     }
@@ -150,15 +151,16 @@ export class LockInModeManager {
     return Date.now() - session.lastActivity > SESSION_TIMEOUT;
   }
 
-  static isValidSession(session: any): boolean {
+  static isValidSession(session: unknown): session is LockInModeState {
+    if (!session || typeof session !== "object") return false;
+    const s = session as Record<string, unknown>;
     return (
-      session &&
-      typeof session.isActive === "boolean" &&
-      typeof session.examId === "string" &&
-      typeof session.startTime === "number" &&
-      typeof session.totalDuration === "number" &&
-      typeof session.sessionId === "string" &&
-      typeof session.lastActivity === "number"
+      typeof s.isActive === "boolean" &&
+      typeof s.examId === "string" &&
+      typeof s.startTime === "number" &&
+      typeof s.totalDuration === "number" &&
+      typeof s.sessionId === "string" &&
+      typeof s.lastActivity === "number"
     );
   }
 
@@ -248,6 +250,7 @@ export class LockInModeManager {
 
       localStorage.setItem(EXAM_HISTORY_KEY, JSON.stringify(trimmedHistory));
     } catch (error) {
+      console.error(error);
       console.warn("Failed to save exam session to history");
     }
   }
@@ -257,6 +260,7 @@ export class LockInModeManager {
       const stored = localStorage.getItem(EXAM_HISTORY_KEY);
       return stored ? JSON.parse(stored) : [];
     } catch (error) {
+      console.error(error);
       return [];
     }
   }

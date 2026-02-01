@@ -6,8 +6,13 @@ import SolutionPdf from "@/components/PDF/SolutionPdf";
 import { motion } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useChatWindow } from "@/context/ChatWindowContext";
+import type { ExamDetailPayload } from "@/api";
 
-const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
+interface Props {
+  examDetail: ExamDetailPayload;
+}
+
+const ExamOnlyView = ({ examDetail }: Props) => {
   const { showChatWindow } = useChatWindow();
   const [isFacitVisible, setIsFacitVisible] = useState(false);
   const [isManual, setIsManual] = useState(false);
@@ -18,7 +23,7 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
     visible: { x: "0%", opacity: 1 },
   };
 
-  const hasFacit = examDetail.solutions.length > 0;
+  const hasFacit = examDetail.solution !== null;
 
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
@@ -95,12 +100,12 @@ const ExamOnlyView = ({ examDetail }: { examDetail: any }) => {
             x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
         >
-          <SolutionPdf pdfUrl={examDetail.solutions[0].pdf_url} />
+          <SolutionPdf pdfUrl={examDetail.solution!.pdf_url} />
         </motion.div>
       )}
 
       {hasFacit && !isFacitVisible && !showChatWindow && (
-        <GradientIndicator facitPdfUrl={examDetail.solutions[0]?.pdf_url} />
+        <GradientIndicator facitPdfUrl={examDetail.solution!.pdf_url} />
       )}
     </div>
   );

@@ -1,9 +1,16 @@
-import { FC, useState, useEffect, useCallback, useRef, useMemo } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
+import {
+  FC,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  startTransition,
+} from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
-import { ExamWithSolutions } from "@/types/exam";
 import { VirtuosoHandle } from "react-virtuoso";
+import type { ExamDetailPayload } from "@/api";
 import { useResizablePanel, useTextSelection } from "./hooks";
 import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
@@ -12,10 +19,10 @@ import { MessageList } from "./components/MessageList";
 import { ChatInput, ChatInputHandle } from "./components/ChatInput";
 import { ResizeHandle } from "./components/ResizeHandle";
 import { Loader2 } from "lucide-react";
-import { useChatState } from "@/context/ChatContext";
+import { useChatState } from "@/hooks/useChatState";
 
 interface ChatWindowProps {
-  examDetail: ExamWithSolutions;
+  examDetail: ExamDetailPayload;
   isOpen: boolean;
   onClose: () => void;
   variant?: "overlay" | "push";
@@ -24,18 +31,6 @@ interface ChatWindowProps {
 const STORAGE_KEY = "chat_input_draft";
 const MODEL_STORAGE_KEY = "chat_model_id_preference";
 const SIDE_STORAGE_KEY = "chat_window_side_preference";
-
-const contentVariants: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: { duration: 0, ease: "easeOut" },
-  },
-  exit: {
-    opacity: 0,
-    transition: { duration: 0.1 },
-  },
-};
 
 const ChatWindow: FC<ChatWindowProps> = ({
   examDetail,
@@ -53,11 +48,13 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const [side, setSide] = useState<"left" | "right">("right");
   const [isSideLoaded, setIsSideLoaded] = useState(false);
-  const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
+
+  // keep-alive states
+  const [hasBeenOpened, setHasBeenOpened] = useState(false);
+  const [isReadyToRender, setIsReadyToRender] = useState(false);
   const [showScrollButton, setShowScrollButton] = useState(false);
 
   const { messages, isLoading, sendMessage, cancelGeneration } = useChatState();
-
   const { width, isResizing, startResizing } = useResizablePanel();
 
   const { selectedText, selectionPosition, clearSelection } = useTextSelection({
@@ -71,6 +68,12 @@ const ChatWindow: FC<ChatWindowProps> = ({
     useState<string>("gemini-2.5-flash");
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [quotedContext, setQuotedContext] = useState("");
+
+  useEffect(() => {
+    if (isOpen && !hasBeenOpened) {
+      setHasBeenOpened(true);
+    }
+  }, [isOpen, hasBeenOpened]);
 
   useEffect(() => {
     const savedSide = localStorage.getItem(SIDE_STORAGE_KEY) as
@@ -97,30 +100,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModelId);
   }, [selectedModelId, isDraftLoaded]);
 
-  const prevMessagesLength = useRef(messages.length);
-
-  useEffect(() => {
-    if (messages.length > prevMessagesLength.current) {
-      const lastMessage = messages[messages.length - 1];
-      const secondLastMessage = messages[messages.length - 2];
-
-      if (secondLastMessage?.role === "user") {
-        virtuosoRef.current?.scrollToIndex({
-          index: messages.length - 2,
-          align: "start",
-          behavior: "smooth",
-        });
-      } else if (lastMessage?.role === "user") {
-        virtuosoRef.current?.scrollToIndex({
-          index: messages.length - 1,
-          align: "start",
-          behavior: "smooth",
-        });
-      }
-    }
-    prevMessagesLength.current = messages.length;
-  }, [messages.length]);
-
   const toggleSide = useCallback(() => {
     const newSide = side === "right" ? "left" : "right";
     setSide(newSide);
@@ -142,25 +121,22 @@ const ChatWindow: FC<ChatWindowProps> = ({
   }, [onClose]);
 
   const handleScrollToBottom = useCallback(() => {
-    virtuosoRef.current?.scrollToIndex({
-      index: messages.length - 1,
-      align: "end",
+    virtuosoRef.current?.scrollTo({
+      top: Number.MAX_SAFE_INTEGER,
       behavior: "smooth",
     });
-  }, [messages.length]);
+  }, []);
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
-
     const messageToSend = quotedContext
       ? `Regarding this: "${quotedContext}"\n\n${input}`
       : input;
-
     sendMessage(messageToSend, giveDirectAnswer, selectedModelId);
-
     setInput("");
     setQuotedContext("");
     localStorage.removeItem(STORAGE_KEY);
+    requestAnimationFrame(() => handleScrollToBottom());
   }, [
     input,
     isLoading,
@@ -168,6 +144,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
     selectedModelId,
     quotedContext,
     sendMessage,
+    handleScrollToBottom,
   ]);
 
   const handleCancel = useCallback(() => {
@@ -186,148 +163,151 @@ const ChatWindow: FC<ChatWindowProps> = ({
     return () => document.removeEventListener("keydown", handleEscape);
   }, [isOpen, handleClose]);
 
-  const hasSolutions = examDetail.solutions.length > 0;
+  const hasSolution = examDetail.solution !== null;
   const isOverlay = variant === "overlay";
 
-  const parentVariants = useMemo((): Variants => {
-    const enterSettings = isResizing
-      ? { duration: 0 }
-      : {
-          type: "spring" as const,
-          bounce: 0,
-          duration: 0.2,
-          delayChildren: 0.1,
-        };
+  const handleScrollChange = useCallback((isAtBottom: boolean) => {
+    setShowScrollButton(!isAtBottom);
+  }, []);
 
-    const exitSettings = { type: "spring" as const, bounce: 0, duration: 0.2 };
+  const handleTransitionEnd = useCallback(
+    (e: React.TransitionEvent) => {
+      if (e.propertyName !== "transform" || e.target !== chatWindowRef.current)
+        return;
 
-    if (isOverlay) {
-      const xHidden = side === "right" ? "100%" : "-100%";
-      return {
-        hidden: { x: xHidden },
-        visible: { x: "0%", transition: enterSettings },
-        exit: { x: xHidden, transition: exitSettings },
-      };
-    } else {
-      return {
-        hidden: { width: 0, opacity: 0 },
-        visible: { width: `${width}%`, opacity: 1, transition: enterSettings },
-        exit: { width: 0, opacity: 0, transition: exitSettings },
-      };
-    }
-  }, [isOverlay, width, isResizing, side]);
+      if (isOpen) {
+        if (!isReadyToRender) {
+          startTransition(() => {
+            setIsReadyToRender(true);
+          });
+        }
+        chatInputRef.current?.focus();
+      }
+    },
+    [isOpen, isReadyToRender],
+  );
 
+  if (!isSideLoaded) return null;
+
+  const transform = isOpen
+    ? "translateX(0%)"
+    : side === "right"
+      ? "translateX(100%)"
+      : "translateX(-100%)";
   const positionClasses = isOverlay
     ? side === "right"
       ? "fixed right-0 top-0 h-full shadow-xl"
       : "fixed left-0 top-0 h-full shadow-xl"
     : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
 
-  const handleAnimationComplete = (definition: any) => {
-    if (definition === "visible") {
-      setShouldRenderMessages(true);
-    }
-  };
-
-  if (!isSideLoaded) return null;
-
   return (
-    <AnimatePresence mode="wait">
-      {isOpen && (
-        <motion.div
-          ref={chatWindowRef}
-          key={`chat-window-${side}`}
-          variants={parentVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          onAnimationComplete={handleAnimationComplete}
-          className={`bg-transparent flex flex-col z-50 ${positionClasses}`}
-          style={{
-            width: isOverlay ? `${width}%` : undefined,
-            willChange: isResizing ? "width" : "auto",
-            contain: isResizing ? "layout style" : "none",
-          }}
-        >
-          <ResizeHandle
-            onStartResize={startResizing}
-            isResizing={isResizing}
-            side={side}
-          />
+    <div
+      ref={chatWindowRef}
+      onTransitionEnd={handleTransitionEnd}
+      className={`bg-transparent flex flex-col z-50 transition-transform duration-250 cubic-bezier(0.16, 1, 0.3, 1) ${positionClasses}`}
+      style={{
+        width: `${width}%`,
+        transform,
+        willChange: "transform, width",
+        visibility: isOpen || hasBeenOpened ? "visible" : "hidden",
+        pointerEvents: isOpen ? "auto" : "none",
+      }}
+    >
+      <ResizeHandle
+        onStartResize={startResizing}
+        isResizing={isResizing}
+        side={side}
+      />
 
-          <div
-            className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? "" : "border-l"}`}
-          >
-            <motion.div variants={contentVariants}>
+      <div
+        className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? "" : "border-l"}`}
+      >
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="flex-1 flex flex-col min-h-0 relative"
+            >
               <ChatHeader
                 language={language}
-                hasSolutions={hasSolutions}
+                hasSolution={hasSolution}
                 onClose={handleClose}
                 side={side}
                 onToggleSide={toggleSide}
               />
-            </motion.div>
 
-            {messages.length === 0 && (
-              <EmptyState language={language} hasSolutions={hasSolutions} />
-            )}
+              <div className="flex-1 relative min-h-0 flex flex-col">
+                <div
+                  ref={messagesContainerRef}
+                  className="absolute inset-0"
+                  style={{ contain: "strict" }}
+                >
+                  {isReadyToRender ? (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.3 }}
+                      className="h-full w-full"
+                    >
+                      {messages.length === 0 ? (
+                        <EmptyState language={language} />
+                      ) : (
+                        <MessageList
+                          messages={messages}
+                          isLoading={isLoading}
+                          language={language}
+                          virtuosoRef={virtuosoRef}
+                          onScroll={handleScrollChange}
+                        />
+                      )}
+                    </motion.div>
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center">
+                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
 
-            <div className="flex-1 relative min-h-0 flex flex-col">
-              <div ref={messagesContainerRef} className="absolute inset-0">
-                {shouldRenderMessages ? (
-                  <MessageList
-                    messages={messages}
-                    isLoading={isLoading}
-                    language={language}
-                    virtuosoRef={virtuosoRef}
-                    onScroll={(isAtBottom) => setShowScrollButton(!isAtBottom)}
-                  />
-                ) : (
-                  <div className="h-full w-full flex items-center justify-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                  </div>
-                )}
+                <SelectionPopover
+                  show={!!selectedText}
+                  position={selectionPosition}
+                  language={language}
+                  onAskAbout={handleAskAboutSelection}
+                />
+
+                <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8 z-10">
+                  {isDraftLoaded && isReadyToRender && (
+                    <ChatInput
+                      ref={chatInputRef}
+                      language={language}
+                      input={input}
+                      isLoading={isLoading}
+                      giveDirectAnswer={giveDirectAnswer}
+                      showScrollButton={showScrollButton && messages.length > 0}
+                      placeholder={t("aiChatPlaceholder")}
+                      sendButtonLabel={t("aiChatSend")}
+                      poweredByText={t("aiChatPoweredBy")}
+                      quotedContext={quotedContext}
+                      selectedModelId={selectedModelId}
+                      onModelChange={setSelectedModelId}
+                      onInputChange={setInput}
+                      onSend={handleSend}
+                      onCancel={handleCancel}
+                      onScrollToBottom={handleScrollToBottom}
+                      onToggleAnswerMode={setGiveDirectAnswer}
+                      onClearQuotedContext={handleClearQuotedContext}
+                    />
+                  )}
+                </div>
               </div>
-
-              <SelectionPopover
-                show={!!selectedText}
-                position={selectionPosition}
-                language={language}
-                onAskAbout={handleAskAboutSelection}
-              />
-
-              <motion.div
-                variants={contentVariants}
-                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8 z-10"
-              >
-                {isDraftLoaded && (
-                  <ChatInput
-                    ref={chatInputRef}
-                    language={language}
-                    input={input}
-                    isLoading={isLoading}
-                    giveDirectAnswer={giveDirectAnswer}
-                    showScrollButton={showScrollButton && messages.length > 0}
-                    placeholder={t("aiChatPlaceholder")}
-                    sendButtonLabel={t("aiChatSend")}
-                    poweredByText={t("aiChatPoweredBy")}
-                    quotedContext={quotedContext}
-                    selectedModelId={selectedModelId}
-                    onModelChange={setSelectedModelId}
-                    onInputChange={setInput}
-                    onSend={handleSend}
-                    onCancel={handleCancel}
-                    onScrollToBottom={handleScrollToBottom}
-                    onToggleAnswerMode={setGiveDirectAnswer}
-                    onClearQuotedContext={handleClearQuotedContext}
-                  />
-                )}
-              </motion.div>
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </div>
   );
 };
 

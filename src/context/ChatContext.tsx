@@ -1,15 +1,11 @@
-import { createContext, useContext, ReactNode, FC } from "react";
-import {
-  useChatMessages,
-  UseChatMessagesReturn,
-} from "@/components/AI/chat/hooks/useChatMessages";
-import { ExamWithSolutions } from "@/types/exam";
-
-const ChatStateContext = createContext<UseChatMessagesReturn | null>(null);
+import { ReactNode, FC } from "react";
+import { useChatMessages } from "@/components/AI/chat/hooks/useChatMessages";
+import { ChatStateContext } from "./chatStateContext";
+import type { ExamDetailPayload } from "@/api";
 
 interface ChatProviderProps {
   children: ReactNode;
-  examDetail: ExamWithSolutions;
+  examDetail: ExamDetailPayload;
 }
 
 export const ChatProvider: FC<ChatProviderProps> = ({
@@ -20,8 +16,7 @@ export const ChatProvider: FC<ChatProviderProps> = ({
     examId: examDetail.exam.id,
     courseCode: examDetail.exam.course_code,
     examUrl: examDetail.exam.pdf_url,
-    solutionUrl:
-      examDetail.solutions.length > 0 ? examDetail.solutions[0].pdf_url : null,
+    solutionUrl: examDetail.solution?.pdf_url ?? null,
   });
 
   return (
@@ -29,12 +24,4 @@ export const ChatProvider: FC<ChatProviderProps> = ({
       {children}
     </ChatStateContext.Provider>
   );
-};
-
-export const useChatState = () => {
-  const context = useContext(ChatStateContext);
-  if (!context) {
-    throw new Error("useChatState must be used within a ChatProvider");
-  }
-  return context;
 };

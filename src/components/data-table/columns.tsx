@@ -6,13 +6,13 @@ import {
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { ColumnDef } from "@tanstack/react-table";
-import { Exam } from "@/types/exam";
+import type { Exam } from "@/api";
 import { ExamStatsDialog } from "@/components/ExamStatsDialog";
 import { Translations } from "@/util/translations";
 
 export const getColumns = (
   t: (key: keyof Translations) => string,
-): ColumnDef<Exam, any>[] => [
+): ColumnDef<Exam>[] => [
   {
     id: "exam_name",
     header: t("examName"),
@@ -28,7 +28,7 @@ export const getColumns = (
     accessorKey: "exam_date",
     header: t("createdAt"),
     cell: ({ row }) => {
-      let date = new Intl.DateTimeFormat("sv-SE", {
+      const date = new Intl.DateTimeFormat("sv-SE", {
         year: "numeric",
         month: "long",
         day: "numeric",
@@ -77,15 +77,16 @@ export const getColumns = (
       else if (passedCount < 30)
         color = "text-red-600 dark:text-red-400 font-semibold";
 
+      const stats = row.original.statistics;
       return (
         <ExamStatsDialog
           statistics={{
-            "3": row.original.statistics["3"] || 0,
-            "4": row.original.statistics["4"] || 0,
-            "5": row.original.statistics["5"] || 0,
-            VG: row.original.statistics["VG"] || 0,
-            U: row.original.statistics.U || 0,
-            G: row.original.statistics.G || 0,
+            "3": stats?.["3"] || 0,
+            "4": stats?.["4"] || 0,
+            "5": stats?.["5"] || 0,
+            VG: stats?.["VG"] || 0,
+            U: stats?.U || 0,
+            G: stats?.G || 0,
             pass_rate: passedCount,
           }}
           date={row.original.exam_date}

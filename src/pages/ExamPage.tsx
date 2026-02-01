@@ -9,8 +9,7 @@ import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
 import { Loader2 } from "lucide-react";
 import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
 import { formatExamDate } from "@/util/formatExamDate";
-import { useCourseExams } from "@/hooks/useCourseExams";
-import { useExamDetails } from "@/hooks/useExamDetail";
+import { useCourseExams, useExamDetail } from "@/api";
 import useLayoutMode from "@/stores/LayoutModeStore";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
@@ -34,7 +33,7 @@ const ExamPage: FC = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     setShowChatWindow(false);
-  }, [examId]);
+  }, [examId, setShowChatWindow]);
 
   const handleToggleChat = useCallback(() => {
     setShowChatWindow((prev) => !prev);
@@ -55,16 +54,17 @@ const ExamPage: FC = () => {
     isLoading: examsLoading,
     isError: examsError,
   } = useCourseExams(courseCode);
+
   const {
     examDetail,
     isLoading: detailLoading,
     isError: detailError,
-  } = useExamDetails(Number(examId));
+  } = useExamDetail(Number(examId));
 
   const pageTitle =
     examDetail && courseData
       ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${
-          courseData.course_name_swe
+          courseData.courseName
         }`
       : `${courseCode} - Tenta ${examId}`;
 
@@ -72,14 +72,14 @@ const ExamPage: FC = () => {
     examDetail && courseData
       ? `Se tenta för ${courseCode} från ${formatExamDate(
           examDetail.exam.exam_date,
-        )} - ${courseData.course_name_eng}`
+        )} - ${courseData.courseName}`
       : `Tenta för ${courseCode}`;
 
   useMetadata({
     title: pageTitle,
     description: pageDescription,
     keywords: `${courseCode}, tenta, Linköpings Universitet, kurs, LiU, liu, Liu ${
-      courseData?.course_name_eng || ""
+      courseData?.courseName || ""
     }`,
     ogTitle: pageTitle,
     ogDescription: pageDescription,
