@@ -22,8 +22,9 @@ export const TYPEWRITER_EXAMPLES = [
 ];
 
 export const CHAT_API_URL =
-  "https://hono-liutentor-production.up.railway.app/chat/completion";
-export const CHAT_API_URL_LOCAL = "http://localhost:4330/chat/completion";
+  "https://liutentor-api-production.up.railway.app/api/v1/chat/completion";
+export const CHAT_API_URL_LOCAL =
+  "http://localhost:3000/api/v1/chat/completion";
 
 export const STREAM_UPDATE_INTERVAL = 50;
 
