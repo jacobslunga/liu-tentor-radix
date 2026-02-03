@@ -3,8 +3,7 @@ import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamDetailPayload } from "@/api";
-import { VirtuosoHandle } from "react-virtuoso";
-import { useResizablePanel, useTextSelection } from "./hooks";
+import { useResizablePanel, useTextSelection, useScrollManager } from "./hooks";
 import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
 import { EmptyState } from "./components/EmptyState";
@@ -48,13 +47,19 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
-  const virtuosoRef = useRef<VirtuosoHandle>(null);
+
+  // Use the new scroll manager
+  const {
+    messagesEndRef,
+    messagesContainerRef,
+    showScrollButton,
+    scrollToBottom,
+    isUserScrollingRef,
+  } = useScrollManager({ isOpen });
 
   const [side, setSide] = useState<"left" | "right">("right");
   const [isSideLoaded, setIsSideLoaded] = useState(false);
   const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
-  const [showScrollButton, setShowScrollButton] = useState(false);
 
   const { messages, isLoading, sendMessage, cancelGeneration } = useChatState();
 
@@ -97,29 +102,25 @@ const ChatWindow: FC<ChatWindowProps> = ({
     if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModelId);
   }, [selectedModelId, isDraftLoaded]);
 
+  // Handle auto-scroll on new messages
   const prevMessagesLength = useRef(messages.length);
-
   useEffect(() => {
+    // Only scroll if we added messages and user wasn't scrolling up
     if (messages.length > prevMessagesLength.current) {
       const lastMessage = messages[messages.length - 1];
-      const secondLastMessage = messages[messages.length - 2];
+      const isUserMessage = lastMessage?.role === "user";
 
-      if (secondLastMessage?.role === "user") {
-        virtuosoRef.current?.scrollToIndex({
-          index: messages.length - 2,
-          align: "start",
-          behavior: "smooth",
-        });
-      } else if (lastMessage?.role === "user") {
-        virtuosoRef.current?.scrollToIndex({
-          index: messages.length - 1,
-          align: "start",
-          behavior: "smooth",
-        });
+      // If it's a user message, always scroll to bottom
+      // If it's AI message, scroll only if not manually scrolled up (handled by useScrollManager/isUserScrollingRef)
+      if (isUserMessage || !isUserScrollingRef.current) {
+        // Small timeout to ensure DOM is updated
+        setTimeout(() => {
+          scrollToBottom("smooth");
+        }, 100);
       }
     }
     prevMessagesLength.current = messages.length;
-  }, [messages]);
+  }, [messages, scrollToBottom, isUserScrollingRef]);
 
   const handleAskAboutSelection = useCallback(() => {
     setQuotedContext(selectedText);
@@ -135,13 +136,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     onClose();
   }, [onClose]);
 
-  const handleScrollToBottom = useCallback(() => {
-    virtuosoRef.current?.scrollTo({
-      top: Number.MAX_SAFE_INTEGER,
-      behavior: "smooth",
-    });
-  }, []);
-
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
 
@@ -154,7 +148,10 @@ const ChatWindow: FC<ChatWindowProps> = ({
     setInput("");
     setQuotedContext("");
     localStorage.removeItem(STORAGE_KEY);
-    requestAnimationFrame(() => handleScrollToBottom());
+
+    // Reset user scrolling state so we stick to bottom
+    isUserScrollingRef.current = false;
+    requestAnimationFrame(() => scrollToBottom("smooth"));
   }, [
     input,
     isLoading,
@@ -162,7 +159,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
     selectedModelId,
     quotedContext,
     sendMessage,
-    handleScrollToBottom,
+    scrollToBottom,
+    isUserScrollingRef,
   ]);
 
   const handleCancel = useCallback(() => {
@@ -265,21 +263,29 @@ const ChatWindow: FC<ChatWindowProps> = ({
             {messages.length === 0 && <EmptyState language={language} />}
 
             <div className="flex-1 relative min-h-0 flex flex-col">
-              <div ref={messagesContainerRef} className="absolute inset-0">
-                {shouldRenderMessages ? (
-                  <MessageList
-                    messages={messages}
-                    isLoading={isLoading}
-                    language={language}
-                    virtuosoRef={virtuosoRef}
-                    onScroll={(isAtBottom) => setShowScrollButton(!isAtBottom)}
-                  />
-                ) : (
-                  <div className="h-full w-full flex items-center justify-center">
-                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                  </div>
-                )}
-              </div>
+              <motion.div
+                variants={contentVariants}
+                ref={messagesContainerRef}
+                className="absolute inset-0 overflow-y-auto"
+              >
+                <div className="p-4 pb-48 space-y-4 relative min-h-full">
+                  {shouldRenderMessages ? (
+                    <>
+                      <MessageList
+                        messages={messages}
+                        isLoading={isLoading}
+                        language={language}
+                        messagesEndRef={messagesEndRef}
+                        messagesContainerRef={messagesContainerRef}
+                      />
+                    </>
+                  ) : (
+                    <div className="h-full w-full flex items-center justify-center">
+                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                    </div>
+                  )}
+                </div>
+              </motion.div>
 
               <SelectionPopover
                 show={!!selectedText}
@@ -309,7 +315,10 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     onInputChange={setInput}
                     onSend={handleSend}
                     onCancel={handleCancel}
-                    onScrollToBottom={handleScrollToBottom}
+                    onScrollToBottom={() => {
+                      isUserScrollingRef.current = false;
+                      scrollToBottom("smooth");
+                    }}
                     onToggleAnswerMode={setGiveDirectAnswer}
                     onClearQuotedContext={handleClearQuotedContext}
                   />
