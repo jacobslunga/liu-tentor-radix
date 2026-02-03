@@ -95,7 +95,7 @@ export default function LayoutSwitcher() {
                         : "rounded-r-lg"
                     } cursor-pointer ${
                       isActive
-                        ? "bg-primary text-primary-foreground border-transparent"
+                        ? "bg-secondary text-secondary-foreground border-transparent"
                         : "bg-background text-muted-foreground border-border hover:bg-accent hover:text-foreground"
                     }`}
                   >

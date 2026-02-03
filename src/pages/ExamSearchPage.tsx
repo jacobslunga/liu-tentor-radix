@@ -2,7 +2,6 @@ import { FC, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Loader2,
-  Search as SearchIcon,
   Upload as UploadIcon,
   BarChart as ChartIcon,
   Filter,
@@ -19,7 +18,6 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DataTable } from "@/components/data-table/exams-data-table";
 import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { ExamUploader } from "@/components/upload/ExamUploader";
@@ -81,7 +79,6 @@ const ExamSearchPage: FC = () => {
   const { courseData, isLoading, isError } = useCourseExams(courseCode || "");
 
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
-  const [searchQuery, setSearchQuery] = useState("");
   const [selectedExamType, setSelectedExamType] = useState<string | null>(null);
 
   const sortedExams = useMemo(() => {
@@ -157,7 +154,7 @@ const ExamSearchPage: FC = () => {
             <div className="flex flex-col gap-6 w-full lg:w-auto min-w-0">
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-                  <span className="font-semibold text-primary/80">
+                  <span className="font-semibold text-foreground/80">
                     {courseCode}
                   </span>
                   <span>/</span>
@@ -194,20 +191,6 @@ const ExamSearchPage: FC = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2">
-                <div className="relative flex-1 min-w-[200px]">
-                  <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder={
-                      language === "sv"
-                        ? "Sök på datum, kod..."
-                        : "Search date, code..."
-                    }
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 bg-background rounded-full"
-                  />
-                </div>
-
                 <div className="flex gap-2">
                   <Select
                     onValueChange={(v) =>
@@ -244,12 +227,11 @@ const ExamSearchPage: FC = () => {
                     </Button>
                   </Link>
                   <Link to={`/search/${courseCode}/stats`}>
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="h-10 w-10"
-                    >
+                    <Button variant="secondary">
                       <ChartIcon className="h-4 w-4" />
+                      <span className="hidden sm:inline">
+                        {language === "sv" ? "Statistik" : "Statistics"}
+                      </span>
                     </Button>
                   </Link>
                 </div>
@@ -257,7 +239,6 @@ const ExamSearchPage: FC = () => {
 
               <DataTable
                 data={filteredExams}
-                globalFilter={searchQuery}
                 onSortChange={() =>
                   setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
                 }

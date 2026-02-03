@@ -66,8 +66,6 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
     const isThinking =
       message.role === "assistant" && message.content === "" && isLoading;
 
-    // Only throttle if the message is currently loading (streaming)
-    // Static messages don't need throttling and skipping it avoids unnecessary hook logic
     const throttledContent = useThrottle(message.content, isLoading ? 150 : 0);
 
     return (
@@ -77,7 +75,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         <div
           className={`${
             isUser
-              ? "bg-primary/10 text-foreground px-5 py-2.5 rounded-3xl max-w-[85%] w-fit"
+              ? "bg-primary/5 text-foreground px-5 py-2.5 rounded-3xl max-w-[85%] w-fit"
               : "w-full px-1 py-2"
           }`}
           data-message-content
