@@ -43,11 +43,12 @@ const SettingsDialog: FC = () => {
   const { setTheme, theme } = useTheme();
   const { textSize, setTextSize } = useTextSize();
   const { changeLanguage, languages, language } = useLanguage();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSystemPrefersDark] = useState(false);
 
   useEffect(() => {
     const isDarkMode = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     setSystemPrefersDark(isDarkMode);
 
@@ -141,8 +142,8 @@ const SettingsDialog: FC = () => {
                   "flex-1 cursor-pointer rounded-md border border-border transition-all select-none",
                   "flex flex-col items-center justify-center gap-2 py-4 hover:bg-primary/5 hover:border-primary",
                   theme === id
-                    ? "bg-primary/10 border-primary hover:bg-primary/10"
-                    : "bg-card"
+                    ? "bg-primary/5 border-primary hover:bg-primary/10"
+                    : "bg-card",
                 )}
               >
                 {icon}
@@ -166,7 +167,7 @@ const SettingsDialog: FC = () => {
                   "flex flex-col items-center justify-center gap-2 py-4 hover:bg-primary/5 hover:border-primary",
                   textSize === id
                     ? "bg-primary/10 border-primary hover:bg-primary/10"
-                    : "bg-card"
+                    : "bg-card",
                 )}
               >
                 {icon}
@@ -199,7 +200,7 @@ const SettingsDialog: FC = () => {
           <div className="space-y-4">
             {Object.keys(categoryTranslations).map((category) => {
               const categoryShortcuts = shortcuts.filter(
-                (s) => s.category === category
+                (s) => s.category === category,
               );
               if (categoryShortcuts.length === 0) return null;
 
