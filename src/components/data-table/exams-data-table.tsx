@@ -20,11 +20,10 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   data: Exam[];
-  globalFilter: string;
   onSortChange: () => void;
 }
 
-export function DataTable({ data, globalFilter, onSortChange }: Props) {
+export function DataTable({ data, onSortChange }: Props) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const columns = getColumns(t);
@@ -34,7 +33,6 @@ export function DataTable({ data, globalFilter, onSortChange }: Props) {
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    state: { globalFilter },
   });
 
   return (
