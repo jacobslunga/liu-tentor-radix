@@ -3,43 +3,46 @@ import { Link } from "react-router-dom";
 import { LogoIcon } from "./LogoIcon";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useTranslation } from "@/hooks/useTranslation";
+import { useLayout } from "@/context/LayoutContext";
 
 const Header = () => {
   const { t } = useTranslation();
+  const { headerSearchAlignX } = useLayout();
+
+  const shouldUseDynamicAlignment =
+    headerSearchAlignX !== null && headerSearchAlignX > 220;
 
   return (
-    <header
-      className="sticky top-0 z-50 h-14 bg-background w-full flex flex-row items-center justify-between md:justify-center transition-colors duration-200 px-5 md:px-10"
-      role="banner"
-      style={{
-        maxWidth: "100%",
-      }}
-    >
-      <Link
-        to="/"
-        className="text-xl space-x-1 static md:absolute md:left-20 lg:left-32 lg:text-2xl tracking-tight font-logo flex flex-row items-center justify-center"
-        aria-label={t("homeTitle")}
-      >
-        <LogoIcon className="w-10 h-10" />
-      </Link>
+    <header className="sticky top-0 z-50 w-full">
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-xl -z-10 mask-[linear-gradient(to_bottom,black,transparent)]" />
 
-      <div
-        className="relative hidden sm:flex items-center flex-1 max-w-md mx-4 min-w-0"
-        role="search"
-      >
-        <CourseSearchDropdown
-          placeholder={t("searchCoursePlaceholder")}
-          className="w-full"
-          size="md"
-        />
-      </div>
+      {shouldUseDynamicAlignment && (
+        <div
+          className="absolute top-1/2 -translate-y-1/2 w-full max-w-md transition-all duration-300 ease-out z-20"
+          style={{ left: headerSearchAlignX }}
+        >
+          <CourseSearchDropdown size="sm" className="w-full" />
+        </div>
+      )}
 
-      <div
-        className="flex flex-row items-center justify-center static md:absolute md:right-20 lg:right-32 space-x-2"
-        role="navigation"
-        aria-label="secondary"
-      >
-        <SettingsDialog />
+      <div className="container h-14 max-w-screen-2xl flex items-center justify-between px-4 sm:px-8 relative z-10">
+        <Link
+          to="/"
+          className="flex items-center hover:opacity-80 transition-opacity mr-4 shrink-0"
+          aria-label={t("homeTitle")}
+        >
+          <LogoIcon className="w-7 h-7" />
+        </Link>
+
+        {!shouldUseDynamicAlignment && (
+          <div className="flex-1 max-w-md mx-auto">
+            <CourseSearchDropdown size="sm" className="w-full" />
+          </div>
+        )}
+
+        <div className="flex items-center justify-end ml-4 shrink-0">
+          <SettingsDialog />
+        </div>
       </div>
     </header>
   );

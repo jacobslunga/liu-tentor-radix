@@ -28,7 +28,6 @@ export const markdownComponents: Partial<Components> = {
   },
 
   code: ({ children, ...props }: HTMLAttributes<HTMLElement> & ExtraProps) => {
-    // Check if this is an inline code block (not inside a pre tag)
     const isInline = !props.className?.includes("language-");
     if (isInline) {
       return (

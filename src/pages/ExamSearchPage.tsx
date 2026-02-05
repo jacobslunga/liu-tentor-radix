@@ -1,4 +1,4 @@
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   Loader2,
@@ -28,6 +28,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
 import { sponsors } from "@/components/sponsors/sponsorsData";
+import { useLayout } from "@/context/LayoutContext";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -77,6 +78,44 @@ const ExamSearchPage: FC = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const { courseData, isLoading, isError } = useCourseExams(courseCode || "");
+  const { setHeaderSearchAlignX } = useLayout();
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const updatePosition = () => {
+      if (contentRef.current) {
+        const rect = contentRef.current.getBoundingClientRect();
+        setHeaderSearchAlignX(rect.left);
+      }
+    };
+
+    // Initial update
+    updatePosition();
+
+    // Debounced resize handler
+    let timeoutId: NodeJS.Timeout;
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updatePosition, 100);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    const observer = new ResizeObserver(() => {
+      // Use requestAnimationFrame to avoid "ResizeObserver loop limit exceeded"
+      requestAnimationFrame(updatePosition);
+    });
+
+    if (contentRef.current) {
+      observer.observe(contentRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
+  }, [setHeaderSearchAlignX, isLoading]);
 
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [selectedExamType, setSelectedExamType] = useState<string | null>(null);
@@ -151,7 +190,10 @@ const ExamSearchPage: FC = () => {
 
         {!isLoading && !isError && sortedExams.length > 0 && (
           <div className="grid grid-cols-1 lg:grid-cols-[max-content_260px] gap-8 items-start lg:justify-center">
-            <div className="flex flex-col gap-6 w-full lg:w-auto min-w-0">
+            <div
+              ref={contentRef}
+              className="flex flex-col gap-6 w-full lg:w-auto min-w-0"
+            >
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
                   <span className="font-semibold text-foreground/80">
@@ -197,9 +239,9 @@ const ExamSearchPage: FC = () => {
                       setSelectedExamType(v === "all" ? null : v)
                     }
                   >
-                    <SelectTrigger className="h-10 w-[140px] bg-background">
+                    <SelectTrigger className="h-8 w-[140px] bg-background rounded-full text-xs">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Filter className="h-3.5 w-3.5" />
+                        <Filter className="h-3 w-3" />
                         <SelectValue
                           placeholder={language === "sv" ? "Alla" : "All"}
                         />
@@ -218,7 +260,7 @@ const ExamSearchPage: FC = () => {
                   </Select>
 
                   <Link to="/upload-exams">
-                    <Button variant="default">
+                    <Button variant="default" size="sm">
                       <UploadIcon className="h-4 w-4" />
                       <span className="hidden sm:inline">
                         {t("uploadMore")}
@@ -227,7 +269,7 @@ const ExamSearchPage: FC = () => {
                     </Button>
                   </Link>
                   <Link to={`/search/${courseCode}/stats`}>
-                    <Button variant="secondary">
+                    <Button variant="secondary" size="sm">
                       <ChartIcon className="h-4 w-4" />
                       <span className="hidden sm:inline">
                         {language === "sv" ? "Statistik" : "Statistics"}

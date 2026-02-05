@@ -126,6 +126,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
     const chatState = useChatState();
     isLoading = chatState.isLoading;
   } catch (e) {
+    console.error("Failed to get chat state:", e);
     isLoading = false;
   }
 

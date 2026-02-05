@@ -37,25 +37,25 @@ export function DataTable({ data, onSortChange }: Props) {
 
   return (
     <div className="w-full lg:w-auto">
-      <div className="border border-border rounded-2xl bg-background overflow-hidden">
+      <div className="border border-border/50 rounded-xl bg-card/50 overflow-hidden backdrop-blur-sm">
         <Table className="w-full">
-          <TableHeader className="bg-muted/30">
+          <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow
                 key={headerGroup.id}
-                className="hover:bg-transparent border-b border-border/60"
+                className="hover:bg-transparent border-b border-border/30"
               >
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={`px-4 py-3 h-10 text-xs font-medium text-muted-foreground whitespace-nowrap ${
+                    className={`px-3 py-2.5 h-9 text-[11px] font-medium text-muted-foreground/70 whitespace-nowrap ${
                       header.id === "exam_date"
                         ? "cursor-pointer hover:text-foreground transition-colors"
                         : ""
                     }`}
                     onClick={() => header.id === "exam_date" && onSortChange()}
                   >
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-1">
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext(),
@@ -63,7 +63,7 @@ export function DataTable({ data, onSortChange }: Props) {
                       {header.id === "exam_date" && (
                         <ArrowsDownUpIcon
                           weight="bold"
-                          className="h-3.5 w-3.5"
+                          className="h-3 w-3 opacity-60"
                         />
                       )}
                     </div>
@@ -82,12 +82,16 @@ export function DataTable({ data, onSortChange }: Props) {
                       `/search/${row.original.course_code}/${row.original.id}`,
                     )
                   }
-                  className="cursor-pointer hover:bg-secondary transition-colors border-b border-border/40 last:border-0"
+                  className={`cursor-pointer transition-colors border-b border-border/20 last:border-0 hover:bg-secondary`}
                 >
-                  {row.getVisibleCells().map((cell) => (
+                  {row.getVisibleCells().map((cell, cellIndex) => (
                     <TableCell
                       key={cell.id}
-                      className="px-4 py-2.5 text-sm whitespace-nowrap"
+                      className={`px-3 py-2 text-[13px] whitespace-nowrap ${
+                        cellIndex === 0
+                          ? "font-mono text-foreground/90"
+                          : "text-muted-foreground"
+                      }`}
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -101,7 +105,7 @@ export function DataTable({ data, onSortChange }: Props) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-32 text-center text-muted-foreground"
+                  className="h-28 text-center text-sm text-muted-foreground/60"
                 >
                   {t("noExamsFound")}
                 </TableCell>
@@ -110,8 +114,7 @@ export function DataTable({ data, onSortChange }: Props) {
           </TableBody>
         </Table>
       </div>
-
-      <div className="sm:hidden text-center text-xs text-muted-foreground mt-4">
+      <div className="sm:hidden text-center text-[11px] text-muted-foreground/50 mt-3">
         {t("scrollHint")}
       </div>
     </div>
