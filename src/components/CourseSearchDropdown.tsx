@@ -243,7 +243,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       <div className="relative flex items-center">
         <MagnifyingGlassIcon
           weight="bold"
-          className={`${iconSizes[size]} text-muted-foreground absolute left-3 pointer-events-none z-10`}
+          className={`${iconSizes[size]} text-muted-foreground absolute w-4 h-4 left-3 pointer-events-none z-10`}
         />
         <Input
           ref={inputRef}
@@ -255,7 +255,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onBlur={handleBlur}
           className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-full`}
         />
-        {!courseCode && !isFocused && (
+        {!courseCode && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1">
             <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
               <span className="text-xs">/</span>
