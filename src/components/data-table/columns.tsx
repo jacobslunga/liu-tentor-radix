@@ -17,9 +17,22 @@ export const getColumns = (
     id: "exam_name",
     header: t("examName"),
     cell: ({ row }) => {
+      const name = row.original.exam_name;
+      const match = name.match(/^([A-Z]+\d*)\s+(.+)$/);
+
+      if (match) {
+        const [, prefix, rest] = match;
+        return (
+          <div className="flex items-center group-hover:underline font-mono transition-colors">
+            <span className="font-semibold text-foreground">{prefix}</span>
+            <span className="text-foreground/80 font-medium ml-2">{rest}</span>
+          </div>
+        );
+      }
+
       return (
-        <div className="flex items-center group-hover:underline font-semibold transition-colors">
-          {row.original.exam_name}
+        <div className="flex items-center group-hover:underline font-mono font-semibold transition-colors">
+          {name}
         </div>
       );
     },

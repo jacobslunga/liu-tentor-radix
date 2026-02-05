@@ -5,6 +5,11 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
+@theme {
+  --font-logo: "DM Serif Text", serif;
+  --font-mono: "Fragment Mono", monospace;
+}
+
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -197,11 +202,6 @@
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--muted-foreground), transparent 70%)
     transparent;
-}
-
-@theme {
-  --font-logo: "DM Serif Text", serif;
-  --font-mono: monospace;
 }
 
 @theme inline {

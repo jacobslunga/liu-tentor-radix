@@ -210,6 +210,22 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     }, 150);
   };
 
+  useEffect(() => {
+    const handleGlobalKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.key === "/" &&
+        !isFocused &&
+        document.activeElement !== inputRef.current
+      ) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+
+    document.addEventListener("keydown", handleGlobalKeyDown);
+    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
+  }, [isFocused]);
+
   const sizeClasses = {
     sm: "text-xs p-2",
     md: "text-sm p-2.5",
@@ -237,8 +253,15 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full bg-secondary ${sizeClasses[size]} pl-10 pr-10 rounded-full`}
+          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-full`}
         />
+        {!courseCode && !isFocused && (
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+              <span className="text-xs">/</span>
+            </kbd>
+          </div>
+        )}
         {courseCode && (
           <button
             className="absolute right-3 top-1/2 -translate-y-1/2 z-10"

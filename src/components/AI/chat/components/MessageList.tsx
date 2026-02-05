@@ -3,8 +3,8 @@ import { Message } from "../types";
 import { MessageBubble } from "./MessageBubble";
 
 const BATCH = 20;
-const INITIAL_BATCH = 15; // Increased slightly for better initial fill
-const TOP_THRESHOLD = 200; // Threshold to trigger loading more
+const INITIAL_BATCH = 15;
+const TOP_THRESHOLD = 200;
 
 interface MessageListProps {
   messages: Message[];
@@ -16,7 +16,6 @@ interface MessageListProps {
 
 export const MessageList: FC<MessageListProps> = memo(
   ({ messages, isLoading, language, messagesEndRef, messagesContainerRef }) => {
-    // Start by showing only the last N messages
     const [startIndex, setStartIndex] = useState(() =>
       Math.max(0, messages.length - INITIAL_BATCH),
     );
@@ -24,20 +23,17 @@ export const MessageList: FC<MessageListProps> = memo(
     const prevScrollHeightRef = useRef<number>(0);
     const isPrependingRef = useRef(false);
 
-    // Reset logic if messages are cleared (e.g. new chat)
     useEffect(() => {
       if (messages.length < INITIAL_BATCH) {
         setStartIndex(0);
       }
     }, [messages.length]);
 
-    // Scroll listener for "Infinite Scroll Up"
     useEffect(() => {
       const container = messagesContainerRef.current;
       if (!container) return;
 
       const onScroll = () => {
-        // If we are near top and have more messages to show
         if (container.scrollTop <= TOP_THRESHOLD && startIndex > 0) {
           isPrependingRef.current = true;
           prevScrollHeightRef.current = container.scrollHeight;
@@ -50,7 +46,6 @@ export const MessageList: FC<MessageListProps> = memo(
       return () => container.removeEventListener("scroll", onScroll);
     }, [messagesContainerRef, startIndex]);
 
-    // Restore scroll position after prepending items
     useLayoutEffect(() => {
       const container = messagesContainerRef.current;
       if (!container || !isPrependingRef.current) return;
@@ -59,7 +54,6 @@ export const MessageList: FC<MessageListProps> = memo(
       const scrollDiff = newScrollHeight - prevScrollHeightRef.current;
 
       if (scrollDiff > 0) {
-        // Adjust scroll position to maintain visual continuity
         container.scrollTop += scrollDiff;
       }
 
@@ -80,7 +74,7 @@ export const MessageList: FC<MessageListProps> = memo(
           const realIndex = startIndex + index;
           return (
             <MessageBubble
-              key={realIndex} // Use index as key if messages don't have unique IDs, or use message.id if available. Code used realIndex.
+              key={realIndex}
               index={realIndex}
               message={message}
               isLoading={isLoading && realIndex === messages.length - 1}
@@ -88,7 +82,6 @@ export const MessageList: FC<MessageListProps> = memo(
             />
           );
         })}
-        {/* The bottom ref for scrolling */}
         <div ref={messagesEndRef} className="h-px w-full" />
       </div>
     );
