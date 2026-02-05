@@ -5,6 +5,30 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
+@font-face {
+  font-family: "GG Sans";
+  src: url("/fonts/gg-Regular.ttf");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "GG Sans";
+  src: url("/fonts/gg-Medium.ttf");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "GG Sans";
+  src: url("/fonts/gg-Semibold.ttf");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "GG Sans";
+  src: url("/fonts/gg-Bold.ttf");
+  font-weight: 700;
+}
+
 @theme {
   --font-logo: "DM Serif Text", serif;
   --font-mono: "Fragment Mono", monospace;
@@ -65,6 +89,7 @@
 
   body {
     font-family:
+      "GG Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
