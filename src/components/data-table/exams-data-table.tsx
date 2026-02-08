@@ -89,7 +89,7 @@ export function DataTable({ data, onSortChange }: Props) {
                       key={cell.id}
                       className={`px-3 py-2 text-[13px] whitespace-nowrap ${
                         cellIndex === 0
-                          ? "font-mono text-foreground/90"
+                          ? "text-foreground/90"
                           : "text-muted-foreground"
                       }`}
                     >
