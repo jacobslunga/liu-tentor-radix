@@ -44,7 +44,7 @@ import { QuotedContext } from "./QuotedContext";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "@primer/octicons-react";
 
-export type ModelProvider = "google";
+export type ModelProvider = "google" | "openai" | "anthropic";
 
 export interface ModelBadge {
   sv: string;
@@ -55,37 +55,35 @@ export interface Model {
   id: string;
   name: string;
   provider: ModelProvider;
-  description: string;
   icon?: React.ReactNode;
 }
 
-const getModels = (language: string): Model[] => {
-  const isSv = language === "sv";
-
+const getModels = (): Model[] => {
   return [
+    {
+      id: "gpt-5",
+      name: "GPT-5",
+      provider: "openai",
+    },
+    {
+      id: "claude-4.5-sonnet",
+      name: "Claude 4.5 Sonnet",
+      provider: "anthropic",
+    },
     {
       id: "gemini-3-pro-preview",
       name: "Gemini 3 Pro",
       provider: "google",
-      description: isSv
-        ? "Googles bästa multimodala modell"
-        : "Google's best multimodal model",
     },
     {
       id: "gemini-2.5-pro",
       name: "Gemini 2.5 Pro",
       provider: "google",
-      description: isSv
-        ? "Googles bästa multimodala modell"
-        : "Google's best multimodal model",
     },
     {
       id: "gemini-2.5-flash",
       name: "Auto",
       provider: "google",
-      description: isSv
-        ? "Snabbaste modellen för enklare frågor"
-        : "Fastest model for simpler queries",
     },
   ];
 };
@@ -109,33 +107,6 @@ export interface ChatInputProps {
   onToggleAnswerMode: (direct: boolean) => void;
   onClearQuotedContext?: () => void;
 }
-
-const ProviderLogo = ({
-  provider,
-  className,
-}: {
-  provider: ModelProvider;
-  className?: string;
-}) => {
-  const logos: Record<ModelProvider, string> = {
-    google: "/llm-logos/gemini.png",
-  };
-
-  return (
-    <div
-      className={cn(
-        "relative h-5 w-5 overflow-hidden rounded-sm shrink-0",
-        className,
-      )}
-    >
-      <img
-        src={logos[provider]}
-        alt={provider}
-        className="h-full w-full object-contain"
-      />
-    </div>
-  );
-};
 
 const ScrollToBottomButton = memo(
   ({ show, onClick }: { show: boolean; onClick: () => void }) => (
@@ -170,7 +141,7 @@ const ModelSelector = ({
   const selectedItemRef = useRef<HTMLDivElement>(null);
 
   const isSv = language === "sv";
-  const models = useMemo(() => getModels(language), [language]);
+  const models = useMemo(() => getModels(), []);
   const selectedModel =
     models.find((m) => m.id === selectedModelId) || models[0];
 
@@ -195,17 +166,17 @@ const ModelSelector = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="flex items-center gap-1.5 h-6 px-2 rounded-full border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
+          className="flex items-center gap-1 h-6 px-2 rounded-full border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
           aria-label={isSv ? "Välj modell" : "Select model"}
         >
-          <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
+          <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate">
             {selectedModel.name}
           </span>
-          <ChevronDownIcon className="w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
+          <ChevronDownIcon className="w-2.5 h-2.5 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[340px] p-0"
+        className="w-[300px] p-0"
         align="start"
         side="top"
         sideOffset={10}
@@ -218,7 +189,11 @@ const ModelSelector = ({
             {Object.entries(groupedModels).map(([provider, providerModels]) => (
               <CommandGroup
                 key={provider}
-                heading={provider.charAt(0).toUpperCase() + provider.slice(1)}
+                heading={
+                  provider === "openai"
+                    ? "OpenAI"
+                    : provider.charAt(0).toUpperCase() + provider.slice(1)
+                }
               >
                 {providerModels.map((model) => (
                   <CommandItem
@@ -229,26 +204,13 @@ const ModelSelector = ({
                       onSelect(model.id);
                       setOpen(false);
                     }}
-                    className="flex items-start gap-3 py-3 cursor-pointer aria-selected:bg-accent"
+                    className="flex items-start gap-3 py-2 cursor-pointer aria-selected:bg-accent"
                   >
-                    <div className="mt-0.5 shrink-0">
-                      <ProviderLogo
-                        provider={model.provider}
-                        className="h-5 w-5"
-                      />
-                    </div>
                     <div className="flex flex-col flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-foreground">
-                          {model.name}
-                        </span>
-                      </div>
-                      <span className="text-[10px] text-muted-foreground line-clamp-1">
-                        {model.description}
-                      </span>
+                      {model.name}
                     </div>
                     {selectedModelId === model.id && (
-                      <CheckIcon className="h-4 w-4 text-primary shrink-0 mt-1" />
+                      <CheckIcon className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                     )}
                   </CommandItem>
                 ))}
@@ -376,7 +338,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                             inputRef.current?.focus();
                           }}
                           className={cn(
-                            "flex items-center gap-1.5 px-2 h-6 text-[10px] font-medium transition-all rounded-full cursor-pointer border select-none",
+                            "flex items-center gap-1.5 px-2 h-6 text-xs font-medium transition-all rounded-full cursor-pointer border select-none",
                             !giveDirectAnswer
                               ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
                               : "bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground",
