@@ -23,7 +23,7 @@ export const getColumns = (
       if (match) {
         const [, prefix, rest] = match;
         return (
-          <div className="flex items-center group-hover:underline font-mono transition-colors">
+          <div className="flex items-center group-hover:underline transition-colors">
             <span className="font-semibold text-foreground">{prefix}</span>
             <span className="text-foreground/80 font-medium ml-2">{rest}</span>
           </div>

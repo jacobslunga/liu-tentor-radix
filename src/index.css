@@ -5,30 +5,6 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
-@font-face {
-  font-family: "GG Sans";
-  src: url("/fonts/gg-Regular.ttf");
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: "GG Sans";
-  src: url("/fonts/gg-Medium.ttf");
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: "GG Sans";
-  src: url("/fonts/gg-Semibold.ttf");
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: "GG Sans";
-  src: url("/fonts/gg-Bold.ttf");
-  font-weight: 700;
-}
-
 @theme {
   --font-logo: "DM Serif Text", serif;
   --font-mono: "Fragment Mono", monospace;
@@ -79,17 +55,16 @@
   }
 
   .prose hr {
-    border-color: hsl(var(--border));
+    border-color: var(--border);
     opacity: 0.2;
   }
 
   .dark .prose hr {
-    border-color: hsl(var(--border));
+    border-color: var(--border);
   }
 
   body {
     font-family:
-      "GG Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -139,15 +114,13 @@
   }
 
   .react-pdf__Page {
-    background-color: hsl(var(--background)) !important;
-    border: 1px solid hsl(var(--border));
-    border-radius: 8px;
+    background-color: var(--background) !important;
     overflow: hidden;
     margin: 8px 0;
   }
 
   .react-pdf__Document {
-    background-color: hsl(var(--background)) !important;
+    background-color: var(--background) !important;
     display: block !important;
     width: 100% !important;
     height: 100% !important;
@@ -155,13 +128,15 @@
 
   .pdf-container {
     scrollbar-width: thin;
-    scrollbar-color: hsl(var(--muted-foreground)) transparent;
+    scrollbar-color: var(--muted-foreground) transparent;
   }
 
   .dark .react-pdf__Page__canvas {
-    filter: invert(0.925) hue-rotate(180deg) brightness(1) contrast(1)
-      saturate(0.9);
-    background-color: oklch(var(--background)) !important;
+    filter: invert(0.99) hue-rotate(270deg) brightness(1) contrast(0.85)
+      saturate(1);
+    filter: invert(1) hue-rotate(180deg);
+    mix-blend-mode: screen;
+    background-color: transparent !important;
   }
 
   .dark .react-pdf__Page,
@@ -303,37 +278,37 @@
 }
 
 .dark {
-  --background: oklch(0.1872 0.002 286.2);
-  --foreground: oklch(90.844% 0.00218 14.701);
-  --card: oklch(0.2591 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.2591 0 0);
-  --popover-foreground: oklch(0.985 0 0);
+  --background: oklch(18.055% 0.01548 101.819);
+  --foreground: oklch(91% 0.01 101.819);
+  --card: oklch(22% 0.016 101.819);
+  --card-foreground: oklch(91% 0.01 101.819);
+  --popover: oklch(22% 0.016 101.819);
+  --popover-foreground: oklch(91% 0.01 101.819);
   --primary: oklch(0.8332 0.088 144.73);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.2386 0.0024 247.93);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.2386 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.2386 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  --primary-foreground: oklch(20% 0.015 101.819);
+  --secondary: oklch(21% 0.015 101.819);
+  --secondary-foreground: oklch(91% 0.01 101.819);
+  --muted: oklch(21% 0.015 101.819);
+  --muted-foreground: oklch(70% 0.01 101.819);
+  --accent: oklch(21% 0.015 101.819);
+  --accent-foreground: oklch(91% 0.01 101.819);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.28 0 0);
-  --input: oklch(0.2801 0 0);
-  --ring: oklch(0.556 0 0);
+  --border: oklch(26% 0.015 101.819);
+  --input: oklch(26% 0.015 101.819);
+  --ring: oklch(55% 0.01 101.819);
   --chart-1: oklch(0.911 0.0453 168.18);
   --chart-2: oklch(0.8072 0.1109 164.79);
   --chart-3: oklch(0.7521 0.1557 160.22);
   --chart-4: oklch(0.6506 0.138 159.72);
   --chart-5: oklch(0.5382 0.1159 159.4);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --sidebar: oklch(16% 0.015 101.819);
+  --sidebar-foreground: oklch(91% 0.01 101.819);
+  --sidebar-primary: oklch(0.8332 0.088 144.73);
+  --sidebar-primary-foreground: oklch(20% 0.015 101.819);
+  --sidebar-accent: oklch(21% 0.015 101.819);
+  --sidebar-accent-foreground: oklch(91% 0.01 101.819);
+  --sidebar-border: oklch(26% 0.015 101.819);
+  --sidebar-ring: oklch(55% 0.01 101.819);
 }
 
 @layer base {

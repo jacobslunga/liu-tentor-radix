@@ -35,10 +35,10 @@ import {
 } from "@/components/ui/command";
 import {
   LightbulbFilamentIcon,
-  ArrowUpIcon,
-  SquareIcon,
   ArrowDownIcon,
   CheckIcon,
+  SquareIcon,
+  ArrowElbowDownLeftIcon,
 } from "@phosphor-icons/react";
 import { QuotedContext } from "./QuotedContext";
 import { cn } from "@/lib/utils";
@@ -81,11 +81,11 @@ const getModels = (language: string): Model[] => {
     },
     {
       id: "gemini-2.5-flash",
-      name: "Gemini 2.5 Flash",
+      name: "Auto",
       provider: "google",
       description: isSv
-        ? "Googles snabbaste multimodala modell"
-        : "Google's fastest multimodal model",
+        ? "Snabbaste modellen för enklare frågor"
+        : "Fastest model for simpler queries",
     },
   ];
 };
@@ -195,14 +195,13 @@ const ModelSelector = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="flex items-center gap-2 h-8 px-2 rounded-full border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+          className="flex items-center gap-1.5 h-6 px-2 rounded-full border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
           aria-label={isSv ? "Välj modell" : "Select model"}
         >
-          <ProviderLogo provider={selectedModel.provider} />
-          <span className="text-xs font-medium text-muted-foreground truncate max-w-[100px] hidden sm:inline-block">
+          <span className="text-[10px] font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
             {selectedModel.name}
           </span>
-          <ChevronDownIcon className="w-3 h-3 text-muted-foreground opacity-50" />
+          <ChevronDownIcon className="w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
         </button>
       </PopoverTrigger>
       <PopoverContent
@@ -377,7 +376,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                             inputRef.current?.focus();
                           }}
                           className={cn(
-                            "flex items-center gap-1.5 px-2.5 h-7 text-xs font-medium transition-all rounded-full cursor-pointer border select-none",
+                            "flex items-center gap-1.5 px-2 h-6 text-[10px] font-medium transition-all rounded-full cursor-pointer border select-none",
                             !giveDirectAnswer
                               ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
                               : "bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground",
@@ -420,22 +419,55 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                   </TooltipProvider>
                 </div>
 
-                <InputGroupButton
-                  variant="default"
-                  size="icon-sm"
-                  disabled={(!input.trim() && !isLoading) || isInputTooLong}
-                  onClick={isLoading ? onCancel : onSend}
-                  className="rounded-full h-8 w-8 shrink-0"
-                >
-                  {isLoading ? (
-                    <SquareIcon weight="fill" className="h-3.5 w-3.5" />
-                  ) : (
-                    <ArrowUpIcon weight="bold" className="h-4 w-4" />
-                  )}
-                  <span className="sr-only">
-                    {isLoading ? "Cancel" : sendButtonLabel}
-                  </span>
-                </InputGroupButton>
+                <div className="relative">
+                  <AnimatePresence mode="wait" initial={false}>
+                    {isLoading ? (
+                      <motion.div
+                        key="stop"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <InputGroupButton
+                          variant="secondary"
+                          size="icon-sm"
+                          onClick={onCancel}
+                          className="rounded-full h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground"
+                        >
+                          <SquareIcon weight="fill" className="h-3.5 w-3.5" />
+                          <span className="sr-only">
+                            {language === "sv" ? "Avbryt" : "Cancel"}
+                          </span>
+                        </InputGroupButton>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        key="send"
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.8 }}
+                        transition={{ duration: 0.15 }}
+                      >
+                        <InputGroupButton
+                          variant="default"
+                          size="xs"
+                          disabled={
+                            (!input.trim() && !isLoading) || isInputTooLong
+                          }
+                          onClick={onSend}
+                          className="rounded-full shrink-0 font-medium transition-all"
+                        >
+                          <span className="text-xs">
+                            {language === "sv" ? "Skicka" : "Send"}
+                          </span>
+                          <ArrowElbowDownLeftIcon weight="bold" />
+                          <span className="sr-only">{sendButtonLabel}</span>
+                        </InputGroupButton>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </InputGroupAddon>
           </InputGroup>
