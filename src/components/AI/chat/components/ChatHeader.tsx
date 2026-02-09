@@ -6,13 +6,7 @@ import {
   TooltipProvider,
 } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
-import {
-  CaretRightIcon,
-  CaretLeftIcon,
-  CheckCircleIcon,
-  ChatCircleDotsIcon,
-  XCircleIcon,
-} from "@phosphor-icons/react";
+import { CheckCircle, XCircle, X, MessageSquare } from "lucide-react";
 
 interface ChatHeaderProps {
   language: string;
@@ -22,37 +16,42 @@ interface ChatHeaderProps {
 }
 
 export const ChatHeader: FC<ChatHeaderProps> = memo(
-  ({ language, hasSolution, onClose, side }) => {
+  ({ language, hasSolution, onClose }) => {
     return (
-      <div className="shrink-0 flex items-center justify-between p-3 z-40">
+      <div className="shrink-0 flex items-center justify-between px-3 py-2 z-40">
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={onClose}
-            className="h-8 w-8 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/50"
-          >
-            {side === "right" ? (
-              <CaretRightIcon weight="bold" className="h-5 w-5" />
-            ) : (
-              <CaretLeftIcon weight="bold" className="h-5 w-5" />
-            )}
-          </Button>
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="h-7 w-7 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="right">
+                <p>{language === "sv" ? "Stäng (C)" : "Close (C)"}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <div
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-default transition-colors ${
+                  className={`flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-medium cursor-default transition-colors border ${
                     hasSolution
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                      : "bg-muted/50 text-muted-foreground"
+                      ? "bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-950/30 dark:text-emerald-400 dark:border-emerald-800"
+                      : "bg-muted/50 text-muted-foreground border-transparent"
                   }`}
                 >
                   {hasSolution ? (
-                    <CheckCircleIcon weight="fill" className="h-3.5 w-3.5" />
+                    <CheckCircle className="h-3 w-3" />
                   ) : (
-                    <XCircleIcon weight="bold" className="h-3.5 w-3.5" />
+                    <XCircle className="h-3 w-3" />
                   )}
                   <span>{language === "sv" ? "Lösning" : "Solution"}</span>
                 </div>
@@ -73,31 +72,6 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
         </div>
 
         <div className="flex items-center gap-1">
-          {/* <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={onToggleSide}
-                  className="h-8 w-8 px-0 rounded-full text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                >
-                  <SidebarSimpleIcon
-                    weight="bold"
-                    className={`h-5 w-5 transform transition-transform ${side === "left" ? "scale-x-[-1]" : ""}`}
-                  />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="end">
-                <p>
-                  {language === "sv"
-                    ? `Fäst på ${side === "right" ? "vänster" : "höger"} sida`
-                    : `Dock to ${side === "right" ? "left" : "right"}`}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider> */}
-
           {/* Feedback Button */}
           <TooltipProvider delayDuration={0}>
             <Tooltip>
@@ -106,9 +80,9 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
                   variant="ghost"
                   size="sm"
                   onClick={() => window.open("/feedback", "_blank")}
-                  className="h-8 gap-1.5 px-3 rounded-full text-xs text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                  className="h-7 gap-1.5 px-2.5 rounded-full text-[10px] text-muted-foreground hover:text-foreground hover:bg-accent/50"
                 >
-                  <ChatCircleDotsIcon weight="bold" className="h-4 w-4" />
+                  <MessageSquare className="h-3.5 w-3.5" />
                   <span>Feedback</span>
                 </Button>
               </TooltipTrigger>

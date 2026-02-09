@@ -56,7 +56,7 @@ const ExamToolbar: FC<Props> = ({ pdfUrl }) => {
   const { zoomIn, zoomOut, rotateLeft, rotateRight } = usePdf("exam");
 
   return (
-    <div className="fixed top-20 left-5 flex flex-col space-y-2 z-40 opacity-20 hover:opacity-100 transition-opacity duration-300">
+    <div className="absolute top-6 left-6 flex flex-col space-y-2 z-40 opacity-20 hover:opacity-100 transition-opacity duration-300">
       <ToolbarButton icon={PlusIcon} onClick={zoomIn} tooltip="Zooma in" />
       <ToolbarButton icon={MinusIcon} onClick={zoomOut} tooltip="Zooma ut" />
       <Separator />

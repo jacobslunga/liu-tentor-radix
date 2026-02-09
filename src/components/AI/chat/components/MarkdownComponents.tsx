@@ -21,9 +21,11 @@ export const markdownComponents: Partial<Components> = {
       children?: ReactNode;
     }>;
     return (
-      <CodeBlock className={child?.props?.className}>
-        {child?.props?.children}
-      </CodeBlock>
+      <div className="overflow-x-auto max-w-full">
+        <CodeBlock className={child?.props?.className}>
+          {child?.props?.children}
+        </CodeBlock>
+      </div>
     );
   },
 
@@ -31,7 +33,7 @@ export const markdownComponents: Partial<Components> = {
     const isInline = !props.className?.includes("language-");
     if (isInline) {
       return (
-        <code className="bg-muted/50 text-foreground px-1 py-0.5 rounded text-base">
+        <code className="bg-muted/50 text-foreground px-1 py-0.5 rounded text-base break-all">
           {children}
         </code>
       );
@@ -39,14 +41,21 @@ export const markdownComponents: Partial<Components> = {
     return <code {...props}>{children}</code>;
   },
 
-  p: (props: BaseProps) => <p {...props} className="my-2 text-base" />,
+  p: (props: BaseProps) => (
+    <p {...props} className="my-2 text-base wrap-break-word" />
+  ),
   ul: (props: BaseProps) => (
-    <ul {...props} className="my-2 ml-4 list-disc text-base" />
+    <ul {...props} className="my-2 ml-4 list-disc text-base wrap-break-word" />
   ),
   ol: (props: BaseProps) => (
-    <ol {...props} className="my-2 ml-4 list-decimal text-base" />
+    <ol
+      {...props}
+      className="my-2 ml-4 list-decimal text-base wrap-break-word"
+    />
   ),
-  li: (props: BaseProps) => <li {...props} className="my-1 text-base" />,
+  li: (props: BaseProps) => (
+    <li {...props} className="my-1 text-base wrap-break-word" />
+  ),
   h1: (props: BaseProps) => (
     <h1 {...props} className="text-xl font-semibold mt-4 mb-2" />
   ),

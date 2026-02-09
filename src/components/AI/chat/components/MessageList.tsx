@@ -11,11 +11,11 @@ interface MessageListProps {
   isLoading: boolean;
   language: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
-  messagesContainerRef: React.RefObject<HTMLDivElement | null>;
+  messagesContainer: HTMLElement | null;
 }
 
 export const MessageList: FC<MessageListProps> = memo(
-  ({ messages, isLoading, language, messagesEndRef, messagesContainerRef }) => {
+  ({ messages, isLoading, language, messagesEndRef, messagesContainer }) => {
     const [startIndex, setStartIndex] = useState(() =>
       Math.max(0, messages.length - INITIAL_BATCH),
     );
@@ -30,7 +30,7 @@ export const MessageList: FC<MessageListProps> = memo(
     }, [messages.length]);
 
     useEffect(() => {
-      const container = messagesContainerRef.current;
+      const container = messagesContainer;
       if (!container) return;
 
       const onScroll = () => {
@@ -44,10 +44,10 @@ export const MessageList: FC<MessageListProps> = memo(
 
       container.addEventListener("scroll", onScroll, { passive: true });
       return () => container.removeEventListener("scroll", onScroll);
-    }, [messagesContainerRef, startIndex]);
+    }, [messagesContainer, startIndex]);
 
     useLayoutEffect(() => {
-      const container = messagesContainerRef.current;
+      const container = messagesContainer;
       if (!container || !isPrependingRef.current) return;
 
       const newScrollHeight = container.scrollHeight;
@@ -58,12 +58,12 @@ export const MessageList: FC<MessageListProps> = memo(
       }
 
       isPrependingRef.current = false;
-    }, [startIndex, messagesContainerRef]);
+    }, [startIndex, messagesContainer]);
 
     const visibleMessages = messages.slice(startIndex);
 
     return (
-      <div className="w-full flex flex-col gap-8 pb-4">
+      <div className="w-full flex flex-col pb-4 mt-10">
         {startIndex > 0 && (
           <div className="h-8 flex items-center justify-center opacity-50 text-xs">
             ...
@@ -72,12 +72,13 @@ export const MessageList: FC<MessageListProps> = memo(
 
         {visibleMessages.map((message, index) => {
           const realIndex = startIndex + index;
+          const isLast = realIndex === messages.length - 1;
           return (
             <MessageBubble
               key={realIndex}
               index={realIndex}
               message={message}
-              isLoading={isLoading && realIndex === messages.length - 1}
+              isLoading={isLoading && isLast}
               language={language}
             />
           );

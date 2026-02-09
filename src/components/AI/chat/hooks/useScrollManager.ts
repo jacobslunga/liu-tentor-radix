@@ -5,22 +5,32 @@ interface UseScrollManagerProps {
 }
 
 export const useScrollManager = ({ isOpen }: UseScrollManagerProps) => {
-  const messagesContainerRef = useRef<HTMLDivElement>(null);
+  const [messagesContainer, setMessagesContainer] =
+    useState<HTMLDivElement | null>(null);
+  const messagesContainerRef = useCallback((node: HTMLDivElement | null) => {
+    if (node) {
+      setMessagesContainer(node);
+    }
+  }, []);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showScrollButton, setShowScrollButton] = useState(false);
   const isUserScrollingRef = useRef(false);
 
-  const scrollToBottom = useCallback((behavior: ScrollBehavior = "auto") => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: Number.MAX_SAFE_INTEGER, // Ensure we hit the absolute bottom
-        behavior,
-      });
-    }
-  }, []);
+  const scrollToBottom = useCallback(
+    (behavior: ScrollBehavior = "auto") => {
+      if (messagesContainer) {
+        messagesContainer.scrollTo({
+          top: Number.MAX_SAFE_INTEGER, // Ensure we hit the absolute bottom
+          behavior,
+        });
+      }
+    },
+    [messagesContainer],
+  );
 
   useEffect(() => {
-    const container = messagesContainerRef.current;
+    const container = messagesContainer;
     if (!container) return;
 
     const handleScroll = () => {
@@ -37,7 +47,7 @@ export const useScrollManager = ({ isOpen }: UseScrollManagerProps) => {
 
     container.addEventListener("scroll", handleScroll, { passive: true });
     return () => container.removeEventListener("scroll", handleScroll);
-  }, [isOpen]);
+  }, [isOpen, messagesContainer]);
 
   // Reset scroll when opening
   useEffect(() => {
@@ -52,6 +62,7 @@ export const useScrollManager = ({ isOpen }: UseScrollManagerProps) => {
   return {
     messagesEndRef,
     messagesContainerRef,
+    messagesContainer,
     showScrollButton,
     scrollToBottom,
     isUserScrollingRef,

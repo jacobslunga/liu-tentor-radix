@@ -47,7 +47,7 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         ref={leftPanelRef}
         defaultSize={55}
         minSize={20}
-        className="bg-background"
+        className="bg-background relative"
       >
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
       </ResizablePanel>

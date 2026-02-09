@@ -38,7 +38,11 @@ type ShortcutAction =
   | "rotateRight"
   | "toggleAIChat";
 
-const SettingsDialog: FC = () => {
+interface SettingsDialogProps {
+  trigger?: React.ReactNode;
+}
+
+const SettingsDialog: FC<SettingsDialogProps> = ({ trigger }) => {
   const { t } = useTranslation();
   const { setTheme, theme } = useTheme();
   const { textSize, setTextSize } = useTextSize();
@@ -120,9 +124,13 @@ const SettingsDialog: FC = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <GearSixIcon weight="bold" />
-        </Button>
+        {trigger ? (
+          trigger
+        ) : (
+          <Button variant="ghost" size="icon">
+            <GearSixIcon weight="bold" />
+          </Button>
+        )}
       </DialogTrigger>
       <DialogContent className="w-[95vw] max-w-[500px] max-h-[90%] overflow-y-auto rounded-lg">
         <DialogHeader>

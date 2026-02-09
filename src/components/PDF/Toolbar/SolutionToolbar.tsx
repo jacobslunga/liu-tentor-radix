@@ -58,7 +58,7 @@ const SolutionToolbar: FC<Props> = ({ pdfUrl }) => {
   const { zoomIn, zoomOut, rotateLeft, rotateRight } = usePdf("solution");
 
   return (
-    <div className="fixed top-20 right-5 hidden lg:flex flex-col space-y-2 z-40 opacity-20 hover:opacity-100 transition-opacity duration-300">
+    <div className="absolute top-6 right-6 hidden lg:flex flex-col space-y-2 z-40 opacity-20 hover:opacity-100 transition-opacity duration-300">
       <ToolbarButton icon={PlusIcon} onClick={zoomIn} tooltip={t("zoomIn")} />
       <ToolbarButton
         icon={MinusIcon}

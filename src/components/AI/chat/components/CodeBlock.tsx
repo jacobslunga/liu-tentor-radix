@@ -1,8 +1,8 @@
 import { FC, memo, useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import {
-  oneDark,
-  oneLight,
+  gruvboxDark,
+  gruvboxLight,
 } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { Button } from "@/components/ui/button";
 import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
@@ -72,7 +72,7 @@ export const CodeBlock: FC<CodeBlockProps> = memo(
         <div className="relative overflow-hidden rounded-b-lg border border-t-0 border-border">
           <SyntaxHighlighter
             language={language}
-            style={effectiveTheme === "dark" ? oneDark : oneLight}
+            style={effectiveTheme === "dark" ? gruvboxDark : gruvboxLight}
             customStyle={{
               margin: 0,
               padding: "1.25rem",

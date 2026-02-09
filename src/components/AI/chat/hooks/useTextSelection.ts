@@ -6,12 +6,12 @@ interface SelectionState {
 }
 
 interface UseTextSelectionProps {
-  containerRef: React.RefObject<HTMLElement | null>;
+  container: HTMLElement | null;
   minLength?: number;
 }
 
 export const useTextSelection = ({
-  containerRef,
+  container,
   minLength = 10,
 }: UseTextSelectionProps) => {
   const [selection, setSelection] = useState<SelectionState>({
@@ -27,7 +27,6 @@ export const useTextSelection = ({
   }, []);
 
   const checkSelection = useCallback(() => {
-    const container = containerRef.current;
     if (!container) return;
 
     const windowSelection = window.getSelection();
@@ -78,7 +77,7 @@ export const useTextSelection = ({
         y: rect.top - 8,
       },
     });
-  }, [containerRef, minLength]);
+  }, [container, minLength]);
 
   useEffect(() => {
     const handleMouseDown = (e: MouseEvent) => {

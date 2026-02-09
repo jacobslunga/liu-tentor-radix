@@ -2,10 +2,8 @@ import { FC, useEffect, useCallback } from "react";
 
 import { Button } from "@/components/ui/button";
 import ChatWindow from "@/components/AI/chat/ChatWindow";
-import ExamHeader from "@/components/ExamHeader";
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
-import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
 import { Loader2 } from "lucide-react";
 import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
 import { formatExamDate } from "@/util/formatExamDate";
@@ -16,6 +14,7 @@ import { useParams } from "react-router-dom";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useChatWindow } from "@/context/ChatWindowContext";
 import { ChatProvider } from "@/context/ChatContext";
+import { ExamSidebar } from "@/components/ExamSidebar";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
@@ -40,12 +39,12 @@ const ExamPage: FC = () => {
   }, [setShowChatWindow]);
 
   useHotkeys(
-    "c",
+    "mod+c",
     (e) => {
       e.preventDefault();
       handleToggleChat();
     },
-    { preventDefault: true },
+    { preventDefault: true, enableOnFormTags: true },
     [handleToggleChat],
   );
 
@@ -99,41 +98,41 @@ const ExamPage: FC = () => {
     return <ErrorState />;
   }
 
-  const chatVariant = layoutMode === "exam-only" ? "push" : "overlay";
-
   return (
-    <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
+    <div className="flex h-screen flex-col lg:flex-row items-center justify-center w-screen overflow-hidden bg-background">
       <ChatProvider examDetail={examDetail}>
-        <ExamHeader
-          exams={courseData.exams}
-          setIsChatOpen={setShowChatWindow}
-          onToggleChat={handleToggleChat}
-        />
-
-        <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
-          <div className="flex-1 flex flex-col min-w-0 h-full">
-            <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
-              <div className="flex-1 h-full relative">
-                {layoutMode === "exam-only" ? (
-                  <ExamOnlyView examDetail={examDetail} />
-                ) : (
-                  <ExamWithFacitView examDetail={examDetail} />
-                )}
-                <LayoutSwitcher />
-              </div>
-            </div>
-          </div>
-
-          <ChatWindow
-            examDetail={examDetail}
-            isOpen={showChatWindow}
-            onClose={handleCloseChat}
-            variant={chatVariant}
+        {/* Sidebar */}
+        <div className="hidden lg:block h-full z-50">
+          <ExamSidebar
+            exams={courseData.exams}
+            showChat={showChatWindow}
+            onToggleChat={handleToggleChat}
           />
         </div>
-      </ChatProvider>
 
-      <MobilePdfView examDetail={examDetail} />
+        {/* Main Content Area */}
+        <div className="flex-1 w-full h-full relative overflow-hidden hidden lg:block">
+          {showChatWindow ? (
+            <ChatWindow
+              examDetail={examDetail}
+              isOpen={true}
+              onClose={handleCloseChat}
+              variant="fullscreen"
+            />
+          ) : (
+            <div className="w-full h-full relative">
+              {layoutMode === "exam-only" ? (
+                <ExamOnlyView examDetail={examDetail} />
+              ) : (
+                <ExamWithFacitView examDetail={examDetail} />
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Mobile View */}
+        <MobilePdfView examDetail={examDetail} />
+      </ChatProvider>
     </div>
   );
 };

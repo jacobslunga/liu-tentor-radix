@@ -17,7 +17,7 @@ interface ChatWindowProps {
   examDetail: ExamDetailPayload;
   isOpen: boolean;
   onClose: () => void;
-  variant?: "overlay" | "push";
+  variant?: "overlay" | "push" | "fullscreen";
 }
 
 const STORAGE_KEY = "chat_input_draft";
@@ -52,6 +52,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const {
     messagesEndRef,
     messagesContainerRef,
+    messagesContainer,
     showScrollButton,
     scrollToBottom,
     isUserScrollingRef,
@@ -66,7 +67,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const { width, isResizing, startResizing } = useResizablePanel();
 
   const { selectedText, selectionPosition, clearSelection } = useTextSelection({
-    containerRef: messagesContainerRef,
+    container: messagesContainer,
     minLength: 10,
   });
 
@@ -175,12 +176,16 @@ const ChatWindow: FC<ChatWindowProps> = ({
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) handleClose();
     };
+
     document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
   }, [isOpen, handleClose]);
 
   const hasSolutions = examDetail.solution !== null;
   const isOverlay = variant === "overlay";
+  const isFullscreen = variant === "fullscreen";
 
   const parentVariants = useMemo((): Variants => {
     const enterSettings = isResizing
@@ -193,6 +198,14 @@ const ChatWindow: FC<ChatWindowProps> = ({
         };
 
     const exitSettings = { type: "spring" as const, bounce: 0, duration: 0.2 };
+
+    if (isFullscreen) {
+      return {
+        hidden: { opacity: 0 },
+        visible: { opacity: 1, transition: { duration: 0.2 } },
+        exit: { opacity: 0, transition: { duration: 0.1 } },
+      };
+    }
 
     if (isOverlay) {
       const xHidden = side === "right" ? "100%" : "-100%";
@@ -208,13 +221,15 @@ const ChatWindow: FC<ChatWindowProps> = ({
         exit: { width: 0, opacity: 0, transition: exitSettings },
       };
     }
-  }, [isOverlay, width, isResizing, side]);
+  }, [isOverlay, width, isResizing, side, isFullscreen]);
 
-  const positionClasses = isOverlay
-    ? side === "right"
-      ? "fixed right-0 top-0 h-full shadow-xl"
-      : "fixed left-0 top-0 h-full shadow-xl"
-    : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
+  const positionClasses = isFullscreen
+    ? "relative w-full h-full"
+    : isOverlay
+      ? side === "right"
+        ? "fixed right-0 top-0 h-full shadow-xl"
+        : "fixed left-0 top-0 h-full shadow-xl"
+      : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
 
   const handleAnimationComplete = (definition: string) => {
     if (definition === "visible") {
@@ -242,33 +257,34 @@ const ChatWindow: FC<ChatWindowProps> = ({
             contain: isResizing ? "layout style" : "none",
           }}
         >
-          <ResizeHandle
-            onStartResize={startResizing}
-            isResizing={isResizing}
-            side={side}
-          />
+          {!isFullscreen && (
+            <ResizeHandle
+              onStartResize={startResizing}
+              isResizing={isResizing}
+              side={side}
+            />
+          )}
 
           <div
-            className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? "" : "border-l"}`}
+            className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay && !isFullscreen ? "border-l" : ""}`}
           >
-            <motion.div variants={contentVariants}>
-              <ChatHeader
-                language={language}
-                hasSolution={hasSolutions}
-                onClose={handleClose}
-                side={side}
-              />
-            </motion.div>
-
             {messages.length === 0 && <EmptyState language={language} />}
 
             <div className="flex-1 relative min-h-0 flex flex-col">
+              <motion.div variants={contentVariants} className="z-50">
+                <ChatHeader
+                  language={language}
+                  hasSolution={hasSolutions}
+                  onClose={handleClose}
+                  side={side}
+                />
+              </motion.div>
               <motion.div
                 variants={contentVariants}
                 ref={messagesContainerRef}
                 className="absolute inset-0 overflow-y-auto"
               >
-                <div className="p-4 pb-48 space-y-4 relative min-h-full">
+                <div className="pb-48 relative min-h-full">
                   {shouldRenderMessages ? (
                     <>
                       <MessageList
@@ -276,7 +292,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
                         isLoading={isLoading}
                         language={language}
                         messagesEndRef={messagesEndRef}
-                        messagesContainerRef={messagesContainerRef}
+                        messagesContainer={messagesContainer}
                       />
                     </>
                   ) : (
