@@ -99,8 +99,6 @@ const ExamPage: FC = () => {
     return <ErrorState />;
   }
 
-  const chatVariant = layoutMode === "exam-only" ? "push" : "overlay";
-
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
       <ChatProvider examDetail={examDetail}>
@@ -128,7 +126,6 @@ const ExamPage: FC = () => {
             examDetail={examDetail}
             isOpen={showChatWindow}
             onClose={handleCloseChat}
-            variant={chatVariant}
           />
         </div>
       </ChatProvider>

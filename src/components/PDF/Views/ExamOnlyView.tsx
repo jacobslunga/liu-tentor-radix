@@ -1,71 +1,26 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-
+import { useEffect, useRef, useState } from "react";
+import { BookOpen, X } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
 import ExamPdf from "@/components/PDF/ExamPdf";
-import GradientIndicator from "@/components/GradientIndicator";
 import SolutionPdf from "@/components/PDF/SolutionPdf";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
 import { useChatWindow } from "@/context/ChatWindowContext";
 import type { ExamDetailPayload } from "@/api";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface Props {
   examDetail: ExamDetailPayload;
 }
 
 const ExamOnlyView = ({ examDetail }: Props) => {
+  const { language } = useLanguage();
+  const { t } = useTranslation();
   const { showChatWindow } = useChatWindow();
   const [isFacitVisible, setIsFacitVisible] = useState(false);
-  const [isManual, setIsManual] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
-  const facitVariants = {
-    hidden: { x: "100%", opacity: 0 },
-    visible: { x: "0%", opacity: 1 },
-  };
-
   const hasFacit = examDetail.solution !== null;
-
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!hasFacit || isManual || showChatWindow) return;
-
-      const w = window.innerWidth;
-      const threshold = w * 0.9;
-      const topSafeZone = 120;
-
-      if (isFacitVisible && panelRef.current) {
-        const rect = panelRef.current.getBoundingClientRect();
-        const isInsidePanel =
-          e.clientX >= rect.left &&
-          e.clientX <= rect.right &&
-          e.clientY >= rect.top &&
-          e.clientY <= rect.bottom;
-
-        if (isInsidePanel) {
-          return;
-        }
-      }
-
-      if (e.clientX > threshold) {
-        if (!isFacitVisible) {
-          if (e.clientY < topSafeZone) {
-            return;
-          }
-        }
-
-        setIsFacitVisible(true);
-        return;
-      }
-
-      setIsFacitVisible(false);
-    },
-    [hasFacit, isManual, showChatWindow, isFacitVisible],
-  );
-
-  useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [handleMouseMove]);
 
   useEffect(() => {
     if (showChatWindow) {
@@ -74,38 +29,57 @@ const ExamOnlyView = ({ examDetail }: Props) => {
   }, [showChatWindow, setIsFacitVisible]);
 
   useHotkeys("e", () => {
-    setIsFacitVisible((prev) => !prev);
-    setIsManual((prev) => !prev);
+    if (hasFacit) setIsFacitVisible((prev) => !prev);
   });
 
   useHotkeys("esc", () => {
-    setIsManual(false);
     setIsFacitVisible(false);
   });
 
   return (
-    <div className="w-full h-full relative max-w-full bg-background">
+    <div className="w-full h-full relative max-w-full bg-background overflow-hidden">
       <div className="w-full h-full bg-background overflow-auto">
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
       </div>
 
-      {hasFacit && (
-        <motion.div
-          ref={panelRef}
-          className="absolute right-0 top-0 w-1/2 h-full bg-background border-l z-40 overflow-auto"
-          variants={facitVariants}
-          initial="hidden"
-          animate={isFacitVisible ? "visible" : "hidden"}
-          transition={{
-            x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
-          }}
-        >
-          <SolutionPdf pdfUrl={examDetail.solution!.pdf_url} />
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {hasFacit && isFacitVisible && (
+          <motion.div
+            ref={panelRef}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.2 }}
+            className="absolute inset-0 bg-background z-50 flex flex-col"
+          >
+            <div className="flex-1 w-full overflow-hidden bg-muted">
+              <SolutionPdf pdfUrl={examDetail.solution!.pdf_url} />
+            </div>
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-50">
+              <button
+                onClick={() => setIsFacitVisible(false)}
+                className="bg-secondary cursor-pointer text-secondary-foreground shadow-2xl hover:scale-105 active:scale-95 transition-all rounded-full px-8 py-3.5 flex items-center gap-3 border border-primary/20 group"
+              >
+                <X className="w-5 h-5" />
+                <span className="font-bold tracking-tight">
+                  {language === "sv" ? "Stäng" : "Close"}
+                </span>
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {hasFacit && !isFacitVisible && !showChatWindow && (
-        <GradientIndicator facitPdfUrl={examDetail.solution!.pdf_url} />
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
+          <button
+            onClick={() => setIsFacitVisible(true)}
+            className="bg-primary cursor-pointer text-primary-foreground shadow-2xl hover:scale-105 active:scale-95 transition-all rounded-full px-8 py-3.5 flex items-center gap-3 border border-primary/20 group"
+          >
+            <BookOpen className="w-5 h-5" />
+            <span className="font-bold tracking-tight">{t("facit")}</span>
+          </button>
+        </div>
       )}
     </div>
   );

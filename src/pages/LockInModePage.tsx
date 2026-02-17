@@ -1,17 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import {
-  Maximize,
-  Minimize,
-  Pause,
-  Play,
-  RotateCw,
-  Timer,
-  ZoomIn,
-  ZoomOut,
-  Loader2,
-} from "lucide-react";
+import { Maximize, Minimize, Pause, Play, Timer, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -45,10 +35,6 @@ const LockInModePage: React.FC = () => {
   const [showFinishDialog, setShowFinishDialog] = useState(false);
   const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
 
-  // PDF State
-  const [numPages, setNumPages] = useState<number>(0);
-  const [scale, setScale] = useState<number>(1.2);
-  const [rotation, setRotation] = useState<number>(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -111,21 +97,6 @@ const LockInModePage: React.FC = () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
   }, [session, isPaused]);
-
-  const zoomIn = useCallback(
-    () => setScale((p) => Math.min(p + 0.15, 3.0)),
-    [],
-  );
-  const zoomOut = useCallback(
-    () => setScale((p) => Math.max(p - 0.15, 0.5)),
-    [],
-  );
-  const rotateCw = useCallback(() => setRotation((p) => p + 90), []);
-
-  const onDocumentLoadSuccess = useCallback(
-    ({ numPages }: { numPages: number }) => setNumPages(numPages),
-    [],
-  );
 
   const handlePauseResume = () => {
     if (isPaused) {
@@ -221,34 +192,6 @@ const LockInModePage: React.FC = () => {
       {/* --- Top Control Bar --- */}
       <div className="absolute top-0 left-0 right-0 z-40 px-4 py-2 flex items-center justify-center pointer-events-none">
         <div className="bg-background border shadow-md rounded-full px-4 py-2 flex items-center gap-6 pointer-events-auto">
-          {/* Left: PDF Tools */}
-          <div className="flex items-center gap-1 border-r pr-4 mr-2">
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full"
-              onClick={zoomOut}
-            >
-              <ZoomOut className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full"
-              onClick={zoomIn}
-            >
-              <ZoomIn className="w-4 h-4" />
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 rounded-full"
-              onClick={rotateCw}
-            >
-              <RotateCw className="w-4 h-4" />
-            </Button>
-          </div>
-
           {/* Center: Timer */}
           <div className="flex items-center gap-3 min-w-[120px] justify-center">
             <Timer
@@ -299,13 +242,7 @@ const LockInModePage: React.FC = () => {
 
       <div className="flex-1 w-full h-full pt-12 pb-4 px-4 overflow-hidden">
         <div className="w-full h-full rounded-xl overflow-hidden shadow-2xl border bg-background/50">
-          <PdfRenderer
-            pdfUrl={examDetail.exam.pdf_url}
-            scale={scale}
-            rotation={rotation}
-            numPages={numPages}
-            onLoadSuccess={onDocumentLoadSuccess}
-          />
+          <PdfRenderer pdfUrl={examDetail.exam.pdf_url} />
         </div>
       </div>
 

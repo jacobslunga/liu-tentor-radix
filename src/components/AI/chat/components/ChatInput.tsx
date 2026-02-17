@@ -205,7 +205,7 @@ const ModelSelector = ({
         </button>
       </PopoverTrigger>
       <PopoverContent
-        className="w-[340px] p-0"
+        className="w-[340px] p-0 z-[100]"
         align="start"
         side="top"
         sideOffset={10}
