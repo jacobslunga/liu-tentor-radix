@@ -1,32 +1,14 @@
-import { useCallback, type FC } from "react";
+import { type FC } from "react";
 import PdfRenderer from "./PdfRenderer";
-import usePdf from "@/hooks/usePdf";
-import SolutionToolbar from "./Toolbar/SolutionToolbar";
-import { useIsSafari } from "@/hooks/useIsSafari";
 
 interface Props {
   pdfUrl: string;
 }
 
 const SolutionPdf: FC<Props> = ({ pdfUrl }) => {
-  const isSafari = useIsSafari();
-  const { numPages, scale, rotation, setNumPages } = usePdf("solution");
-
-  const onLoadSuccess = useCallback(
-    ({ numPages }: { numPages: number }) => setNumPages(numPages),
-    []
-  );
-
   return (
     <>
-      {!isSafari && <SolutionToolbar pdfUrl={pdfUrl} />}
-      <PdfRenderer
-        scale={scale}
-        rotation={rotation}
-        onLoadSuccess={onLoadSuccess}
-        numPages={numPages}
-        pdfUrl={pdfUrl}
-      />
+      <PdfRenderer pdfUrl={pdfUrl} />
     </>
   );
 };

@@ -20,7 +20,6 @@ import type { Exam } from "@/api";
 import SettingsDialog from "@/components/SettingsDialog";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
-import { motion } from "framer-motion";
 import { LockInMenu } from "./lock-in-mode/LockInMenu";
 import { LockInModeManager } from "@/lib/lockInMode";
 import { useChatState } from "@/hooks/useChatState";
@@ -44,10 +43,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedExam, setSelectedExam] = useState<Exam | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [isMouseActive, setIsMouseActive] = useState(true);
-  const [isHovering, setIsHovering] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const isHoveringRef = useRef(isHovering);
 
   const sorted = useMemo(
     () =>
@@ -57,26 +52,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       ),
     [exams],
   );
-
-  useEffect(() => {
-    isHoveringRef.current = isHovering;
-  }, [isHovering]);
-
-  useEffect(() => {
-    const handleMouseMove = () => {
-      setIsMouseActive(true);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      timeoutRef.current = setTimeout(() => {
-        if (!isHoveringRef.current) setIsMouseActive(false);
-      }, 1000);
-    };
-    handleMouseMove();
-    window.addEventListener("mousemove", handleMouseMove);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    };
-  }, []);
 
   useEffect(() => {
     const sel = sorted.find((e) => e.id.toString() === examId);
@@ -131,19 +106,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
   }
 
   return (
-    <motion.div
-      className="flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-transparent"
-      onMouseEnter={() => {
-        setIsHovering(true);
-        if (timeoutRef.current) clearTimeout(timeoutRef.current);
-      }}
-      onMouseLeave={() => {
-        setIsHovering(false);
-      }}
-      initial={{ opacity: 1 }}
-      animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div className="hidden lg:flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-transparent">
       <div className="flex items-center space-x-5">
         <Button
           size="icon"
@@ -274,7 +237,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
         <SettingsDialog />
       </div>
-    </motion.div>
+    </div>
   );
 };
 

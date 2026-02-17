@@ -41,7 +41,7 @@ The backend API is available at: https://github.com/jacobslunga/fast-api-liu-ten
 - **Styling**: Tailwind CSS
 - **UI Components**: Radix UI
 - **Database**: Supabase
-- **PDF Handling**: PDF.js through react-pdf
+- **PDF Handling**: Native browser PDF rendering via iframes
 
 ## Contributing
 

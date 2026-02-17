@@ -109,61 +109,16 @@
     resize: none;
   }
 
-  .react-pdf__Page__canvas {
-    background-color: white !important;
+  .pdf-invert {
+    filter: none;
   }
 
-  .react-pdf__Page {
-    background-color: var(--background) !important;
-    overflow: hidden;
-    margin: 8px 0;
-  }
-
-  .react-pdf__Document {
-    background-color: var(--background) !important;
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
-
-  .pdf-container {
-    scrollbar-width: thin;
-    scrollbar-color: var(--muted-foreground) transparent;
-  }
-
-  .dark .react-pdf__Page__canvas {
+  .dark .pdf-invert {
     filter: invert(0.99) hue-rotate(270deg) brightness(1) contrast(0.85)
       saturate(1);
     filter: invert(1) hue-rotate(180deg);
     mix-blend-mode: screen;
     background-color: transparent !important;
-  }
-
-  .dark .react-pdf__Page,
-  .dark .react-pdf__Document {
-    background-color: oklch(var(--background)) !important;
-  }
-
-  .pdf-container::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: oklch(var(--background));
-  }
-
-  .pdf-container::-webkit-scrollbar-track {
-    background-color: oklch(var(--background));
-  }
-
-  .pdf-container::-webkit-scrollbar-thumb {
-    background-color: oklch(var(--muted-foreground) / 0.3);
-    border-radius: 9999px;
-    border: 2px solid oklch(var(--background));
-    background-clip: content-box;
-    transition: background-color 0.2s ease;
-  }
-
-  .pdf-container::-webkit-scrollbar-thumb:hover {
-    background-color: oklch(var(--muted-foreground) / 0.5);
   }
 }
 

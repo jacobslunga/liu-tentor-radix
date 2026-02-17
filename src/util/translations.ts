@@ -72,10 +72,6 @@ interface ExamTranslations {
 }
 
 interface PDFControlTranslations {
-  zoomIn: string;
-  zoomOut: string;
-  rotateLeft: string;
-  rotateRight: string;
   downloadExam: string;
   downloadFacit: string;
   showExamToolbar: string;
@@ -405,10 +401,6 @@ const translations: Record<Language, Translations> = {
     toggleShowFacit: "Toggla facit visning",
 
     // PDF Controls
-    zoomIn: "Zooma in",
-    zoomOut: "Zooma ut",
-    rotateLeft: "Rotera vänster",
-    rotateRight: "Rotera höger",
     downloadExam: "Ladda ner tenta",
     downloadFacit: "Ladda ner facit",
     showExamToolbar: "Visa tenta verktygsfält",
@@ -739,10 +731,6 @@ const translations: Record<Language, Translations> = {
     toggleShowFacit: "Toggle show solution",
 
     // PDF Controls
-    zoomIn: "Zoom In",
-    zoomOut: "Zoom Out",
-    rotateLeft: "Rotate left",
-    rotateRight: "Rotate right",
     downloadExam: "Download exam",
     downloadFacit: "Download facit",
     showExamToolbar: "Show exam toolbar",

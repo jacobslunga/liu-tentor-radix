@@ -1,15 +1,14 @@
-import { FC, useState, useEffect, useCallback, useRef, useMemo } from "react";
+import { FC, useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useLanguage } from "@/context/LanguageContext";
 import { ExamDetailPayload } from "@/api";
-import { useResizablePanel, useTextSelection, useScrollManager } from "./hooks";
+import { useTextSelection, useScrollManager } from "./hooks";
 import { ChatHeader } from "./components/ChatHeader";
 import { SelectionPopover } from "./components/SelectionPopover";
 import { EmptyState } from "./components/EmptyState";
 import { MessageList } from "./components/MessageList";
 import { ChatInput, ChatInputHandle } from "./components/ChatInput";
-import { ResizeHandle } from "./components/ResizeHandle";
 import { Loader2 } from "lucide-react";
 import { useChatState } from "@/hooks/useChatState";
 
@@ -17,38 +16,31 @@ interface ChatWindowProps {
   examDetail: ExamDetailPayload;
   isOpen: boolean;
   onClose: () => void;
-  variant?: "overlay" | "push";
 }
 
 const STORAGE_KEY = "chat_input_draft";
 const MODEL_STORAGE_KEY = "chat_model_id_preference";
-const SIDE_STORAGE_KEY = "chat_window_side_preference";
 
-const contentVariants: Variants = {
-  hidden: { opacity: 0 },
+const modalVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
-    transition: { duration: 0, ease: "easeOut" },
+    y: 0,
+    transition: { type: "spring", damping: 25, stiffness: 300 },
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.1 },
+    y: 20,
+    transition: { duration: 0.2 },
   },
 };
 
-const ChatWindow: FC<ChatWindowProps> = ({
-  examDetail,
-  isOpen,
-  onClose,
-  variant = "overlay",
-}) => {
+const ChatWindow: FC<ChatWindowProps> = ({ examDetail, isOpen, onClose }) => {
   const { t } = useTranslation();
   const { language } = useLanguage();
 
-  const chatWindowRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
 
-  // Use the new scroll manager
   const {
     messagesEndRef,
     messagesContainerRef,
@@ -57,13 +49,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
     isUserScrollingRef,
   } = useScrollManager({ isOpen });
 
-  const [side, setSide] = useState<"left" | "right">("right");
-  const [isSideLoaded, setIsSideLoaded] = useState(false);
   const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
-
   const { messages, isLoading, sendMessage, cancelGeneration } = useChatState();
-
-  const { width, isResizing, startResizing } = useResizablePanel();
 
   const { selectedText, selectionPosition, clearSelection } = useTextSelection({
     containerRef: messagesContainerRef,
@@ -76,15 +63,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     useState<string>("gemini-2.5-flash");
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [quotedContext, setQuotedContext] = useState("");
-
-  useEffect(() => {
-    const savedSide = localStorage.getItem(SIDE_STORAGE_KEY) as
-      | "left"
-      | "right"
-      | null;
-    if (savedSide) setSide(savedSide);
-    setIsSideLoaded(true);
-  }, []);
 
   useEffect(() => {
     const savedInput = localStorage.getItem(STORAGE_KEY);
@@ -102,18 +80,13 @@ const ChatWindow: FC<ChatWindowProps> = ({
     if (isDraftLoaded) localStorage.setItem(MODEL_STORAGE_KEY, selectedModelId);
   }, [selectedModelId, isDraftLoaded]);
 
-  // Handle auto-scroll on new messages
   const prevMessagesLength = useRef(messages.length);
   useEffect(() => {
-    // Only scroll if we added messages and user wasn't scrolling up
     if (messages.length > prevMessagesLength.current) {
       const lastMessage = messages[messages.length - 1];
       const isUserMessage = lastMessage?.role === "user";
 
-      // If it's a user message, always scroll to bottom
-      // If it's AI message, scroll only if not manually scrolled up (handled by useScrollManager/isUserScrollingRef)
       if (isUserMessage || !isUserScrollingRef.current) {
-        // Small timeout to ensure DOM is updated
         setTimeout(() => {
           scrollToBottom("smooth");
         }, 100);
@@ -149,7 +122,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     setQuotedContext("");
     localStorage.removeItem(STORAGE_KEY);
 
-    // Reset user scrolling state so we stick to bottom
     isUserScrollingRef.current = false;
     requestAnimationFrame(() => scrollToBottom("smooth"));
   }, [
@@ -180,41 +152,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
   }, [isOpen, handleClose]);
 
   const hasSolutions = examDetail.solution !== null;
-  const isOverlay = variant === "overlay";
-
-  const parentVariants = useMemo((): Variants => {
-    const enterSettings = isResizing
-      ? { duration: 0 }
-      : {
-          type: "spring" as const,
-          bounce: 0,
-          duration: 0.2,
-          delayChildren: 0.1,
-        };
-
-    const exitSettings = { type: "spring" as const, bounce: 0, duration: 0.2 };
-
-    if (isOverlay) {
-      const xHidden = side === "right" ? "100%" : "-100%";
-      return {
-        hidden: { x: xHidden },
-        visible: { x: "0%", transition: enterSettings },
-        exit: { x: xHidden, transition: exitSettings },
-      };
-    } else {
-      return {
-        hidden: { width: 0, opacity: 0 },
-        visible: { width: `${width}%`, opacity: 1, transition: enterSettings },
-        exit: { width: 0, opacity: 0, transition: exitSettings },
-      };
-    }
-  }, [isOverlay, width, isResizing, side]);
-
-  const positionClasses = isOverlay
-    ? side === "right"
-      ? "fixed right-0 top-0 h-full shadow-xl"
-      : "fixed left-0 top-0 h-full shadow-xl"
-    : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
 
   const handleAnimationComplete = (definition: string) => {
     if (definition === "visible") {
@@ -222,108 +159,82 @@ const ChatWindow: FC<ChatWindowProps> = ({
     }
   };
 
-  if (!isSideLoaded) return null;
-
   return (
-    <AnimatePresence mode="wait">
+    <AnimatePresence>
       {isOpen && (
         <motion.div
-          ref={chatWindowRef}
-          key={`chat-window-${side}`}
-          variants={parentVariants}
+          variants={modalVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
           onAnimationComplete={handleAnimationComplete}
-          className={`bg-transparent flex flex-col z-50 ${positionClasses}`}
-          style={{
-            width: isOverlay ? `${width}%` : undefined,
-            willChange: isResizing ? "width" : "auto",
-            contain: isResizing ? "layout style" : "none",
-          }}
+          className="fixed inset-0 z-50 bg-background flex flex-col overflow-hidden"
         >
-          <ResizeHandle
-            onStartResize={startResizing}
-            isResizing={isResizing}
-            side={side}
-          />
+          <div className="absolute top-0 left-0 right-0 z-40 bg-transparent">
+            <ChatHeader
+              language={language}
+              hasSolution={hasSolutions}
+              onClose={handleClose}
+            />
+          </div>
 
-          <div
-            className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? "" : "border-l"}`}
-          >
-            <motion.div variants={contentVariants}>
-              <ChatHeader
-                language={language}
-                hasSolution={hasSolutions}
-                onClose={handleClose}
-                side={side}
-              />
-            </motion.div>
+          {messages.length === 0 && <EmptyState language={language} />}
 
-            {messages.length === 0 && <EmptyState language={language} />}
-
-            <div className="flex-1 relative min-h-0 flex flex-col">
-              <motion.div
-                variants={contentVariants}
-                ref={messagesContainerRef}
-                className="absolute inset-0 overflow-y-auto"
-              >
-                <div className="p-4 pb-48 space-y-4 relative min-h-full">
-                  {shouldRenderMessages ? (
-                    <>
-                      <MessageList
-                        messages={messages}
-                        isLoading={isLoading}
-                        language={language}
-                        messagesEndRef={messagesEndRef}
-                        messagesContainerRef={messagesContainerRef}
-                      />
-                    </>
-                  ) : (
-                    <div className="h-full w-full flex items-center justify-center">
-                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-
-              <SelectionPopover
-                show={!!selectedText}
-                position={selectionPosition}
-                language={language}
-                onAskAbout={handleAskAboutSelection}
-              />
-
-              <motion.div
-                variants={contentVariants}
-                className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8 z-10"
-              >
-                {isDraftLoaded && (
-                  <ChatInput
-                    ref={chatInputRef}
-                    language={language}
-                    input={input}
+          <div className="flex-1 relative min-h-0">
+            <div
+              ref={messagesContainerRef}
+              className="absolute inset-0 overflow-y-auto"
+            >
+              <div className="p-4 pt-16 pb-48 space-y-4 relative min-h-full">
+                {shouldRenderMessages ? (
+                  <MessageList
+                    messages={messages}
                     isLoading={isLoading}
-                    giveDirectAnswer={giveDirectAnswer}
-                    showScrollButton={showScrollButton && messages.length > 0}
-                    placeholder={t("aiChatPlaceholder")}
-                    sendButtonLabel={t("aiChatSend")}
-                    poweredByText={t("aiChatPoweredBy")}
-                    quotedContext={quotedContext}
-                    selectedModelId={selectedModelId}
-                    onModelChange={setSelectedModelId}
-                    onInputChange={setInput}
-                    onSend={handleSend}
-                    onCancel={handleCancel}
-                    onScrollToBottom={() => {
-                      isUserScrollingRef.current = false;
-                      scrollToBottom("smooth");
-                    }}
-                    onToggleAnswerMode={setGiveDirectAnswer}
-                    onClearQuotedContext={handleClearQuotedContext}
+                    language={language}
+                    messagesEndRef={messagesEndRef}
+                    messagesContainerRef={messagesContainerRef}
                   />
+                ) : (
+                  <div className="h-full w-full flex items-center justify-center py-20">
+                    <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                  </div>
                 )}
-              </motion.div>
+              </div>
+            </div>
+
+            <SelectionPopover
+              show={!!selectedText}
+              position={selectionPosition}
+              language={language}
+              onAskAbout={handleAskAboutSelection}
+            />
+
+            <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-background via-background to-transparent pt-8 z-10 px-4 pb-4">
+              {isDraftLoaded && (
+                <ChatInput
+                  ref={chatInputRef}
+                  language={language}
+                  input={input}
+                  isLoading={isLoading}
+                  giveDirectAnswer={giveDirectAnswer}
+                  showScrollButton={showScrollButton && messages.length > 0}
+                  placeholder={t("aiChatPlaceholder")}
+                  sendButtonLabel={t("aiChatSend")}
+                  poweredByText={t("aiChatPoweredBy")}
+                  quotedContext={quotedContext}
+                  selectedModelId={selectedModelId}
+                  onModelChange={setSelectedModelId}
+                  onInputChange={setInput}
+                  onSend={handleSend}
+                  onCancel={handleCancel}
+                  onScrollToBottom={() => {
+                    isUserScrollingRef.current = false;
+                    scrollToBottom("smooth");
+                  }}
+                  onToggleAnswerMode={setGiveDirectAnswer}
+                  onClearQuotedContext={handleClearQuotedContext}
+                />
+              )}
             </div>
           </div>
         </motion.div>
