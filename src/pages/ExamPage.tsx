@@ -1,7 +1,6 @@
-import { FC, useEffect, useCallback } from "react";
+import { FC } from "react";
 
 import { Button } from "@/components/ui/button";
-import ChatWindow from "@/components/AI/chat/ChatWindow";
 import ExamHeader from "@/components/ExamHeader";
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
@@ -13,41 +12,14 @@ import { useCourseExams, useExamDetail } from "@/api";
 import useLayoutMode from "@/stores/LayoutModeStore";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
-import { useHotkeys } from "react-hotkeys-hook";
-import { useChatWindow } from "@/context/ChatWindowContext";
-import { ChatProvider } from "@/context/ChatContext";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
-  const { showChatWindow, setShowChatWindow } = useChatWindow();
 
   const { courseCode = "", examId = "" } = useParams<{
     courseCode: string;
     examId: string;
   }>();
-
-  const handleCloseChat = () => {
-    setShowChatWindow(false);
-  };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    setShowChatWindow(false);
-  }, [examId, setShowChatWindow]);
-
-  const handleToggleChat = useCallback(() => {
-    setShowChatWindow((prev) => !prev);
-  }, [setShowChatWindow]);
-
-  useHotkeys(
-    "c",
-    (e) => {
-      e.preventDefault();
-      handleToggleChat();
-    },
-    { preventDefault: true },
-    [handleToggleChat],
-  );
 
   const {
     courseData,
@@ -63,24 +35,22 @@ const ExamPage: FC = () => {
 
   const pageTitle =
     examDetail && courseData
-      ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${
-          courseData.courseName
-        }`
+      ? `${courseCode} - Tenta ${formatExamDate(examDetail.exam.exam_date)} | ${courseData.courseName
+      }`
       : `${courseCode} - Tenta ${examId}`;
 
   const pageDescription =
     examDetail && courseData
       ? `Se tenta för ${courseCode} från ${formatExamDate(
-          examDetail.exam.exam_date,
-        )} - ${courseData.courseName}`
+        examDetail.exam.exam_date,
+      )} - ${courseData.courseName}`
       : `Tenta för ${courseCode}`;
 
   useMetadata({
     title: pageTitle,
     description: pageDescription,
-    keywords: `${courseCode}, tenta, Linköpings Universitet, kurs, LiU, liu, Liu ${
-      courseData?.courseName || ""
-    }`,
+    keywords: `${courseCode}, tenta, Linköpings Universitet, kurs, LiU, liu, Liu ${courseData?.courseName || ""
+      }`,
     ogTitle: pageTitle,
     ogDescription: pageDescription,
     ogType: "article",
@@ -101,34 +71,24 @@ const ExamPage: FC = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
-      <ChatProvider examDetail={examDetail}>
-        <ExamHeader
-          exams={courseData.exams}
-          setIsChatOpen={setShowChatWindow}
-          onToggleChat={handleToggleChat}
-        />
+      <ExamHeader
+        exams={courseData.exams}
+      />
 
-        <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
-          <div className="flex-1 flex flex-col min-w-0 h-full">
-            <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
-              <div className="flex-1 h-full relative">
-                {layoutMode === "exam-only" ? (
-                  <ExamOnlyView examDetail={examDetail} />
-                ) : (
-                  <ExamWithFacitView examDetail={examDetail} />
-                )}
-                <LayoutSwitcher />
-              </div>
+      <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
+        <div className="flex-1 flex flex-col min-w-0 h-full">
+          <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
+            <div className="flex-1 h-full relative">
+              {layoutMode === "exam-only" ? (
+                <ExamOnlyView examDetail={examDetail} />
+              ) : (
+                <ExamWithFacitView examDetail={examDetail} />
+              )}
+              <LayoutSwitcher />
             </div>
           </div>
-
-          <ChatWindow
-            examDetail={examDetail}
-            isOpen={showChatWindow}
-            onClose={handleCloseChat}
-          />
         </div>
-      </ChatProvider>
+      </div>
 
       <MobilePdfView examDetail={examDetail} />
     </div>

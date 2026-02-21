@@ -32,10 +32,6 @@ export default function InfoSidebar() {
       label: language === "sv" ? "Innehåll" : "Content",
       links: [
         {
-          to: "/updates",
-          label: language === "sv" ? "Uppdateringar" : "Updates",
-        },
-        {
           to: "/faq",
           label: language === "sv" ? "Vanliga frågor" : "FAQ",
         },

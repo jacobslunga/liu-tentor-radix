@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import {
   Loader2,
   Upload as UploadIcon,
-  BarChart as ChartIcon,
   Filter,
   CheckCircle2,
   TrendingUp,
@@ -89,10 +88,8 @@ const ExamSearchPage: FC = () => {
       }
     };
 
-    // Initial update
     updatePosition();
 
-    // Debounced resize handler
     let timeoutId: NodeJS.Timeout;
     const handleResize = () => {
       clearTimeout(timeoutId);
@@ -102,7 +99,6 @@ const ExamSearchPage: FC = () => {
     window.addEventListener("resize", handleResize);
 
     const observer = new ResizeObserver(() => {
-      // Use requestAnimationFrame to avoid "ResizeObserver loop limit exceeded"
       requestAnimationFrame(updatePosition);
     });
 
@@ -266,14 +262,6 @@ const ExamSearchPage: FC = () => {
                         {t("uploadMore")}
                       </span>
                       <span className="sm:hidden">Ladda upp</span>
-                    </Button>
-                  </Link>
-                  <Link to={`/search/${courseCode}/stats`}>
-                    <Button variant="secondary" size="sm">
-                      <ChartIcon className="h-4 w-4" />
-                      <span className="hidden sm:inline">
-                        {language === "sv" ? "Statistik" : "Statistics"}
-                      </span>
                     </Button>
                   </Link>
                 </div>

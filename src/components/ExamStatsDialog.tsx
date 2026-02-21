@@ -57,12 +57,12 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
   const passRate =
     total > 0
       ? (((statistics.G || 0) +
-          (statistics["VG"] || 0) +
-          (statistics["3"] || 0) +
-          (statistics["4"] || 0) +
-          (statistics["5"] || 0)) /
-          total) *
-        100
+        (statistics["VG"] || 0) +
+        (statistics["3"] || 0) +
+        (statistics["4"] || 0) +
+        (statistics["5"] || 0)) /
+        total) *
+      100
       : 0;
 
   const chartData = ["U", "G", "VG", "3", "4", "5"]
@@ -134,10 +134,6 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
                     itemStyle={{
                       color: "var(--foreground)",
                     }}
-                    formatter={(value: number, name: string) => [
-                      `${value} studenter`,
-                      `Betyg ${name}`,
-                    ]}
                   />
                   <Bar
                     dataKey="count"
