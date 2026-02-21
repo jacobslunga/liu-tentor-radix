@@ -1,11 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { BookOpen, X } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import ExamPdf from "@/components/PDF/ExamPdf";
 import SolutionPdf from "@/components/PDF/SolutionPdf";
 import { motion, AnimatePresence } from "framer-motion";
 import { useHotkeys } from "react-hotkeys-hook";
-import { useChatWindow } from "@/context/ChatWindowContext";
 import type { ExamDetailPayload } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 
@@ -16,17 +15,10 @@ interface Props {
 const ExamOnlyView = ({ examDetail }: Props) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
-  const { showChatWindow } = useChatWindow();
   const [isFacitVisible, setIsFacitVisible] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
   const hasFacit = examDetail.solution !== null;
-
-  useEffect(() => {
-    if (showChatWindow) {
-      setIsFacitVisible(false);
-    }
-  }, [showChatWindow, setIsFacitVisible]);
 
   useHotkeys("e", () => {
     if (hasFacit) setIsFacitVisible((prev) => !prev);
@@ -70,7 +62,7 @@ const ExamOnlyView = ({ examDetail }: Props) => {
         )}
       </AnimatePresence>
 
-      {hasFacit && !isFacitVisible && !showChatWindow && (
+      {hasFacit && !isFacitVisible && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
           <button
             onClick={() => setIsFacitVisible(true)}

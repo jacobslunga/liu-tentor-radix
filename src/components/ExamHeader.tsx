@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   CaretRightIcon,
-  ChatDotsIcon,
   CheckIcon,
 } from "@phosphor-icons/react";
 import {
@@ -22,16 +21,12 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { LockInMenu } from "./lock-in-mode/LockInMenu";
 import { LockInModeManager } from "@/lib/lockInMode";
-import { useChatState } from "@/hooks/useChatState";
-import { Loader2 } from "lucide-react";
 
 interface Props {
   exams: Exam[];
-  setIsChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  onToggleChat?: () => void;
 }
 
-const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
+const ExamHeader: FC<Props> = ({ exams }) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const { courseCode = "", examId = "" } = useParams<{
@@ -96,15 +91,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
     navigate(`/lock-in-mode/${session.examId}`);
   };
 
-  let isLoading = false;
-  try {
-    const chatState = useChatState();
-    isLoading = chatState.isLoading;
-  } catch (e) {
-    console.error("Failed to get chat state:", e);
-    isLoading = false;
-  }
-
   return (
     <div className="hidden lg:flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-transparent">
       <div className="flex items-center space-x-5">
@@ -129,12 +115,12 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                     <span className="font-semibold">
                       {selectedExam.exam_name.length > 20
                         ? `${selectedExam.exam_name
-                            .slice(0, 20)
-                            .replace(selectedExam.exam_date, "")}...`
+                          .slice(0, 20)
+                          .replace(selectedExam.exam_date, "")}...`
                         : selectedExam.exam_name.replace(
-                            selectedExam.exam_date,
-                            "",
-                          )}
+                          selectedExam.exam_date,
+                          "",
+                        )}
                     </span>
                     <span className="font-normal">
                       {selectedExam.exam_date}
@@ -142,9 +128,8 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                   </span>
                   <CaretRightIcon
                     weight="bold"
-                    className={`w-4 h-4 text-muted-foreground group-hover:rotate-90 ${
-                      isDropdownOpen ? "rotate-90" : "rotate-0"
-                    } transition-transform duration-200`}
+                    className={`w-4 h-4 text-muted-foreground group-hover:rotate-90 ${isDropdownOpen ? "rotate-90" : "rotate-0"
+                      } transition-transform duration-200`}
                   />
                 </Button>
               </DropdownMenuTrigger>
@@ -166,11 +151,10 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                         key={e.id}
                         onClick={() => changeExam(e)}
                         data-current={sel ? "true" : undefined}
-                        className={`flex items-center mt-2 justify-between px-3 py-3 cursor-pointer text-sm ${
-                          sel
-                            ? "bg-primary/10 text-primary"
-                            : "hover:bg-muted/50"
-                        }`}
+                        className={`flex items-center mt-2 justify-between px-3 py-3 cursor-pointer text-sm ${sel
+                          ? "bg-primary/10 text-primary"
+                          : "hover:bg-muted/50"
+                          }`}
                       >
                         <div className="flex-1 min-w-0 pr-3">
                           <div className="font-medium truncate">
@@ -214,25 +198,6 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Button
-          onClick={onToggleChat || (() => setIsChatOpen(true))}
-          variant="outline"
-          size="sm"
-          className="hidden lg:flex gap-2 rounded-full transition-all duration-200"
-        >
-          {isLoading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>{language === "sv" ? "Tänker..." : "Thinking..."}</span>
-            </>
-          ) : (
-            <>
-              <ChatDotsIcon weight="bold" />
-              {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
-            </>
-          )}
-        </Button>
-
         <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />
 
         <SettingsDialog />

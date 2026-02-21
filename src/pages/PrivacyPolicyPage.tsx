@@ -104,16 +104,6 @@ const PrivacyPolicy: FC = () => {
         />
 
         <Section
-          title={t("privacyPolicySection7Title")}
-          content={t("privacyPolicySection7Content")}
-          items={[
-            t("privacyPolicySection7Item1"),
-            t("privacyPolicySection7Item2"),
-            t("privacyPolicySection7Item3"),
-          ]}
-        />
-
-        <Section
           title={t("privacyPolicySection8Title")}
           content={t("privacyPolicySection8Content")}
         />
@@ -132,11 +122,11 @@ const PrivacyPolicy: FC = () => {
           }
           items={[
             t("privacyPolicyGDPRItem1") ||
-              "Vi publicerar endast tentor som är offentligt tillgängliga.",
+            "Vi publicerar endast tentor som är offentligt tillgängliga.",
             t("privacyPolicyGDPRItem2") ||
-              "Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.",
+            "Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.",
             t("privacyPolicyGDPRItem3") ||
-              "Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.",
+            "Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.",
           ]}
         />
       </div>{" "}

@@ -8,11 +8,9 @@ import OmOss from "@/pages/AboutUs";
 import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
 import { RouteObject } from "react-router-dom";
 import SearchLayout from "@/layouts/SearchLayout";
-import StatsSearchPage from "@/pages/StatsSearchPage";
 import TentaPage from "@/pages/ExamPage";
 import ExamSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
-import UpdatesPage from "@/pages/UpdatesPage";
 import LockInModePage from "@/pages/LockInModePage";
 
 const routes: RouteObject[] = [
@@ -30,14 +28,12 @@ const routes: RouteObject[] = [
         element: <SearchLayout />,
         children: [
           { path: ":courseCode", element: <ExamSearchPage /> },
-          { path: ":courseCode/stats", element: <StatsSearchPage /> },
           { path: ":courseCode/:examId", element: <TentaPage /> },
         ],
       },
       {
         element: <InfoPageLayout />,
         children: [
-          { path: "updates", element: <UpdatesPage /> },
           { path: "feedback", element: <FeedbackPage /> },
           { path: "privacy-policy", element: <PrivacyPolicyPage /> },
           { path: "upload-exams", element: <UploadExamPage /> },

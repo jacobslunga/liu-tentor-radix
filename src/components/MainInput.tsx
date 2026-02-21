@@ -16,13 +16,7 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { kurskodArray } from "@/data/kurskoder";
 
 import { Button } from "./ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchIcon } from "lucide-react";
 
 interface MainInputProps {
   focusInput: boolean;
@@ -44,7 +38,6 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [searchMethod, setSearchMethod] = useState("tentor");
 
   const inputRef = useRef<HTMLInputElement>(null);
   const listParentRef = useRef<HTMLDivElement>(null);
@@ -88,11 +81,9 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
     overscan: 5,
   });
 
-  // Save selected course to recent activity cookie
   const saveRecentActivity = (courseCode: string) => {
     const COOKIE_NAME = "recentActivities_v3";
     const COOKIE_VERSION = "1.2";
-    // Remove old cookie if version changed
     const storedVersion = Cookies.get("cookieVersion");
     if (storedVersion !== COOKIE_VERSION) {
       Cookies.remove(COOKIE_NAME);
@@ -113,19 +104,13 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
         activities = [];
       }
     }
-    // Remove any previous entry for this course
     activities = activities.filter((a) => a.courseCode !== courseCode);
-    // Add new activity to the front
     activities.unshift({
       courseCode,
-      courseName: courseCode, // No name available here
-      path:
-        searchMethod === "stats"
-          ? `/search/${courseCode}/stats`
-          : `/search/${courseCode}`,
+      courseName: courseCode,
+      path: `/search/${courseCode}`,
       timestamp: Date.now(),
     });
-    // Limit to 10 recent
     activities = activities.slice(0, 10);
     Cookies.set(COOKIE_NAME, encodeURIComponent(JSON.stringify(activities)), {
       expires: 365,
@@ -138,11 +123,7 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
     saveRecentActivity(searchCode);
     setCourseCode("");
     setShowSuggestions(false);
-    navigate(
-      searchMethod === "stats"
-        ? `/search/${searchCode}/stats`
-        : `/search/${searchCode}`
-    );
+    navigate(`/search/${searchCode}`);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -223,30 +204,8 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
   return (
     <div className="relative w-full">
       <div className="w-full relative flex flex-row items-center justify-center px-2">
-        {/* Search Method Selector */}
-        <Select
-          defaultValue="tentor"
-          onOpenChange={(open) => {
-            if (!open) setTimeout(() => inputRef.current?.focus(), 0);
-          }}
-          onValueChange={(value) => {
-            setSearchMethod(value);
-            setFocusInput(true);
-            setTimeout(() => inputRef.current?.focus(), 0);
-          }}
-        >
-          <SelectTrigger className="shrink-0 w-[120px] transition-colors duration-200 ring-0 focus-visible:ring-0 shadow-none rounded-full text-foreground/60 hover:text-foreground">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="tentor">{t("exams")}</SelectItem>
-            <SelectItem value="stats">{t("statistics")}</SelectItem>
-          </SelectContent>
-        </Select>
+        <SearchIcon className="ml-2" />
 
-        <div className="shrink-0 h-[25px] w-px bg-foreground/10 ml-4" />
-
-        {/* Input Field */}
         <input
           ref={inputRef}
           value={courseCode.toUpperCase()}
@@ -273,7 +232,6 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
         </Button>
       </div>
 
-      {/* Suggestions Dropdown */}
       {showSuggestions && suggestions.length > 0 && (
         <div className="absolute w-full left-0 mt-2 bg-background rounded-2xl border shadow-md z-40 max-h-72 overflow-hidden text-sm will-change-transform">
           {isLoading && (
@@ -303,11 +261,10 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
                 return (
                   <div
                     key={suggestion}
-                    className={`flex items-center px-4 py-2 cursor-pointer transition-colors ${
-                      isSelected
-                        ? "bg-muted text-foreground"
-                        : "hover:bg-muted/50"
-                    }`}
+                    className={`flex items-center px-4 py-2 cursor-pointer transition-colors ${isSelected
+                      ? "bg-muted text-foreground"
+                      : "hover:bg-muted/50"
+                      }`}
                     style={{
                       position: "absolute",
                       top: 0,
@@ -317,7 +274,6 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
                       transform: `translateY(${virtualRow.start}px)`,
                     }}
                     onMouseDown={(e) => {
-                      // Prevent input blur before click processes
                       e.preventDefault();
                       handleSelectCourse(suggestion);
                     }}

@@ -93,10 +93,9 @@ const SettingsDialog: FC = () => {
     key: string;
     category: string;
   }> = [
-    { action: "moveFacitRight", key: "→", category: "navigation" },
-    { action: "moveFacitLeft", key: "←", category: "navigation" },
-    { action: "toggleAIChat", key: "C", category: "navigation" },
-  ];
+      { action: "moveFacitRight", key: "→", category: "navigation" },
+      { action: "moveFacitLeft", key: "←", category: "navigation" },
+    ];
 
   const categoryTranslations = {
     search: { en: "Search", sv: "Sök" },
@@ -196,7 +195,7 @@ const SettingsDialog: FC = () => {
                   <h4 className="text-sm font-medium text-muted-foreground first-letter:uppercase">
                     {
                       categoryTranslations[
-                        category as keyof typeof categoryTranslations
+                      category as keyof typeof categoryTranslations
                       ][language as "en" | "sv"]
                     }
                   </h4>
