@@ -1,4 +1,4 @@
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 
 interface PdfRendererProps {
   pdfUrl: string | null;
@@ -6,6 +6,10 @@ interface PdfRendererProps {
 
 const PdfRenderer: FC<PdfRendererProps> = ({ pdfUrl }) => {
   if (!pdfUrl) return null;
+
+  const isFirefox = useMemo(() => {
+    return typeof window !== "undefined" && navigator.userAgent.toLowerCase().includes("firefox");
+  }, []);
 
   /**
    * Parameters breakdown:
@@ -19,7 +23,10 @@ const PdfRenderer: FC<PdfRendererProps> = ({ pdfUrl }) => {
     <div className="w-full h-full bg-white dark:bg-background overflow-hidden relative">
       <iframe
         src={`${pdfUrl}${pdfParams}`}
-        className="w-full h-full border-none block pdf-invert"
+        className={`
+          border-none block pdf-invert w-full
+          ${isFirefox ? "h-[calc(100%+56px)] -mt-[56px]" : "h-full"}
+        `}
         title="PDF Document"
         style={{ colorScheme: "light" }}
       />
