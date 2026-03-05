@@ -37,7 +37,7 @@ export function DataTable({ data, onSortChange }: Props) {
 
   return (
     <div className="w-full lg:w-auto">
-      <div className="border border-border/50 rounded-xl bg-card/50 overflow-hidden backdrop-blur-sm">
+      <div className="border border-border/50 rounded-md bg-card/50 overflow-hidden backdrop-blur-sm">
         <Table className="w-full">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

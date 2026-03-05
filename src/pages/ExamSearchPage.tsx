@@ -1,13 +1,6 @@
 import { FC, useMemo, useState, useRef, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  Loader2,
-  Upload as UploadIcon,
-  Filter,
-  CheckCircle2,
-  TrendingUp,
-  FileText,
-} from "lucide-react";
+import { Loader2, Upload as UploadIcon, Filter } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -18,7 +11,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
-import SponsorBanner from "@/components/sponsors/SponsorBanner";
 import { ExamUploader } from "@/components/upload/ExamUploader";
 import { getClosestCourseCodes } from "@/util/helperFunctions";
 import { kurskodArray } from "@/data/kurskoder";
@@ -26,7 +18,6 @@ import { useCourseExams } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
-import { sponsors } from "@/components/sponsors/sponsorsData";
 import { useLayout } from "@/context/LayoutContext";
 
 const LoadingSpinner = () => {
@@ -178,53 +169,25 @@ const ExamSearchPage: FC = () => {
 
   return (
     <div className="bg-background min-h-screen w-full">
-      <div className="container mx-auto px-4 md:px-8 py-8 max-w-[1400px]">
+      <div className="container mx-auto px-4 md:px-8 py-8 max-w-350">
         {isLoading && <LoadingSpinner />}
         {showNotFound && (
           <NotFoundState courseCode={courseCode || ""} suggestions={closest} />
         )}
 
         {!isLoading && !isError && sortedExams.length > 0 && (
-          <div className="grid grid-cols-1 lg:grid-cols-[max-content_260px] gap-8 items-start lg:justify-center">
+          <div className="flex flex-col lg:flex-row gap-10 items-center justify-center">
             <div
               ref={contentRef}
               className="flex flex-col gap-6 w-full lg:w-auto min-w-0"
             >
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-                  <span className="font-semibold text-foreground/80">
-                    {courseCode}
-                  </span>
-                  <span>/</span>
-                  <span>Tentor</span>
-                </div>
+              <div className="flex flex-col">
+                <span className="font-semibold text-xs">{courseCode}</span>
 
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                  <h1 className="text-2xl sm:text-3xl font-semibold text-foreground wrap-break-word max-w-3xl leading-tight text-balance">
+                  <h1 className="text-2xl sm:text-3xl font-medium text-foreground wrap-break-word max-w-3xl leading-tight text-balance">
                     {courseName}
                   </h1>
-                </div>
-
-                <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm mt-1">
-                  <Badge variant="secondary">
-                    <TrendingUp className="w-4 h-4" />
-                    <span className="font-semibold">{stats.avgPassRate}%</span>
-                    <span className="opacity-80">{t("averagePassRate")}</span>
-                  </Badge>
-
-                  <Badge variant="secondary">
-                    <CheckCircle2 className="w-4 h-4" />
-                    <span className="font-semibold">{stats.withSolutions}</span>
-                    <span className="opacity-80">{t("withSolution")}</span>
-                  </Badge>
-
-                  <Badge variant="secondary">
-                    <FileText className="w-4 h-4" />
-                    <span className="font-semibold">{stats.total}</span>
-                    <span className="opacity-80">
-                      {t("exams").toLowerCase()}
-                    </span>
-                  </Badge>
                 </div>
               </div>
 
@@ -235,7 +198,7 @@ const ExamSearchPage: FC = () => {
                       setSelectedExamType(v === "all" ? null : v)
                     }
                   >
-                    <SelectTrigger className="h-8 w-[140px] bg-background rounded-full text-xs">
+                    <SelectTrigger className="h-8 w-35 bg-background text-xs">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Filter className="h-3 w-3" />
                         <SelectValue
@@ -273,24 +236,6 @@ const ExamSearchPage: FC = () => {
                   setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
                 }
               />
-            </div>
-
-            <div className="hidden lg:flex flex-col gap-4 sticky top-24 w-[260px]">
-              <div className="flex items-center justify-between text-xs font-medium text-muted-foreground/60">
-                <span>Sponsorer</span>
-              </div>
-              <div className="flex flex-col gap-3">
-                {sponsors.map((sponsor) => (
-                  <SponsorBanner
-                    key={sponsor.id}
-                    sponsor={sponsor}
-                    title={sponsor.title}
-                    subtitle={sponsor.subtitle}
-                    body={sponsor.body}
-                    courseCode={courseCode || ""}
-                  />
-                ))}
-              </div>
             </div>
           </div>
         )}

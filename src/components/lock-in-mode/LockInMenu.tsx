@@ -79,11 +79,10 @@ export const LockInMenu: React.FC<LockInMenuProps> = ({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
-            variant="outline" // Changed to outline
+            variant="outline"
             size="sm"
             disabled={disabled}
-            // Added rounded-full and specific styling to look like a "pill"
-            className="rounded-full flex items-center gap-2 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-900/20"
+            className="flex items-center gap-2 border-red-200 text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-300 dark:border-red-900/50 dark:text-red-400 dark:hover:bg-red-900/20"
           >
             <Lock className="w-3.5 h-3.5" />
             {t.trigger}

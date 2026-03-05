@@ -20,6 +20,7 @@ import { LockInModeManager } from "@/lib/lockInMode";
 import { useExamDetail } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { useMetadata } from "@/hooks/useMetadata";
+import { PlayIcon } from "@phosphor-icons/react";
 
 const LockInModePage: React.FC = () => {
   const { examId } = useParams<{ examId: string }>();
@@ -192,8 +193,7 @@ const LockInModePage: React.FC = () => {
       {/* --- Top Control Bar --- */}
       <div className="absolute top-0 left-0 right-0 z-40 px-4 py-2 flex items-center justify-center pointer-events-none">
         <div className="bg-background border shadow-md rounded-full px-4 py-2 flex items-center gap-6 pointer-events-auto">
-          {/* Center: Timer */}
-          <div className="flex items-center gap-3 min-w-[120px] justify-center">
+          <div className="flex items-center gap-3 min-w-30 justify-center">
             <Timer
               className={`w-5 h-5 ${timeRemaining < 300000 ? "text-red-500 animate-pulse" : "text-primary"}`}
             />
@@ -207,7 +207,7 @@ const LockInModePage: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 rounded-full"
+              className="h-8 w-8"
               onClick={toggleFullscreen}
             >
               {isFullscreen ? (
@@ -219,7 +219,7 @@ const LockInModePage: React.FC = () => {
             <Button
               variant="ghost"
               size="icon"
-              className={`h-8 w-8 rounded-full ${isPaused ? "text-yellow-500 bg-yellow-500/10" : ""}`}
+              className={`h-8 w-8 ${isPaused ? "text-yellow-500 bg-yellow-500/10" : ""}`}
               onClick={handlePauseResume}
             >
               {isPaused ? (
@@ -231,7 +231,7 @@ const LockInModePage: React.FC = () => {
             <Button
               variant="destructive"
               size="sm"
-              className="h-8 rounded-full px-3 ml-2"
+              className="h-8 px-3 ml-2"
               onClick={() => setShowFinishDialog(true)}
             >
               {t.confirm}
@@ -273,9 +273,9 @@ const LockInModePage: React.FC = () => {
             <Button
               onClick={handlePauseResume}
               size="lg"
-              className="rounded-full px-8 h-12 text-lg gap-2 mt-4"
+              className="px-8 h-12 text-lg gap-2 mt-4"
             >
-              <Play className="w-5 h-5 fill-current" />
+              <PlayIcon className="w-5 h-5" weight="fill" />
               {t.resume}
             </Button>
           </motion.div>
