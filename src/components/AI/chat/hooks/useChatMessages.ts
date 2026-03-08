@@ -1,6 +1,6 @@
-import { useState, useRef, useCallback, useEffect } from "react";
-import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from "../constants";
-import { Message } from "../types";
+import { useState, useRef, useCallback, useEffect } from 'react';
+import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from '../constants';
+import { Message } from '../types';
 
 interface UseChatMessagesProps {
   examId: string | number;
@@ -489,17 +489,17 @@ export const useChatMessages = ({
 
     setMessages((prev) => {
       const last = prev[prev.length - 1];
-      if (last?.role === "assistant") {
+      if (last?.role === 'assistant') {
         if (!last.content.trim()) {
           const userMsg = prev[prev.length - 2];
-          if (userMsg?.role === "user") {
+          if (userMsg?.role === 'user') {
             cancelledUserMessage = userMsg.content;
           }
           if (prev.length === 2) {
             const updated = [...prev];
             updated[updated.length - 1] = {
-              role: "assistant",
-              content: "> *Avbruten av användaren*",
+              role: 'assistant',
+              content: '> *Avbruten av användaren*',
             };
             return updated;
           }
@@ -507,8 +507,8 @@ export const useChatMessages = ({
         } else {
           const updated = [...prev];
           updated[updated.length - 1] = {
-            role: "assistant",
-            content: last.content.trim() + "\n\n> *Avbruten av användaren*",
+            role: 'assistant',
+            content: last.content.trim() + '\n\n> *Avbruten av användaren*',
           };
           return updated;
         }
@@ -528,12 +528,12 @@ export const useChatMessages = ({
     ) => {
       if (!content.trim() || isLoadingRef.current) return;
 
-      const userMessage: Message = { role: "user", content };
+      const userMessage: Message = { role: 'user', content };
 
       const optimistic: Message[] = [
         ...messagesRef.current,
         userMessage,
-        { role: "assistant", content: "" } as Message,
+        { role: 'assistant', content: '' } as Message,
       ];
 
       setMessages(optimistic);
@@ -548,11 +548,11 @@ export const useChatMessages = ({
         const recentMessages = optimistic.slice(0, -1).slice(-10);
 
         const response = await fetch(`${CHAT_API_URL}/${examId}`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            "x-anonymous-user-id":
-              localStorage.getItem("liutentor_anonymous_id") || "unknown",
+            'Content-Type': 'application/json',
+            'x-anonymous-user-id':
+              localStorage.getItem('liutentor_anonymous_id') || 'unknown',
           },
           body: JSON.stringify({
             messages: recentMessages,
@@ -570,8 +570,8 @@ export const useChatMessages = ({
         const reader = response.body?.getReader();
         if (!reader) throw new Error();
 
-        const decoder = new TextDecoder("utf-8");
-        let text = "";
+        const decoder = new TextDecoder('utf-8');
+        let text = '';
         let lastUpdate = 0;
 
         while (true) {
@@ -585,7 +585,7 @@ export const useChatMessages = ({
             lastUpdate = now;
             const updated = [...messagesRef.current];
             updated[updated.length - 1] = {
-              role: "assistant",
+              role: 'assistant',
               content: text,
             };
             setMessages(updated);
@@ -595,20 +595,20 @@ export const useChatMessages = ({
 
         const final = [...messagesRef.current];
         final[final.length - 1] = {
-          role: "assistant",
-          content: text.trim() || "Jag kunde inte generera ett svar.",
+          role: 'assistant',
+          content: text.trim() || 'Jag kunde inte generera ett svar.',
         };
 
         setMessages(final);
         messagesRef.current = final;
       } catch (error) {
-        if (error instanceof Error && error.name === "AbortError") {
+        if (error instanceof Error && error.name === 'AbortError') {
           return;
         }
         const updated = [...messagesRef.current];
         updated[updated.length - 1] = {
-          role: "assistant",
-          content: "Något gick fel. Försök igen senare.",
+          role: 'assistant',
+          content: 'Något gick fel. Försök igen senare.',
         };
         setMessages(updated);
         messagesRef.current = updated;

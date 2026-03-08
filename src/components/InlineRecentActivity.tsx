@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 
-import { ArrowUpRightIcon } from "@phosphor-icons/react";
-import { Button } from "@/components/ui/button";
-import Cookies from "js-cookie";
-import { Link } from "react-router-dom";
+import { ArrowUpRightIcon } from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import Cookies from 'js-cookie';
+import { Link } from 'react-router-dom';
 
 interface RecentActivity {
   courseCode: string;
@@ -14,12 +14,12 @@ interface RecentActivity {
 
 const InlineRecentActivity = () => {
   const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(
-    []
+    [],
   );
   const [maxVisible, setMaxVisible] = useState(3);
 
-  const COOKIE_NAME = "recentActivities_v3";
-  const COOKIE_VERSION = "1.2";
+  const COOKIE_NAME = 'recentActivities_v3';
+  const COOKIE_VERSION = '1.2';
 
   useEffect(() => {
     const updateVisible = () => {
@@ -30,27 +30,27 @@ const InlineRecentActivity = () => {
     };
 
     updateVisible();
-    window.addEventListener("resize", updateVisible);
-    return () => window.removeEventListener("resize", updateVisible);
+    window.addEventListener('resize', updateVisible);
+    return () => window.removeEventListener('resize', updateVisible);
   }, []);
 
   useEffect(() => {
-    const storedVersion = Cookies.get("cookieVersion");
+    const storedVersion = Cookies.get('cookieVersion');
     if (storedVersion !== COOKIE_VERSION) {
       Cookies.remove(COOKIE_NAME);
-      Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
+      Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
     }
 
     const cookie = Cookies.get(COOKIE_NAME);
     if (cookie) {
       try {
         const parsed = JSON.parse(
-          decodeURIComponent(cookie)
+          decodeURIComponent(cookie),
         ) as RecentActivity[];
         const sorted = parsed.sort((a, b) => b.timestamp - a.timestamp);
         setRecentActivities(sorted.slice(0, 3));
       } catch (e) {
-        console.error("Failed to parse recent activity:", e);
+        console.error('Failed to parse recent activity:', e);
       }
     }
   }, []);
@@ -60,21 +60,21 @@ const InlineRecentActivity = () => {
   if (visibleActivities.length === 0) return null;
 
   return (
-    <div className="w-full max-w-md">
-      <div className="flex items-center justify-center w-full overflow-x-auto space-x-3 text-sm">
+    <div className='w-full max-w-md'>
+      <div className='flex items-center justify-center w-full overflow-x-auto space-x-3 text-sm'>
         {visibleActivities.map((activity, index) => (
-          <Link key={activity.path} to={activity.path}>
-            <Button variant="ghost" size="sm" className="group">
-              <span className="text-foreground hover:text-foreground transition-colors">
+          <Link key={activity.path} to={activity.path} viewTransition>
+            <Button variant='ghost' size='sm' className='group'>
+              <span className='text-foreground hover:text-foreground transition-colors'>
                 {activity.courseCode}
               </span>
               <ArrowUpRightIcon
-                weight="bold"
-                className="opacity-60 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-1 transition-all duration-200"
+                weight='bold'
+                className='opacity-60 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-1 transition-all duration-200'
               />
             </Button>
             {index < visibleActivities.length - 1 && (
-              <span className="mx-2 text-foreground/20">|</span>
+              <span className='mx-2 text-foreground/20'>|</span>
             )}
           </Link>
         ))}

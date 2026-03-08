@@ -1,17 +1,17 @@
-import { Link, useLocation } from "react-router-dom";
-import { useState } from "react";
-import { LogoIcon } from "./LogoIcon";
-import { useLanguage } from "@/context/LanguageContext";
-import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
+import { Link, useLocation } from 'react-router-dom';
+import { useState } from 'react';
+import { LogoIcon } from './LogoIcon';
+import { useLanguage } from '@/context/LanguageContext';
+import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { ListIcon } from "@phosphor-icons/react";
+} from '@/components/ui/sheet';
+import { ListIcon } from '@phosphor-icons/react';
 
 interface NavLink {
   to: string;
@@ -29,75 +29,76 @@ export default function InfoSidebar() {
 
   const navGroups: NavGroup[] = [
     {
-      label: language === "sv" ? "Innehåll" : "Content",
+      label: language === 'sv' ? 'Innehåll' : 'Content',
       links: [
         {
-          to: "/updates",
-          label: language === "sv" ? "Uppdateringar" : "Updates",
+          to: '/updates',
+          label: language === 'sv' ? 'Uppdateringar' : 'Updates',
         },
         {
-          to: "/faq",
-          label: language === "sv" ? "Vanliga frågor" : "FAQ",
+          to: '/faq',
+          label: language === 'sv' ? 'Vanliga frågor' : 'FAQ',
         },
         {
-          to: "/om-oss",
-          label: language === "sv" ? "Om oss" : "About Us",
+          to: '/om-oss',
+          label: language === 'sv' ? 'Om oss' : 'About Us',
         },
       ],
     },
     {
-      label: language === "sv" ? "Bidra" : "Contribute",
+      label: language === 'sv' ? 'Bidra' : 'Contribute',
       links: [
         {
-          to: "/upload-exams",
-          label: language === "sv" ? "Ladda upp tenta" : "Upload Exam",
+          to: '/upload-exams',
+          label: language === 'sv' ? 'Ladda upp tenta' : 'Upload Exam',
         },
         {
-          to: "/feedback",
-          label: "Feedback",
+          to: '/feedback',
+          label: 'Feedback',
         },
       ],
     },
     {
-      label: language === "sv" ? "Juridiskt" : "Legal",
+      label: language === 'sv' ? 'Juridiskt' : 'Legal',
       links: [
         {
-          to: "/privacy-policy",
-          label: language === "sv" ? "Integritetspolicy" : "Privacy Policy",
+          to: '/privacy-policy',
+          label: language === 'sv' ? 'Integritetspolicy' : 'Privacy Policy',
         },
       ],
     },
   ];
 
   const isCurrentPath = (path: string) => {
-    if (path === "/") {
-      return location.pathname === "/";
+    if (path === '/') {
+      return location.pathname === '/';
     }
     return location.pathname.startsWith(path);
   };
 
   const NavigationContent = ({ onLinkClick }: { onLinkClick?: () => void }) => (
-    <nav className="space-y-5">
+    <nav className='space-y-5'>
       {navGroups.map((group) => (
         <div key={group.label}>
           {/* Group Label */}
-          <h3 className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2">
+          <h3 className='text-[11px] font-medium text-muted-foreground uppercase tracking-wider mb-2'>
             {group.label}
           </h3>
 
           {/* Links - indented tree structure */}
-          <div className="ml-2 pl-2 space-y-0.5">
+          <div className='ml-2 pl-2 space-y-0.5'>
             {group.links.map((link) => (
               <Link
                 key={link.to}
                 to={link.to}
                 onClick={onLinkClick}
                 className={cn(
-                  "block px-2 py-1.5 text-sm rounded-md transition-colors",
+                  'block px-2 py-1.5 text-sm rounded-md transition-colors',
                   isCurrentPath(link.to)
-                    ? "bg-secondary text-foreground font-medium"
-                    : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
+                    ? 'bg-secondary text-foreground font-medium'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-secondary/50',
                 )}
+                viewTransition
               >
                 {link.label}
               </Link>
@@ -113,15 +114,16 @@ export default function InfoSidebar() {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="fixed top-6 left-6 z-40 hidden md:block">
-        <div className="bg-background/95 backdrop-blur-sm border border-border rounded-lg p-4 w-56">
+      <aside className='fixed top-6 left-6 z-40 hidden md:block'>
+        <div className='bg-background/95 backdrop-blur-sm border border-border rounded-lg p-4 w-56'>
           {/* Logo */}
           <Link
-            to="/"
-            className="flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity"
+            to='/'
+            className='flex items-center gap-2 mb-6 hover:opacity-80 transition-opacity'
+            viewTransition
           >
-            <LogoIcon className="w-7 h-7" />
-            <span className="font-medium text-lg font-logo tracking-tight">
+            <LogoIcon className='w-7 h-7' />
+            <span className='font-medium text-lg font-logo tracking-tight'>
               LiU Tentor
             </span>
           </Link>
@@ -131,32 +133,32 @@ export default function InfoSidebar() {
       </aside>
 
       {/* Mobile Header */}
-      <header className="fixed top-0 left-0 right-0 z-40 md:hidden bg-background/95 backdrop-blur-sm border-b border-border">
-        <div className="flex items-center justify-between px-4 h-14">
-          <Link to="/" className="flex items-center gap-2">
-            <LogoIcon className="w-7 h-7" />
-            <span className="font-medium text-lg font-logo text-foreground/80 tracking-tight">
+      <header className='fixed top-0 left-0 right-0 z-40 md:hidden bg-background/95 backdrop-blur-sm border-b border-border'>
+        <div className='flex items-center justify-between px-4 h-14'>
+          <Link to='/' viewTransition className='flex items-center gap-2'>
+            <LogoIcon className='w-7 h-7' />
+            <span className='font-medium text-lg font-logo text-foreground/80 tracking-tight'>
               LiU Tentor
             </span>
           </Link>
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <ListIcon weight="bold" className="h-5 w-5" />
-                <span className="sr-only">Toggle menu</span>
+              <Button variant='ghost' size='icon'>
+                <ListIcon weight='bold' className='h-5 w-5' />
+                <span className='sr-only'>Toggle menu</span>
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-[280px]">
+            <SheetContent side='right' className='w-[280px]'>
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2">
-                  <LogoIcon className="w-7 h-7" />
-                  <span className="font-medium text-lg font-logo text-foreground/80 tracking-tight">
+                <SheetTitle className='flex items-center gap-2'>
+                  <LogoIcon className='w-7 h-7' />
+                  <span className='font-medium text-lg font-logo text-foreground/80 tracking-tight'>
                     LiU Tentor
                   </span>
                 </SheetTitle>
               </SheetHeader>
-              <div className="mt-6">
+              <div className='mt-6'>
                 <NavigationContent onLinkClick={() => setOpen(false)} />
               </div>
             </SheetContent>

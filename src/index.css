@@ -1,13 +1,13 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
 @theme {
-  --font-logo: "DM Serif Text", serif;
-  --font-mono: "Fragment Mono", monospace;
+  --font-logo: 'DM Serif Text', serif;
+  --font-mono: 'Fragment Mono', monospace;
 }
 
 @layer utilities {
@@ -65,16 +65,17 @@
 
   body {
     font-family:
+      'Google Sans',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
-      "Segoe UI",
+      'Segoe UI',
       Roboto,
       Oxygen,
       Ubuntu,
       Cantarell,
-      "Open Sans",
-      "Helvetica Neue",
+      'Open Sans',
+      'Helvetica Neue',
       sans-serif;
   }
 

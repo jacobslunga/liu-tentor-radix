@@ -1,12 +1,12 @@
-import { FC, useRef, useState } from "react";
+import { FC, useRef, useState } from 'react';
 import {
   ResizableHandle,
   ResizablePanel,
   ResizablePanelGroup,
-} from "@/components/ui/resizable";
+} from '@/components/ui/resizable';
 
-import { ArrowUpRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowUpRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import {
   Empty,
   EmptyContent,
@@ -14,16 +14,16 @@ import {
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import ExamPdf from "../ExamPdf";
-import { FileQuestion } from "lucide-react";
-import { ImperativePanelHandle } from "react-resizable-panels";
-import { Link } from "react-router-dom";
-import SolutionOverlay from "../SolutionOverlay";
-import SolutionPdf from "../SolutionPdf";
-import { useResizeHotkeys } from "@/hooks/useResizeHotkeys";
-import { useTranslation } from "@/hooks/useTranslation";
-import type { ExamDetailPayload } from "@/api";
+} from '@/components/ui/empty';
+import ExamPdf from '../ExamPdf';
+import { FileQuestion } from 'lucide-react';
+import { ImperativePanelHandle } from 'react-resizable-panels';
+import { Link } from 'react-router-dom';
+import SolutionOverlay from '../SolutionOverlay';
+import SolutionPdf from '../SolutionPdf';
+import { useResizeHotkeys } from '@/hooks/useResizeHotkeys';
+import { useTranslation } from '@/hooks/useTranslation';
+import type { ExamDetailPayload } from '@/api';
 
 interface Props {
   examDetail: ExamDetailPayload;
@@ -40,14 +40,14 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
 
   return (
     <ResizablePanelGroup
-      direction="horizontal"
-      className="w-full h-full bg-background"
+      direction='horizontal'
+      className='w-full h-full bg-background'
     >
       <ResizablePanel
         ref={leftPanelRef}
         defaultSize={55}
         minSize={20}
-        className="bg-background"
+        className='bg-background'
       >
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
       </ResizablePanel>
@@ -58,7 +58,7 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         ref={rightPanelRef}
         defaultSize={45}
         minSize={20}
-        className="relative bg-background"
+        className='relative bg-background'
         onMouseEnter={() => setIsFacitBlurred(false)}
         onMouseLeave={() => setIsFacitBlurred(true)}
       >
@@ -68,29 +68,31 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
             <SolutionOverlay isBlurred={isFacitBlurred} />
           </>
         ) : (
-          <Empty className="h-full">
+          <Empty className='h-full'>
             <EmptyHeader>
-              <EmptyMedia variant="icon">
+              <EmptyMedia variant='icon'>
                 <FileQuestion />
               </EmptyMedia>
-              <EmptyTitle>{t("noFacitAvailable")}</EmptyTitle>
+              <EmptyTitle>{t('noFacitAvailable')}</EmptyTitle>
               <EmptyDescription>
-                {t("noFacitAvailableDescription")}
+                {t('noFacitAvailableDescription')}
               </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
               <Button asChild>
-                <Link to="/upload-exams">{t("uploadButton")}</Link>
+                <Link to='/upload-exams' viewTransition>
+                  {t('uploadButton')}
+                </Link>
               </Button>
             </EmptyContent>
             <Button
-              variant="link"
+              variant='link'
               asChild
-              className="text-muted-foreground"
-              size="sm"
+              className='text-muted-foreground'
+              size='sm'
             >
-              <Link to="/faq">
-                {t("learnMore")} <ArrowUpRight className="ml-1 h-4 w-4" />
+              <Link to='/faq' viewTransition>
+                {t('learnMore')} <ArrowUpRight className='ml-1 h-4 w-4' />
               </Link>
             </Button>
           </Empty>

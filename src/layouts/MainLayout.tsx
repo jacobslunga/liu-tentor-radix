@@ -1,8 +1,8 @@
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
-import React, { useEffect, useState } from "react";
-import { useTextSize } from "@/context/TextSizeContext";
-import { LockInModeManager } from "@/lib/lockInMode";
-import Footer from "@/components/Footer";
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useTextSize } from '@/context/TextSizeContext';
+import { LockInModeManager } from '@/lib/lockInMode';
+import Footer from '@/components/Footer';
 
 const MainLayout: React.FC = () => {
   const { pathname } = useLocation();
@@ -15,15 +15,15 @@ const MainLayout: React.FC = () => {
   useEffect(() => {
     const root = document.documentElement;
 
-    if (textSize === "stor") {
-      root.style.fontSize = "115%";
-    } else if (textSize === "liten") {
-      root.style.fontSize = "87.5%";
+    if (textSize === 'stor') {
+      root.style.fontSize = '115%';
+    } else if (textSize === 'liten') {
+      root.style.fontSize = '87.5%';
     } else {
-      root.style.removeProperty("font-size");
+      root.style.removeProperty('font-size');
     }
 
-    const storageKey = "liutentor_anonymous_id";
+    const storageKey = 'liutentor_anonymous_id';
     const existingId = localStorage.getItem(storageKey);
 
     if (!existingId) {
@@ -41,13 +41,16 @@ const MainLayout: React.FC = () => {
 
       if (activeSession) {
         if (!isLockInRoute) {
-          navigate(`/lock-in-mode/${activeSession.examId}`, { replace: true });
+          navigate(`/lock-in-mode/${activeSession.examId}`, {
+            replace: true,
+            viewTransition: true,
+          });
           return;
         }
         setIsExamMode(true);
       } else {
         if (isLockInRoute) {
-          navigate("/", { replace: true });
+          navigate('/', { replace: true, viewTransition: true });
           return;
         }
         setIsExamMode(false);
@@ -64,19 +67,19 @@ const MainLayout: React.FC = () => {
     const handleFocus = () => checkSession();
 
     const handleStorageChange = (e: StorageEvent) => {
-      if (e.key === "examMode") {
+      if (e.key === 'examMode') {
         checkSession();
       }
     };
 
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    window.addEventListener("focus", handleFocus);
-    window.addEventListener("storage", handleStorageChange);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      window.removeEventListener("focus", handleFocus);
-      window.removeEventListener("storage", handleStorageChange);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, [pathname, navigate]);
 
@@ -87,7 +90,7 @@ const MainLayout: React.FC = () => {
       LockInModeManager.updateActivity();
     };
 
-    const events = ["mousedown", "keydown", "scroll", "touchstart"];
+    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
     events.forEach((event) => {
       document.addEventListener(event, updateActivity, { passive: true });
     });
@@ -100,8 +103,8 @@ const MainLayout: React.FC = () => {
   }, [isExamMode]);
 
   return (
-    <div className="flex flex-col max-w-full min-h-screen bg-background">
-      <main className="grow">
+    <div className='flex flex-col max-w-full min-h-screen bg-background'>
+      <main className='grow'>
         <Outlet />
       </main>
       {!isStandardExamPage && !isExamMode && <Footer />}
