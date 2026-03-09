@@ -231,7 +231,6 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       giveDirectAnswer,
       showScrollButton,
       placeholder,
-      poweredByText,
       sendButtonLabel,
       quotedContext,
       selectedModelId,
@@ -280,7 +279,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     };
 
     return (
-      <div className='px-4 pb-4 relative w-full'>
+      <div className='px-4 relative w-full'>
         <div className='max-w-2xl mx-auto w-full relative'>
           <ScrollToBottomButton
             show={showScrollButton}
@@ -297,7 +296,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className='rounded-3xl bg-background p-2 dark:bg-secondary border border-border transition-all'>
+          <InputGroup className='rounded-t-3xl rounded-b-none bg-background p-2 dark:bg-secondary border border-border transition-all'>
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
@@ -362,7 +361,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               ? 'Hints är av'
                               : 'Hints disabled'}
                         </p>
-                        <p className='text-xs text-muted-foreground'>
+                        <p className='text-xs text-background/60'>
                           {!giveDirectAnswer
                             ? language === 'sv'
                               ? 'Du får pedagogiska ledtrådar.'
@@ -430,10 +429,6 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                 : `Maximum length is ${MAX_INPUT_LENGTH} characters.`}
             </div>
           )}
-
-          <div className='flex flex-row items-center justify-center gap-4 w-full mt-2 opacity-60 hover:opacity-100 transition-opacity'>
-            <p className='text-[10px] text-muted-foreground'>{poweredByText}</p>
-          </div>
         </div>
       </div>
     );
