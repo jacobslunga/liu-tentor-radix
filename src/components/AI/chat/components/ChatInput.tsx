@@ -77,7 +77,7 @@ const getModels = (): Model[] => {
     },
     {
       id: 'gemini-2.5-flash',
-      name: 'Auto',
+      name: 'Gemini 2.5 Flash',
       provider: 'google',
     },
   ];
@@ -195,11 +195,11 @@ const ModelSelector = ({
                       onSelect(model.id);
                       setOpen(false);
                     }}
-                    className='flex items-start gap-3 py-3 cursor-pointer aria-selected:bg-accent'
+                    className='flex items-start cursor-pointer aria-selected:bg-accent'
                   >
                     <div className='flex flex-col flex-1 min-w-0'>
                       <div className='flex items-center gap-2'>
-                        <span className='text-sm font-medium text-foreground'>
+                        <span className='text-xs font-normal text-foreground'>
                           {model.name}
                         </span>
                       </div>
@@ -296,7 +296,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className='rounded-t-3xl rounded-b-none bg-background p-2 dark:bg-secondary border border-border transition-all'>
+          <InputGroup className='rounded-t-3xl rounded-b-none p-2 bg-secondary border border-border transition-all'>
             <InputGroupTextarea
               ref={inputRef}
               placeholder={placeholder}
@@ -386,7 +386,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                         transition={{ duration: 0.15 }}
                       >
                         <InputGroupButton
-                          variant='secondary'
+                          variant='outline'
                           size='icon-sm'
                           onClick={onCancel}
                           className='rounded-full h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground'
