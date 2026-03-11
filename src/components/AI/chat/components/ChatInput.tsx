@@ -6,6 +6,7 @@ import {
   useImperativeHandle,
   useState,
   useMemo,
+  useCallback,
 } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -231,6 +232,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       giveDirectAnswer,
       showScrollButton,
       placeholder,
+      poweredByText,
       sendButtonLabel,
       quotedContext,
       selectedModelId,
@@ -245,6 +247,23 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     ref,
   ) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const [isMultiline, setIsMultiline] = useState(false);
+
+    const updateComposerShape = useCallback(() => {
+      const textarea = inputRef.current;
+
+      if (!textarea) {
+        return;
+      }
+
+      const computedStyle = window.getComputedStyle(textarea);
+      const lineHeight = Number.parseFloat(computedStyle.lineHeight) || 24;
+      const paddingTop = Number.parseFloat(computedStyle.paddingTop) || 0;
+      const paddingBottom = Number.parseFloat(computedStyle.paddingBottom) || 0;
+      const singleLineHeight = lineHeight + paddingTop + paddingBottom;
+
+      setIsMultiline(textarea.scrollHeight > singleLineHeight + 2);
+    }, []);
 
     useImperativeHandle(ref, () => ({
       focus: () => {
@@ -258,7 +277,31 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         const val = inputRef.current.value;
         inputRef.current.setSelectionRange(val.length, val.length);
       }
-    }, []);
+
+      updateComposerShape();
+    }, [updateComposerShape]);
+
+    useEffect(() => {
+      updateComposerShape();
+    }, [input, updateComposerShape]);
+
+    useEffect(() => {
+      const textarea = inputRef.current;
+
+      if (!textarea || typeof ResizeObserver === 'undefined') {
+        return;
+      }
+
+      const resizeObserver = new ResizeObserver(() => {
+        updateComposerShape();
+      });
+
+      resizeObserver.observe(textarea);
+
+      return () => {
+        resizeObserver.disconnect();
+      };
+    }, [updateComposerShape]);
 
     useEffect(() => {
       if (quotedContext && inputRef.current) {
@@ -279,7 +322,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     };
 
     return (
-      <div className='px-4 relative w-full'>
+      <div className='px-4 pb-4 relative w-full'>
         <div className='max-w-2xl mx-auto w-full relative'>
           <ScrollToBottomButton
             show={showScrollButton}
@@ -296,131 +339,147 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             )}
           </AnimatePresence>
 
-          <InputGroup className='rounded-t-3xl rounded-b-none p-2 bg-background dark:bg-background border-t border-b-0 shadow-md transition-all'>
-            <InputGroupTextarea
-              ref={inputRef}
-              placeholder={placeholder}
-              value={input}
-              onChange={(e) => {
-                if (e.target.value.length <= MAX_INPUT_LENGTH) {
-                  onInputChange(e.target.value);
-                }
-              }}
-              onKeyDown={handleKeyDown}
-              rows={1}
-              className='text-base resize-none max-h-[200px] overflow-y-auto py-2 px-1'
-            />
+          <motion.div
+            layout
+            animate={{ borderRadius: isMultiline ? 28 : 9999 }}
+            transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
+            className='overflow-hidden border border-border bg-background shadow-md dark:bg-secondary'
+          >
+            <InputGroup
+              className={cn(
+                'rounded-none border-0 bg-transparent px-2 pt-2 pb-3 shadow-none dark:bg-transparent',
+                isMultiline ? 'gap-0.5' : 'gap-0',
+              )}
+            >
+              <InputGroupTextarea
+                ref={inputRef}
+                placeholder={placeholder}
+                value={input}
+                onChange={(e) => {
+                  if (e.target.value.length <= MAX_INPUT_LENGTH) {
+                    onInputChange(e.target.value);
+                  }
+                }}
+                onKeyDown={handleKeyDown}
+                rows={1}
+                className='min-h-11 max-h-[200px] overflow-y-auto px-2 py-2 text-base leading-6 resize-none'
+              />
 
-            <InputGroupAddon align='block-end' className='w-full'>
-              <div className='flex items-center justify-between w-full gap-2'>
-                <div className='flex items-center gap-1.5'>
-                  <ModelSelector
-                    selectedModelId={selectedModelId}
-                    language={language}
-                    onSelect={(id) => {
-                      onModelChange(id);
-                      setTimeout(() => inputRef.current?.focus(), 100);
-                    }}
-                  />
+              <InputGroupAddon align='block-end' className='mt-1 w-full pb-1'>
+                <div className='flex items-center justify-between w-full gap-2'>
+                  <div className='flex items-center gap-1.5'>
+                    <ModelSelector
+                      selectedModelId={selectedModelId}
+                      language={language}
+                      onSelect={(id) => {
+                        onModelChange(id);
+                        setTimeout(() => inputRef.current?.focus(), 100);
+                      }}
+                    />
 
-                  <TooltipProvider delayDuration={0}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <button
-                          onClick={() => {
-                            onToggleAnswerMode(!giveDirectAnswer);
-                            inputRef.current?.focus();
-                          }}
-                          className={cn(
-                            'flex items-center gap-1.5 px-2 h-6 text-xs font-medium transition-all rounded-full cursor-pointer border select-none',
-                            !giveDirectAnswer
-                              ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20'
-                              : 'bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground',
-                          )}
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <button
+                            onClick={() => {
+                              onToggleAnswerMode(!giveDirectAnswer);
+                              inputRef.current?.focus();
+                            }}
+                            className={cn(
+                              'flex items-center gap-1.5 px-2 h-6 text-xs font-medium transition-all rounded-full cursor-pointer border select-none',
+                              !giveDirectAnswer
+                                ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20'
+                                : 'bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground',
+                            )}
+                          >
+                            <LightbulbFilamentIcon
+                              weight={!giveDirectAnswer ? 'fill' : 'regular'}
+                              className='h-4 w-4'
+                            />
+                            <span className='hidden sm:inline'>
+                              {language === 'sv' ? 'Hints' : 'Hints'}
+                            </span>
+                          </button>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side='top'
+                          align='start'
+                          className='flex flex-col gap-0.5'
                         >
-                          <LightbulbFilamentIcon
-                            weight={!giveDirectAnswer ? 'fill' : 'regular'}
-                            className='h-4 w-4'
-                          />
-                          <span className='hidden sm:inline'>
-                            {language === 'sv' ? 'Hints' : 'Hints'}
-                          </span>
-                        </button>
-                      </TooltipTrigger>
-                      <TooltipContent
-                        side='top'
-                        align='start'
-                        className='flex flex-col gap-0.5'
-                      >
-                        <p className='font-semibold'>
-                          {!giveDirectAnswer
-                            ? language === 'sv'
-                              ? 'Hints är på'
-                              : 'Hints enabled'
-                            : language === 'sv'
-                              ? 'Hints är av'
-                              : 'Hints disabled'}
-                        </p>
-                        <p className='text-xs text-background/60'>
-                          {!giveDirectAnswer
-                            ? language === 'sv'
-                              ? 'Du får pedagogiska ledtrådar.'
-                              : "You'll get guidance."
-                            : language === 'sv'
-                              ? 'Klicka för vägledning.'
-                              : 'Click to get guidance.'}
-                        </p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                          <p className='font-medium'>
+                            {!giveDirectAnswer
+                              ? language === 'sv'
+                                ? 'Hints är på'
+                                : 'Hints enabled'
+                              : language === 'sv'
+                                ? 'Hints är av'
+                                : 'Hints disabled'}
+                          </p>
+                          <p className='text-xs text-background/60'>
+                            {!giveDirectAnswer
+                              ? language === 'sv'
+                                ? 'Du får pedagogiska ledtrådar.'
+                                : "You'll get guidance."
+                              : language === 'sv'
+                                ? 'Klicka för vägledning.'
+                                : 'Click to get guidance.'}
+                          </p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+
+                  <div className='relative'>
+                    <AnimatePresence mode='wait' initial={false}>
+                      {isLoading ? (
+                        <motion.div
+                          key='stop'
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          <InputGroupButton
+                            variant='outline'
+                            size='icon-sm'
+                            onClick={onCancel}
+                            className='rounded-full h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground'
+                          >
+                            <SquareIcon weight='fill' className='h-3.5 w-3.5' />
+                          </InputGroupButton>
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key='send'
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.8 }}
+                          transition={{ duration: 0.15 }}
+                        >
+                          <InputGroupButton
+                            variant='default'
+                            size='sm'
+                            disabled={
+                              (!input.trim() && !isLoading) || isInputTooLong
+                            }
+                            onClick={onSend}
+                            className='rounded-full shrink-0 font-medium transition-all'
+                          >
+                            <ArrowUpIcon weight='bold' />
+                            <span className='sr-only'>{sendButtonLabel}</span>
+                          </InputGroupButton>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
+              </InputGroupAddon>
+            </InputGroup>
+          </motion.div>
 
-                <div className='relative'>
-                  <AnimatePresence mode='wait' initial={false}>
-                    {isLoading ? (
-                      <motion.div
-                        key='stop'
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.15 }}
-                      >
-                        <InputGroupButton
-                          variant='outline'
-                          size='icon-sm'
-                          onClick={onCancel}
-                          className='rounded-full h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground'
-                        >
-                          <SquareIcon weight='fill' className='h-3.5 w-3.5' />
-                        </InputGroupButton>
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key='send'
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.8 }}
-                        transition={{ duration: 0.15 }}
-                      >
-                        <InputGroupButton
-                          variant='default'
-                          size='sm'
-                          disabled={
-                            (!input.trim() && !isLoading) || isInputTooLong
-                          }
-                          onClick={onSend}
-                          className='rounded-full shrink-0 font-medium transition-all'
-                        >
-                          <ArrowUpIcon weight='bold' />
-                          <span className='sr-only'>{sendButtonLabel}</span>
-                        </InputGroupButton>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            </InputGroupAddon>
-          </InputGroup>
+          <div className='mt-3 px-2 text-center text-[11px] leading-relaxed text-muted-foreground'>
+            {poweredByText}
+          </div>
 
           {isInputTooLong && (
             <div className='text-xs text-red-500 mt-2 text-center animate-pulse'>

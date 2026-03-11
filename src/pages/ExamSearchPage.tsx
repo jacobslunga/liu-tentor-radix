@@ -47,7 +47,7 @@ const NotFoundState: React.FC<{
     <div className='w-full max-w-2xl mx-auto mt-12 text-center'>
       <h1 className='text-2xl font-medium mb-4'>
         {language === 'sv' ? 'Inga tentor hittades för' : 'No exams found for'}{' '}
-        <span className='font-semibold text-primary'>"{courseCode}"</span>
+        <span className='font-medium text-primary'>"{courseCode}"</span>
       </h1>
       {suggestions.length > 0 && (
         <div className='flex flex-wrap justify-center gap-2 text-sm text-muted-foreground mb-10'>
@@ -171,7 +171,9 @@ const ExamSearchPage: FC = () => {
     canonical: `${window.location.origin}/course/${courseCode}`,
   });
 
-  const courseName = courseData?.courseName;
+  const courseName =
+    courseData?.courseName ??
+    (language === 'sv' ? 'Inget kursnamn hittades' : 'No course name found');
 
   if (courseCode === 'TFYA86')
     return <div className='p-20 text-center'>Borttaget på begäran</div>;
@@ -194,7 +196,7 @@ const ExamSearchPage: FC = () => {
             >
               <div className='flex flex-col gap-2'>
                 <div className='flex items-center gap-2 text-sm text-muted-foreground/70'>
-                  <span className='font-semibold text-foreground/80'>
+                  <span className='font-medium text-foreground/80'>
                     {courseCode}
                   </span>
                   <span>/</span>
@@ -202,7 +204,9 @@ const ExamSearchPage: FC = () => {
                 </div>
 
                 <div className='flex flex-col sm:flex-row sm:items-end justify-between gap-4'>
-                  <h1 className='text-2xl sm:text-3xl font-semibold text-foreground wrap-break-word max-w-3xl leading-tight text-balance'>
+                  <h1
+                    className={`${courseName.length > 20 ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-normal text-foreground wrap-break-word max-w-3xl leading-tight text-balance`}
+                  >
                     {courseName}
                   </h1>
                 </div>
@@ -210,19 +214,19 @@ const ExamSearchPage: FC = () => {
                 <div className='flex flex-wrap items-center gap-x-3 gap-y-2 text-sm mt-1'>
                   <Badge variant='secondary'>
                     <TrendingUp className='w-4 h-4' />
-                    <span className='font-semibold'>{stats.avgPassRate}%</span>
+                    <span className='font-medium'>{stats.avgPassRate}%</span>
                     <span className='opacity-80'>{t('averagePassRate')}</span>
                   </Badge>
 
                   <Badge variant='secondary'>
                     <CheckCircle2 className='w-4 h-4' />
-                    <span className='font-semibold'>{stats.withSolutions}</span>
+                    <span className='font-medium'>{stats.withSolutions}</span>
                     <span className='opacity-80'>{t('withSolution')}</span>
                   </Badge>
 
                   <Badge variant='secondary'>
                     <FileText className='w-4 h-4' />
-                    <span className='font-semibold'>{stats.total}</span>
+                    <span className='font-medium'>{stats.total}</span>
                     <span className='opacity-80'>
                       {t('exams').toLowerCase()}
                     </span>

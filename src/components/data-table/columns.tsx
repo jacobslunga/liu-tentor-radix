@@ -3,19 +3,19 @@ import {
   CheckIcon,
   DownloadSimpleIcon,
   XIcon,
-} from "@phosphor-icons/react";
-import { Button } from "@/components/ui/button";
-import { ColumnDef } from "@tanstack/react-table";
-import type { Exam } from "@/api";
-import { ExamStatsDialog } from "@/components/ExamStatsDialog";
-import { Translations } from "@/util/translations";
+} from '@phosphor-icons/react';
+import { Button } from '@/components/ui/button';
+import { ColumnDef } from '@tanstack/react-table';
+import type { Exam } from '@/api';
+import { ExamStatsDialog } from '@/components/ExamStatsDialog';
+import { Translations } from '@/util/translations';
 
 export const getColumns = (
   t: (key: keyof Translations) => string,
 ): ColumnDef<Exam>[] => [
   {
-    id: "exam_name",
-    header: t("examName"),
+    id: 'exam_name',
+    header: t('examName'),
     cell: ({ row }) => {
       const name = row.original.exam_name;
       const match = name.match(/^([A-Z]+\d*)\s+(.+)$/);
@@ -23,57 +23,57 @@ export const getColumns = (
       if (match) {
         const [, prefix, rest] = match;
         return (
-          <div className="flex items-center group-hover:underline transition-colors">
-            <span className="font-semibold text-foreground">{prefix}</span>
-            <span className="text-foreground/80 font-medium ml-2">{rest}</span>
+          <div className='flex items-center group-hover:underline transition-colors'>
+            <span className='font-medium text-foreground'>{prefix}</span>
+            <span className='text-foreground/80 font-medium ml-2'>{rest}</span>
           </div>
         );
       }
 
       return (
-        <div className="flex items-center group-hover:underline font-mono font-semibold transition-colors">
+        <div className='flex items-center group-hover:underline font-mono font-medium transition-colors'>
           {name}
         </div>
       );
     },
   },
   {
-    accessorKey: "exam_date",
-    header: t("createdAt"),
+    accessorKey: 'exam_date',
+    header: t('createdAt'),
     cell: ({ row }) => {
-      const date = new Intl.DateTimeFormat("sv-SE", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
+      const date = new Intl.DateTimeFormat('sv-SE', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
       }).format(new Date(row.original.exam_date));
 
-      return <p className="text-foreground/70">{date}</p>;
+      return <p className='text-foreground/70'>{date}</p>;
     },
   },
   {
-    accessorKey: "has_solution",
-    header: t("hasFacit"),
+    accessorKey: 'has_solution',
+    header: t('hasFacit'),
     cell: ({ row }) => (
-      <div className="flex justify-center">
+      <div className='flex justify-center'>
         <span
           className={`text-sm font-medium ${
             row.original.has_solution
-              ? "text-green-600 dark:text-green-400"
-              : "text-red-500"
+              ? 'text-green-600 dark:text-green-400'
+              : 'text-red-500'
           }`}
         >
           {row.original.has_solution ? (
-            <CheckIcon weight="bold" size={20} />
+            <CheckIcon weight='bold' size={20} />
           ) : (
-            <XIcon weight="bold" size={20} />
+            <XIcon weight='bold' size={20} />
           )}
         </span>
       </div>
     ),
   },
   {
-    id: "approvalRate",
-    header: t("passedCount"),
+    id: 'approvalRate',
+    header: t('passedCount'),
     cell: ({ row }) => {
       const passedCount = row.original.pass_rate;
 
@@ -84,20 +84,20 @@ export const getColumns = (
       if (passedCount === undefined || passedCount === null)
         return <span>-</span>;
 
-      let color = "text-orange-500 dark:text-orange-400";
+      let color = 'text-orange-500 dark:text-orange-400';
       if (passedCount >= 70)
-        color = "text-green-600 dark:text-green-400 font-semibold";
+        color = 'text-green-600 dark:text-green-400 font-medium';
       else if (passedCount < 30)
-        color = "text-red-600 dark:text-red-400 font-semibold";
+        color = 'text-red-600 dark:text-red-400 font-medium';
 
       const stats = row.original.statistics;
       return (
         <ExamStatsDialog
           statistics={{
-            "3": stats?.["3"] || 0,
-            "4": stats?.["4"] || 0,
-            "5": stats?.["5"] || 0,
-            VG: stats?.["VG"] || 0,
+            '3': stats?.['3'] || 0,
+            '4': stats?.['4'] || 0,
+            '5': stats?.['5'] || 0,
+            VG: stats?.['VG'] || 0,
             U: stats?.U || 0,
             G: stats?.G || 0,
             pass_rate: passedCount,
@@ -116,8 +116,8 @@ export const getColumns = (
     },
   },
   {
-    id: "actions",
-    header: "",
+    id: 'actions',
+    header: '',
     cell: ({ row }) => {
       const pdfUrl = row.original.pdf_url;
       const fileName = `${row.original.course_code}_${row.original.exam_date}.pdf`;
@@ -130,7 +130,7 @@ export const getColumns = (
           const response = await fetch(pdfUrl);
           const blob = await response.blob();
           const url = window.URL.createObjectURL(blob);
-          const link = document.createElement("a");
+          const link = document.createElement('a');
           link.href = url;
           link.download = fileName;
           document.body.appendChild(link);
@@ -138,36 +138,36 @@ export const getColumns = (
           document.body.removeChild(link);
           window.URL.revokeObjectURL(url);
         } catch (error) {
-          console.error("Download failed, falling back to open", error);
-          window.open(pdfUrl, "_blank");
+          console.error('Download failed, falling back to open', error);
+          window.open(pdfUrl, '_blank');
         }
       };
 
       const handleOpen = (e: React.MouseEvent) => {
         e.stopPropagation();
         if (pdfUrl) {
-          window.open(pdfUrl, "_blank", "noopener,noreferrer");
+          window.open(pdfUrl, '_blank', 'noopener,noreferrer');
         }
       };
 
       return (
-        <div className="flex items-center justify-end gap-1">
+        <div className='flex items-center justify-end gap-1'>
           <Button
-            variant="ghost"
-            size="icon"
-            title="Open in new tab"
+            variant='ghost'
+            size='icon'
+            title='Open in new tab'
             onClick={handleOpen}
           >
-            <ArrowSquareOutIcon weight="bold" size={18} />
+            <ArrowSquareOutIcon weight='bold' size={18} />
           </Button>
 
           <Button
-            variant="ghost"
-            size="icon"
-            title="Download PDF"
+            variant='ghost'
+            size='icon'
+            title='Download PDF'
             onClick={handleDownload}
           >
-            <DownloadSimpleIcon weight="bold" size={18} />
+            <DownloadSimpleIcon weight='bold' size={18} />
           </Button>
         </div>
       );

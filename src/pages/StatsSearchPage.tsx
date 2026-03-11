@@ -164,21 +164,21 @@ export default function StatsSearchPage() {
           <div className='flex flex-col gap-6 w-full max-w-4xl min-w-0'>
             <div className='flex flex-col gap-2'>
               <div className='flex items-center gap-2 text-sm text-muted-foreground/70'>
-                <span className='font-semibold text-foreground/80'>
+                <span className='font-medium text-foreground/80'>
                   {courseCode}
                 </span>
                 <span>/</span>
                 <span>{language === 'sv' ? 'Statistik' : 'Statistics'}</span>
               </div>
 
-              <h1 className='text-2xl sm:text-3xl font-semibold text-foreground wrap-break-word max-w-3xl leading-tight text-balance'>
+              <h1 className='text-2xl sm:text-3xl font-normal text-foreground wrap-break-word max-w-3xl leading-tight text-balance'>
                 {courseName}
               </h1>
 
               <div className='flex flex-wrap items-center gap-x-3 gap-y-2 text-sm mt-1'>
                 <Badge variant='secondary'>
                   <ChartPieSliceIcon className='w-4 h-4' weight='bold' />
-                  <span className='font-semibold'>
+                  <span className='font-medium'>
                     {nf.format(aggregate.grand)}
                   </span>
                   <span className='opacity-80'>
@@ -188,7 +188,7 @@ export default function StatsSearchPage() {
 
                 <Badge variant='secondary'>
                   <TrendUpIcon className='w-4 h-4' weight='bold' />
-                  <span className='font-semibold'>{sorted.length}</span>
+                  <span className='font-medium'>{sorted.length}</span>
                   <span className='opacity-80'>
                     {language === 'sv' ? 'tentor' : 'exams'}
                   </span>
@@ -209,7 +209,7 @@ export default function StatsSearchPage() {
               <div className='p-5 border-b border-border/60 bg-muted/20'>
                 <div className='flex items-center gap-2 mb-1'>
                   <TrendUpIcon className='w-4 h-4 text-primary' weight='bold' />
-                  <h2 className='text-sm font-semibold'>
+                  <h2 className='text-sm font-medium'>
                     {language === 'sv'
                       ? 'Godkända över tid'
                       : 'Pass Rate Over Time'}
@@ -288,7 +288,7 @@ export default function StatsSearchPage() {
                     className='w-4 h-4 text-primary'
                     weight='bold'
                   />
-                  <h2 className='text-sm font-semibold'>
+                  <h2 className='text-sm font-medium'>
                     {language === 'sv'
                       ? 'Betygsfördelning'
                       : 'Grade Distribution'}

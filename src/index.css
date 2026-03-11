@@ -10,30 +10,6 @@
   --font-mono: monospace;
 }
 
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Regular.otf');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Regular.otf');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Medium.otf');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Bold.otf');
-  font-weight: 700;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -89,7 +65,6 @@
 
   body {
     font-family:
-      'Camera',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -166,29 +141,37 @@
 
   .dark .react-pdf__Page,
   .dark .react-pdf__Document {
-    background-color: oklch(var(--background)) !important;
+    background-color: var(--background) !important;
   }
 
   .pdf-container::-webkit-scrollbar {
     width: 8px;
     height: 8px;
-    background-color: oklch(var(--background));
+    background-color: var(--background);
   }
 
   .pdf-container::-webkit-scrollbar-track {
-    background-color: oklch(var(--background));
+    background-color: var(--background);
   }
 
   .pdf-container::-webkit-scrollbar-thumb {
-    background-color: oklch(var(--muted-foreground) / 0.3);
+    background-color: color-mix(
+      in srgb,
+      var(--muted-foreground),
+      transparent 70%
+    );
     border-radius: 9999px;
-    border: 2px solid oklch(var(--background));
+    border: 2px solid var(--background);
     background-clip: content-box;
     transition: background-color 0.2s ease;
   }
 
   .pdf-container::-webkit-scrollbar-thumb:hover {
-    background-color: oklch(var(--muted-foreground) / 0.5);
+    background-color: color-mix(
+      in srgb,
+      var(--muted-foreground),
+      transparent 50%
+    );
   }
 }
 
@@ -303,37 +286,37 @@
 }
 
 .dark {
-  --background: oklch(24% 0.006 260);
-  --foreground: oklch(94% 0.004 260);
-  --card: oklch(28% 0.007 260);
-  --card-foreground: oklch(94% 0.004 260);
-  --popover: oklch(29% 0.007 260);
-  --popover-foreground: oklch(94% 0.004 260);
+  --background: #181818;
+  --foreground: #f5f5f5;
+  --card: #212121;
+  --card-foreground: #f5f5f5;
+  --popover: #212121;
+  --popover-foreground: #f5f5f5;
   --primary: oklch(0.8332 0.088 144.73);
-  --primary-foreground: oklch(22% 0.006 260);
-  --secondary: oklch(31% 0.006 260);
-  --secondary-foreground: oklch(93% 0.004 260);
-  --muted: oklch(30% 0.006 260);
-  --muted-foreground: oklch(76% 0.005 260);
-  --accent: oklch(33% 0.007 260);
-  --accent-foreground: oklch(94% 0.004 260);
+  --primary-foreground: #181818;
+  --secondary: #212121;
+  --secondary-foreground: #f5f5f5;
+  --muted: #2a2a2a;
+  --muted-foreground: #a3a3a3;
+  --accent: #2a2a2a;
+  --accent-foreground: #f5f5f5;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(36% 0.007 260);
-  --input: oklch(35% 0.007 260);
-  --ring: oklch(62% 0.018 200);
+  --border: #2a2a2a;
+  --input: #2a2a2a;
+  --ring: #525252;
   --chart-1: oklch(0.911 0.0453 168.18);
   --chart-2: oklch(0.8072 0.1109 164.79);
   --chart-3: oklch(0.7521 0.1557 160.22);
   --chart-4: oklch(0.6506 0.138 159.72);
   --chart-5: oklch(0.5382 0.1159 159.4);
-  --sidebar: oklch(26% 0.006 260);
-  --sidebar-foreground: oklch(94% 0.004 260);
+  --sidebar: #181818;
+  --sidebar-foreground: #f5f5f5;
   --sidebar-primary: oklch(78% 0.055 168);
-  --sidebar-primary-foreground: oklch(22% 0.006 260);
-  --sidebar-accent: oklch(31% 0.006 260);
-  --sidebar-accent-foreground: oklch(94% 0.004 260);
-  --sidebar-border: oklch(35% 0.007 260);
-  --sidebar-ring: oklch(62% 0.018 200);
+  --sidebar-primary-foreground: #181818;
+  --sidebar-accent: #212121;
+  --sidebar-accent-foreground: #f5f5f5;
+  --sidebar-border: #2a2a2a;
+  --sidebar-ring: #525252;
 }
 
 @layer base {
