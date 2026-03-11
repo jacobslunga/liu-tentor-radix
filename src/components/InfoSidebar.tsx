@@ -123,9 +123,7 @@ export default function InfoSidebar() {
             viewTransition
           >
             <LogoIcon className='w-7 h-7' />
-            <span className='font-medium text-lg font-logo tracking-tight'>
-              LiU Tentor
-            </span>
+            <span className='font-medium text-lg font-logo '>LiU Tentor</span>
           </Link>
 
           <NavigationContent />
@@ -137,7 +135,7 @@ export default function InfoSidebar() {
         <div className='flex items-center justify-between px-4 h-14'>
           <Link to='/' viewTransition className='flex items-center gap-2'>
             <LogoIcon className='w-7 h-7' />
-            <span className='font-medium text-lg font-logo text-foreground/80 tracking-tight'>
+            <span className='font-medium text-lg font-logo text-foreground/80 '>
               LiU Tentor
             </span>
           </Link>
@@ -153,7 +151,7 @@ export default function InfoSidebar() {
               <SheetHeader>
                 <SheetTitle className='flex items-center gap-2'>
                   <LogoIcon className='w-7 h-7' />
-                  <span className='font-medium text-lg font-logo text-foreground/80 tracking-tight'>
+                  <span className='font-medium text-lg font-logo text-foreground/80 '>
                     LiU Tentor
                   </span>
                 </SheetTitle>

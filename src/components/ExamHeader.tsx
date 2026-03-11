@@ -165,7 +165,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                   className='flex flex-row items-center px-3 transition-colors group'
                 >
                   <span>
-                    <span className='font-semibold'>
+                    <span className='font-medium'>
                       {selectedExam.exam_name.length > 20
                         ? `${selectedExam.exam_name
                             .slice(0, 20)
