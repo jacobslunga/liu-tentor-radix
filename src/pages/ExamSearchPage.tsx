@@ -128,7 +128,7 @@ const ExamSearchPage: FC = () => {
                 </div>
 
                 <h1
-                  className={`${courseName.length > 20 ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-medium text-foreground wrap-break-word max-w-3xl leading-tight text-balance`}
+                  className={`${courseName.length > 20 ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-semibold text-foreground wrap-break-word max-w-3xl leading-tight text-balance`}
                 >
                   {courseName}
                 </h1>

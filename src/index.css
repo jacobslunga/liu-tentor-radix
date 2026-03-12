@@ -11,27 +11,11 @@
 }
 
 @font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Regular.otf');
-  font-weight: 400;
-}
-
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Medium.otf');
-  font-weight: 500;
-}
-
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Medium.otf');
-  font-weight: 600;
-}
-
-@font-face {
-  font-family: 'Camera';
-  src: url('/fonts/CameraPlain-Bold.otf');
-  font-weight: 700;
+  font-family: 'GitLab Sans';
+  src: url('/fonts/GitLabSans.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
 }
 
 @layer utilities {
@@ -89,6 +73,7 @@
 
   body {
     font-family:
+      'GitLab Sans',
       'Camera',
       system-ui,
       -apple-system,
