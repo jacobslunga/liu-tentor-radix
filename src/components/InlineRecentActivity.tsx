@@ -65,9 +65,7 @@ const InlineRecentActivity = () => {
         {visibleActivities.map((activity, index) => (
           <Link key={activity.path} to={activity.path} viewTransition>
             <Button variant='ghost' size='sm' className='group'>
-              <span className='text-foreground hover:text-foreground transition-colors'>
-                {activity.courseCode}
-              </span>
+              {activity.courseCode}
               <ArrowUpRightIcon
                 weight='bold'
                 className='opacity-60 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:translate-x-1 transition-all duration-200'
