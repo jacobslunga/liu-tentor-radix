@@ -1,5 +1,9 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from '../constants';
+import {
+  CHAT_API_URL,
+  CHAT_API_URL_LOCAL,
+  STREAM_UPDATE_INTERVAL,
+} from '../constants';
 import { Message } from '../types';
 
 interface UseChatMessagesProps {
@@ -17,6 +21,7 @@ export interface UseChatMessagesReturn {
     content: string,
     giveDirectAnswer: boolean,
     selectedModelId: string,
+    context?: string,
   ) => Promise<void>;
   cancelGeneration: () => string | null;
 }
@@ -525,10 +530,15 @@ export const useChatMessages = ({
       content: string,
       giveDirectAnswer: boolean,
       selectedModelId: string,
+      context?: string,
     ) => {
       if (!content.trim() || isLoadingRef.current) return;
 
-      const userMessage: Message = { role: 'user', content };
+      const userMessage: Message = {
+        role: 'user',
+        content,
+        ...(context ? { context } : {}),
+      };
 
       const optimistic: Message[] = [
         ...messagesRef.current,
@@ -545,9 +555,17 @@ export const useChatMessages = ({
       abortControllerRef.current = new AbortController();
 
       try {
-        const recentMessages = optimistic.slice(0, -1).slice(-10);
+        const recentMessages = optimistic
+          .slice(0, -1)
+          .slice(-10)
+          .map((m) => {
+            if (m.context) {
+              return { role: m.role, content: m.content, context: m.context };
+            }
+            return { role: m.role, content: m.content };
+          });
 
-        const response = await fetch(`${CHAT_API_URL}/${examId}`, {
+        const response = await fetch(`${CHAT_API_URL_LOCAL}/${examId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
