@@ -1,6 +1,5 @@
-import { Outlet, useLocation } from "react-router-dom";
-import Header from "@/components/Header";
-import { LayoutProvider } from "@/context/LayoutContext";
+import { Outlet, useLocation } from 'react-router-dom';
+import Header from '@/components/Header';
 
 const isSearchUrl = (url: string) => {
   const pattern = /^\/search\/[A-Z0-9]+\/\d+$/;
@@ -12,14 +11,12 @@ const SearchLayout = () => {
   const shouldShowHeader = !isSearchUrl(location.pathname);
 
   return (
-    <LayoutProvider>
-      <div className="flex flex-col min-h-screen w-full">
-        {shouldShowHeader && <Header />}{" "}
-        <main className="flex grow flex-col max-w-full w-full">
-          <Outlet />
-        </main>
-      </div>
-    </LayoutProvider>
+    <div className='flex flex-col min-h-screen w-full'>
+      {shouldShowHeader && <Header />}
+      <main className='flex grow flex-col max-w-full w-full'>
+        <Outlet />
+      </main>
+    </div>
   );
 };
 

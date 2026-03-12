@@ -1,21 +1,10 @@
-import { FC, useMemo, useState, useRef, useEffect } from 'react';
+import { FC, useMemo, useState, useRef } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   Loader2,
   Upload as UploadIcon,
   BarChart as ChartIcon,
-  Filter,
-  CheckCircle2,
-  TrendingUp,
-  FileText,
 } from 'lucide-react';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DataTable } from '@/components/data-table/exams-data-table';
@@ -26,7 +15,6 @@ import { useCourseExams } from '@/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useMetadata } from '@/hooks/useMetadata';
-import { useLayout } from '@/context/LayoutContext';
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -76,47 +64,9 @@ const ExamSearchPage: FC = () => {
   const { t } = useTranslation();
   const { language } = useLanguage();
   const { courseData, isLoading, isError } = useCourseExams(courseCode || '');
-  const { setHeaderSearchAlignX } = useLayout();
   const contentRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const updatePosition = () => {
-      if (contentRef.current) {
-        const rect = contentRef.current.getBoundingClientRect();
-        setHeaderSearchAlignX(rect.left);
-      }
-    };
-
-    // Initial update
-    updatePosition();
-
-    // Debounced resize handler
-    let timeoutId: NodeJS.Timeout;
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(updatePosition, 100);
-    };
-
-    window.addEventListener('resize', handleResize);
-
-    const observer = new ResizeObserver(() => {
-      // Use requestAnimationFrame to avoid "ResizeObserver loop limit exceeded"
-      requestAnimationFrame(updatePosition);
-    });
-
-    if (contentRef.current) {
-      observer.observe(contentRef.current);
-    }
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      observer.disconnect();
-      clearTimeout(timeoutId);
-    };
-  }, [setHeaderSearchAlignX, isLoading]);
-
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [selectedExamType, setSelectedExamType] = useState<string | null>(null);
 
   const sortedExams = useMemo(() => {
     const exams = courseData?.exams ?? [];
@@ -127,32 +77,6 @@ const ExamSearchPage: FC = () => {
         : new Date(a.exam_date).getTime() - new Date(b.exam_date).getTime();
     });
   }, [courseData?.exams, sortOrder]);
-
-  const filteredExams = useMemo(() => {
-    if (!selectedExamType || selectedExamType === 'all') return sortedExams;
-    return sortedExams.filter(
-      (exam) => exam.exam_name.split(' ')[0] === selectedExamType,
-    );
-  }, [sortedExams, selectedExamType]);
-
-  const examTypes = useMemo(
-    () => new Set(sortedExams.map((exam) => exam.exam_name.split(' ')[0])),
-    [sortedExams],
-  );
-
-  const stats = useMemo(() => {
-    if (sortedExams.length === 0) return { avgPassRate: 0, withSolutions: 0 };
-    const totalPass = sortedExams.reduce(
-      (acc, e) => acc + (e.pass_rate || 0),
-      0,
-    );
-    const withSol = sortedExams.filter((e) => e.has_solution).length;
-    return {
-      avgPassRate: (totalPass / sortedExams.length).toFixed(1),
-      withSolutions: withSol,
-      total: sortedExams.length,
-    };
-  }, [sortedExams]);
 
   const closest = useMemo(
     () => getClosestCourseCodes(courseCode || '', kurskodArray, 5),
@@ -165,7 +89,7 @@ const ExamSearchPage: FC = () => {
 
   useMetadata({
     title: pageTitle,
-    description: `Plugga ${stats.total} tentor för ${courseCode}`,
+    description: `Plugga ${sortedExams.length} tentor för ${courseCode}`,
     keywords: `${courseCode}, tentor`,
     ogTitle: pageTitle,
     canonical: `${window.location.origin}/course/${courseCode}`,
@@ -189,12 +113,12 @@ const ExamSearchPage: FC = () => {
         )}
 
         {!isLoading && !isError && sortedExams.length > 0 && (
-          <div className='flex flex-col items-center justify-center'>
+          <div className='flex flex-col items-center justify-center pb-4'>
             <div
               ref={contentRef}
-              className='flex flex-col gap-6 w-full lg:w-auto min-w-0'
+              className='flex flex-col gap-5 w-full lg:w-auto min-w-0'
             >
-              <div className='flex flex-col gap-2'>
+              <div className='flex flex-col gap-1'>
                 <div className='flex items-center gap-2 text-sm text-muted-foreground/70'>
                   <span className='font-medium text-foreground/80'>
                     {courseCode}
@@ -203,90 +127,44 @@ const ExamSearchPage: FC = () => {
                   <span>Tentor</span>
                 </div>
 
-                <div className='flex flex-col sm:flex-row sm:items-end justify-between gap-4'>
-                  <h1
-                    className={`${courseName.length > 20 ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-normal text-foreground wrap-break-word max-w-3xl leading-tight text-balance`}
-                  >
-                    {courseName}
-                  </h1>
-                </div>
-
-                <div className='flex flex-wrap items-center gap-x-3 gap-y-2 text-sm mt-1'>
-                  <Badge variant='secondary'>
-                    <TrendingUp className='w-4 h-4' />
-                    <span className='font-medium'>{stats.avgPassRate}%</span>
-                    <span className='opacity-80'>{t('averagePassRate')}</span>
-                  </Badge>
-
-                  <Badge variant='secondary'>
-                    <CheckCircle2 className='w-4 h-4' />
-                    <span className='font-medium'>{stats.withSolutions}</span>
-                    <span className='opacity-80'>{t('withSolution')}</span>
-                  </Badge>
-
-                  <Badge variant='secondary'>
-                    <FileText className='w-4 h-4' />
-                    <span className='font-medium'>{stats.total}</span>
-                    <span className='opacity-80'>
-                      {t('exams').toLowerCase()}
-                    </span>
-                  </Badge>
-                </div>
-              </div>
-
-              <div className='flex flex-col sm:flex-row items-stretch sm:items-center gap-3 mt-2'>
-                <div className='flex gap-2'>
-                  <Select
-                    onValueChange={(v) =>
-                      setSelectedExamType(v === 'all' ? null : v)
-                    }
-                  >
-                    <SelectTrigger className='h-8 w-[140px] bg-background rounded-full text-xs'>
-                      <div className='flex items-center gap-2 text-muted-foreground'>
-                        <Filter className='h-3 w-3' />
-                        <SelectValue
-                          placeholder={language === 'sv' ? 'Alla' : 'All'}
-                        />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value='all'>
-                        {language === 'sv' ? 'Alla typer' : 'All types'}
-                      </SelectItem>
-                      {[...examTypes].map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {type}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-
-                  <Link to='/upload-exams' viewTransition>
-                    <Button variant='default' size='sm'>
-                      <UploadIcon className='h-4 w-4' />
-                      <span className='hidden sm:inline'>
-                        {t('uploadMore')}
-                      </span>
-                      <span className='sm:hidden'>Ladda upp</span>
-                    </Button>
-                  </Link>
-                  <Link to={`/search/${courseCode}/stats`} viewTransition>
-                    <Button variant='secondary' size='sm'>
-                      <ChartIcon className='h-4 w-4' />
-                      <span className='hidden sm:inline'>
-                        {language === 'sv' ? 'Statistik' : 'Statistics'}
-                      </span>
-                    </Button>
-                  </Link>
-                </div>
+                <h1
+                  className={`${courseName.length > 20 ? 'text-2xl sm:text-3xl' : 'text-3xl sm:text-4xl'} font-medium text-foreground wrap-break-word max-w-3xl leading-tight text-balance`}
+                >
+                  {courseName}
+                </h1>
               </div>
 
               <DataTable
-                data={filteredExams}
+                data={sortedExams}
                 onSortChange={() =>
                   setSortOrder((prev) => (prev === 'desc' ? 'asc' : 'desc'))
                 }
               />
+
+              <div className='sticky bottom-0 z-50 max-w-full'>
+                <div className='bg-linear-to-t from-background to-transparent overflow-hidden'>
+                  <div className='flex items-center justify-center h-24 gap-4 scrollbar-none'>
+                    <div className='flex items-center gap-2 shrink-0'>
+                      <Link to='/upload-exams' viewTransition>
+                        <Button variant='default'>
+                          <UploadIcon className='h-4 w-4' />
+                          {t('uploadMore')}
+                        </Button>
+                      </Link>
+
+                      <Link to={`/search/${courseCode}/stats`} viewTransition>
+                        <Button
+                          variant='outline'
+                          className='text-muted-foreground'
+                        >
+                          <ChartIcon className='h-4 w-4' />
+                          {language === 'sv' ? 'Statistik' : 'Statistics'}
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         )}
