@@ -1,9 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import {
-  CHAT_API_URL,
-  CHAT_API_URL_LOCAL,
-  STREAM_UPDATE_INTERVAL,
-} from '../constants';
+import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from '../constants';
 import { Message } from '../types';
 
 interface UseChatMessagesProps {
@@ -565,7 +561,7 @@ export const useChatMessages = ({
             return { role: m.role, content: m.content };
           });
 
-        const response = await fetch(`${CHAT_API_URL_LOCAL}/${examId}`, {
+        const response = await fetch(`${CHAT_API_URL}/${examId}`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
