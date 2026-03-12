@@ -8,6 +8,7 @@ import { Message } from '../types';
 import { motion } from 'framer-motion';
 import { markdownComponents } from './MarkdownComponents';
 import { useThrottle } from '../hooks/useThrottle';
+import { QuotesIcon } from '@phosphor-icons/react';
 
 interface MessageBubbleProps {
   message: Message;
@@ -75,7 +76,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         <div
           className={`${
             isUser
-              ? 'bg-primary/10 text-foreground px-5 py-2.5 rounded-3xl max-w-[85%] w-fit'
+              ? 'bg-[#5478FF]/20 text-black dark:text-white px-3 py-2.5 rounded-xl max-w-[85%] w-fit'
               : 'w-full px-1 py-2'
           }`}
           data-message-content
@@ -92,9 +93,21 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
               <AssistantMessage content={throttledContent} />
             )
           ) : (
-            <p className='text-[15px] leading-relaxed whitespace-pre-wrap'>
-              {message.content}
-            </p>
+            <div>
+              {message.context && (
+                <div className='flex items-center gap-1.5 mb-1.5 text-xs text-foreground/50'>
+                  <QuotesIcon weight='fill' className='size-3 shrink-0' />
+                  <span className='truncate max-w-[200px]'>
+                    {message.context.length > 60
+                      ? message.context.slice(0, 60) + '...'
+                      : message.context}
+                  </span>
+                </div>
+              )}
+              <p className='text-[15px] leading-relaxed whitespace-pre-wrap'>
+                {message.content}
+              </p>
+            </div>
           )}
         </div>
       </div>
