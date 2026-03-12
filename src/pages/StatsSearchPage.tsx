@@ -171,7 +171,7 @@ export default function StatsSearchPage() {
                 <span>{language === 'sv' ? 'Statistik' : 'Statistics'}</span>
               </div>
 
-              <h1 className='text-2xl sm:text-3xl font-normal text-foreground wrap-break-word max-w-3xl leading-tight text-balance'>
+              <h1 className='text-2xl sm:text-3xl font-medium text-foreground wrap-break-word max-w-3xl leading-tight text-balance'>
                 {courseName}
               </h1>
 

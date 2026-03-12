@@ -458,12 +458,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                         >
                           <InputGroupButton
                             variant='default'
-                            size='sm'
+                            size='icon-sm'
                             disabled={
                               (!input.trim() && !isLoading) || isInputTooLong
                             }
                             onClick={onSend}
-                            className='rounded-full shrink-0 font-medium transition-all'
+                            className='rounded-full shrink-0 font-medium transition-all bg-linear-to-tr from-primary to-green-300'
                           >
                             <ArrowUpIcon weight='bold' />
                             <span className='sr-only'>{sendButtonLabel}</span>
