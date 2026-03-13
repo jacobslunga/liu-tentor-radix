@@ -28,11 +28,7 @@ const formSchema = z.object({
     .max(500),
   name: z.string().optional(),
   liu_mail: z
-    .string()
     .email({ message: 'Ogiltig e-postadress' })
-    .regex(/^[a-z]{4,6}[0-9]{3}@student\.liu\.se$/, {
-      message: 'Endast LiU studentmail tillåten',
-    })
     .min(1, { message: 'LiU email är obligatoriskt' }),
 });
 

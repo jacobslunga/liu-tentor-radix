@@ -40,6 +40,7 @@ import {
   CheckIcon,
   SquareIcon,
   ArrowUpIcon,
+  MicrophoneIcon,
 } from '@phosphor-icons/react';
 import { QuotedContext } from './QuotedContext';
 import { cn } from '@/lib/utils';
@@ -218,6 +219,33 @@ export interface ChatInputHandle {
   focus: () => void;
 }
 
+interface SpeechRecognitionAlternativeLike {
+  transcript: string;
+}
+
+interface SpeechRecognitionResultLike {
+  isFinal: boolean;
+  [index: number]: SpeechRecognitionAlternativeLike;
+}
+
+interface SpeechRecognitionEventLike {
+  resultIndex: number;
+  results: ArrayLike<SpeechRecognitionResultLike>;
+}
+
+interface SpeechRecognitionLike {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEventLike) => void) | null;
+  onerror: ((event: { error?: string }) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+}
+
+type SpeechRecognitionConstructor = new () => SpeechRecognitionLike;
+
 export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
   (
     {
@@ -242,7 +270,30 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     ref,
   ) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
+    const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+    const baseInputBeforeSpeechRef = useRef('');
     const [isMultiline, setIsMultiline] = useState(false);
+    const [isListening, setIsListening] = useState(false);
+    const [recordingError, setRecordingError] = useState<string | null>(null);
+
+    const speechRecognitionCtor: SpeechRecognitionConstructor | null =
+      typeof window !== 'undefined'
+        ? ((
+            window as Window & {
+              SpeechRecognition?: SpeechRecognitionConstructor;
+              webkitSpeechRecognition?: SpeechRecognitionConstructor;
+            }
+          ).SpeechRecognition ??
+          (
+            window as Window & {
+              SpeechRecognition?: SpeechRecognitionConstructor;
+              webkitSpeechRecognition?: SpeechRecognitionConstructor;
+            }
+          ).webkitSpeechRecognition ??
+          null)
+        : null;
+
+    const isMicSupported = speechRecognitionCtor !== null;
 
     const updateComposerShape = useCallback(() => {
       const textarea = inputRef.current;
@@ -304,6 +355,13 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       }
     }, [quotedContext]);
 
+    useEffect(() => {
+      return () => {
+        recognitionRef.current?.stop();
+        recognitionRef.current = null;
+      };
+    }, []);
+
     const MAX_INPUT_LENGTH = 4000;
     const isInputTooLong = input.length >= MAX_INPUT_LENGTH;
 
@@ -311,10 +369,92 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
       if (e.key === 'Enter' && !e.shiftKey) {
         e.preventDefault();
         if (!isInputTooLong) {
+          recognitionRef.current?.stop();
+          setIsListening(false);
           onSend();
         }
       }
     };
+
+    const startSpeechToText = useCallback(() => {
+      if (!speechRecognitionCtor || isListening) {
+        return;
+      }
+
+      try {
+        setRecordingError(null);
+        baseInputBeforeSpeechRef.current = input.trim();
+
+        const recognition = new speechRecognitionCtor();
+        recognition.lang = language === 'sv' ? 'sv-SE' : 'en-US';
+        recognition.continuous = true;
+        recognition.interimResults = true;
+
+        recognition.onresult = (event) => {
+          let finalTranscript = '';
+          let interimTranscript = '';
+
+          // Rebuild from all current results so earlier phrases are preserved across pauses.
+          for (let i = 0; i < event.results.length; i += 1) {
+            const segment = event.results[i][0]?.transcript ?? '';
+
+            if (event.results[i].isFinal) {
+              finalTranscript += `${segment} `;
+            } else {
+              interimTranscript += segment;
+            }
+          }
+
+          const speechText = `${finalTranscript}${interimTranscript}`.trim();
+          const withBase = [baseInputBeforeSpeechRef.current, speechText]
+            .filter(Boolean)
+            .join(' ')
+            .slice(0, MAX_INPUT_LENGTH);
+
+          onInputChange(withBase);
+        };
+
+        recognition.onerror = (event) => {
+          setRecordingError(
+            language === 'sv'
+              ? event.error === 'not-allowed'
+                ? 'Mikrofonbehörighet nekades i webbläsaren.'
+                : 'Kunde inte transkribera tal just nu.'
+              : event.error === 'not-allowed'
+                ? 'Microphone permission was denied in the browser.'
+                : 'Could not transcribe speech right now.',
+          );
+        };
+
+        recognition.onend = () => {
+          setIsListening(false);
+        };
+
+        recognition.start();
+        recognitionRef.current = recognition;
+        setIsListening(true);
+      } catch {
+        setRecordingError(
+          language === 'sv'
+            ? 'Kunde inte starta taligenkänning i webbläsaren.'
+            : 'Could not start browser speech recognition.',
+        );
+        setIsListening(false);
+      }
+    }, [input, isListening, language, onInputChange, speechRecognitionCtor]);
+
+    const stopSpeechToText = useCallback(() => {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    }, []);
+
+    const toggleSpeechToText = useCallback(() => {
+      if (isListening) {
+        stopSpeechToText();
+      } else {
+        startSpeechToText();
+      }
+    }, [isListening, startSpeechToText, stopSpeechToText]);
 
     return (
       <div className='px-4 pb-4 relative w-full'>
@@ -424,7 +564,29 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                     </TooltipProvider>
                   </div>
 
-                  <div className='relative'>
+                  <div className='relative flex flex-row items-center justify-center gap-2'>
+                    <Button
+                      variant={isListening ? 'destructive' : 'secondary'}
+                      size='icon'
+                      disabled={!isMicSupported}
+                      onClick={toggleSpeechToText}
+                      aria-label={
+                        isListening
+                          ? language === 'sv'
+                            ? 'Stoppa tal-till-text'
+                            : 'Stop speech to text'
+                          : language === 'sv'
+                            ? 'Starta tal-till-text'
+                            : 'Start speech to text'
+                      }
+                    >
+                      {isListening ? (
+                        <SquareIcon weight='fill' className='h-3.5 w-3.5' />
+                      ) : (
+                        <MicrophoneIcon weight='bold' className='h-4 w-4' />
+                      )}
+                    </Button>
+
                     <AnimatePresence mode='wait' initial={false}>
                       {isLoading ? (
                         <motion.div
@@ -457,7 +619,11 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                             disabled={
                               (!input.trim() && !isLoading) || isInputTooLong
                             }
-                            onClick={onSend}
+                            onClick={() => {
+                              recognitionRef.current?.stop();
+                              setIsListening(false);
+                              onSend();
+                            }}
                             className='rounded-full shrink-0 font-medium transition-all'
                           >
                             <ArrowUpIcon weight='bold' />
@@ -475,6 +641,28 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           <div className='mt-3 px-2 text-center text-[11px] leading-relaxed text-muted-foreground'>
             {poweredByText}
           </div>
+
+          {!isMicSupported && (
+            <div className='text-xs text-amber-600 mt-2 text-center'>
+              {language === 'sv'
+                ? 'Din webbläsare stöder inte tal-till-text i denna vy.'
+                : 'Your browser does not support speech to text in this view.'}
+            </div>
+          )}
+
+          {isListening && (
+            <div className='text-xs text-primary mt-2 text-center animate-pulse'>
+              {language === 'sv'
+                ? 'Lyssnar... tryck igen för att stoppa.'
+                : 'Listening... tap again to stop.'}
+            </div>
+          )}
+
+          {recordingError && (
+            <div className='text-xs text-red-500 mt-2 text-center'>
+              {recordingError}
+            </div>
+          )}
 
           {isInputTooLong && (
             <div className='text-xs text-red-500 mt-2 text-center animate-pulse'>

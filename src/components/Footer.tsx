@@ -38,7 +38,7 @@ const Footer: FC = () => {
           <div className='md:col-span-1 space-y-4'>
             <div className='flex items-center gap-2'>
               <LogoIcon className='w-8 h-8 text-primary' />
-              <span className='text-xl font-logo font-medium '>
+              <span className='text-xl font-logo font-medium tracking-tighter'>
                 {t('homeTitle')}
               </span>
             </div>
