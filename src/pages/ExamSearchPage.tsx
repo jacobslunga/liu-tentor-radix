@@ -15,6 +15,7 @@ import { useCourseExams } from '@/api';
 import { useLanguage } from '@/context/LanguageContext';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useMetadata } from '@/hooks/useMetadata';
+import { CardsThreeIcon } from '@phosphor-icons/react';
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -142,7 +143,7 @@ const ExamSearchPage: FC = () => {
               />
 
               <div className='sticky bottom-0 z-50 max-w-full'>
-                <div className='bg-linear-to-t from-background to-transparent overflow-hidden'>
+                <div className='bg-linear-to-t from-background to-transparent w-full overflow-hidden'>
                   <div className='flex items-center justify-center h-24 gap-4 scrollbar-none'>
                     <div className='flex items-center gap-2 shrink-0'>
                       <Link to='/upload-exams' viewTransition>
@@ -160,6 +161,23 @@ const ExamSearchPage: FC = () => {
                           <ChartIcon className='h-4 w-4' />
                           {language === 'sv' ? 'Statistik' : 'Statistics'}
                         </Button>
+                      </Link>
+
+                      <Link
+                        to={`/quiz/${courseCode}`}
+                        viewTransition
+                        className='relative'
+                      >
+                        <Button
+                          variant='outline'
+                          className='text-muted-foreground relative'
+                        >
+                          <CardsThreeIcon weight='bold' className='h-4 w-4' />
+                          {language === 'sv' ? 'Quiz' : 'Quiz'}
+                        </Button>
+                        <div className='bg-red-500 text-white text-[9px] font-medium px-1.5 py-0.5 rounded-full absolute -top-2 -right-2'>
+                          <span>Nyhet</span>
+                        </div>
                       </Link>
                     </div>
                   </div>

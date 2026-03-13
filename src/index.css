@@ -5,9 +5,14 @@
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
+@font-face {
+  font-family: 'Canela';
+  src: url('/fonts/CanelaText-Medium.otf');
+}
+
 @theme {
-  --font-logo: 'DM Serif Text', serif;
-  --font-mono: monospace;
+  --font-logo: 'Canela', serif;
+  --font-mono: 'JetBrains Mono', monospace;
 }
 
 @font-face {

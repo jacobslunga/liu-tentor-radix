@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
-import { CHAT_API_URL, STREAM_UPDATE_INTERVAL } from '../constants';
+import { STREAM_UPDATE_INTERVAL } from '../constants';
+import { CHAT_API_URL } from '@/constants/urls';
 import { Message } from '../types';
 
 interface UseChatMessagesProps {
