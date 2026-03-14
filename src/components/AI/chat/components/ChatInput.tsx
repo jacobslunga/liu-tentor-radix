@@ -46,7 +46,7 @@ import { QuotedContext } from './QuotedContext';
 import { cn } from '@/lib/utils';
 import { ChevronDownIcon } from '@primer/octicons-react';
 
-export type ModelProvider = 'google';
+export type ModelProvider = 'google' | 'openai';
 
 export interface ModelBadge {
   sv: string;
@@ -63,12 +63,12 @@ export interface Model {
 const getModels = (): Model[] => {
   return [
     {
-      id: 'gemini-3.1-pro-preview',
+      id: 'gemini-3.1-pro',
       name: 'Gemini 3.1 Pro',
       provider: 'google',
     },
     {
-      id: 'gemini-3.1-flash-lite-preview',
+      id: 'gemini-3.1-flash-lite',
       name: 'Gemini 3.1 Flash Lite',
       provider: 'google',
     },
@@ -76,6 +76,11 @@ const getModels = (): Model[] => {
       id: 'gemini-2.5-pro',
       name: 'Gemini 2.5 Pro',
       provider: 'google',
+    },
+    {
+      id: 'gpt-5',
+      name: 'GPT-5',
+      provider: 'openai',
     },
   ];
 };
@@ -154,6 +159,11 @@ const ModelSelector = ({
     return groups;
   }, [models]);
 
+  const providerHeading: Record<ModelProvider, string> = {
+    google: 'Google',
+    openai: 'OpenAI',
+  };
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -181,7 +191,7 @@ const ModelSelector = ({
             {Object.entries(groupedModels).map(([provider, providerModels]) => (
               <CommandGroup
                 key={provider}
-                heading={provider.charAt(0).toUpperCase() + provider.slice(1)}
+                heading={providerHeading[provider as ModelProvider] ?? provider}
               >
                 {providerModels.map((model) => (
                   <CommandItem

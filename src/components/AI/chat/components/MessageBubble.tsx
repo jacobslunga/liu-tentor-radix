@@ -132,7 +132,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         <div
           className={`${
             isUser
-              ? 'bg-secondary text-secondary-foreground px-3 py-2.5 rounded-2xl max-w-[85%] w-fit'
+              ? 'bg-primary/10 text-foreground px-5 py-2.5 rounded-2xl max-w-[85%] w-fit'
               : 'w-full px-1 py-2'
           }`}
           data-message-content

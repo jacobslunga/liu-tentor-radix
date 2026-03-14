@@ -81,9 +81,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const [input, setInput] = useState('');
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
-  const [selectedModelId, setSelectedModelId] = useState<string>(
-    'gemini-3.1-pro-preview',
-  );
+  const [selectedModelId, setSelectedModelId] =
+    useState<string>('gemini-3.1-pro');
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [quotedContext, setQuotedContext] = useState('');
 
@@ -100,11 +99,23 @@ const ChatWindow: FC<ChatWindowProps> = ({
     const savedInput = localStorage.getItem(STORAGE_KEY);
     const savedModelId = localStorage.getItem(MODEL_STORAGE_KEY);
     if (savedInput) setInput(savedInput);
-    const deprecated = ['gemini-2.5-flash', 'gemini-3-pro-preview'];
-    if (savedModelId && !deprecated.includes(savedModelId)) {
-      setSelectedModelId(savedModelId);
-    } else if (savedModelId && deprecated.includes(savedModelId)) {
-      localStorage.setItem(MODEL_STORAGE_KEY, 'gemini-3.1-pro-preview');
+    const migratedModelIdMap: Record<string, string> = {
+      'gemini-2.5-flash': 'gemini-2.5-pro',
+      'gemini-3-pro-preview': 'gemini-3.1-pro',
+      'gemini-3.1-pro-preview': 'gemini-3.1-pro',
+      'gemini-3.1-flash-lite-preview': 'gemini-3.1-flash-lite',
+    };
+
+    const migratedModelId =
+      savedModelId && migratedModelIdMap[savedModelId]
+        ? migratedModelIdMap[savedModelId]
+        : savedModelId;
+
+    if (migratedModelId) {
+      setSelectedModelId(migratedModelId);
+      if (savedModelId !== migratedModelId) {
+        localStorage.setItem(MODEL_STORAGE_KEY, migratedModelId);
+      }
     }
     setIsDraftLoaded(true);
   }, []);
