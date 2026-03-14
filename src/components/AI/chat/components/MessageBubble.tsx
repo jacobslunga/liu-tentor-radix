@@ -5,10 +5,66 @@ import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import 'katex/dist/katex.min.css';
 import { Message } from '../types';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { markdownComponents } from './MarkdownComponents';
 import { useThrottle } from '../hooks/useThrottle';
 import { QuotesIcon } from '@phosphor-icons/react';
+
+import { useState, useEffect } from 'react';
+
+const THINKING_STAGES_SV = [
+  'Läser in dokument...',
+  'Analyserar din fråga...',
+  'Söker efter relevanta samband...',
+  'Formulerar ett svar...',
+];
+
+const THINKING_STAGES_EN = [
+  'Reading documents...',
+  'Analyzing your question...',
+  'Finding relevant context...',
+  'Formulating answer...',
+];
+
+const DynamicThinkingStages = ({ language }: { language: string }) => {
+  const [stageIndex, setStageIndex] = useState(0);
+  const stages = language === 'sv' ? THINKING_STAGES_SV : THINKING_STAGES_EN;
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setStageIndex((prevIndex) => {
+        if (prevIndex < stages.length - 1) {
+          return prevIndex + 1;
+        } else {
+          clearInterval(interval);
+          return prevIndex;
+        }
+      });
+    }, 2500);
+
+    return () => clearInterval(interval);
+  }, [stages.length]);
+
+  return (
+    <div className='flex items-center gap-3 py-1 overflow-hidden'>
+      <GridLoader />
+      <div className='relative h-5 w-48 flex items-center'>
+        <AnimatePresence mode='popLayout'>
+          <motion.span
+            key={stageIndex}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeOut' }}
+            className='absolute text-sm font-normal text-muted-foreground whitespace-nowrap'
+          >
+            {stages[stageIndex]}
+          </motion.span>
+        </AnimatePresence>
+      </div>
+    </div>
+  );
+};
 
 interface MessageBubbleProps {
   message: Message;
@@ -76,19 +132,14 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         <div
           className={`${
             isUser
-              ? 'bg-[#5478FF]/20 text-black dark:text-white px-3 py-2.5 rounded-xl max-w-[85%] w-fit'
+              ? 'bg-secondary text-secondary-foreground px-3 py-2.5 rounded-2xl max-w-[85%] w-fit'
               : 'w-full px-1 py-2'
           }`}
           data-message-content
         >
           {message.role === 'assistant' ? (
             isThinking ? (
-              <div className='flex items-center gap-3 py-1'>
-                <GridLoader />
-                <span className='text-sm font-normal text-muted-foreground animate-pulse'>
-                  {language === 'sv' ? 'Tänker...' : 'Thinking...'}
-                </span>
-              </div>
+              <DynamicThinkingStages language={language} />
             ) : (
               <AssistantMessage content={throttledContent} />
             )

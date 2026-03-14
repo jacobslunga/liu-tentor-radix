@@ -61,7 +61,16 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const [isSideLoaded, setIsSideLoaded] = useState(false);
   const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
 
-  const { messages, isLoading, sendMessage, cancelGeneration } = useChatState();
+  const {
+    messages,
+    isLoading,
+    sendMessage,
+    cancelGeneration,
+    chatHistory,
+    activeChatId,
+    loadChat,
+    startNewChat,
+  } = useChatState();
 
   const { width, isResizing, startResizing } = useResizablePanel();
 
@@ -141,6 +150,24 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
+
+  const handleSelectPastChat = useCallback(
+    (chatId: string) => {
+      loadChat(chatId);
+      setQuotedContext('');
+      requestAnimationFrame(() => scrollToBottom('auto'));
+    },
+    [loadChat, scrollToBottom],
+  );
+
+  const handleStartNewChat = useCallback(() => {
+    startNewChat();
+    setInput('');
+    setQuotedContext('');
+    localStorage.removeItem(STORAGE_KEY);
+    isUserScrollingRef.current = false;
+    requestAnimationFrame(() => scrollToBottom('auto'));
+  }, [startNewChat, scrollToBottom, isUserScrollingRef]);
 
   const handleSend = useCallback(() => {
     if (!input.trim() || isLoading) return;
@@ -264,6 +291,10 @@ const ChatWindow: FC<ChatWindowProps> = ({
                 hasSolution={hasSolutions}
                 onClose={handleClose}
                 side={side}
+                chatHistory={chatHistory}
+                activeChatId={activeChatId}
+                onSelectChat={handleSelectPastChat}
+                onStartNewChat={handleStartNewChat}
               />
             </motion.div>
 
