@@ -241,6 +241,11 @@ interface PrivacyTranslations {
   privacyPolicySection7Item1: string;
   privacyPolicySection7Item2: string;
   privacyPolicySection7Item3: string;
+  privacyPolicyAIBestPracticesTitle: string;
+  privacyPolicyAIBestPracticesContent: string;
+  privacyPolicyAIBestPracticesItem1: string;
+  privacyPolicyAIBestPracticesItem2: string;
+  privacyPolicyAIBestPracticesItem3: string;
   privacyPolicySection8Title: string;
   privacyPolicySection8Content: string;
   privacyPolicyContactEmail: string;
@@ -590,6 +595,16 @@ const translations: Record<Language, Translations> = {
       'Ingen personlig koppling: Data lagras kopplat till ett anonymt ID. Vi sparar ingen personlig information som kan identifiera dig.',
     privacyPolicySection7Item3:
       'Kvalitetssäkring: Vi analyserar anonymiserade konversationer för att motverka felaktig information och förbättra AI-modellen.',
+    privacyPolicyAIBestPracticesTitle:
+      'Bästa praxis för att använda AI i studier',
+    privacyPolicyAIBestPracticesContent:
+      'Vi rekommenderar att du i första hand använder hint-läget i chatten. Det uppmuntrar dig att tänka själv steg för steg, vilket oftast ger djupare förståelse och bättre långsiktigt lärande. Samtidigt lär alla sig på olika sätt, så anpassa stödet efter vad som fungerar för dig.',
+    privacyPolicyAIBestPracticesItem1:
+      'Börja med hints och försök lösa uppgiften själv innan du ber om ett komplett svar.',
+    privacyPolicyAIBestPracticesItem2:
+      'Använd fullständiga lösningar främst för att kontrollera resonemang och hitta luckor efter att du har försökt själv.',
+    privacyPolicyAIBestPracticesItem3:
+      'Ställ följdfrågor om varför ett steg fungerar, inte bara vad svaret är.',
     privacyPolicySection8Title: '8. Kontaktinformation',
     privacyPolicySection8Content:
       'Om du har några frågor om denna integritetspolicy eller hur dina uppgifter hanteras, vänligen kontakta oss på:',
@@ -925,6 +940,16 @@ const translations: Record<Language, Translations> = {
       'No Personal Link: Data is stored linked to an anonymous ID. We do not store any personal information that can identify you.',
     privacyPolicySection7Item3:
       'Quality Assurance: We analyze anonymized conversations to prevent incorrect information and improve the AI model.',
+    privacyPolicyAIBestPracticesTitle:
+      'Best practices for using AI when studying',
+    privacyPolicyAIBestPracticesContent:
+      'We recommend using hints mode as your default in chat. It encourages active thinking step by step, which usually leads to deeper understanding and better long-term learning. At the same time, everyone learns differently, so you should adapt the support to what works best for you.',
+    privacyPolicyAIBestPracticesItem1:
+      'Start with hints and try to solve the problem yourself before asking for a full answer.',
+    privacyPolicyAIBestPracticesItem2:
+      'Use full solutions mainly to verify your reasoning and identify gaps after your own attempt.',
+    privacyPolicyAIBestPracticesItem3:
+      'Ask follow-up questions about why a step works, not only what the final answer is.',
     privacyPolicySection8Title: '8. Contact information',
     privacyPolicySection8Content:
       'If you have any questions about this privacy policy or how your data is handled, please contact us at:',

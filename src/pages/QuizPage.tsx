@@ -320,7 +320,7 @@ const QuizPage: FC = () => {
           </Link>
         </Button>
 
-        <p className='text-3xl font-bold tracking-tight'>{courseCode}</p>
+        <p className='text-3xl font-medium tracking-tight'>{courseCode}</p>
       </div>
 
       <div className='flex flex-col gap-3'>
@@ -499,7 +499,7 @@ const QuizPage: FC = () => {
               <p className='mb-1 text-sm font-medium uppercase tracking-wider text-muted-foreground'>
                 {language === 'sv' ? 'Resultat' : 'Result'}
               </p>
-              <h1 className='text-4xl font-bold'>
+              <h1 className='text-4xl font-medium'>
                 {score}{' '}
                 <span className='text-2xl font-normal text-muted-foreground'>
                   / {questionCount}
@@ -507,7 +507,7 @@ const QuizPage: FC = () => {
               </h1>
             </div>
 
-            <Badge className='px-4 py-1.5 text-lg font-bold shadow-sm'>
+            <Badge className='px-4 py-1.5 text-lg font-medium shadow-sm'>
               {pct}%
             </Badge>
           </div>

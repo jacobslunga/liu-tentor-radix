@@ -114,6 +114,16 @@ const PrivacyPolicy: FC = () => {
         />
 
         <Section
+          title={t('privacyPolicyAIBestPracticesTitle')}
+          content={t('privacyPolicyAIBestPracticesContent')}
+          items={[
+            t('privacyPolicyAIBestPracticesItem1'),
+            t('privacyPolicyAIBestPracticesItem2'),
+            t('privacyPolicyAIBestPracticesItem3'),
+          ]}
+        />
+
+        <Section
           title={t('privacyPolicySection8Title')}
           content={t('privacyPolicySection8Content')}
         />
