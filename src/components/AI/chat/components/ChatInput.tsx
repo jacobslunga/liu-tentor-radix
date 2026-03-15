@@ -476,7 +476,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
 
           <motion.div
             layout
-            animate={{ borderRadius: isMultiline ? 28 : 9999 }}
+            animate={{ borderRadius: isMultiline ? 22 : 24 }}
             transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
             className='overflow-hidden border border-border bg-background shadow-md dark:bg-secondary'
           >
@@ -497,7 +497,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                 }}
                 onKeyDown={handleKeyDown}
                 rows={1}
-                className='min-h-11 max-h-[200px] overflow-y-auto px-2 py-2 text-base leading-6 resize-none'
+                className='min-h-11 max-h-[200px] overflow-y-auto px-2 py-2 text-[1rem]! leading-7 text-pretty wrap-break-word resize-none'
               />
 
               <InputGroupAddon align='block-end' className='mt-1 w-full pb-1'>
