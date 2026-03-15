@@ -10,6 +10,14 @@
   src: url('/fonts/CanelaText-Medium.otf');
 }
 
+@font-face {
+  font-family: 'GitLab Sans';
+  src: url('/fonts/GitLabSans.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
 @theme {
   --font-logo: 'Canela', serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -70,6 +78,7 @@
 
   body {
     font-family:
+      'GitLab Sans',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
