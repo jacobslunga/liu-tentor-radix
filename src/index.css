@@ -11,11 +11,27 @@
 }
 
 @font-face {
-  font-family: 'GitLab Sans';
-  src: url('/fonts/GitLabSans.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
+  font-family: 'Neoris';
+  src: url('/fonts/Neoris-Regular.ttf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Neoris';
+  src: url('/fonts/Neoris-Medium.ttf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Neoris';
+  src: url('/fonts/Neoris-Medium.ttf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Neoris';
+  src: url('/fonts/Neoris-Bold.ttf');
+  font-weight: 700;
 }
 
 @theme {
@@ -78,7 +94,7 @@
 
   body {
     font-family:
-      'GitLab Sans',
+      'Neoris',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

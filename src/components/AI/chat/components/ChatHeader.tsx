@@ -20,7 +20,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChatHistoryItem } from '../hooks/useChatMessages';
@@ -123,15 +122,19 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align='end' className='w-72'>
-              <DropdownMenuLabel>
-                {language === 'sv' ? 'Tidigare chattar' : 'Past chats'}
-              </DropdownMenuLabel>
-              <DropdownMenuItem onClick={onStartNewChat}>
-                <PlusIcon weight='bold' className='h-4 w-4' />
-                {language === 'sv' ? 'Ny chatt' : 'New chat'}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
+            <DropdownMenuContent
+              align='end'
+              className='w-72 max-h-80 overflow-y-auto p-0'
+            >
+              <div className='sticky top-0 z-20 bg-popover border-b'>
+                <DropdownMenuLabel>
+                  {language === 'sv' ? 'Tidigare chattar' : 'Past chats'}
+                </DropdownMenuLabel>
+                <DropdownMenuItem onClick={onStartNewChat}>
+                  <PlusIcon weight='bold' className='h-4 w-4' />
+                  {language === 'sv' ? 'Ny chatt' : 'New chat'}
+                </DropdownMenuItem>
+              </div>
 
               {chatHistory.length === 0 ? (
                 <DropdownMenuItem disabled>
