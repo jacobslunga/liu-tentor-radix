@@ -15,14 +15,6 @@
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-@font-face {
-  font-family: 'GitLab Sans';
-  src: url('/fonts/GitLabSans.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
-
 @layer utilities {
   .not-scroll {
     -ms-overflow-style: none;
@@ -78,8 +70,6 @@
 
   body {
     font-family:
-      'GitLab Sans',
-      'Camera',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

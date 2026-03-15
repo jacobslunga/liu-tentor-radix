@@ -16,6 +16,7 @@ type TableRowProps = ComponentProps<'tr'>;
 type TableCellProps = ComponentProps<'th'>;
 type TableDataProps = ComponentProps<'td'>;
 type HrProps = ComponentProps<'hr'>;
+type BrProps = ComponentProps<'br'>;
 
 export const markdownComponents: Partial<Components> = {
   a: ({ className, ...props }: AnchorHTMLAttributes<HTMLAnchorElement>) => (
@@ -67,10 +68,16 @@ export const markdownComponents: Partial<Components> = {
     <li {...props} className={cn('my-1 text-base', className)} />
   ),
   h1: ({ className, ...props }: BaseProps) => (
-    <h1 {...props} className={cn('mt-4 mb-2 text-xl font-medium', className)} />
+    <h1
+      {...props}
+      className={cn('mt-4 mb-2 text-xl font-semibold', className)}
+    />
   ),
   h2: ({ className, ...props }: BaseProps) => (
-    <h2 {...props} className={cn('mt-3 mb-2 text-lg font-medium', className)} />
+    <h2
+      {...props}
+      className={cn('mt-3 mb-2 text-lg font-semibold', className)}
+    />
   ),
   h3: ({ className, ...props }: BaseProps) => (
     <h3
@@ -79,7 +86,10 @@ export const markdownComponents: Partial<Components> = {
     />
   ),
   hr: ({ className, ...props }: HrProps) => (
-    <hr {...props} className={cn('my-4 border-border/60', className)} />
+    <hr {...props} className={cn('my-4 bg-foreground', className)} />
+  ),
+  br: ({ className, ...props }: BrProps) => (
+    <br {...props} className={cn('my-4 bg-foreground', className)} />
   ),
   table: ({ className, ...props }: TableProps) => (
     <div className='my-3 w-full overflow-hidden rounded-4xl border border-border/50 bg-card shadow-sm'>

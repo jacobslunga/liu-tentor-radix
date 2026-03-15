@@ -11,6 +11,7 @@ const MainLayout: React.FC = () => {
   const [isExamMode, setIsExamMode] = useState(false);
 
   const isStandardExamPage = /^\/search\/[A-Z0-9]+\/[0-9]+$/.test(pathname);
+  const isQuizPage = /^\/quiz\/[^/]+$/.test(pathname);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -107,7 +108,7 @@ const MainLayout: React.FC = () => {
       <main className='grow'>
         <Outlet />
       </main>
-      {!isStandardExamPage && !isExamMode && <Footer />}
+      {!isStandardExamPage && !isExamMode && !isQuizPage && <Footer />}
     </div>
   );
 };
