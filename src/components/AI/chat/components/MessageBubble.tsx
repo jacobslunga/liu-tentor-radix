@@ -99,7 +99,7 @@ const GridLoader = () => {
 const AssistantMessage: FC<{ content: string }> = memo(
   ({ content }) => {
     return (
-      <div className='prose prose-base dark:prose-invert max-w-none w-full leading-7'>
+      <div className='prose prose-base dark:prose-invert max-w-none w-full leading-7 text-pretty wrap-break-word'>
         <ReactMarkdown
           remarkPlugins={[remarkMath, remarkGfm]}
           rehypePlugins={[
@@ -155,7 +155,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
                   </span>
                 </div>
               )}
-              <p className='text-[15px] leading-relaxed whitespace-pre-wrap'>
+              <p className='text-[16px] leading-relaxed whitespace-pre-wrap'>
                 {message.content}
               </p>
             </div>

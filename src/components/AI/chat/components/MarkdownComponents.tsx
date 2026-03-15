@@ -44,7 +44,7 @@ export const markdownComponents: Partial<Components> = {
     const isInline = !props.className?.includes('language-');
     if (isInline) {
       return (
-        <code className='bg-muted/50 text-foreground px-1 py-0.5 rounded text-base'>
+        <code className='bg-muted/50 text-foreground px-1.5 py-0.5 rounded text-[1.03rem]'>
           {children}
         </code>
       );
@@ -53,36 +53,57 @@ export const markdownComponents: Partial<Components> = {
   },
 
   p: ({ className, ...props }: BaseProps) => (
-    <p {...props} className={cn('my-2 text-base', className)} />
+    <p
+      {...props}
+      className={cn(
+        'my-2 text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        className,
+      )}
+    />
   ),
   ul: ({ className, ...props }: BaseProps) => (
-    <ul {...props} className={cn('my-2 ml-4 list-disc text-base', className)} />
+    <ul
+      {...props}
+      className={cn(
+        'my-2 ml-5 list-disc text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        className,
+      )}
+    />
   ),
   ol: ({ className, ...props }: BaseProps) => (
     <ol
       {...props}
-      className={cn('my-2 ml-4 list-decimal text-base', className)}
+      className={cn(
+        'my-2 ml-5 list-decimal text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        className,
+      )}
     />
   ),
   li: ({ className, ...props }: BaseProps) => (
-    <li {...props} className={cn('my-1 text-base', className)} />
+    <li
+      {...props}
+      className={cn(
+        'my-1 text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        className,
+      )}
+    />
   ),
   h1: ({ className, ...props }: BaseProps) => (
     <h1
       {...props}
-      className={cn('mt-4 mb-2 text-xl font-semibold', className)}
+      className={cn('mt-4 mb-2 text-2xl font-semibold leading-tight', className)}
     />
   ),
   h2: ({ className, ...props }: BaseProps) => (
     <h2
       {...props}
-      className={cn('mt-3 mb-2 text-lg font-semibold', className)}
+      className={cn('mt-3 mb-2 text-xl font-semibold leading-tight', className)}
     />
   ),
   h3: ({ className, ...props }: BaseProps) => (
     <h3
       {...props}
-      className={cn('mt-2 mb-1 text-base font-medium', className)}
+      className={cn('mt-2 mb-1 text-lg font-medium leading-snug', className)}
     />
   ),
   hr: ({ className, ...props }: HrProps) => (
@@ -96,7 +117,7 @@ export const markdownComponents: Partial<Components> = {
       <table
         {...props}
         className={cn(
-          'w-full border-collapse text-left text-[13px] leading-5',
+          'w-full border-collapse text-left text-[1.01rem] leading-7 wrap-anywhere',
           className,
         )}
       />
@@ -127,7 +148,7 @@ export const markdownComponents: Partial<Components> = {
     <th
       {...props}
       className={cn(
-        'px-6 py-4 text-left align-middle text-sm font-semibold whitespace-nowrap first:pl-8 last:pr-8',
+        'px-6 py-4 text-left align-middle text-[1.03rem] font-semibold whitespace-nowrap first:pl-8 last:pr-8',
         className,
       )}
     />
@@ -136,7 +157,7 @@ export const markdownComponents: Partial<Components> = {
     <td
       {...props}
       className={cn(
-        'px-6 py-4 align-top text-[13px] text-foreground/90 first:pl-8 last:pr-8',
+        'px-6 py-4 align-top text-[1.01rem] text-foreground/90 first:pl-8 last:pr-8',
         className,
       )}
     />
