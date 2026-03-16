@@ -320,7 +320,7 @@ const QuizPage: FC = () => {
           </Link>
         </Button>
 
-        <p className='text-3xl font-medium tracking-tight'>{courseCode}</p>
+        <p className='text-3xl font-semibold tracking-tight'>{courseCode}</p>
       </div>
 
       <div className='flex flex-col gap-3'>

@@ -10,6 +10,30 @@
   src: url('/fonts/CanelaText-Medium.otf');
 }
 
+@font-face {
+  font-family: 'Giphurs';
+  src: url('/fonts/Giphurs-Regular.otf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Giphurs';
+  src: url('/fonts/Giphurs-Medium.otf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Giphurs';
+  src: url('/fonts/Giphurs-SemiBold.otf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Giphurs';
+  src: url('/fonts/Giphurs-Bold.otf');
+  font-weight: 700;
+}
+
 @theme {
   --font-logo: 'Canela', serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -70,6 +94,7 @@
 
   body {
     font-family:
+      'Giphurs',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
