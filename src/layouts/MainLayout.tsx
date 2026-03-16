@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTextSize } from '@/context/TextSizeContext';
 import { LockInModeManager } from '@/lib/lockInMode';
 import Footer from '@/components/Footer';
+import { generateId } from '@/lib/utils';
 
 const MainLayout: React.FC = () => {
   const { pathname } = useLocation();
@@ -28,7 +29,7 @@ const MainLayout: React.FC = () => {
     const existingId = localStorage.getItem(storageKey);
 
     if (!existingId) {
-      const newId = crypto.randomUUID();
+      const newId = generateId();
       localStorage.setItem(storageKey, newId);
     }
   }, [textSize]);
