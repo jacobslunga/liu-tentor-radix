@@ -55,17 +55,14 @@ export const markdownComponents: Partial<Components> = {
   p: ({ className, ...props }: BaseProps) => (
     <p
       {...props}
-      className={cn(
-        'my-2 text-[1.08rem] leading-8 text-pretty wrap-break-word',
-        className,
-      )}
+      className={cn('my-2 text-[1rem] text-pretty wrap-break-word', className)}
     />
   ),
   ul: ({ className, ...props }: BaseProps) => (
     <ul
       {...props}
       className={cn(
-        'my-2 ml-5 list-disc text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        'my-2 ml-5 list-disc text-[1.08rem] text-pretty wrap-break-word',
         className,
       )}
     />
@@ -74,7 +71,7 @@ export const markdownComponents: Partial<Components> = {
     <ol
       {...props}
       className={cn(
-        'my-2 ml-5 list-decimal text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        'my-2 ml-5 list-decimal text-[1.08rem] text-pretty wrap-break-word',
         className,
       )}
     />
@@ -82,16 +79,16 @@ export const markdownComponents: Partial<Components> = {
   li: ({ className, ...props }: BaseProps) => (
     <li
       {...props}
-      className={cn(
-        'my-1 text-[1.08rem] leading-8 text-pretty wrap-break-word',
-        className,
-      )}
+      className={cn('my-1 text-[1rem] text-pretty wrap-break-word', className)}
     />
   ),
   h1: ({ className, ...props }: BaseProps) => (
     <h1
       {...props}
-      className={cn('mt-4 mb-2 text-2xl font-semibold leading-tight', className)}
+      className={cn(
+        'mt-4 mb-2 text-2xl font-semibold leading-tight',
+        className,
+      )}
     />
   ),
   h2: ({ className, ...props }: BaseProps) => (
