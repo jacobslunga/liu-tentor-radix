@@ -1,4 +1,5 @@
-import { Exam } from "@/api";
+import { Exam } from '@/api';
+import { generateId } from '@/lib/utils';
 
 export interface LockInModeState {
   isActive: boolean;
@@ -27,8 +28,8 @@ export interface LockInModeSession {
   reason?: string;
 }
 
-const EXAM_MODE_KEY = "examMode";
-const EXAM_HISTORY_KEY = "examHistory";
+const EXAM_MODE_KEY = 'examMode';
+const EXAM_HISTORY_KEY = 'examHistory';
 const SESSION_TIMEOUT = 24 * 60 * 60 * 1000;
 
 export class LockInModeManager {
@@ -58,7 +59,7 @@ export class LockInModeManager {
   ): LockInModeState {
     const existing = this.getCurrentSession();
     if (existing) {
-      this.forceEndSession(existing, "replaced");
+      this.forceEndSession(existing, 'replaced');
     }
 
     const session: LockInModeState = {
@@ -69,7 +70,7 @@ export class LockInModeManager {
       startTime: Date.now(),
       totalDuration: durationMinutes * 60 * 1000,
       totalPausedTime: 0,
-      sessionId: crypto.randomUUID(),
+      sessionId: generateId(),
       lastActivity: Date.now(),
     };
 
@@ -152,15 +153,15 @@ export class LockInModeManager {
   }
 
   static isValidSession(session: unknown): session is LockInModeState {
-    if (!session || typeof session !== "object") return false;
+    if (!session || typeof session !== 'object') return false;
     const s = session as Record<string, unknown>;
     return (
-      typeof s.isActive === "boolean" &&
-      typeof s.examId === "string" &&
-      typeof s.startTime === "number" &&
-      typeof s.totalDuration === "number" &&
-      typeof s.sessionId === "string" &&
-      typeof s.lastActivity === "number"
+      typeof s.isActive === 'boolean' &&
+      typeof s.examId === 'string' &&
+      typeof s.startTime === 'number' &&
+      typeof s.totalDuration === 'number' &&
+      typeof s.sessionId === 'string' &&
+      typeof s.lastActivity === 'number'
     );
   }
 
@@ -181,7 +182,7 @@ export class LockInModeManager {
       timeUsed,
       completed: true,
       expired: false,
-      reason: "completed",
+      reason: 'completed',
     });
 
     localStorage.removeItem(EXAM_MODE_KEY);
@@ -199,7 +200,7 @@ export class LockInModeManager {
       timeUsed: session.totalDuration,
       completed: false,
       expired: true,
-      reason: "expired",
+      reason: 'expired',
     });
 
     localStorage.removeItem(EXAM_MODE_KEY);
@@ -217,7 +218,7 @@ export class LockInModeManager {
       timeUsed: 0,
       completed: false,
       expired: false,
-      reason: "stale",
+      reason: 'stale',
     });
 
     localStorage.removeItem(EXAM_MODE_KEY);
@@ -251,7 +252,7 @@ export class LockInModeManager {
       localStorage.setItem(EXAM_HISTORY_KEY, JSON.stringify(trimmedHistory));
     } catch (error) {
       console.error(error);
-      console.warn("Failed to save exam session to history");
+      console.warn('Failed to save exam session to history');
     }
   }
 
@@ -285,11 +286,11 @@ export class LockInModeManager {
     const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
 
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds
         .toString()
-        .padStart(2, "0")}`;
+        .padStart(2, '0')}`;
     }
-    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   }
 
   static isPaused(): boolean {

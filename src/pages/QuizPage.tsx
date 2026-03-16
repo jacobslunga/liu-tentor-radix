@@ -25,7 +25,7 @@ import {
 import { useLanguage } from '@/context/LanguageContext';
 import { useMetadata } from '@/hooks/useMetadata';
 import { markdownComponents } from '@/components/AI/chat/components/MarkdownComponents';
-import { cn } from '@/lib/utils';
+import { cn, generateId } from '@/lib/utils';
 import { useQuiz } from '@/hooks/useQuiz';
 import type { MultipleChoiceQuizResponse } from '@/types/quiz';
 
@@ -189,7 +189,7 @@ const QuizPage: FC = () => {
     setSelectedHistoryId('latest');
 
     const entry: StoredQuizItem = {
-      id: crypto.randomUUID(),
+      id: generateId(),
       createdAt: new Date().toISOString(),
       data: quizData,
     };
