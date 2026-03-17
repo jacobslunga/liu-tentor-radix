@@ -628,101 +628,12 @@ const toHistoryItems = (sessions: StoredChatSession[]): ChatHistoryItem[] => {
 //   },
 // ];
 
-const DEMO_MESSAGES: Message[] = [
-  {
-    role: 'user',
-    content: 'kan du ge mig standardgränsvärden',
-  },
-  {
-    role: 'assistant',
-    content: '> *Avbruten av användaren*',
-  },
-  {
-    role: 'user',
-    content:
-      'kan du ge mig standardgränsvärden, inte bara för denna tentan utan generellt de vanliga',
-  },
-  {
-    role: 'assistant',
-    content:
-      `Här är de vanligaste standardgränsvärdena i envariabelanalys, uppdelade efter vilket värde variabeln närmar sig.
-
-### 1. Gränsvärden då $x \\to 0$
-Dessa gränsvärden bygger på funktionernas beteende nära origo och motsvarar den första nollskilda termen i funktionernas Maclaurinutveckling.
-
-Trigonometriska funktioner:
-$$ \\lim_{x \\to 0} \\frac{\\sin x}{x} = 1 $$
-$$ \\lim_{x \\to 0} \\frac{1 - \\cos x}{x^2} = \\frac{1}{2} $$
-
-Exponential- och logaritmfunktioner:
-$$ \\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1 $$
-$$ \\lim_{x \\to 0} \\frac{\\ln(1+x)}{x} = 1 $$
-
-Potensfunktioner:
-$$ \\lim_{x \\to 0} \\frac{(1+x)^\\alpha - 1}{x} = \\alpha \\quad (\\text{för alla konstanter } \\alpha) $$
-
-### 2. Gränsvärden då $x \\to \\infty$ (Hastighetsskalor)
-Dessa gränsvärden beskriver hur snabbt olika typer av funktioner växer mot oändligheten i förhållande till varandra. Grundregeln är att logaritmer växer långsammast, följt av potensfunktioner, sedan exponentialfunktioner, fakulteter och slutligen $x^x$.
-
-Hierarkin kan skrivas som:
-$\\ln x \\ll x^p \\ll a^x \\ll x! \\ll x^x$ för stora $x$ (när $p > 0$ och $a > 1$).
-
-Matematiskt uttrycks detta genom följande standardgränsvärden:
-$$ \\lim_{x \\to \\infty} \\frac{\\ln x}{x^p} = 0 \\quad (p > 0) $$
-$$ \\lim_{x \\to \\infty} \\frac{x^p}{a^x} = 0 \\quad (p > 0, a > 1) $$
-$$ \\lim_{x \\to \\infty} \\frac{a^x}{x!} = 0 \\quad (a > 1) $$
-
-### 3. Gränsvärden då $x \\to 0^+$
-Detta är specialfallet av hastighetsskalorna fast nära noll. Det visar att potensfunktionen $x^p$ går mot noll snabbare än vad $\\ln x$ går mot $-\\infty$.
-
-$$ \\lim_{x \\to 0^+} x^p \\ln x = 0 \\quad (p > 0) $$
-
-### 4. Definitioner av talet $e$
-Dessa gränsvärden används ofta när man har ett uttryck på formen "1 upphöjt till oändligheten".
-
-$$ \\lim_{x \\to \\pm\\infty} \\left(1 + \\frac{1}{x}\\right)^x = e $$
-$$ \\lim_{x \\to 0} (1 + x)^{\\frac{1}{x}} = e $$
-
-### Tillämpningstips
-När du löser uppgifter och har uttryck som inte exakt matchar standardformerna (till exempel $\\sin(3x)$ istället för $\\sin x$), kan du ofta göra ett variabelbyte, exempelvis $t = 3x$. Eftersom $x \\to 0$ innebär att $t \\to 0$, kan du direkt tillämpa standardgränsvärdet på den nya variabeln.`.trim(),
-  },
-  {
-    role: 'user',
-    content:
-      'nej men ge mig en tabell för x -> 0 och x -> oändligheten. alltså typ ln(x) / x.o typ sin(x) / x. osv',
-  },
-  {
-    role: 'assistant',
-    content: `### Gränsvärden då $x \\to 0$
-
-| Gränsvärde | Villkor / Kommentar |
-| :--- | :--- |
-| $\\lim_{x \\to 0} \\frac{\\sin x}{x} = 1$ | Gäller när $x$ anges i radianer. |
-| $\\lim_{x \\to 0} \\frac{e^x - 1}{x} = 1$ | |
-| $\\lim_{x \\to 0} \\frac{\\ln(1+x)}{x} = 1$ | |
-| $\\lim_{x \\to 0} \\frac{1 - \\cos x}{x^2} = \\frac{1}{2}$ | |
-| $\\lim_{x \\to 0^+} x^a \\ln x = 0$ | Gäller för alla konstanter $a > 0$. |
-| $\\lim_{x \\to 0} (1+x)^{\\frac{1}{x}} = e$ | |
-
-### Gränsvärden då $x \\to \\infty$
-
-| Gränsvärde | Villkor / Kommentar |
-| :--- | :--- |
-| $\\lim_{x \\to \\infty} \\frac{\\ln x}{x^a} = 0$ | Gäller för alla konstanter $a > 0$. Potensfunktionen växer snabbare än logaritmen. |
-| $\\lim_{x \\to \\infty} \\frac{x^a}{b^x} = 0$ | Gäller för alla konstanter $a > 0$ och $b > 1$. Exponentialfunktionen växer snabbare än potensfunktionen. |
-| $\\lim_{x \\to \\infty} \\frac{b^x}{x!} = 0$ | Gäller för alla konstanter $b > 1$. Fakultet växer snabbare än exponentialfunktionen. |
-| $\\lim_{x \\to \\infty} x^{\\frac{1}{x}} = 1$ | |
-| $\\lim_{x \\to \\infty} \\left(1+\\frac{1}{x}\\right)^x = e$ | |
-| $\\lim_{x \\to \\infty} \\left(1+\\frac{a}{x}\\right)^x = e^a$ | Gäller för alla konstanter $a$. |`.trim(),
-  },
-];
-
 export const useChatMessages = ({
   examId,
   examUrl,
   courseCode,
   solutionUrl,
-  initialMessages = DEMO_MESSAGES,
+  initialMessages = [],
 }: UseChatMessagesProps): UseChatMessagesReturn => {
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [isLoading, setIsLoading] = useState(false);
