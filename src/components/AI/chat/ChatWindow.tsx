@@ -289,9 +289,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
               variants={contentVariants}
               className='absolute top-0 left-0 right-0 z-20 pt-2 pb-8'
             >
-              <div className='absolute inset-0 z-0 backdrop-blur-md mask-[linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0.8)_20%,rgba(0,0,0,0.5)_50%,rgba(0,0,0,0)_100%)] [-webkit-mask-image:linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0.8)_20%,rgba(0,0,0,0.5)_50%,rgba(0,0,0,0)_100%)] pointer-events-none' />
-
-              <div className='absolute inset-0 z-0 bg-linear-to-b from-background/95 via-background/60 to-transparent pointer-events-none' />
+              <div className='absolute inset-0 z-0 bg-linear-to-b from-background via-background/90 to-transparent pointer-events-none' />
 
               <div className='relative z-10'>
                 <ChatHeader
