@@ -119,18 +119,21 @@ export const markdownComponents: Partial<Components> = {
     <br {...props} className={cn('my-4 bg-foreground', className)} />
   ),
   table: ({ className, ...props }: TableProps) => (
-    <div className='my-3 w-full overflow-hidden rounded-4xl border border-border/50 bg-card shadow-sm'>
+    <div className='mt-5 mb-3 w-full overflow-hidden rounded-2xl border border-border bg-card'>
       <table
         {...props}
         className={cn(
-          'w-full border-collapse text-left text-[1.01rem] leading-7 wrap-anywhere',
+          'w-full mt-0 border-collapse text-left text-sm text-pretty',
           className,
         )}
       />
     </div>
   ),
   thead: ({ className, ...props }: TableSectionProps) => (
-    <thead {...props} className={cn('text-muted-foreground', className)} />
+    <thead
+      {...props}
+      className={cn('bg-muted/30 text-muted-foreground', className)}
+    />
   ),
   tbody: ({ className, ...props }: TableSectionProps) => (
     <tbody
@@ -145,7 +148,7 @@ export const markdownComponents: Partial<Components> = {
     <tr
       {...props}
       className={cn(
-        'border-b border-border/35 transition-colors hover:bg-muted/8',
+        'border-b border-border/50 transition-colors hover:bg-muted/10',
         className,
       )}
     />
@@ -154,7 +157,7 @@ export const markdownComponents: Partial<Components> = {
     <th
       {...props}
       className={cn(
-        'px-6 py-4 text-left align-middle text-[1.03rem] font-semibold whitespace-nowrap first:pl-8 last:pr-8',
+        'px-3 py-2 text-left align-middle font-semibold whitespace-nowrap',
         className,
       )}
     />
@@ -163,7 +166,7 @@ export const markdownComponents: Partial<Components> = {
     <td
       {...props}
       className={cn(
-        'px-6 py-4 align-top text-[1.01rem] text-foreground/90 first:pl-8 last:pr-8',
+        'px-3 py-2 align-top text-foreground/90 first:whitespace-nowrap',
         className,
       )}
     />

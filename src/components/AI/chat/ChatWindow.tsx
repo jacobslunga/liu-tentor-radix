@@ -285,17 +285,26 @@ const ChatWindow: FC<ChatWindowProps> = ({
           <div
             className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? '' : 'border-l'}`}
           >
-            <motion.div variants={contentVariants}>
-              <ChatHeader
-                language={language}
-                hasSolution={hasSolutions}
-                onClose={handleClose}
-                side={side}
-                chatHistory={chatHistory}
-                activeChatId={activeChatId}
-                onSelectChat={handleSelectPastChat}
-                onStartNewChat={handleStartNewChat}
-              />
+            <motion.div
+              variants={contentVariants}
+              className='absolute top-0 left-0 right-0 z-20 pt-2 pb-8'
+            >
+              <div className='absolute inset-0 z-0 backdrop-blur-md mask-[linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0.8)_20%,rgba(0,0,0,0.5)_50%,rgba(0,0,0,0)_100%)] [-webkit-mask-image:linear-gradient(to_bottom,rgba(0,0,0,1)_0%,rgba(0,0,0,0.8)_20%,rgba(0,0,0,0.5)_50%,rgba(0,0,0,0)_100%)] pointer-events-none' />
+
+              <div className='absolute inset-0 z-0 bg-linear-to-b from-background/95 via-background/60 to-transparent pointer-events-none' />
+
+              <div className='relative z-10'>
+                <ChatHeader
+                  language={language}
+                  hasSolution={hasSolutions}
+                  onClose={handleClose}
+                  side={side}
+                  chatHistory={chatHistory}
+                  activeChatId={activeChatId}
+                  onSelectChat={handleSelectPastChat}
+                  onStartNewChat={handleStartNewChat}
+                />
+              </div>
             </motion.div>
 
             {messages.length === 0 && <EmptyState language={language} />}
@@ -306,7 +315,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
                 ref={messagesContainerRef}
                 className='absolute inset-0 overflow-y-auto'
               >
-                <div className='p-4 pb-48 space-y-4 relative min-h-full'>
+                <div className='px-4 pt-24 pb-48 space-y-4 relative min-h-full'>
                   {shouldRenderMessages ? (
                     <>
                       <MessageList
