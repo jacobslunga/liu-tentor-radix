@@ -10,6 +10,30 @@
   src: url('/fonts/CanelaText-Medium.otf');
 }
 
+@font-face {
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-Regular.otf');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-Medium.otf');
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-SemiBold.otf');
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-Bold.otf');
+  font-weight: 700;
+}
+
 @theme {
   --font-logo: 'Canela', serif;
   --font-mono: 'JetBrains Mono', monospace;
@@ -70,6 +94,7 @@
 
   body {
     font-family:
+      'Haffer',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
