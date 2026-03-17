@@ -143,10 +143,8 @@ const ExamSearchPage: FC = () => {
               />
 
               <div className='sticky bottom-0 z-50 max-w-full'>
-                <div className='relative w-full h-28 overflow-hidden'>
-                  <div className='absolute inset-0 pointer-events-none fade-glass-bottom' />
-
-                  <div className='relative z-10 flex items-end justify-center h-full pb-5 gap-4 scrollbar-none'>
+                <div className='bg-linear-to-t from-background to-transparent w-full overflow-hidden'>
+                  <div className='flex items-center justify-center h-24 gap-4 scrollbar-none'>
                     <div className='flex items-center gap-2 shrink-0'>
                       <Link to='/upload-exams' viewTransition>
                         <Button variant='default'>
