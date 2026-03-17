@@ -112,7 +112,7 @@ const ScrollToBottomButton = memo(
           className='absolute -top-14 left-1/2 -translate-x-1/2 z-20'
         >
           <Button variant='outline' size='icon' onClick={onClick}>
-            <ArrowDownIcon weight='bold' size={20} />
+            <ArrowDownIcon weight='bold' />
           </Button>
         </motion.div>
       )}
