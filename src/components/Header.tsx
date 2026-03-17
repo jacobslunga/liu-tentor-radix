@@ -9,9 +9,9 @@ const Header = () => {
 
   return (
     <header className='sticky top-0 z-50 w-full'>
-      <div className='absolute inset-0 bg-background/80 backdrop-blur-xl -z-10 mask-[linear-gradient(to_bottom,black,transparent)]' />
+      <div className='absolute inset-x-0 top-0 h-28 -z-10 pointer-events-none fade-glass-top' />
 
-      <div className='container h-14 max-w-full flex items-center justify-between px-4 md:px-10 lg:px-20 relative z-10'>
+      <div className='container h-16 max-w-full flex items-center justify-between px-4 md:px-10 lg:px-20 relative z-10'>
         <Link
           to='/'
           className='flex items-center hover:opacity-80 transition-opacity mr-4 shrink-0'

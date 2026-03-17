@@ -48,6 +48,22 @@
     display: none;
   }
 
+  .fade-glass-top {
+    background-color: color-mix(in srgb, var(--background), transparent 20%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    mask-image: linear-gradient(to bottom, black, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, black, transparent);
+  }
+
+  .fade-glass-bottom {
+    background-color: color-mix(in srgb, var(--background), transparent 20%);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    mask-image: linear-gradient(to top, black, transparent);
+    -webkit-mask-image: linear-gradient(to top, black, transparent);
+  }
+
   .mesh {
     background-color: hsla(0, 49%, 56%, 0);
     background-image:
