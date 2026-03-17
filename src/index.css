@@ -11,26 +11,26 @@
 }
 
 @font-face {
-  font-family: 'Giphurs';
-  src: url('/fonts/Giphurs-Regular.otf');
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-Regular.otf');
   font-weight: 400;
 }
 
 @font-face {
-  font-family: 'Giphurs';
-  src: url('/fonts/Giphurs-Medium.otf');
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-Medium.otf');
   font-weight: 500;
 }
 
 @font-face {
-  font-family: 'Giphurs';
-  src: url('/fonts/Giphurs-SemiBold.otf');
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-SemiBold.otf');
   font-weight: 600;
 }
 
 @font-face {
-  font-family: 'Giphurs';
-  src: url('/fonts/Giphurs-Bold.otf');
+  font-family: 'Haffer';
+  src: url('/fonts/Haffer-Bold.otf');
   font-weight: 700;
 }
 
@@ -94,7 +94,7 @@
 
   body {
     font-family:
-      'Giphurs',
+      'Haffer',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

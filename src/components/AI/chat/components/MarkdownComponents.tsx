@@ -55,14 +55,17 @@ export const markdownComponents: Partial<Components> = {
   p: ({ className, ...props }: BaseProps) => (
     <p
       {...props}
-      className={cn('my-2 text-[1rem] text-pretty wrap-break-word', className)}
+      className={cn(
+        'my-3 text-[1rem] leading-7 text-pretty wrap-break-word',
+        className,
+      )}
     />
   ),
   ul: ({ className, ...props }: BaseProps) => (
     <ul
       {...props}
       className={cn(
-        'my-2 ml-5 list-disc text-[1.08rem] text-pretty wrap-break-word',
+        'my-3 ml-6 list-disc text-[1.08rem] leading-8 text-pretty wrap-break-word',
         className,
       )}
     />
@@ -71,7 +74,7 @@ export const markdownComponents: Partial<Components> = {
     <ol
       {...props}
       className={cn(
-        'my-2 ml-5 list-decimal text-[1.08rem] text-pretty wrap-break-word',
+        'my-3 ml-6 list-decimal text-[1.08rem] leading-8 text-pretty wrap-break-word',
         className,
       )}
     />
@@ -79,14 +82,17 @@ export const markdownComponents: Partial<Components> = {
   li: ({ className, ...props }: BaseProps) => (
     <li
       {...props}
-      className={cn('my-1 text-[1rem] text-pretty wrap-break-word', className)}
+      className={cn(
+        'my-1.5 text-[1.08rem] leading-8 text-pretty wrap-break-word',
+        className,
+      )}
     />
   ),
   h1: ({ className, ...props }: BaseProps) => (
     <h1
       {...props}
       className={cn(
-        'mt-4 mb-2 text-2xl font-semibold leading-tight',
+        'mt-4 mb-2 text-2xl font-semibold leading-[1.3]',
         className,
       )}
     />
@@ -94,13 +100,16 @@ export const markdownComponents: Partial<Components> = {
   h2: ({ className, ...props }: BaseProps) => (
     <h2
       {...props}
-      className={cn('mt-3 mb-2 text-xl font-semibold leading-tight', className)}
+      className={cn(
+        'mt-3 mb-2 text-xl font-semibold leading-[1.35]',
+        className,
+      )}
     />
   ),
   h3: ({ className, ...props }: BaseProps) => (
     <h3
       {...props}
-      className={cn('mt-2 mb-1 text-lg font-medium leading-snug', className)}
+      className={cn('mt-2 mb-1 text-lg font-medium leading-[1.4]', className)}
     />
   ),
   hr: ({ className, ...props }: HrProps) => (
