@@ -1,4 +1,4 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useMemo, useState, useEffect } from 'react';
 import { createPluginRegistration } from '@embedpdf/core';
 import { EmbedPDF } from '@embedpdf/core/react';
 import { usePdfiumEngine } from '@embedpdf/engines/react';
@@ -43,11 +43,25 @@ const PdfRenderer: FC<PdfRendererProps> = ({
 }) => {
   const { effectiveTheme } = useTheme();
   const { engine, isLoading } = usePdfiumEngine();
-
   const isDark = effectiveTheme === 'dark';
+
+  const [windowWidth, setWindowWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : 1200,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const plugins = useMemo(() => {
     if (!pdfUrl) return [];
+
+    const determineZoomMode = () => {
+      if (layoutMode === 'exam-with-facit') return ZoomMode.FitWidth;
+      return windowWidth < 1100 ? ZoomMode.FitWidth : ZoomMode.Automatic;
+    };
 
     return [
       createPluginRegistration(DocumentManagerPluginPackage, {
@@ -60,13 +74,10 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       createPluginRegistration(RotatePluginPackage),
       createPluginRegistration(SelectionPluginPackage),
       createPluginRegistration(ZoomPluginPackage, {
-        defaultZoomLevel:
-          layoutMode === 'exam-with-facit'
-            ? ZoomMode.FitWidth
-            : ZoomMode.Automatic,
+        defaultZoomLevel: determineZoomMode(),
       }),
     ];
-  }, [pdfUrl, layoutMode]);
+  }, [pdfUrl, layoutMode, windowWidth]);
 
   if (!pdfUrl) return null;
 
@@ -116,7 +127,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                   isDark
                                     ? {
                                         filter:
-                                          'invert(0.99) hue-rotate(270deg) brightness(1) contrast(0.85) saturate(1)',
+                                          'invert(90.6%) hue-rotate(180deg)',
                                       }
                                     : undefined
                                 }

@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { useHotkeys } from 'react-hotkeys-hook';
 import { useChatWindow } from '@/context/ChatWindowContext';
 import type { ExamDetailPayload } from '@/api';
+import { ResizeHandle } from '@/components/AI/chat/components/ResizeHandle';
 
 interface Props {
   examDetail: ExamDetailPayload;
@@ -16,6 +17,10 @@ const ExamOnlyView = ({ examDetail }: Props) => {
   const { showChatWindow } = useChatWindow();
   const [isFacitVisible, setIsFacitVisible] = useState(false);
   const [isManual, setIsManual] = useState(false);
+
+  const [panelWidth, setPanelWidth] = useState(window.innerWidth / 2);
+  const [isDragging, setIsDragging] = useState(false);
+
   const panelRef = useRef<HTMLDivElement>(null);
 
   const facitVariants = {
@@ -25,23 +30,48 @@ const ExamOnlyView = ({ examDetail }: Props) => {
 
   const hasFacit = examDetail.solution !== null;
 
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const handleDrag = (e: MouseEvent) => {
+      const newWidth = window.innerWidth - e.clientX;
+      const clampedWidth = Math.max(
+        300,
+        Math.min(newWidth, window.innerWidth * 0.85),
+      );
+      setPanelWidth(clampedWidth);
+    };
+
+    const stopDrag = () => setIsDragging(false);
+
+    window.addEventListener('mousemove', handleDrag);
+    window.addEventListener('mouseup', stopDrag);
+
+    return () => {
+      window.removeEventListener('mousemove', handleDrag);
+      window.removeEventListener('mouseup', stopDrag);
+    };
+  }, [isDragging]);
+
   const handleMouseMove = useCallback(
     (e: MouseEvent) => {
-      if (!hasFacit || isManual || showChatWindow) return;
+      if (!hasFacit || isManual || showChatWindow || isDragging) return;
 
       const w = window.innerWidth;
       const threshold = w * 0.9;
       const topSafeZone = 120;
+      const offset = 40;
 
       if (isFacitVisible && panelRef.current) {
         const rect = panelRef.current.getBoundingClientRect();
-        const isInsidePanel =
-          e.clientX >= rect.left &&
-          e.clientX <= rect.right &&
-          e.clientY >= rect.top &&
-          e.clientY <= rect.bottom;
 
-        if (isInsidePanel) {
+        const isInsidePanelWithOffset =
+          e.clientX >= rect.left - offset &&
+          e.clientX <= rect.right + offset &&
+          e.clientY >= rect.top - offset &&
+          e.clientY <= rect.bottom + offset;
+
+        if (isInsidePanelWithOffset) {
           return;
         }
       }
@@ -59,7 +89,7 @@ const ExamOnlyView = ({ examDetail }: Props) => {
 
       setIsFacitVisible(false);
     },
-    [hasFacit, isManual, showChatWindow, isFacitVisible],
+    [hasFacit, isManual, showChatWindow, isFacitVisible, isDragging],
   );
 
   useEffect(() => {
@@ -92,7 +122,8 @@ const ExamOnlyView = ({ examDetail }: Props) => {
       {hasFacit && (
         <motion.div
           ref={panelRef}
-          className='absolute right-0 top-0 w-1/2 h-full bg-background border-l z-40 overflow-auto'
+          className='absolute right-0 top-0 h-full bg-background border-l shadow-2xl z-40 flex'
+          style={{ width: panelWidth }}
           variants={facitVariants}
           initial='hidden'
           animate={isFacitVisible ? 'visible' : 'hidden'}
@@ -100,10 +131,18 @@ const ExamOnlyView = ({ examDetail }: Props) => {
             x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
         >
-          <SolutionPdf
-            pdfUrl={examDetail.solution!.pdf_url}
-            layoutMode='exam-only'
+          <ResizeHandle
+            onStartResize={() => setIsDragging(true)}
+            isResizing={isDragging}
+            side='right'
           />
+
+          <div className='flex-1 w-full h-full overflow-auto relative'>
+            <SolutionPdf
+              pdfUrl={examDetail.solution!.pdf_url}
+              layoutMode='exam-only'
+            />
+          </div>
         </motion.div>
       )}
 
