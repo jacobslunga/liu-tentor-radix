@@ -1,27 +1,27 @@
-import { FC, useEffect, useCallback } from "react";
+import { FC, useEffect, useCallback } from 'react';
 
-import { Button } from "@/components/ui/button";
-import ChatWindow from "@/components/AI/chat/ChatWindow";
-import ExamHeader from "@/components/ExamHeader";
-import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
-import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
-import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
-import { Loader2 } from "lucide-react";
-import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
-import { formatExamDate } from "@/util/formatExamDate";
-import { useCourseExams, useExamDetail } from "@/api";
-import useLayoutMode from "@/stores/LayoutModeStore";
-import { useMetadata } from "@/hooks/useMetadata";
-import { useParams } from "react-router-dom";
-import { useHotkeys } from "react-hotkeys-hook";
-import { useChatWindow } from "@/context/ChatWindowContext";
-import { ChatProvider } from "@/context/ChatContext";
+import { Button } from '@/components/ui/button';
+import ChatWindow from '@/components/AI/chat/ChatWindow';
+import ExamHeader from '@/components/ExamHeader';
+import ExamOnlyView from '@/components/PDF/Views/ExamOnlyView';
+import ExamWithFacitView from '@/components/PDF/Views/ExamWithFacitView';
+import LayoutSwitcher from '@/components/PDF/LayoutSwitcher';
+import { Loader2 } from 'lucide-react';
+import MobilePdfView from '@/components/PDF/Views/MobilePdfView';
+import { formatExamDate } from '@/util/formatExamDate';
+import { useCourseExams, useExamDetail } from '@/api';
+import useLayoutMode from '@/stores/LayoutModeStore';
+import { useMetadata } from '@/hooks/useMetadata';
+import { useParams } from 'react-router-dom';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { useChatWindow } from '@/context/ChatWindowContext';
+import { ChatProvider } from '@/context/ChatContext';
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
   const { showChatWindow, setShowChatWindow } = useChatWindow();
 
-  const { courseCode = "", examId = "" } = useParams<{
+  const { courseCode = '', examId = '' } = useParams<{
     courseCode: string;
     examId: string;
   }>();
@@ -40,7 +40,7 @@ const ExamPage: FC = () => {
   }, [setShowChatWindow]);
 
   useHotkeys(
-    "c",
+    'c',
     (e) => {
       e.preventDefault();
       handleToggleChat();
@@ -79,15 +79,15 @@ const ExamPage: FC = () => {
     title: pageTitle,
     description: pageDescription,
     keywords: `${courseCode}, tenta, Linköpings Universitet, kurs, LiU, liu, Liu ${
-      courseData?.courseName || ""
+      courseData?.courseName || ''
     }`,
     ogTitle: pageTitle,
     ogDescription: pageDescription,
-    ogType: "article",
-    twitterCard: "summary",
+    ogType: 'article',
+    twitterCard: 'summary',
     twitterTitle: pageTitle,
     twitterDescription: pageDescription,
-    robots: "noindex, nofollow",
+    robots: 'noindex, nofollow',
     canonical: `${window.location.origin}/exam/${courseCode}/${examId}`,
   });
 
@@ -99,10 +99,10 @@ const ExamPage: FC = () => {
     return <ErrorState />;
   }
 
-  const chatVariant = layoutMode === "exam-only" ? "push" : "overlay";
+  const chatVariant = layoutMode === 'exam-only' ? 'push' : 'overlay';
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden">
+    <div className='flex h-screen flex-col items-center justify-center w-screen overflow-y-hidden'>
       <ChatProvider examDetail={examDetail}>
         <ExamHeader
           exams={courseData.exams}
@@ -110,11 +110,11 @@ const ExamPage: FC = () => {
           onToggleChat={handleToggleChat}
         />
 
-        <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
-          <div className="flex-1 flex flex-col min-w-0 h-full">
-            <div className="flex-1 flex flex-row items-center justify-center overflow-hidden">
-              <div className="flex-1 h-full relative">
-                {layoutMode === "exam-only" ? (
+        <div className='w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden'>
+          <div className='flex-1 flex flex-col min-w-0 h-full'>
+            <div className='flex-1 flex flex-row items-center justify-center overflow-hidden'>
+              <div className='flex-1 h-full relative'>
+                {layoutMode === 'exam-only' ? (
                   <ExamOnlyView examDetail={examDetail} />
                 ) : (
                   <ExamWithFacitView examDetail={examDetail} />
@@ -142,22 +142,22 @@ export default ExamPage;
 
 const LoadingState = () => {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center gap-2">
-      <Loader2 className="w-10 h-10 animate-spin" />
-      <p className="font-normal text-foreground/70">Laddar tenta...</p>
+    <div className='w-screen h-screen flex flex-col items-center justify-center gap-2'>
+      <Loader2 className='w-10 h-10 animate-spin' />
+      <p className='font-normal text-foreground/70'>Laddar tenta...</p>
     </div>
   );
 };
 
 const ErrorState = () => {
   return (
-    <div className="h-screen w-screen flex flex-col items-center justify-center gap-2">
-      <p className="text-4xl text-foreground/80">Något gick fel!</p>
-      <p className="text-sm text-foreground/50">
+    <div className='h-screen w-screen flex flex-col items-center justify-center gap-2'>
+      <p className='text-4xl text-foreground/80'>Något gick fel!</p>
+      <p className='text-sm text-foreground/50'>
         Ibland fungerar det att bara ladda om sidan :)
       </p>
 
-      <Button onClick={() => window.location.reload()} variant="secondary">
+      <Button onClick={() => window.location.reload()} variant='secondary'>
         Ladda om
       </Button>
     </div>

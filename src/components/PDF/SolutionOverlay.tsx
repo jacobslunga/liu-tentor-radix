@@ -5,9 +5,10 @@ import { useTranslation } from '@/hooks/useTranslation';
 
 interface Props {
   isBlurred: boolean;
+  className?: string;
 }
 
-const SolutionOverlay = ({ isBlurred }: Props) => {
+const SolutionOverlay = ({ isBlurred, className }: Props) => {
   const { t } = useTranslation();
 
   return (
@@ -15,14 +16,12 @@ const SolutionOverlay = ({ isBlurred }: Props) => {
       {isBlurred && (
         <motion.div
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1, backdropFilter: 'blur(8px)' }}
-          exit={{ opacity: 0, backdropFilter: 'blur(0px)' }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
           transition={{ duration: 0.1 }}
-          className='absolute inset-0 flex flex-col items-center justify-center bg-background/30 z-30'
+          className={`absolute inset-0 z-30 flex flex-col items-center justify-center bg-background/30 backdrop-blur-sm ${className ?? ''}`}
         >
-          <p className='font-medium text-center'>
-            {t('mouseOverDescription')}
-          </p>
+          <p className='font-medium text-center'>{t('mouseOverDescription')}</p>
           <CursorClickIcon weight='regular' className='w-7 h-7 mt-2' />
         </motion.div>
       )}

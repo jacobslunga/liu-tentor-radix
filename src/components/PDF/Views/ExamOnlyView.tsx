@@ -1,12 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import ExamPdf from "@/components/PDF/ExamPdf";
-import GradientIndicator from "@/components/GradientIndicator";
-import SolutionPdf from "@/components/PDF/SolutionPdf";
-import { motion } from "framer-motion";
-import { useHotkeys } from "react-hotkeys-hook";
-import { useChatWindow } from "@/context/ChatWindowContext";
-import type { ExamDetailPayload } from "@/api";
+import ExamPdf from '@/components/PDF/ExamPdf';
+import GradientIndicator from '@/components/GradientIndicator';
+import SolutionPdf from '@/components/PDF/SolutionPdf';
+import { motion } from 'framer-motion';
+import { useHotkeys } from 'react-hotkeys-hook';
+import { useChatWindow } from '@/context/ChatWindowContext';
+import type { ExamDetailPayload } from '@/api';
 
 interface Props {
   examDetail: ExamDetailPayload;
@@ -19,8 +19,8 @@ const ExamOnlyView = ({ examDetail }: Props) => {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const facitVariants = {
-    hidden: { x: "100%", opacity: 0 },
-    visible: { x: "0%", opacity: 1 },
+    hidden: { x: '100%', opacity: 0 },
+    visible: { x: '0%', opacity: 1 },
   };
 
   const hasFacit = examDetail.solution !== null;
@@ -63,8 +63,8 @@ const ExamOnlyView = ({ examDetail }: Props) => {
   );
 
   useEffect(() => {
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    window.addEventListener('mousemove', handleMouseMove, { passive: true });
+    return () => window.removeEventListener('mousemove', handleMouseMove);
   }, [handleMouseMove]);
 
   useEffect(() => {
@@ -73,34 +73,37 @@ const ExamOnlyView = ({ examDetail }: Props) => {
     }
   }, [showChatWindow, setIsFacitVisible]);
 
-  useHotkeys("e", () => {
+  useHotkeys('e', () => {
     setIsFacitVisible((prev) => !prev);
     setIsManual((prev) => !prev);
   });
 
-  useHotkeys("esc", () => {
+  useHotkeys('esc', () => {
     setIsManual(false);
     setIsFacitVisible(false);
   });
 
   return (
-    <div className="w-full h-full relative max-w-full bg-background">
-      <div className="w-full h-full bg-background overflow-auto">
-        <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
+    <div className='w-full h-full relative max-w-full bg-background'>
+      <div className='w-full h-full bg-background overflow-auto'>
+        <ExamPdf pdfUrl={examDetail.exam.pdf_url} layoutMode='exam-only' />
       </div>
 
       {hasFacit && (
         <motion.div
           ref={panelRef}
-          className="absolute right-0 top-0 w-1/2 h-full bg-background border-l z-40 overflow-auto"
+          className='absolute right-0 top-0 w-1/2 h-full bg-background border-l z-40 overflow-auto'
           variants={facitVariants}
-          initial="hidden"
-          animate={isFacitVisible ? "visible" : "hidden"}
+          initial='hidden'
+          animate={isFacitVisible ? 'visible' : 'hidden'}
           transition={{
             x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
         >
-          <SolutionPdf pdfUrl={examDetail.solution!.pdf_url} />
+          <SolutionPdf
+            pdfUrl={examDetail.solution!.pdf_url}
+            layoutMode='exam-only'
+          />
         </motion.div>
       )}
 
