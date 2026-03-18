@@ -1,34 +1,18 @@
-import { useCallback, type FC } from "react";
-import PdfRenderer from "./PdfRenderer";
-import usePdf from "@/hooks/usePdf";
-import SolutionToolbar from "./Toolbar/SolutionToolbar";
-import { useIsSafari } from "@/hooks/useIsSafari";
+import { memo, type FC } from 'react';
+import PdfRenderer from './PdfRenderer';
 
 interface Props {
   pdfUrl: string;
+  layoutMode?: 'exam-only' | 'exam-with-facit' | 'default';
 }
 
-const SolutionPdf: FC<Props> = ({ pdfUrl }) => {
-  const isSafari = useIsSafari();
-  const { numPages, scale, rotation, setNumPages } = usePdf("solution");
-
-  const onLoadSuccess = useCallback(
-    ({ numPages }: { numPages: number }) => setNumPages(numPages),
-    []
-  );
-
-  return (
-    <>
-      {!isSafari && <SolutionToolbar pdfUrl={pdfUrl} />}
-      <PdfRenderer
-        scale={scale}
-        rotation={rotation}
-        onLoadSuccess={onLoadSuccess}
-        numPages={numPages}
-        pdfUrl={pdfUrl}
-      />
-    </>
-  );
+const SolutionPdfComponent: FC<Props> = ({
+  pdfUrl,
+  layoutMode = 'default',
+}) => {
+  return <PdfRenderer pdfUrl={pdfUrl} layoutMode={layoutMode} />;
 };
+
+const SolutionPdf = memo(SolutionPdfComponent);
 
 export default SolutionPdf;

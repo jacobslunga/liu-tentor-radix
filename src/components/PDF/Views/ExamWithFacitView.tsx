@@ -22,7 +22,6 @@ interface Props {
 
 const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
   const { t } = useTranslation();
-  const [isFacitBlurred, setIsFacitBlurred] = useState(true);
 
   const leftPanelRef = useRef<ImperativePanelHandle>(null);
   const rightPanelRef = useRef<ImperativePanelHandle>(null);
@@ -40,7 +39,10 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         minSize={20}
         className='bg-background'
       >
-        <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
+        <ExamPdf
+          pdfUrl={examDetail.exam.pdf_url}
+          layoutMode='exam-with-facit'
+        />
       </ResizablePanel>
 
       <ResizableHandle withHandle />
@@ -49,15 +51,10 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         ref={rightPanelRef}
         defaultSize={45}
         minSize={20}
-        className='relative bg-background'
-        onMouseEnter={() => setIsFacitBlurred(false)}
-        onMouseLeave={() => setIsFacitBlurred(true)}
+        className='bg-background'
       >
         {examDetail.solution ? (
-          <>
-            <SolutionPdf pdfUrl={examDetail.solution.pdf_url} />
-            <SolutionOverlay isBlurred={isFacitBlurred} />
-          </>
+          <SolutionPanel pdfUrl={examDetail.solution.pdf_url} />
         ) : (
           <div className='flex h-full items-center justify-center p-6'>
             <div className='group relative w-full max-w-sm'>
@@ -101,3 +98,18 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
 };
 
 export default ExamWithFacitView;
+
+const SolutionPanel: FC<{ pdfUrl: string }> = ({ pdfUrl }) => {
+  const [isBlurred, setIsBlurred] = useState(true);
+
+  return (
+    <div
+      className='relative h-full bg-background'
+      onMouseEnter={() => setIsBlurred(false)}
+      onMouseLeave={() => setIsBlurred(true)}
+    >
+      <SolutionPdf pdfUrl={pdfUrl} layoutMode='exam-with-facit' />
+      <SolutionOverlay isBlurred={isBlurred} className='pointer-events-none' />
+    </div>
+  );
+};
