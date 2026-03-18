@@ -17,6 +17,7 @@ import {
   RenderPluginPackage,
 } from '@embedpdf/plugin-render/react';
 import { InteractionManagerPluginPackage } from '@embedpdf/plugin-interaction-manager/react';
+import { Rotate, RotatePluginPackage } from '@embedpdf/plugin-rotate/react';
 import {
   CopyToClipboard,
   SelectionLayer,
@@ -56,6 +57,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       createPluginRegistration(ScrollPluginPackage),
       createPluginRegistration(RenderPluginPackage),
       createPluginRegistration(InteractionManagerPluginPackage),
+      createPluginRegistration(RotatePluginPackage),
       createPluginRegistration(SelectionPluginPackage),
       createPluginRegistration(ZoomPluginPackage, {
         defaultZoomLevel:
@@ -102,27 +104,33 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                               isDark ? 'pdf-page-shell--dark' : ''
                             }`}
                           >
-                            <RenderLayer
+                            <Rotate
                               documentId={activeDocumentId}
                               pageIndex={pageIndex}
-                              style={
-                                isDark
-                                  ? {
-                                      filter:
-                                        'invert(0.99) hue-rotate(270deg) brightness(1) contrast(0.85) saturate(1)',
-                                    }
-                                  : undefined
-                              }
-                            />
-                            <SelectionLayer
-                              documentId={activeDocumentId}
-                              pageIndex={pageIndex}
-                              textStyle={{
-                                background: isDark
-                                  ? 'rgba(180, 240, 120, 0.35)'
-                                  : 'rgba(33, 150, 243, 0.28)',
-                              }}
-                            />
+                              className='relative h-full w-full'
+                            >
+                              <RenderLayer
+                                documentId={activeDocumentId}
+                                pageIndex={pageIndex}
+                                style={
+                                  isDark
+                                    ? {
+                                        filter:
+                                          'invert(0.99) hue-rotate(270deg) brightness(1) contrast(0.85) saturate(1)',
+                                      }
+                                    : undefined
+                                }
+                              />
+                              <SelectionLayer
+                                documentId={activeDocumentId}
+                                pageIndex={pageIndex}
+                                textStyle={{
+                                  background: isDark
+                                    ? 'rgba(180, 240, 120, 0.35)'
+                                    : 'rgba(33, 150, 243, 0.28)',
+                                }}
+                              />
+                            </Rotate>
                           </div>
                         )}
                       />
