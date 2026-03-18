@@ -11,26 +11,26 @@
 }
 
 @font-face {
-  font-family: 'Haffer';
-  src: url('/fonts/Haffer-Regular.otf');
+  font-family: 'Basier';
+  src: url('/fonts/basiersquare-regular.ttf');
   font-weight: 400;
 }
 
 @font-face {
-  font-family: 'Haffer';
-  src: url('/fonts/Haffer-Medium.otf');
+  font-family: 'Basier';
+  src: url('/fonts/basiersquare-medium.ttf');
   font-weight: 500;
 }
 
 @font-face {
-  font-family: 'Haffer';
-  src: url('/fonts/Haffer-SemiBold.otf');
+  font-family: 'Basier';
+  src: url('/fonts/basiersquare-semibold.ttf');
   font-weight: 600;
 }
 
 @font-face {
-  font-family: 'Haffer';
-  src: url('/fonts/Haffer-Bold.otf');
+  font-family: 'Basier';
+  src: url('/fonts/basiersquare-bold.ttf');
   font-weight: 700;
 }
 
@@ -119,7 +119,7 @@
 
   body {
     font-family:
-      'Haffer',
+      'Basier',
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
