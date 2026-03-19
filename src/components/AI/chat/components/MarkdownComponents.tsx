@@ -119,11 +119,11 @@ export const markdownComponents: Partial<Components> = {
     <br {...props} className={cn('my-4 bg-foreground', className)} />
   ),
   table: ({ className, ...props }: TableProps) => (
-    <div className='mt-5 mb-3 w-full overflow-hidden rounded-2xl border border-border bg-card'>
+    <div className='mt-5 mb-3 w-full overflow-x-auto overflow-y-hidden rounded-2xl border border-border bg-card'>
       <table
         {...props}
         className={cn(
-          'w-full mt-0 border-collapse text-left text-sm text-pretty',
+          'min-w-full mt-0 border-collapse text-left text-sm text-pretty',
           className,
         )}
       />
