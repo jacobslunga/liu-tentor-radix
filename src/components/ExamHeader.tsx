@@ -296,11 +296,11 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
         <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />
 
-        <div className="hidden lg:flex items-stretch overflow-hidden rounded-full border border-border bg-background dark:bg-[#121212]">
+        <div className="hidden lg:flex items-stretch gap-0.5 overflow-hidden rounded-full bg-transparent">
           <button
             onClick={handleDownloadExam}
             disabled={!selectedExam?.pdf_url}
-            className="px-3 py-2 cursor-pointer text-xs font-medium text-foreground bg-background dark:bg-[#141413] hover:bg-secondary dark:hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed border-r border-border outline-none"
+            className="px-3 py-2 cursor-pointer text-xs font-medium text-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed outline-none"
           >
             {language === "sv" ? "Ladda ned" : "Download"}
           </button>
@@ -308,7 +308,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="px-2 py-2 cursor-pointer text-foreground bg-background dark:bg-[#141413] hover:bg-secondary dark:hover:bg-zinc-800 transition-colors flex items-center justify-center outline-none"
+                className="px-2 py-2 cursor-pointer text-foreground bg-secondary hover:bg-accent transition-colors flex items-center justify-center outline-none"
                 aria-label="Download options"
               >
                 <CaretDownIcon weight="bold" className="w-4 h-4" />
