@@ -6,8 +6,8 @@ import React, {
   useState,
 } from "react";
 
-type BaseTheme = "light" | "dark" | "system";
-type EffectiveTheme = "light" | "dark";
+type BaseTheme = "light" | "dark" | "dim" | "system";
+type EffectiveTheme = "light" | "dark" | "dim";
 
 interface ThemeContextProps {
   theme: BaseTheme;
@@ -35,9 +35,10 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
   });
 
   const [effectiveTheme, setEffectiveTheme] = useState<EffectiveTheme>("light");
-  const themes: BaseTheme[] = ["light", "dark", "system"];
 
-  const getSystemTheme = () =>
+  const themes: BaseTheme[] = ["light", "dim", "dark", "system"];
+
+  const getSystemTheme = (): EffectiveTheme =>
     window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
@@ -47,37 +48,24 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({
     const body = document.body;
 
     const applyTheme = (baseTheme: BaseTheme) => {
-      let appliedTheme: EffectiveTheme;
-      root.className = "";
-      body.className = "";
+      const appliedTheme: EffectiveTheme =
+        baseTheme === "system" ? getSystemTheme() : baseTheme;
 
-      if (baseTheme === "system") {
-        appliedTheme = getSystemTheme();
-        root.className = appliedTheme;
-        body.className = appliedTheme;
-      } else {
-        appliedTheme = baseTheme;
-        root.className = baseTheme;
-        body.className = baseTheme;
-      }
-
+      root.className = appliedTheme;
+      body.className = appliedTheme;
       setEffectiveTheme(appliedTheme);
     };
 
     applyTheme(theme);
 
-    const handleSystemThemeChange = (_: MediaQueryListEvent) => {
-      if (theme === "system") {
-        applyTheme(theme);
-      }
-    };
-
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-
-    return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
+    const handleSystemThemeChange = () => {
+      if (theme === "system") applyTheme(theme);
     };
+
+    mediaQuery.addEventListener("change", handleSystemThemeChange);
+    return () =>
+      mediaQuery.removeEventListener("change", handleSystemThemeChange);
   }, [theme]);
 
   const changeTheme = (newTheme: BaseTheme) => {
