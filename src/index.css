@@ -11,26 +11,26 @@
 }
 
 @font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-regular.ttf");
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Regular.otf");
   font-weight: 400;
 }
 
 @font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-medium.ttf");
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Medium.otf");
   font-weight: 500;
 }
 
 @font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-semibold.ttf");
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-SemiBold.otf");
   font-weight: 600;
 }
 
 @font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-bold.ttf");
+  font-family: "Pretendard";
+  src: url("/fonts/Pretendard-Bold.otf");
   font-weight: 700;
 }
 
@@ -137,6 +137,7 @@
 
   body {
     font-family:
+      "Pretendard",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
