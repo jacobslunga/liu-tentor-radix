@@ -33,34 +33,13 @@ import {
 import { Loader2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
-/*
- * Background math:
- *
- * CSS invert(100%) maps each channel c → (255 - c).
- * We want the final rendered background to equal the app's --background.
- *
- * So we set the wrapper background to invert(--background), i.e.
- *   pre_r = 255 - bg_r,  pre_g = 255 - bg_g,  pre_b = 255 - bg_b
- *
- * After invert() runs:  (255 - pre) = bg  ✓
- *
- * dark --background: #181818  → pre-inverted: #e7e7e7
- * dim  --background: #22272e  → pre-inverted: #ddd8d1
- *
- * For dim we use invert(85%) not 100%, so the mapping is approximate
- * but visually close enough — the slight warmth actually looks good.
- */
-const THEME_CONFIG: Record<
-  string,
-  { filter: string; preinvertedBg: string } | undefined
-> = {
+const THEME_CONFIG: Record<string, { filter: string } | undefined> = {
   dark: {
     filter: "invert(90.6%) hue-rotate(180deg)",
-    preinvertedBg: "#e7e7e7",
   },
   dim: {
-    filter: "invert(85%) hue-rotate(180deg) brightness(0.97) saturate(0.9)",
-    preinvertedBg: "#ddd8d1",
+    filter:
+      "brightness(0) saturate(100%) invert(13%) sepia(3%) saturate(2849%) hue-rotate(176deg) brightness(95%) contrast(93%);",
   },
 };
 
@@ -209,8 +188,6 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                       themeConfig
                                         ? {
                                             filter: themeConfig.filter,
-                                            background:
-                                              themeConfig.preinvertedBg,
                                           }
                                         : undefined
                                     }

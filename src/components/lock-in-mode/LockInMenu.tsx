@@ -78,7 +78,7 @@ export const LockInMenu: React.FC<LockInMenuProps> = ({
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="secondary" size="sm" disabled={disabled}>
+          <Button variant="outline" size="sm" disabled={disabled}>
             <Lock className="w-3.5 h-3.5" />
             {t.trigger}
           </Button>

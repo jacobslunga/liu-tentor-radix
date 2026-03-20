@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { Maximize, Minimize, Pause, Play, Timer, Loader2 } from 'lucide-react';
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
+import { Maximize, Minimize, Pause, Play, Timer, Loader2 } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,13 +13,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+} from "@/components/ui/alert-dialog";
 
-import PdfRenderer from '@/components/PDF/PdfRenderer';
-import { LockInModeManager } from '@/lib/lockInMode';
-import { useExamDetail } from '@/api';
-import { useLanguage } from '@/context/LanguageContext';
-import { useMetadata } from '@/hooks/useMetadata';
+import PdfRenderer from "@/components/PDF/PdfRenderer";
+import { LockInModeManager } from "@/lib/lockInMode";
+import { useExamDetail } from "@/api";
+import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const LockInModePage: React.FC = () => {
   const { examId } = useParams<{ examId: string }>();
@@ -46,8 +46,8 @@ const LockInModePage: React.FC = () => {
   } = useExamDetail(Number(examId));
 
   useMetadata({
-    title: `Locked In | ${examDetail ? examDetail.exam.course_code : 'Exam'}`,
-    robots: 'noindex, nofollow',
+    title: `Locked In | ${examDetail ? examDetail.exam.course_code : "Exam"}`,
+    robots: "noindex, nofollow",
   });
 
   const returnToNormalExam = useCallback(() => {
@@ -62,7 +62,7 @@ const LockInModePage: React.FC = () => {
         },
       );
     } else {
-      navigate('/', { replace: true, viewTransition: true });
+      navigate("/", { replace: true, viewTransition: true });
     }
   }, [navigate, session]);
 
@@ -139,39 +139,39 @@ const LockInModePage: React.FC = () => {
     const seconds = totalSeconds % 60;
 
     if (hours > 0) {
-      return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds
+      return `${hours}:${minutes.toString().padStart(2, "0")}:${seconds
         .toString()
-        .padStart(2, '0')}`;
+        .padStart(2, "0")}`;
     }
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
 
   const t = {
-    paused: language === 'sv' ? 'PAUSAD' : 'PAUSED',
-    resume: language === 'sv' ? 'Återuppta' : 'Resume',
-    finishTitle: language === 'sv' ? 'Avsluta Tenta?' : 'Finish Exam?',
+    paused: language === "sv" ? "PAUSAD" : "PAUSED",
+    resume: language === "sv" ? "Återuppta" : "Resume",
+    finishTitle: language === "sv" ? "Avsluta Tenta?" : "Finish Exam?",
     finishDesc:
-      language === 'sv'
-        ? 'Är du säker på att du vill lämna in? Du har tid kvar.'
-        : 'Are you sure you want to finish? You still have time remaining.',
-    timeUpTitle: language === 'sv' ? 'Tiden är ute!' : "Time's Up!",
+      language === "sv"
+        ? "Är du säker på att du vill lämna in? Du har tid kvar."
+        : "Are you sure you want to finish? You still have time remaining.",
+    timeUpTitle: language === "sv" ? "Tiden är ute!" : "Time's Up!",
     timeUpDesc:
-      language === 'sv'
-        ? 'Bra jobbat! Din session har avslutats.'
-        : 'Good job! Your session has ended.',
-    cancel: language === 'sv' ? 'Avbryt' : 'Cancel',
-    confirm: language === 'sv' ? 'Avsluta' : 'Finish',
-    home: language === 'sv' ? 'Till startsidan' : 'Go Home',
+      language === "sv"
+        ? "Bra jobbat! Din session har avslutats."
+        : "Good job! Your session has ended.",
+    cancel: language === "sv" ? "Avbryt" : "Cancel",
+    confirm: language === "sv" ? "Avsluta" : "Finish",
+    home: language === "sv" ? "Till startsidan" : "Go Home",
   };
 
   if (detailLoading || !session) {
     return (
-      <div className='min-h-screen bg-background flex flex-col items-center justify-center gap-2'>
-        <Loader2 className='w-10 h-10 animate-spin text-primary' />
-        <p className='text-muted-foreground'>
-          {language === 'sv'
-            ? 'Initierar Lock In-läge...'
-            : 'Initializing Lock In Mode...'}
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-2">
+        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <p className="text-muted-foreground">
+          {language === "sv"
+            ? "Initierar Lock In-läge..."
+            : "Initializing Lock In Mode..."}
         </p>
       </div>
     );
@@ -179,11 +179,11 @@ const LockInModePage: React.FC = () => {
 
   if (detailError || !examDetail) {
     return (
-      <div className='min-h-screen bg-background flex flex-col items-center justify-center gap-4'>
-        <p className='text-destructive font-medium'>Failed to load exam.</p>
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
+        <p className="text-destructive font-medium">Failed to load exam.</p>
         <Button
-          onClick={() => navigate('/', { viewTransition: true })}
-          variant='outline'
+          onClick={() => navigate("/", { viewTransition: true })}
+          variant="outline"
         >
           Go Back
         </Button>
@@ -192,50 +192,48 @@ const LockInModePage: React.FC = () => {
   }
 
   return (
-    <div className='relative h-screen w-screen overflow-hidden bg-background flex flex-col'>
-      {/* --- Top Control Bar --- */}
-      <div className='absolute top-0 left-0 right-0 z-40 px-4 py-2 flex items-center justify-center pointer-events-none'>
-        <div className='bg-background border shadow-md rounded-full px-4 py-2 flex items-center gap-6 pointer-events-auto'>
-          {/* Left: Timer */}
-          <div className='flex items-center gap-3 min-w-[120px] justify-center'>
+    <div className="relative h-screen w-screen overflow-hidden bg-background flex flex-col">
+      <div className="absolute top-0 left-0 right-0 z-40 px-4 py-2 flex items-center justify-center pointer-events-none">
+        <div className="bg-background border shadow-md rounded-lg px-4 py-2 flex items-center gap-6 pointer-events-auto">
+          <div className="flex items-center gap-3 min-w-[120px] justify-center">
             <Timer
-              className={`w-5 h-5 ${timeRemaining < 300000 ? 'text-red-500 animate-pulse' : 'text-primary'}`}
+              className={`w-5 h-5 ${timeRemaining < 300000 ? "text-red-500 animate-pulse" : "text-primary"}`}
             />
-            <span className='font-mono text-xl font-bold tracking-widest tabular-nums'>
+            <span className="font-mono text-xl font-bold tracking-widest tabular-nums">
               {formatTime(timeRemaining)}
             </span>
           </div>
 
           {/* Right: Actions */}
-          <div className='flex items-center gap-2 border-l pl-4'>
+          <div className="flex items-center gap-2 border-l pl-4">
             <Button
-              variant='ghost'
-              size='icon'
-              className='h-8 w-8 rounded-full'
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8 rounded-lg"
               onClick={toggleFullscreen}
             >
               {isFullscreen ? (
-                <Minimize className='w-4 h-4' />
+                <Minimize className="w-4 h-4" />
               ) : (
-                <Maximize className='w-4 h-4' />
+                <Maximize className="w-4 h-4" />
               )}
             </Button>
             <Button
-              variant='ghost'
-              size='icon'
-              className={`h-8 w-8 rounded-full ${isPaused ? 'text-yellow-500 bg-yellow-500/10' : ''}`}
+              variant="ghost"
+              size="icon"
+              className={`h-8 w-8 rounded-lg ${isPaused ? "text-yellow-500 bg-yellow-500/10" : ""}`}
               onClick={handlePauseResume}
             >
               {isPaused ? (
-                <Play className='w-4 h-4 fill-current' />
+                <Play className="w-4 h-4 fill-current" />
               ) : (
-                <Pause className='w-4 h-4 fill-current' />
+                <Pause className="w-4 h-4 fill-current" />
               )}
             </Button>
             <Button
-              variant='destructive'
-              size='sm'
-              className='h-8 rounded-full px-3 ml-2'
+              variant="destructive"
+              size="sm"
+              className="h-8 rounded-lg px-3 ml-2"
               onClick={() => setShowFinishDialog(true)}
             >
               {t.confirm}
@@ -244,8 +242,8 @@ const LockInModePage: React.FC = () => {
         </div>
       </div>
 
-      <div className='flex-1 w-full h-full pt-12 pb-4 px-4 overflow-hidden'>
-        <div className='w-full h-full rounded-xl overflow-hidden shadow-2xl border bg-background/50'>
+      <div className="flex-1 w-full h-full pt-12 pb-4 px-4 overflow-hidden">
+        <div className="w-full h-full rounded-xl overflow-hidden shadow-2xl border bg-background/50">
           <PdfRenderer pdfUrl={examDetail.exam.pdf_url} />
         </div>
       </div>
@@ -256,28 +254,28 @@ const LockInModePage: React.FC = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className='absolute inset-0 z-50 bg-background/60 backdrop-blur-xl flex flex-col items-center justify-center gap-6'
+            className="absolute inset-0 z-50 bg-background/60 backdrop-blur-xl flex flex-col items-center justify-center gap-6"
           >
-            <div className='p-4 rounded-full bg-yellow-500/10 mb-2'>
-              <Pause className='w-16 h-16 text-yellow-500 fill-current' />
+            <div className="p-4 rounded-lg bg-yellow-500/10 mb-2">
+              <Pause className="w-16 h-16 text-yellow-500 fill-current" />
             </div>
-            <h2 className='text-4xl font-medium '>{t.paused}</h2>
-            <div className='flex flex-col items-center gap-2'>
-              <p className='text-muted-foreground text-lg'>
+            <h2 className="text-4xl font-medium ">{t.paused}</h2>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-muted-foreground text-lg">
                 {examDetail.exam.course_code}
               </p>
-              <p className='font-mono text-2xl'>
-                {formatTime(timeRemaining)}{' '}
-                {language === 'sv' ? 'återstår' : 'remaining'}
+              <p className="font-mono text-2xl">
+                {formatTime(timeRemaining)}{" "}
+                {language === "sv" ? "återstår" : "remaining"}
               </p>
             </div>
 
             <Button
               onClick={handlePauseResume}
-              size='lg'
-              className='rounded-full px-8 h-12 text-lg gap-2 mt-4'
+              size="lg"
+              className="rounded-lg px-8 h-12 text-lg gap-2 mt-4"
             >
-              <Play className='w-5 h-5 fill-current' />
+              <Play className="w-5 h-5 fill-current" />
               {t.resume}
             </Button>
           </motion.div>
@@ -293,7 +291,7 @@ const LockInModePage: React.FC = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>{t.cancel}</AlertDialogCancel>
             <AlertDialogAction
-              className='bg-red-600 hover:bg-red-700 text-white'
+              className="bg-red-600 hover:bg-red-700 text-white"
               onClick={confirmFinishExam}
             >
               {t.confirm}

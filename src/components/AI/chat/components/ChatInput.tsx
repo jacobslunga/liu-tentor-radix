@@ -7,33 +7,33 @@ import {
   useState,
   useMemo,
   useCallback,
-} from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+} from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   InputGroup,
   InputGroupTextarea,
   InputGroupAddon,
   InputGroupButton,
-} from '@/components/ui/input-group';
+} from "@/components/ui/input-group";
 import {
   TooltipTrigger,
   Tooltip,
   TooltipContent,
   TooltipProvider,
-} from '@/components/ui/tooltip';
-import { Button } from '@/components/ui/button';
+} from "@/components/ui/tooltip";
+import { Button } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from "@/components/ui/popover";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from "@/components/ui/command";
 import {
   LightbulbFilamentIcon,
   ArrowDownIcon,
@@ -41,12 +41,12 @@ import {
   SquareIcon,
   ArrowUpIcon,
   MicrophoneIcon,
-} from '@phosphor-icons/react';
-import { QuotedContext } from './QuotedContext';
-import { cn } from '@/lib/utils';
-import { ChevronDownIcon } from '@primer/octicons-react';
+} from "@phosphor-icons/react";
+import { QuotedContext } from "./QuotedContext";
+import { cn } from "@/lib/utils";
+import { ChevronDownIcon } from "@primer/octicons-react";
 
-export type ModelProvider = 'google';
+export type ModelProvider = "google";
 
 export interface ModelBadge {
   sv: string;
@@ -63,19 +63,19 @@ export interface Model {
 const getModels = (): Model[] => {
   return [
     {
-      id: 'gemini-3.1-pro-preview',
-      name: 'Gemini 3.1 Pro',
-      provider: 'google',
+      id: "gemini-3.1-pro-preview",
+      name: "Gemini 3.1 Pro",
+      provider: "google",
     },
     {
-      id: 'gemini-3.1-flash-lite-preview',
-      name: 'Gemini 3.1 Flash Lite',
-      provider: 'google',
+      id: "gemini-3.1-flash-lite-preview",
+      name: "Gemini 3.1 Flash Lite",
+      provider: "google",
     },
     {
-      id: 'gemini-2.5-pro',
-      name: 'Gemini 2.5 Pro',
-      provider: 'google',
+      id: "gemini-2.5-pro",
+      name: "Gemini 2.5 Pro",
+      provider: "google",
     },
   ];
 };
@@ -108,11 +108,11 @@ const ScrollToBottomButton = memo(
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
-          transition={{ ease: 'easeInOut', duration: 0.2 }}
-          className='absolute -top-14 left-1/2 -translate-x-1/2 z-20'
+          transition={{ ease: "easeInOut", duration: 0.2 }}
+          className="absolute -top-14 left-1/2 -translate-x-1/2 z-20"
         >
-          <Button variant='outline' size='icon' onClick={onClick}>
-            <ArrowDownIcon weight='bold' size={20} />
+          <Button variant="outline" size="icon" onClick={onClick}>
+            <ArrowDownIcon weight="bold" size={20} />
           </Button>
         </motion.div>
       )}
@@ -132,7 +132,7 @@ const ModelSelector = ({
   const [open, setOpen] = useState(false);
   const selectedItemRef = useRef<HTMLDivElement>(null);
 
-  const isSv = language === 'sv';
+  const isSv = language === "sv";
   const models = useMemo(() => getModels(), []);
   const selectedModel =
     models.find((m) => m.id === selectedModelId) || models[0];
@@ -140,7 +140,7 @@ const ModelSelector = ({
   useEffect(() => {
     if (open && selectedItemRef.current) {
       setTimeout(() => {
-        selectedItemRef.current?.scrollIntoView({ block: 'center' });
+        selectedItemRef.current?.scrollIntoView({ block: "center" });
       }, 100);
     }
   }, [open]);
@@ -158,25 +158,20 @@ const ModelSelector = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className='flex items-center gap-1.5 h-6 px-2 rounded-full border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group'
-          aria-label={isSv ? 'Välj modell' : 'Select model'}
+          className="flex items-center gap-1.5 h-6 px-2 rounded-lg border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
+          aria-label={isSv ? "Välj modell" : "Select model"}
         >
-          <span className='text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]'>
+          <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
             {selectedModel.name}
           </span>
-          <ChevronDownIcon className='w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors' />
+          <ChevronDownIcon className="w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
         </button>
       </PopoverTrigger>
-      <PopoverContent
-        className='w-[340px] p-0'
-        align='start'
-        side='top'
-        sideOffset={10}
-      >
+      <PopoverContent className="p-0" align="start" side="top" sideOffset={10}>
         <Command>
-          <CommandList className='max-h-[300px] overflow-y-auto custom-scrollbar'>
+          <CommandList className="max-h-[300px] overflow-y-auto custom-scrollbar">
             <CommandEmpty>
-              {isSv ? 'Ingen modell hittades.' : 'No model found.'}
+              {isSv ? "Ingen modell hittades." : "No model found."}
             </CommandEmpty>
             {Object.entries(groupedModels).map(([provider, providerModels]) => (
               <CommandGroup
@@ -192,17 +187,17 @@ const ModelSelector = ({
                       onSelect(model.id);
                       setOpen(false);
                     }}
-                    className='flex items-start cursor-pointer aria-selected:bg-accent'
+                    className="flex items-start cursor-pointer aria-selected:bg-accent"
                   >
-                    <div className='flex flex-col flex-1 min-w-0'>
-                      <div className='flex items-center gap-2'>
-                        <span className='text-xs font-normal text-foreground'>
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-normal text-foreground">
                           {model.name}
                         </span>
                       </div>
                     </div>
                     {selectedModelId === model.id && (
-                      <CheckIcon className='h-4 w-4 text-primary shrink-0 mt-1' />
+                      <CheckIcon className="h-4 w-4 text-primary shrink-0 mt-1" />
                     )}
                   </CommandItem>
                 ))}
@@ -271,13 +266,13 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
   ) => {
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
-    const baseInputBeforeSpeechRef = useRef('');
+    const baseInputBeforeSpeechRef = useRef("");
     const [isMultiline, setIsMultiline] = useState(false);
     const [isListening, setIsListening] = useState(false);
     const [recordingError, setRecordingError] = useState<string | null>(null);
 
     const speechRecognitionCtor: SpeechRecognitionConstructor | null =
-      typeof window !== 'undefined'
+      typeof window !== "undefined"
         ? ((
             window as Window & {
               SpeechRecognition?: SpeechRecognitionConstructor;
@@ -334,7 +329,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     useEffect(() => {
       const textarea = inputRef.current;
 
-      if (!textarea || typeof ResizeObserver === 'undefined') {
+      if (!textarea || typeof ResizeObserver === "undefined") {
         return;
       }
 
@@ -366,7 +361,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     const isInputTooLong = input.length >= MAX_INPUT_LENGTH;
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
+      if (e.key === "Enter" && !e.shiftKey) {
         e.preventDefault();
         if (!isInputTooLong) {
           recognitionRef.current?.stop();
@@ -386,17 +381,16 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         baseInputBeforeSpeechRef.current = input.trim();
 
         const recognition = new speechRecognitionCtor();
-        recognition.lang = language === 'sv' ? 'sv-SE' : 'en-US';
+        recognition.lang = language === "sv" ? "sv-SE" : "en-US";
         recognition.continuous = true;
         recognition.interimResults = true;
 
         recognition.onresult = (event) => {
-          let finalTranscript = '';
-          let interimTranscript = '';
+          let finalTranscript = "";
+          let interimTranscript = "";
 
-          // Rebuild from all current results so earlier phrases are preserved across pauses.
           for (let i = 0; i < event.results.length; i += 1) {
-            const segment = event.results[i][0]?.transcript ?? '';
+            const segment = event.results[i][0]?.transcript ?? "";
 
             if (event.results[i].isFinal) {
               finalTranscript += `${segment} `;
@@ -408,7 +402,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           const speechText = `${finalTranscript}${interimTranscript}`.trim();
           const withBase = [baseInputBeforeSpeechRef.current, speechText]
             .filter(Boolean)
-            .join(' ')
+            .join(" ")
             .slice(0, MAX_INPUT_LENGTH);
 
           onInputChange(withBase);
@@ -416,13 +410,13 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
 
         recognition.onerror = (event) => {
           setRecordingError(
-            language === 'sv'
-              ? event.error === 'not-allowed'
-                ? 'Mikrofonbehörighet nekades i webbläsaren.'
-                : 'Kunde inte transkribera tal just nu.'
-              : event.error === 'not-allowed'
-                ? 'Microphone permission was denied in the browser.'
-                : 'Could not transcribe speech right now.',
+            language === "sv"
+              ? event.error === "not-allowed"
+                ? "Mikrofonbehörighet nekades i webbläsaren."
+                : "Kunde inte transkribera tal just nu."
+              : event.error === "not-allowed"
+                ? "Microphone permission was denied in the browser."
+                : "Could not transcribe speech right now.",
           );
         };
 
@@ -435,9 +429,9 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         setIsListening(true);
       } catch {
         setRecordingError(
-          language === 'sv'
-            ? 'Kunde inte starta taligenkänning i webbläsaren.'
-            : 'Could not start browser speech recognition.',
+          language === "sv"
+            ? "Kunde inte starta taligenkänning i webbläsaren."
+            : "Could not start browser speech recognition.",
         );
         setIsListening(false);
       }
@@ -457,8 +451,8 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     }, [isListening, startSpeechToText, stopSpeechToText]);
 
     return (
-      <div className='px-4 pb-4 relative w-full'>
-        <div className='max-w-2xl mx-auto w-full relative'>
+      <div className="px-4 pb-4 relative w-full">
+        <div className="max-w-2xl mx-auto w-full relative">
           <ScrollToBottomButton
             show={showScrollButton}
             onClick={onScrollToBottom}
@@ -478,12 +472,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             layout
             animate={{ borderRadius: isMultiline ? 22 : 24 }}
             transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
-            className='overflow-hidden border border-border bg-background shadow-md dark:bg-secondary'
+            className="overflow-hidden border border-border bg-background shadow-md dark:bg-secondary"
           >
             <InputGroup
               className={cn(
-                'rounded-none border-0 bg-transparent px-2 pt-2 pb-3 shadow-none dark:bg-transparent',
-                isMultiline ? 'gap-0.5' : 'gap-0',
+                "rounded-none border-0 px-2 pt-2 pb-3 shadow-none",
+                isMultiline ? "gap-0.5" : "gap-0",
               )}
             >
               <InputGroupTextarea
@@ -497,12 +491,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                 }}
                 onKeyDown={handleKeyDown}
                 rows={1}
-                className='min-h-11 max-h-[200px] overflow-y-auto px-2 py-2 leading-7 text-pretty wrap-break-word resize-none'
+                className="min-h-11 max-h-[200px] overflow-y-auto px-2 py-2 leading-7 text-pretty wrap-break-word resize-none"
               />
 
-              <InputGroupAddon align='block-end' className='mt-1 w-full pb-1'>
-                <div className='flex items-center justify-between w-full gap-2'>
-                  <div className='flex items-center gap-1.5'>
+              <InputGroupAddon align="block-end" className="mt-1 w-full pb-1">
+                <div className="flex items-center justify-between w-full gap-2">
+                  <div className="flex items-center gap-1.5">
                     <ModelSelector
                       selectedModelId={selectedModelId}
                       language={language}
@@ -521,101 +515,101 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               inputRef.current?.focus();
                             }}
                             className={cn(
-                              'flex items-center gap-1.5 px-2 h-6 text-xs font-medium transition-all rounded-full cursor-pointer border select-none',
+                              "flex items-center gap-1.5 px-2 h-6 text-xs font-medium transition-all rounded-lg cursor-pointer border select-none",
                               !giveDirectAnswer
-                                ? 'bg-primary/10 text-primary border-primary/20 hover:bg-primary/20'
-                                : 'bg-transparent text-muted-foreground border-transparent hover:bg-accent hover:text-foreground',
+                                ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
+                                : "bg-transparent border-dashed text-muted-foreground hover:bg-accent hover:text-foreground",
                             )}
                           >
                             <LightbulbFilamentIcon
-                              weight={!giveDirectAnswer ? 'fill' : 'regular'}
-                              className='h-4 w-4'
+                              weight={!giveDirectAnswer ? "fill" : "regular"}
+                              className="h-4 w-4"
                             />
-                            <span className='hidden sm:inline'>
-                              {language === 'sv' ? 'Hints' : 'Hints'}
+                            <span className="hidden sm:inline">
+                              {language === "sv" ? "Hints" : "Hints"}
                             </span>
                           </button>
                         </TooltipTrigger>
                         <TooltipContent
-                          side='top'
-                          align='start'
-                          className='flex flex-col gap-0.5'
+                          side="top"
+                          align="start"
+                          className="flex flex-col gap-0.5"
                         >
-                          <p className='font-medium'>
+                          <p className="font-medium">
                             {!giveDirectAnswer
-                              ? language === 'sv'
-                                ? 'Hints är på'
-                                : 'Hints enabled'
-                              : language === 'sv'
-                                ? 'Hints är av'
-                                : 'Hints disabled'}
+                              ? language === "sv"
+                                ? "Hints är på"
+                                : "Hints enabled"
+                              : language === "sv"
+                                ? "Hints är av"
+                                : "Hints disabled"}
                           </p>
-                          <p className='text-xs text-background/60'>
+                          <p className="text-xs text-background/60">
                             {!giveDirectAnswer
-                              ? language === 'sv'
-                                ? 'Du får pedagogiska ledtrådar.'
+                              ? language === "sv"
+                                ? "Du får pedagogiska ledtrådar."
                                 : "You'll get guidance."
-                              : language === 'sv'
-                                ? 'Klicka för vägledning.'
-                                : 'Click to get guidance.'}
+                              : language === "sv"
+                                ? "Klicka för vägledning."
+                                : "Click to get guidance."}
                           </p>
                         </TooltipContent>
                       </Tooltip>
                     </TooltipProvider>
                   </div>
 
-                  <div className='relative flex flex-row items-center justify-center gap-2'>
+                  <div className="relative flex flex-row items-center justify-center gap-2">
                     <Button
-                      variant={isListening ? 'destructive' : 'secondary'}
-                      size='icon'
+                      variant={isListening ? "destructive" : "secondary"}
+                      size="icon"
                       disabled={!isMicSupported}
                       onClick={toggleSpeechToText}
                       aria-label={
                         isListening
-                          ? language === 'sv'
-                            ? 'Stoppa tal-till-text'
-                            : 'Stop speech to text'
-                          : language === 'sv'
-                            ? 'Starta tal-till-text'
-                            : 'Start speech to text'
+                          ? language === "sv"
+                            ? "Stoppa tal-till-text"
+                            : "Stop speech to text"
+                          : language === "sv"
+                            ? "Starta tal-till-text"
+                            : "Start speech to text"
                       }
                     >
                       {isListening ? (
-                        <SquareIcon weight='fill' className='h-3.5 w-3.5' />
+                        <SquareIcon weight="fill" className="h-3.5 w-3.5" />
                       ) : (
-                        <MicrophoneIcon weight='bold' className='h-4 w-4' />
+                        <MicrophoneIcon weight="bold" className="h-4 w-4" />
                       )}
                     </Button>
 
-                    <AnimatePresence mode='wait' initial={false}>
+                    <AnimatePresence mode="wait" initial={false}>
                       {isLoading ? (
                         <motion.div
-                          key='stop'
+                          key="stop"
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           transition={{ duration: 0.15 }}
                         >
                           <InputGroupButton
-                            variant='outline'
-                            size='icon-sm'
+                            variant="outline"
+                            size="icon-sm"
                             onClick={onCancel}
-                            className='rounded-full h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground'
+                            className="rounded-full h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground"
                           >
-                            <SquareIcon weight='fill' className='h-3.5 w-3.5' />
+                            <SquareIcon weight="fill" className="h-3.5 w-3.5" />
                           </InputGroupButton>
                         </motion.div>
                       ) : (
                         <motion.div
-                          key='send'
+                          key="send"
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.8 }}
                           transition={{ duration: 0.15 }}
                         >
                           <InputGroupButton
-                            variant='default'
-                            size='icon-sm'
+                            variant="default"
+                            size="icon-sm"
                             disabled={
                               (!input.trim() && !isLoading) || isInputTooLong
                             }
@@ -624,10 +618,10 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               setIsListening(false);
                               onSend();
                             }}
-                            className='rounded-full shrink-0 font-medium transition-all'
+                            className="rounded-full shrink-0 font-medium transition-all"
                           >
-                            <ArrowUpIcon weight='bold' />
-                            <span className='sr-only'>{sendButtonLabel}</span>
+                            <ArrowUpIcon weight="bold" />
+                            <span className="sr-only">{sendButtonLabel}</span>
                           </InputGroupButton>
                         </motion.div>
                       )}
@@ -638,35 +632,35 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             </InputGroup>
           </motion.div>
 
-          <div className='mt-3 px-2 text-center text-[11px] leading-relaxed text-muted-foreground'>
+          <div className="mt-3 px-2 text-center text-[11px] leading-relaxed text-muted-foreground">
             {poweredByText}
           </div>
 
           {!isMicSupported && (
-            <div className='text-xs text-amber-600 mt-2 text-center'>
-              {language === 'sv'
-                ? 'Din webbläsare stöder inte tal-till-text i denna vy.'
-                : 'Your browser does not support speech to text in this view.'}
+            <div className="text-xs text-amber-600 mt-2 text-center">
+              {language === "sv"
+                ? "Din webbläsare stöder inte tal-till-text i denna vy."
+                : "Your browser does not support speech to text in this view."}
             </div>
           )}
 
           {isListening && (
-            <div className='text-xs text-primary mt-2 text-center animate-pulse'>
-              {language === 'sv'
-                ? 'Lyssnar... tryck igen för att stoppa.'
-                : 'Listening... tap again to stop.'}
+            <div className="text-xs text-primary mt-2 text-center animate-pulse">
+              {language === "sv"
+                ? "Lyssnar... tryck igen för att stoppa."
+                : "Listening... tap again to stop."}
             </div>
           )}
 
           {recordingError && (
-            <div className='text-xs text-red-500 mt-2 text-center'>
+            <div className="text-xs text-red-500 mt-2 text-center">
               {recordingError}
             </div>
           )}
 
           {isInputTooLong && (
-            <div className='text-xs text-red-500 mt-2 text-center animate-pulse'>
-              {language === 'sv'
+            <div className="text-xs text-red-500 mt-2 text-center animate-pulse">
+              {language === "sv"
                 ? `Maximal längd är ${MAX_INPUT_LENGTH} tecken.`
                 : `Maximum length is ${MAX_INPUT_LENGTH} characters.`}
             </div>

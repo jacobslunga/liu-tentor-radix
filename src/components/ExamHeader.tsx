@@ -277,9 +277,8 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       <div className="flex items-center gap-2">
         <Button
           onClick={onToggleChat || (() => setIsChatOpen(true))}
-          variant="secondary"
+          variant="outline"
           size="sm"
-          className="hidden lg:flex gap-2 rounded-full transition-all duration-200"
         >
           {isLoading ? (
             <>
@@ -296,11 +295,11 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
         <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />
 
-        <div className="hidden lg:flex items-stretch gap-0.5 overflow-hidden rounded-full bg-transparent">
+        <div className="hidden lg:flex items-stretch gap-0.5 overflow-hidden bg-transparent">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
-                variant="secondary"
+                variant="outline"
                 size="sm"
                 disabled={!selectedExam?.pdf_url && !solutionPdfUrl}
               >

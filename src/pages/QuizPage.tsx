@@ -68,6 +68,15 @@ const MarkdownMathBlock = ({ content }: { content: string }) => (
   </ReactMarkdown>
 );
 
+const blurFadeStyle: React.CSSProperties = {
+  background:
+    "linear-gradient(to top, hsl(var(--background)) 60%, transparent 100%)",
+  backdropFilter: "blur(10px)",
+  WebkitBackdropFilter: "blur(10px)",
+  maskImage: "linear-gradient(to top, black 60%, transparent 100%)",
+  WebkitMaskImage: "linear-gradient(to top, black 60%, transparent 100%)",
+};
+
 const QuizPage: FC = () => {
   const { courseCode = "" } = useParams<{ courseCode: string }>();
   const { language } = useLanguage();
@@ -106,10 +115,8 @@ const QuizPage: FC = () => {
     try {
       const raw = localStorage.getItem(QUIZ_HISTORY_STORAGE_KEY);
       if (!raw) return;
-
       const parsed = JSON.parse(raw) as StoredQuizItem[];
       if (!Array.isArray(parsed)) return;
-
       setQuizHistory(parsed);
     } catch {
       setQuizHistory([]);
@@ -122,7 +129,6 @@ const QuizPage: FC = () => {
     setSelectedHistoryId("latest");
     setCurrentIndex(0);
     setAnswers({});
-
     setHasInitializedQuizState(false);
     setActiveQuizData(null);
     resetQuiz();
@@ -139,7 +145,6 @@ const QuizPage: FC = () => {
 
   useEffect(() => {
     if (!hasHydratedHistory || hasInitializedQuizState) return;
-
     setHasInitializedQuizState(true);
 
     if (currentCourseHistory.length > 0) {
@@ -183,7 +188,6 @@ const QuizPage: FC = () => {
 
   useEffect(() => {
     if (!quizData?.quiz?.questions?.length) return;
-
     setActiveQuizData(quizData);
     setCurrentIndex(0);
     setAnswers({});
@@ -201,23 +205,18 @@ const QuizPage: FC = () => {
       return next;
     });
 
-    if (!isLoading) {
-      setStage("answering");
-    }
+    if (!isLoading) setStage("answering");
   }, [isLoading, quizData]);
 
   useEffect(() => {
     if (stage !== "generating" || !isLoading) return;
-
     const interval = setInterval(() => {
       setLoadingMessageIndex((prev) => (prev + 1) % loadingMessages.length);
     }, 1800);
-
     return () => clearInterval(interval);
   }, [stage, isLoading, loadingMessages.length]);
 
   const displayQuizData = activeQuizData;
-
   const quiz = displayQuizData?.quiz ?? null;
   const questions = quiz?.questions ?? [];
   const questionCount = questions.length;
@@ -244,9 +243,8 @@ const QuizPage: FC = () => {
 
   const nextQuestion = () =>
     setCurrentIndex((prev) => {
-      if (!currentQuestion || answers[currentQuestion.id] === undefined) {
+      if (!currentQuestion || answers[currentQuestion.id] === undefined)
         return prev;
-      }
       return Math.min(prev + 1, questionCount - 1);
     });
 
@@ -270,7 +268,6 @@ const QuizPage: FC = () => {
             minute: "2-digit",
           },
         );
-
         return {
           id: item.id,
           label: `${item.data.meta.courseCode} - ${createdLabel}`,
@@ -283,7 +280,6 @@ const QuizPage: FC = () => {
   const loadStoredQuiz = (historyId: string) => {
     const selected = currentCourseHistory.find((item) => item.id === historyId);
     if (!selected) return;
-
     resetQuiz();
     setActiveQuizData(selected.data);
     setStage("answering");
@@ -297,7 +293,6 @@ const QuizPage: FC = () => {
     setAnswers({});
     setSelectedHistoryId("latest");
     setLoadingMessageIndex(Math.floor(Math.random() * loadingMessages.length));
-
     resetQuiz();
     setActiveQuizData(null);
     setStage("generating");
@@ -311,7 +306,7 @@ const QuizPage: FC = () => {
   };
 
   const sidebar = (
-    <aside className="flex w-full shrink-0 flex-col gap-6 border-r bg-secondary/40 p-5 md:sticky md:top-0 md:h-screen md:w-72 lg:w-80">
+    <aside className="flex w-full shrink-0 flex-col gap-6 border-r bg-secondary/40 p-5 md:sticky md:top-0 md:h-screen md:w-72 md:overflow-y-auto lg:w-80">
       <div className="flex flex-col gap-6">
         <Button
           variant="ghost"
@@ -443,10 +438,9 @@ const QuizPage: FC = () => {
                   ? "Kunde inte generera quizet."
                   : "Could not generate the quiz."}
               </p>
-
               <div className="mt-4 flex flex-wrap justify-center gap-2">
                 <Button onClick={generateNewQuiz} variant="outline">
-                  <RefreshCw className=" h-4 w-4" />
+                  <RefreshCw className="h-4 w-4" />
                   {language === "sv" ? "Försök igen" : "Try again"}
                 </Button>
               </div>
@@ -464,7 +458,6 @@ const QuizPage: FC = () => {
               ? "Kunde inte generera quizet."
               : "Could not generate the quiz."}
           </p>
-
           <div className="mt-4 flex flex-wrap justify-center gap-2">
             <Button onClick={generateNewQuiz} variant="outline">
               <RefreshCw className="h-4 w-4" />
@@ -488,7 +481,6 @@ const QuizPage: FC = () => {
               ? "Generera ett nytt quiz för att komma igång."
               : "Generate a new quiz to get started."}
           </p>
-
           <div className="mt-6 flex justify-center">
             <Button onClick={generateNewQuiz}>
               <RefreshCw className="h-4 w-4" />
@@ -502,7 +494,7 @@ const QuizPage: FC = () => {
     const pct = Math.round((score / questionCount) * 100);
 
     mainContent = (
-      <div className="animate-in fade-in duration-500">
+      <div className="animate-in fade-in duration-500 pb-12">
         <div className="mb-8 rounded-3xl border bg-card p-6 shadow-sm sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
@@ -516,7 +508,6 @@ const QuizPage: FC = () => {
                 </span>
               </h1>
             </div>
-
             <Badge className="px-4 py-1.5 text-lg font-medium shadow-sm">
               {pct}%
             </Badge>
@@ -542,7 +533,6 @@ const QuizPage: FC = () => {
                     {language === "sv" ? "Fråga" : "Question"}{" "}
                     {questionIndex + 1}
                   </Badge>
-
                   <Badge
                     className={cn(
                       "px-3 py-1",
@@ -603,7 +593,6 @@ const QuizPage: FC = () => {
               {language === "sv" ? "Testa vad du kan" : "Test what you know"}
             </h1>
           </div>
-
           <Badge variant="secondary" className="px-3 py-1.5 text-sm">
             {language === "sv" ? "Källor" : "Sources"}:{" "}
             {displayQuizData?.meta.sourceCount}
@@ -613,9 +602,7 @@ const QuizPage: FC = () => {
         <div className="mb-5 h-2 w-full overflow-hidden rounded-full bg-muted">
           <div
             className="h-full rounded-full bg-primary transition-all duration-300 ease-in-out"
-            style={{
-              width: `${((currentIndex + 1) / questionCount) * 100}%`,
-            }}
+            style={{ width: `${((currentIndex + 1) / questionCount) * 100}%` }}
           />
         </div>
 
@@ -625,7 +612,6 @@ const QuizPage: FC = () => {
               {language === "sv" ? "Fråga" : "Question"} {currentIndex + 1} /{" "}
               {questionCount}
             </Badge>
-
             <span className="text-sm font-medium text-muted-foreground">
               {answeredCount}/{questionCount}{" "}
               {language === "sv" ? "besvarade" : "answered"}
@@ -665,7 +651,6 @@ const QuizPage: FC = () => {
                     >
                       {String.fromCharCode(65 + optionIndex)}
                     </span>
-
                     <div className="min-w-0 text-sm leading-relaxed sm:text-base">
                       <MarkdownMathBlock content={option} />
                     </div>
@@ -675,7 +660,10 @@ const QuizPage: FC = () => {
             </div>
           </div>
 
-          <div className="sticky bottom-0 z-20 mt-6 border-t bg-background/95 py-4 backdrop-blur">
+          <div
+            className="sticky bottom-0 z-20 mt-6 border-t py-4"
+            style={blurFadeStyle}
+          >
             <div className="flex justify-end">
               <div className="flex flex-wrap items-center gap-3">
                 <Button
@@ -718,9 +706,9 @@ const QuizPage: FC = () => {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-background md:h-screen md:flex-row md:overflow-hidden">
+    <div className="flex min-h-screen flex-col bg-background md:flex-row">
       {sidebar}
-      <main className="flex-1 overflow-y-auto px-4 py-8 sm:px-6 md:px-8 md:pt-8 md:pb-0 lg:px-12 lg:pt-12 lg:pb-0">
+      <main className="flex-1 px-4 py-8 sm:px-6 md:px-8 md:pt-8 lg:px-12 lg:pt-12">
         <div className="mx-auto w-full max-w-4xl">{mainContent}</div>
       </main>
     </div>

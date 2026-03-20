@@ -1,14 +1,14 @@
-import { ClockFillIcon } from '@primer/octicons-react';
-import { XIcon, MagnifyingGlassIcon } from '@phosphor-icons/react';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { ClockFillIcon } from "@primer/octicons-react";
+import { XIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import Cookies from 'js-cookie';
-import { ArrowBendUpRightIcon } from '@phosphor-icons/react';
-import { Input } from '@/components/ui/input';
-import { useLanguage } from '@/context/LanguageContext';
-import useSWR from 'swr';
-import { useTranslation } from '@/hooks/useTranslation';
+import Cookies from "js-cookie";
+import { ArrowBendUpRightIcon } from "@phosphor-icons/react";
+import { Input } from "@/components/ui/input";
+import { useLanguage } from "@/context/LanguageContext";
+import useSWR from "swr";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface RecentActivity {
   courseCode: string;
@@ -20,29 +20,29 @@ interface RecentActivity {
 interface CourseSearchDropdownProps {
   placeholder?: string;
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
 }
 
-const COOKIE_VERSION = '1.2';
-const COOKIE_NAME = 'recentActivities_v3';
+const COOKIE_VERSION = "1.2";
+const COOKIE_NAME = "recentActivities_v3";
 
 const fetchCourseCodes = async (): Promise<string[]> => {
-  const res = await fetch('/courseCodes.json');
-  if (!res.ok) throw new Error('Failed to load course codes');
+  const res = await fetch("/courseCodes.json");
+  if (!res.ok) throw new Error("Failed to load course codes");
   return res.json();
 };
 
 const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   placeholder,
-  className = '',
-  size = 'md',
+  className = "",
+  size = "md",
 }) => {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useTranslation();
 
-  const [courseCode, setCourseCode] = useState('');
+  const [courseCode, setCourseCode] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -52,7 +52,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const { data: courseCodes = [], isLoading } = useSWR(
-    'courseCodes',
+    "courseCodes",
     fetchCourseCodes,
     {
       dedupingInterval: 1000 * 60 * 60 * 24,
@@ -61,12 +61,12 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   );
 
   const loadRecentSearches = useCallback(() => {
-    const storedVersion = Cookies.get('cookieVersion');
-    const searches = Cookies.get('popularSearches');
+    const storedVersion = Cookies.get("cookieVersion");
+    const searches = Cookies.get("popularSearches");
 
     if (!searches || storedVersion !== COOKIE_VERSION) {
-      Cookies.remove('popularSearches');
-      Cookies.set('cookieVersion', COOKIE_VERSION, { expires: 365 });
+      Cookies.remove("popularSearches");
+      Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
       return;
     }
 
@@ -81,7 +81,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       ).slice(0, 4);
       setRecentSearches(uniqueCourses as string[]);
     } catch (error) {
-      console.error('Error processing popular searches:', error);
+      console.error("Error processing popular searches:", error);
     }
   }, []);
 
@@ -96,7 +96,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
         ? JSON.parse(decodeURIComponent(Cookies.get(COOKIE_NAME)!))
         : [];
     } catch (error) {
-      console.error('Failed to parse recent activities cookie', error);
+      console.error("Failed to parse recent activities cookie", error);
     }
 
     const existingIndex = searchesArray.findIndex(
@@ -118,11 +118,11 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
     Cookies.set(COOKIE_NAME, JSON.stringify(searchesArray), {
       expires: 365,
-      domain: window.location.hostname.includes('liutentor.se')
-        ? '.liutentor.se'
+      domain: window.location.hostname.includes("liutentor.se")
+        ? ".liutentor.se"
         : undefined,
-      sameSite: window.location.hostname === 'localhost' ? 'Strict' : 'Lax',
-      secure: window.location.protocol === 'https:',
+      sameSite: window.location.hostname === "localhost" ? "Strict" : "Lax",
+      secure: window.location.protocol === "https:",
     });
   };
 
@@ -146,33 +146,33 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       if (suggestionElements && suggestionElements[index]) {
         const selectedElement = suggestionElements[index] as HTMLElement;
         selectedElement.scrollIntoView({
-          behavior: 'instant',
-          block: 'nearest',
+          behavior: "instant",
+          block: "nearest",
         });
       }
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       if (selectedIndex >= 0 && suggestions.length > 0) {
         handleSelectCourse(suggestions[selectedIndex]);
       } else {
         handleSelectCourse(courseCode);
       }
       setShowSuggestions(false);
-    } else if (e.key === 'ArrowDown') {
+    } else if (e.key === "ArrowDown") {
       const newIndex = Math.min(
         selectedIndex + 1,
         recentSearches.length + suggestions.length - 1,
       );
       setSelectedIndex(newIndex);
       scrollToSuggestion(newIndex);
-    } else if (e.key === 'ArrowUp') {
+    } else if (e.key === "ArrowUp") {
       const newIndex = Math.max(selectedIndex - 1, 0);
       setSelectedIndex(newIndex);
       scrollToSuggestion(newIndex);
-    } else if (e.key === 'Escape') {
+    } else if (e.key === "Escape") {
       setShowSuggestions(false);
       setSelectedIndex(-1);
       inputRef.current?.blur();
@@ -184,11 +184,11 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
     if (!searchCode) return;
 
     updateSearchCount(searchCode);
-    setCourseCode('');
+    setCourseCode("");
     setShowSuggestions(false);
     setIsFocused(false);
     inputRef.current?.blur();
-    if (pathname.includes('stats')) {
+    if (pathname.includes("stats")) {
       navigate(`/search/${searchCode}/stats`, { viewTransition: true });
     } else {
       navigate(`/search/${searchCode}`, { viewTransition: true });
@@ -213,7 +213,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   useEffect(() => {
     const handleGlobalKeyDown = (e: KeyboardEvent) => {
       if (
-        e.key === '/' &&
+        e.key === "/" &&
         !isFocused &&
         document.activeElement !== inputRef.current
       ) {
@@ -222,54 +222,54 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       }
     };
 
-    document.addEventListener('keydown', handleGlobalKeyDown);
-    return () => document.removeEventListener('keydown', handleGlobalKeyDown);
+    document.addEventListener("keydown", handleGlobalKeyDown);
+    return () => document.removeEventListener("keydown", handleGlobalKeyDown);
   }, [isFocused]);
 
   const sizeClasses = {
-    sm: 'text-xs p-2',
-    md: 'text-sm p-2.5',
-    lg: 'text-base p-3',
+    sm: "text-xs p-2",
+    md: "text-sm p-2.5",
+    lg: "text-base p-3",
   };
 
   const iconSizes = {
-    sm: 'w-3 h-3',
-    md: 'w-4 h-4',
-    lg: 'w-5 h-5',
+    sm: "w-3 h-3",
+    md: "w-4 h-4",
+    lg: "w-5 h-5",
   };
 
   return (
     <div className={`relative ${className}`}>
-      <div className='relative flex items-center'>
+      <div className="relative flex items-center">
         <MagnifyingGlassIcon
-          weight='bold'
+          weight="bold"
           className={`${iconSizes[size]} text-muted-foreground absolute w-4 h-4 left-3 pointer-events-none z-10`}
         />
         <Input
           ref={inputRef}
-          placeholder={placeholder || t('searchCoursePlaceholder')}
+          placeholder={placeholder || t("searchCoursePlaceholder")}
           value={courseCode.toUpperCase()}
           onChange={(e) => setCourseCode(e.target.value)}
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-full`}
+          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-lg`}
         />
         {!courseCode && (
-          <div className='absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1'>
-            <kbd className='pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100'>
-              <span className='text-xs'>/</span>
+          <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+              <span className="text-xs">/</span>
             </kbd>
           </div>
         )}
         {courseCode && (
           <button
-            className='absolute right-3 top-1/2 -translate-y-1/2 z-10'
-            onClick={() => setCourseCode('')}
-            aria-label='Clear search'
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10"
+            onClick={() => setCourseCode("")}
+            aria-label="Clear search"
           >
             <XIcon
-              weight='bold'
+              weight="bold"
               className={`${iconSizes[size]} text-muted-foreground hover:text-foreground transition-colors`}
             />
           </button>
@@ -281,33 +281,33 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
-            className='absolute w-full left-0 mt-2 bg-background border border-border z-60 max-h-72 rounded-xl overflow-y-auto text-sm'
+            className="absolute w-full left-0 mt-2 bg-background border border-border z-60 max-h-72 rounded-xl overflow-y-auto text-sm"
           >
             {isLoading && (
-              <div className='px-3 py-2 text-sm text-muted-foreground'>
-                {language === 'sv' ? 'Laddar kurser...' : 'Loading courses...'}
+              <div className="px-3 py-2 text-sm text-muted-foreground">
+                {language === "sv" ? "Laddar kurser..." : "Loading courses..."}
               </div>
             )}
             {recentSearches.length > 0 && !courseCode.trim() && (
               <>
-                <div className='px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs'>
-                  {t('recentSearches')}
+                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs">
+                  {t("recentSearches")}
                 </div>
                 {recentSearches.map((suggestion, index) => (
                   <div
                     key={`recent-${suggestion}`}
                     className={`flex items-center px-3 py-2 cursor-pointer transition-colors duration-150 ${
                       index === selectedIndex
-                        ? 'bg-muted text-foreground'
-                        : 'hover:bg-muted/50'
+                        ? "bg-muted text-foreground"
+                        : "hover:bg-muted/50"
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <ClockFillIcon className='w-4 h-4 mr-2 opacity-70' />
-                    <span className='flex-1'>{suggestion}</span>
+                    <ClockFillIcon className="w-4 h-4 mr-2 opacity-70" />
+                    <span className="flex-1">{suggestion}</span>
                     <ArrowBendUpRightIcon
-                      weight='bold'
-                      className='w-4 h-4 opacity-50'
+                      weight="bold"
+                      className="w-4 h-4 opacity-50"
                     />
                   </div>
                 ))}
@@ -316,10 +316,10 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
             {suggestions.length > 0 && courseCode.trim() && (
               <>
                 {recentSearches.length > 0 && !courseCode.trim() && (
-                  <div className='border-t mx-2 my-1' />
+                  <div className="border-t mx-2 my-1" />
                 )}
-                <div className='px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs'>
-                  {t('allCourses')}
+                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs">
+                  {t("allCourses")}
                 </div>
                 {suggestions.slice(0, 10).map((suggestion, index) => (
                   <div
@@ -328,15 +328,15 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                       index +
                         (courseCode.trim() ? 0 : recentSearches.length) ===
                       selectedIndex
-                        ? 'bg-muted text-foreground'
-                        : 'hover:bg-muted/50'
+                        ? "bg-muted text-foreground"
+                        : "hover:bg-muted/50"
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <span className='flex-1 font-normal'>{suggestion}</span>
+                    <span className="flex-1 font-normal">{suggestion}</span>
                     <ArrowBendUpRightIcon
-                      weight='bold'
-                      className='w-4 h-4 opacity-50'
+                      weight="bold"
+                      className="w-4 h-4 opacity-50"
                     />
                   </div>
                 ))}
