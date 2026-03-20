@@ -559,9 +559,9 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                   </div>
 
                   <div className="relative flex flex-row items-center justify-center gap-2">
-                    <Button
+                    <InputGroupButton
                       variant={isListening ? "destructive" : "secondary"}
-                      size="icon"
+                      size="icon-sm"
                       disabled={!isMicSupported}
                       onClick={toggleSpeechToText}
                       aria-label={
@@ -579,7 +579,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                       ) : (
                         <MicrophoneIcon weight="bold" className="h-4 w-4" />
                       )}
-                    </Button>
+                    </InputGroupButton>
 
                     <AnimatePresence mode="wait" initial={false}>
                       {isLoading ? (
