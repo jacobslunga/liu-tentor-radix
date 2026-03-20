@@ -299,20 +299,14 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
         <div className="hidden lg:flex items-stretch gap-0.5 overflow-hidden rounded-full bg-transparent">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <button
-                className="flex cursor-pointer items-center overflow-hidden rounded-full bg-secondary hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              <Button
+                variant="secondary"
+                size="sm"
                 disabled={!selectedExam?.pdf_url && !solutionPdfUrl}
               >
-                <span className="px-3 py-2 text-xs font-medium">
-                  {language === "sv" ? "Ladda ned" : "Download"}
-                </span>
-
-                <span className="w-px h-5 bg-border opacity-60" />
-
-                <span className="px-2 py-2 flex items-center justify-center">
-                  <CaretDownIcon weight="bold" className="w-4 h-4" />
-                </span>
-              </button>
+                {language === "sv" ? "Ladda ned" : "Download"}
+                <CaretDownIcon weight="bold" className="w-4 h-4" />
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"

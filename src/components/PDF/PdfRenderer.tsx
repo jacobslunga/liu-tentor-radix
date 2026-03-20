@@ -33,97 +33,42 @@ import {
 import { Loader2 } from "lucide-react";
 import { useTheme } from "@/context/ThemeContext";
 
-// interface CopyMenuProps extends SelectionSelectionMenuProps {
-//   documentId: string;
-// }
+/*
+ * Background math:
+ *
+ * CSS invert(100%) maps each channel c → (255 - c).
+ * We want the final rendered background to equal the app's --background.
+ *
+ * So we set the wrapper background to invert(--background), i.e.
+ *   pre_r = 255 - bg_r,  pre_g = 255 - bg_g,  pre_b = 255 - bg_b
+ *
+ * After invert() runs:  (255 - pre) = bg  ✓
+ *
+ * dark --background: #181818  → pre-inverted: #e7e7e7
+ * dim  --background: #22272e  → pre-inverted: #ddd8d1
+ *
+ * For dim we use invert(85%) not 100%, so the mapping is approximate
+ * but visually close enough — the slight warmth actually looks good.
+ */
+const THEME_CONFIG: Record<
+  string,
+  { filter: string; preinvertedBg: string } | undefined
+> = {
+  dark: {
+    filter: "invert(90.6%) hue-rotate(180deg)",
+    preinvertedBg: "#e7e7e7",
+  },
+  dim: {
+    filter: "invert(85%) hue-rotate(180deg) brightness(0.97) saturate(0.9)",
+    preinvertedBg: "#ddd8d1",
+  },
+};
 
-// const BUTTON_HEIGHT = 32;
-// const BUTTON_WIDTH = 70;
-
-// const CopyMenu: FC<CopyMenuProps> = ({
-//   rect,
-//   menuWrapperProps,
-//   placement,
-//   documentId,
-// }) => {
-//   const { provides: selectionCapability } = useSelectionCapability();
-//   const [buttonPos, setButtonPos] = useState<{
-//     top: number;
-//     left: number;
-//   } | null>(null);
-
-//   const measureRef = useCallback(
-//     (node: HTMLDivElement | null) => {
-//       if (!node) return;
-//       requestAnimationFrame(() => {
-//         const domRect = node.getBoundingClientRect();
-//         const top = placement.suggestTop
-//           ? domRect.top - BUTTON_HEIGHT - 8
-//           : domRect.bottom + 8;
-//         const left = domRect.left + domRect.width / 2 - BUTTON_WIDTH / 2;
-//         setButtonPos({ top, left });
-//       });
-//     },
-//     [placement.suggestTop],
-//   );
-
-//   const { ref: wrapperLibRef, ...restWrapperProps } =
-//     menuWrapperProps as typeof menuWrapperProps & {
-//       ref?: React.Ref<HTMLDivElement>;
-//     };
-
-//   const mergedRef = useCallback(
-//     (node: HTMLDivElement | null) => {
-//       measureRef(node);
-//       if (typeof wrapperLibRef === "function") wrapperLibRef(node);
-//       else if (wrapperLibRef && typeof wrapperLibRef === "object") {
-//         (
-//           wrapperLibRef as React.MutableRefObject<HTMLDivElement | null>
-//         ).current = node;
-//       }
-//     },
-//     [measureRef, wrapperLibRef],
-//   );
-
-//   const handleCopy = () => {
-//     const scope = selectionCapability?.forDocument(documentId);
-//     scope?.copyToClipboard();
-//     scope?.clear();
-//   };
-
-//   return (
-//     <>
-//       <div
-//         ref={mergedRef}
-//         {...restWrapperProps}
-//         style={{
-//           ...restWrapperProps.style,
-//           width: rect.size.width,
-//           height: rect.size.height,
-//         }}
-//       />
-//       {buttonPos &&
-//         createPortal(
-//           <button
-//             onClick={handleCopy}
-//             style={{
-//               position: "fixed",
-//               top: buttonPos.top,
-//               left: buttonPos.left,
-//               width: BUTTON_WIDTH,
-//               height: BUTTON_HEIGHT,
-//               zIndex: 9999,
-//               pointerEvents: "auto",
-//             }}
-//             className="rounded-lg cursor-pointer hover:scale-95 bg-foreground px-3 py-1 text-xs text-background shadow-md transition-transform"
-//           >
-//             Kopiera
-//           </button>,
-//           document.body,
-//         )}
-//     </>
-//   );
-// };
+const SELECTION_COLOR: Record<string, string> = {
+  light: "oklch(0.6193 0.1154 172.06 / 0.28)",
+  dark: "oklch(0.8332 0.088 144.73 / 0.35)",
+  dim: "oklch(0.72 0.12 200 / 0.35)",
+};
 
 const KeyboardCopyHandler: FC<{
   documentId: string;
@@ -165,7 +110,10 @@ const PdfRenderer: FC<PdfRendererProps> = ({
 }) => {
   const { effectiveTheme } = useTheme();
   const { engine, isLoading } = usePdfiumEngine();
-  const isDark = effectiveTheme === "dark";
+
+  const themeConfig = THEME_CONFIG[effectiveTheme];
+  const selectionColor =
+    SELECTION_COLOR[effectiveTheme] ?? SELECTION_COLOR.light;
 
   const [windowWidth, setWindowWidth] = useState(
     typeof window !== "undefined" ? window.innerWidth : 1200,
@@ -244,9 +192,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                           renderPage={({ width, height, pageIndex }) => (
                             <div
                               style={{ width, height }}
-                              className={`relative mx-auto my-4 pdf-page-shell ${
-                                isDark ? "pdf-page-shell--dark" : ""
-                              }`}
+                              className="relative mx-auto my-4 pdf-page-shell"
                             >
                               <PagePointerProvider
                                 documentId={activeDocumentId}
@@ -260,10 +206,11 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                   <div
                                     className="absolute inset-0 z-0 pdf-render-surface"
                                     style={
-                                      isDark
+                                      themeConfig
                                         ? {
-                                            filter:
-                                              "invert(90.6%) hue-rotate(180deg)",
+                                            filter: themeConfig.filter,
+                                            background:
+                                              themeConfig.preinvertedBg,
                                           }
                                         : undefined
                                     }
@@ -273,21 +220,12 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                       pageIndex={pageIndex}
                                     />
                                   </div>
+
                                   <div className="absolute inset-0 z-10 pdf-selection-surface">
                                     <SelectionLayer
                                       documentId={activeDocumentId}
                                       pageIndex={pageIndex}
-                                      textStyle={{
-                                        background: isDark
-                                          ? "oklch(0.8332 0.088 144.73 / 0.35)"
-                                          : "oklch(0.6193 0.1154 172.06 / 0.28)",
-                                      }}
-                                      // selectionMenu={(props) => (
-                                      //   <CopyMenu
-                                      //     {...props}
-                                      //     documentId={activeDocumentId}
-                                      //   />
-                                      // )}
+                                      textStyle={{ background: selectionColor }}
                                     />
                                   </div>
                                 </Rotate>

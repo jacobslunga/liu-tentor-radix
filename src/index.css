@@ -2,6 +2,7 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
+@custom-variant dim (&:is(.dim *));
 @plugin "@tailwindcss/typography";
 @plugin "@toolwind/corner-shape";
 
@@ -77,9 +78,15 @@
     background: white;
   }
 
-  .dark .pdf-page-shell--dark canvas,
-  .dark .pdf-page-shell--dark img,
-  .dark .pdf-page-shell--dark svg {
+  .dark .pdf-page-shell canvas,
+  .dark .pdf-page-shell img,
+  .dark .pdf-page-shell svg,
+  .dim .pdf-page-shell canvas,
+  .dim .pdf-page-shell img,
+  .dim .pdf-page-shell svg {
+    display: block;
+    width: 100%;
+    height: 100%;
     background: transparent;
   }
 
@@ -131,7 +138,8 @@
     opacity: 0.2;
   }
 
-  .dark .prose hr {
+  .dark .prose hr,
+  .dim .prose hr {
     border-color: var(--border);
   }
 
@@ -169,6 +177,15 @@
     color: oklch(0.985 0 0);
   }
 
+  .dim *::selection {
+    background: oklch(0.75 0.1 200 / 0.35);
+    color: oklch(0.95 0 0);
+  }
+  .dim *::-moz-selection {
+    background: oklch(0.75 0.1 200 / 0.35);
+    color: oklch(0.95 0 0);
+  }
+
   .kbd {
     background-color: #333;
     color: #fff;
@@ -188,11 +205,9 @@
   height: 6px;
   background-color: transparent;
 }
-
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background-color: color-mix(
     in srgb,
@@ -201,7 +216,6 @@
   );
   border-radius: 9999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background-color: color-mix(
     in srgb,
@@ -209,7 +223,6 @@
     transparent 50%
   );
 }
-
 ::-webkit-scrollbar-corner {
   background-color: transparent;
 }
@@ -325,6 +338,41 @@
   --sidebar-accent-foreground: #f5f5f5;
   --sidebar-border: #2a2a2a;
   --sidebar-ring: #525252;
+}
+
+/* ── Dim theme (GitHub Dim-inspired) ─────────────────────────────── */
+.dim {
+  --background: #22272e;
+  --foreground: #adbac7;
+  --card: #2d333b;
+  --card-foreground: #adbac7;
+  --popover: #2d333b;
+  --popover-foreground: #adbac7;
+  --primary: oklch(0.8332 0.088 144.73);
+  --primary-foreground: #22272e;
+  --secondary: #373e47;
+  --secondary-foreground: #adbac7;
+  --muted: #2d333b;
+  --muted-foreground: #768390;
+  --accent: #373e47;
+  --accent-foreground: #adbac7;
+  --destructive: oklch(0.65 0.18 22);
+  --border: #373e47;
+  --input: #373e47;
+  --ring: #4c5460;
+  --chart-1: oklch(0.82 0.09 200);
+  --chart-2: oklch(0.72 0.12 185);
+  --chart-3: oklch(0.65 0.14 175);
+  --chart-4: oklch(0.58 0.13 168);
+  --chart-5: oklch(0.5 0.11 162);
+  --sidebar: #1c2128;
+  --sidebar-foreground: #adbac7;
+  --sidebar-primary: oklch(0.72 0.12 200);
+  --sidebar-primary-foreground: #22272e;
+  --sidebar-accent: #2d333b;
+  --sidebar-accent-foreground: #adbac7;
+  --sidebar-border: #373e47;
+  --sidebar-ring: #4c5460;
 }
 
 @layer base {
