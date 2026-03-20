@@ -47,7 +47,25 @@
   }
 
   .pdf-page-shell {
+    position: relative;
+    isolation: isolate;
     background: transparent;
+  }
+
+  .pdf-render-surface {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .pdf-selection-surface {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+    filter: none !important;
+    mix-blend-mode: normal;
+    isolation: isolate;
+    pointer-events: auto;
   }
 
   .pdf-page-shell canvas,
@@ -115,15 +133,6 @@
 
   .dark .prose hr {
     border-color: var(--border);
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: "Basier", sans-serif;
   }
 
   body {
