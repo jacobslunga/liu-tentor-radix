@@ -297,21 +297,21 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
         <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />
 
         <div className="hidden lg:flex items-stretch gap-0.5 overflow-hidden rounded-full bg-transparent">
-          <button
-            onClick={handleDownloadExam}
-            disabled={!selectedExam?.pdf_url}
-            className="px-3 py-2 cursor-pointer text-xs font-medium text-foreground bg-secondary hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed outline-none"
-          >
-            {language === "sv" ? "Ladda ned" : "Download"}
-          </button>
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button
-                className="px-2 py-2 cursor-pointer text-foreground bg-secondary hover:bg-accent transition-colors flex items-center justify-center outline-none"
-                aria-label="Download options"
+                className="flex cursor-pointer items-center overflow-hidden rounded-full bg-secondary hover:bg-accent transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={!selectedExam?.pdf_url && !solutionPdfUrl}
               >
-                <CaretDownIcon weight="bold" className="w-4 h-4" />
+                <span className="px-3 py-2 text-xs font-medium">
+                  {language === "sv" ? "Ladda ned" : "Download"}
+                </span>
+
+                <span className="w-px h-5 bg-border opacity-60" />
+
+                <span className="px-2 py-2 flex items-center justify-center">
+                  <CaretDownIcon weight="bold" className="w-4 h-4" />
+                </span>
               </button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
