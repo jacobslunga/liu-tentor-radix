@@ -171,41 +171,6 @@
   textarea {
     resize: none;
   }
-
-  .pdf-container {
-    scrollbar-width: thin;
-    scrollbar-color: var(--muted-foreground) transparent;
-  }
-
-  .pdf-container::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-    background-color: var(--background);
-  }
-
-  .pdf-container::-webkit-scrollbar-track {
-    background-color: var(--background);
-  }
-
-  .pdf-container::-webkit-scrollbar-thumb {
-    background-color: color-mix(
-      in srgb,
-      var(--muted-foreground),
-      transparent 70%
-    );
-    border-radius: 9999px;
-    border: 2px solid var(--background);
-    background-clip: content-box;
-    transition: background-color 0.2s ease;
-  }
-
-  .pdf-container::-webkit-scrollbar-thumb:hover {
-    background-color: color-mix(
-      in srgb,
-      var(--muted-foreground),
-      transparent 50%
-    );
-  }
 }
 
 ::-webkit-scrollbar {
