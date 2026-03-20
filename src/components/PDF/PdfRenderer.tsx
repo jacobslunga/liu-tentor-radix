@@ -134,9 +134,9 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                 pageIndex={pageIndex}
                                 className="relative h-full w-full"
                               >
-                                <RenderLayer
-                                  documentId={activeDocumentId}
-                                  pageIndex={pageIndex}
+                                {/* Only invert the rendered PDF */}
+                                <div
+                                  className="absolute inset-0 z-0 pdf-render-surface"
                                   style={
                                     isDark
                                       ? {
@@ -145,16 +145,24 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                         }
                                       : undefined
                                   }
-                                />
-                                <SelectionLayer
-                                  documentId={activeDocumentId}
-                                  pageIndex={pageIndex}
-                                  textStyle={{
-                                    background: isDark
-                                      ? "oklch(0.8332 0.088 144.73 / 0.35)"
-                                      : "oklch(0.6193 0.1154 172.06 / 0.28)",
-                                  }}
-                                />
+                                >
+                                  <RenderLayer
+                                    documentId={activeDocumentId}
+                                    pageIndex={pageIndex}
+                                  />
+                                </div>
+
+                                <div className="absolute inset-0 z-10 pdf-selection-surface">
+                                  <SelectionLayer
+                                    documentId={activeDocumentId}
+                                    pageIndex={pageIndex}
+                                    textStyle={{
+                                      background: isDark
+                                        ? "oklch(0.8332 0.088 144.73 / 0.35)"
+                                        : "oklch(0.6193 0.1154 172.06 / 0.28)",
+                                    }}
+                                  />
+                                </div>
                               </Rotate>
                             </PagePointerProvider>
                           </div>
