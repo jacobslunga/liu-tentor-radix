@@ -189,27 +189,14 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
           </TooltipProvider> */}
 
           {/* Feedback Button */}
-          <TooltipProvider delayDuration={0}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => window.open("/feedback", "_blank")}
-                >
-                  <ChatCircleDotsIcon weight="bold" className="h-4 w-4" />
-                  <span>Feedback</span>
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="end">
-                <p>
-                  {language === "sv"
-                    ? "Ge feedback om AI-chatten"
-                    : "Give feedback about the AI chat"}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => window.open("/feedback", "_blank")}
+          >
+            <ChatCircleDotsIcon weight="bold" className="h-4 w-4" />
+            <span>Feedback</span>
+          </Button>
         </div>
       </div>
     );
