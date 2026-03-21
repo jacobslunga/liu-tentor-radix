@@ -111,7 +111,7 @@ const ScrollToBottomButton = memo(
           transition={{ ease: "easeInOut", duration: 0.2 }}
           className="absolute -top-14 left-1/2 -translate-x-1/2 z-20"
         >
-          <Button variant="outline" size="icon" onClick={onClick}>
+          <Button className="rounded-full" variant="outline" size="icon" onClick={onClick}>
             <ArrowDownIcon weight="bold" size={20} />
           </Button>
         </motion.div>
