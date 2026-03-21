@@ -5,24 +5,65 @@ import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
 import "katex/dist/katex.min.css";
 import { Message } from "../types";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { markdownComponents } from "./MarkdownComponents";
 import { useThrottle } from "../hooks/useThrottle";
+import { useLanguage } from "@/context/LanguageContext";
 
-const ThinkingDot = () => (
-  <motion.div
-    className="h-2 w-2 rounded-full bg-foreground"
-    animate={{
-      scale: [1, 1.6, 1],
-      opacity: [0.3, 0.9, 0.3],
-    }}
-    transition={{
-      duration: 1.8,
-      repeat: Infinity,
-      ease: "easeInOut",
-    }}
-  />
-);
+const GridLoader = () => {
+  const delays = [0, 0.2, 0.6, 0.4];
+
+  return (
+    <div className="grid grid-cols-2 gap-0.5">
+      {[0, 1, 2, 3].map((index) => (
+        <motion.div
+          key={index}
+          className="h-1 w-1 rounded-full bg-foreground"
+          initial={{ opacity: 0.4 }}
+          animate={{ opacity: [0.4, 1, 0.4] }}
+          transition={{
+            duration: 1.2,
+            repeat: Infinity,
+            delay: delays[index],
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+    </div>
+  );
+};
+
+const ShimmeringThinking = () => {
+  const { language } = useLanguage();
+
+  return (
+    <div className="flex items-center h-6 overflow-hidden select-none">
+      <AnimatePresence mode="popLayout">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.3 }}
+          className="text-sm font-medium"
+        >
+          <motion.span
+            className="inline-block bg-linear-to-r from-muted-foreground/40 via-foreground to-muted-foreground/40 bg-size-[200%_auto] bg-clip-text text-transparent"
+            animate={{
+              backgroundPosition: ["200% center", "-200% center"],
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 2.5,
+              ease: "linear",
+            }}
+          >
+            {language === "sv" ? "Tänker..." : "Thinking..."}
+          </motion.span>
+        </motion.div>
+      </AnimatePresence>
+    </div>
+  );
+};
 
 interface MessageBubbleProps {
   message: Message;
@@ -74,7 +115,10 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         >
           {message.role === "assistant" ? (
             isThinking ? (
-              <ThinkingDot />
+              <div className="flex flex-row items-center justify-start gap-2">
+                <GridLoader />
+                <ShimmeringThinking />
+              </div>
             ) : (
               <AssistantMessage content={throttledContent} />
             )
