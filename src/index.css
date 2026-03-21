@@ -22,36 +22,8 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-regular-webfont.woff2") format("woff2");
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-medium-webfont.woff2") format("woff2");
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-semibold-webfont.woff2") format("woff2");
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Basier";
-  src: url("/fonts/basiersquare-bold-webfont.woff2") format("woff2");
-  font-weight: 700;
-  font-display: swap;
-}
-
 [data-font="default"] body {
-  font-family: "Anthropic Sans", "Basier", system-ui, sans-serif;
+  font-family: "Anthropic Sans", system-ui, sans-serif;
 }
 
 [data-font="system"] body {
