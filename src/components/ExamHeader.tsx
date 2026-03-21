@@ -170,6 +170,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
         <Button
           size="icon"
           variant="outline"
+          className="size-9"
           onClick={() =>
             navigate(`/search/${courseCode}`, { viewTransition: true })
           }
@@ -182,7 +183,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           {selectedExam && (
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="group">
+                <Button variant="outline" className="group">
                   <span className="font-semibold">
                     {selectedExam.exam_name.length > 20
                       ? `${selectedExam.exam_name

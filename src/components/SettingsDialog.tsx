@@ -123,7 +123,7 @@ const SettingsDialog: FC = () => {
       id: "default",
       label: "Default",
       preview: "Aa",
-      style: { fontFamily: '"Basier", sans-serif' },
+      style: { fontFamily: '"Anthropic Sans", sans-serif' },
     },
     {
       id: "system",

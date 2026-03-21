@@ -20,18 +20,18 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
   useEffect(() => {
     const onMouseMove = (e: MouseEvent) => {
       const w = window.innerWidth;
+      const h = window.innerHeight;
       const xTrigger = w * 0.7;
 
-      const topSafeZone = 150;
+      const safeZoneY = h * 0.2;
+      const isInVerticalSafeZone =
+        e.clientY < safeZoneY || e.clientY > h - safeZoneY;
 
-      if (e.clientX > xTrigger) {
+      if (e.clientX > xTrigger && !isInVerticalSafeZone) {
         const xRatio = (e.clientX - xTrigger) / (w - xTrigger);
         const clampedX = Math.min(Math.max(xRatio, 0), 1);
 
-        const yRatio = e.clientY / topSafeZone;
-        const clampedY = Math.min(Math.max(yRatio, 0), 1);
-
-        spring.set(clampedX * clampedY);
+        spring.set(clampedX);
       } else {
         spring.set(0);
       }
@@ -41,14 +41,24 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
     return () => window.removeEventListener("mousemove", onMouseMove);
   }, [spring]);
 
-  const gradientOpacity = useTransform(spring, (v) => 0.1 + v * 0.25);
+  const gradientOpacity = useTransform(spring, (v) =>
+    document.documentElement.classList.contains("dark")
+      ? 0.08 + v * 0.3
+      : 0.16 + v * 0.45,
+  );
   const iconOpacity = useTransform(spring, (v) => 0.5 + v * 0.5);
   const arrowX = useTransform(spring, (v) => `${-10 + v * -20}px`);
 
   const backgroundImage = useTransform(
     gradientOpacity,
     (o) =>
-      `linear-gradient(to right, transparent, oklch(0.6193 0.1154 172.06 / ${o}))`
+      `radial-gradient(
+        ellipse 90px 42% at 100% 50%,
+        oklch(0.6193 0.1154 172.06 / ${o}) 0%,
+        oklch(0.6193 0.1154 172.06 / ${o * 0.7}) 22%,
+        oklch(0.6193 0.1154 172.06 / ${o * 0.28}) 48%,
+        transparent 72%
+      )`,
   );
 
   return (

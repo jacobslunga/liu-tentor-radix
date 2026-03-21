@@ -8,6 +8,14 @@
 @plugin "@toolwind/corner-shape";
 
 @font-face {
+  font-family: "Anthropic Sans";
+  src: url("/fonts/Anthropic-Sans.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@font-face {
   font-family: "Canela";
   src: url("/fonts/CanelaText-Medium.otf") format("opentype");
   font-weight: 500;
@@ -43,7 +51,7 @@
 }
 
 [data-font="default"] body {
-  font-family: "Basier", system-ui, sans-serif;
+  font-family: "Anthropic Sans", "Basier", system-ui, sans-serif;
 }
 
 [data-font="system"] body {
@@ -175,6 +183,7 @@
 
   body {
     font-family:
+      "Anthropic Sans",
       "Basier",
       system-ui,
       -apple-system,
