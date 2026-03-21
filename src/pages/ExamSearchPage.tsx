@@ -167,7 +167,7 @@ const ExamSearchPage: FC = () => {
                       >
                         <Button variant="outline">
                           <CardsThreeIcon weight="bold" className="h-4 w-4" />
-                          {language === "sv" ? "Quiz" : "Quiz"}
+                          Quiz
                         </Button>
                         <div className="bg-red-500 text-white text-[9px] font-medium px-1.5 py-0.5 rounded-full absolute -top-2 -right-2">
                           <span>Nyhet</span>

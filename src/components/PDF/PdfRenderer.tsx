@@ -35,18 +35,13 @@ import { useTheme } from "@/context/ThemeContext";
 
 const THEME_CONFIG: Record<string, { filter: string } | undefined> = {
   dark: {
-    filter: "invert(90.6%) hue-rotate(180deg)",
-  },
-  dim: {
-    filter:
-      "brightness(0) saturate(100%) invert(13%) sepia(3%) saturate(2849%) hue-rotate(176deg) brightness(95%) contrast(93%);",
+    filter: "invert(92%) hue-rotate(180deg)",
   },
 };
 
 const SELECTION_COLOR: Record<string, string> = {
   light: "oklch(0.6193 0.1154 172.06 / 0.28)",
   dark: "oklch(0.8332 0.088 144.73 / 0.35)",
-  dim: "oklch(0.72 0.12 200 / 0.35)",
 };
 
 const KeyboardCopyHandler: FC<{

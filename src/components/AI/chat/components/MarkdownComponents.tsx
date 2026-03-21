@@ -51,12 +51,11 @@ export const markdownComponents: Partial<Components> = {
     }
     return <code {...props}>{children}</code>;
   },
-
   p: ({ className, ...props }: BaseProps) => (
     <p
       {...props}
       className={cn(
-        "my-3 text-[1rem] leading-7 text-pretty wrap-break-word",
+        "my-2 text-[1rem] leading-[1.65] text-pretty wrap-break-word",
         className,
       )}
     />
@@ -65,7 +64,7 @@ export const markdownComponents: Partial<Components> = {
     <ul
       {...props}
       className={cn(
-        "my-3 ml-6 list-disc text-[1.08rem] leading-8 text-pretty wrap-break-word",
+        "my-2 ml-6 list-disc text-[1.08rem] leading-[1.65] text-pretty wrap-break-word",
         className,
       )}
     />
@@ -74,7 +73,7 @@ export const markdownComponents: Partial<Components> = {
     <ol
       {...props}
       className={cn(
-        "my-3 ml-6 list-decimal text-[1.08rem] leading-8 text-pretty wrap-break-word",
+        "my-2 ml-6 list-decimal text-[1.08rem] leading-[1.65] text-pretty wrap-break-word",
         className,
       )}
     />
@@ -83,7 +82,7 @@ export const markdownComponents: Partial<Components> = {
     <li
       {...props}
       className={cn(
-        "my-1.5 text-[1.08rem] leading-8 text-pretty wrap-break-word",
+        "my-1 text-[1.08rem] leading-[1.65] text-pretty wrap-break-word",
         className,
       )}
     />

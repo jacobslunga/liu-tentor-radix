@@ -1,13 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from "react";
 
-import ExamPdf from '@/components/PDF/ExamPdf';
-import GradientIndicator from '@/components/GradientIndicator';
-import SolutionPdf from '@/components/PDF/SolutionPdf';
-import { motion } from 'framer-motion';
-import { useHotkeys } from 'react-hotkeys-hook';
-import { useChatWindow } from '@/context/ChatWindowContext';
-import type { ExamDetailPayload } from '@/api';
-import { ResizeHandle } from '@/components/AI/chat/components/ResizeHandle';
+import ExamPdf from "@/components/PDF/ExamPdf";
+import GradientIndicator from "@/components/GradientIndicator";
+import SolutionPdf from "@/components/PDF/SolutionPdf";
+import { motion } from "framer-motion";
+import { useHotkeys } from "react-hotkeys-hook";
+import { useChatWindow } from "@/context/ChatWindowContext";
+import type { ExamDetailPayload } from "@/api";
+import { ResizeHandle } from "@/components/AI/chat/components/ResizeHandle";
 
 interface Props {
   examDetail: ExamDetailPayload;
@@ -24,8 +24,8 @@ const ExamOnlyView = ({ examDetail }: Props) => {
   const panelRef = useRef<HTMLDivElement>(null);
 
   const facitVariants = {
-    hidden: { x: '100%', opacity: 0 },
-    visible: { x: '0%', opacity: 1 },
+    hidden: { x: "100%", opacity: 0 },
+    visible: { x: "0%", opacity: 1 },
   };
 
   const hasFacit = examDetail.solution !== null;
@@ -44,12 +44,12 @@ const ExamOnlyView = ({ examDetail }: Props) => {
 
     const stopDrag = () => setIsDragging(false);
 
-    window.addEventListener('mousemove', handleDrag);
-    window.addEventListener('mouseup', stopDrag);
+    window.addEventListener("mousemove", handleDrag);
+    window.addEventListener("mouseup", stopDrag);
 
     return () => {
-      window.removeEventListener('mousemove', handleDrag);
-      window.removeEventListener('mouseup', stopDrag);
+      window.removeEventListener("mousemove", handleDrag);
+      window.removeEventListener("mouseup", stopDrag);
     };
   }, [isDragging]);
 
@@ -93,8 +93,8 @@ const ExamOnlyView = ({ examDetail }: Props) => {
   );
 
   useEffect(() => {
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [handleMouseMove]);
 
   useEffect(() => {
@@ -103,30 +103,30 @@ const ExamOnlyView = ({ examDetail }: Props) => {
     }
   }, [showChatWindow, setIsFacitVisible]);
 
-  useHotkeys('e', () => {
+  useHotkeys("e", () => {
     setIsFacitVisible((prev) => !prev);
     setIsManual((prev) => !prev);
   });
 
-  useHotkeys('esc', () => {
+  useHotkeys("esc", () => {
     setIsManual(false);
     setIsFacitVisible(false);
   });
 
   return (
-    <div className='w-full h-full relative max-w-full bg-background'>
-      <div className='w-full h-full bg-background overflow-auto'>
-        <ExamPdf pdfUrl={examDetail.exam.pdf_url} layoutMode='exam-only' />
+    <div className="w-full h-full relative max-w-full bg-background">
+      <div className="w-full h-full bg-background overflow-auto">
+        <ExamPdf pdfUrl={examDetail.exam.pdf_url} layoutMode="exam-only" />
       </div>
 
       {hasFacit && (
         <motion.div
           ref={panelRef}
-          className='absolute right-0 top-0 h-full bg-background border-l shadow-2xl z-40 flex'
+          className="absolute right-0 top-0 h-full bg-background border-l shadow-2xl z-40 flex"
           style={{ width: panelWidth }}
           variants={facitVariants}
-          initial='hidden'
-          animate={isFacitVisible ? 'visible' : 'hidden'}
+          initial="hidden"
+          animate={isFacitVisible ? "visible" : "hidden"}
           transition={{
             x: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
           }}
@@ -134,13 +134,12 @@ const ExamOnlyView = ({ examDetail }: Props) => {
           <ResizeHandle
             onStartResize={() => setIsDragging(true)}
             isResizing={isDragging}
-            side='right'
           />
 
-          <div className='flex-1 w-full h-full overflow-auto relative'>
+          <div className="flex-1 w-full h-full overflow-auto relative">
             <SolutionPdf
               pdfUrl={examDetail.solution!.pdf_url}
-              layoutMode='exam-only'
+              layoutMode="exam-only"
             />
           </div>
         </motion.div>

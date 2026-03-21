@@ -166,7 +166,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       animate={{ opacity: isMouseActive || isHovering ? 1 : 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className="flex items-center space-x-5">
+      <div className="flex items-center gap-2">
         <Button
           size="icon"
           variant="outline"
@@ -182,25 +182,18 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           {selectedExam && (
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="flex flex-row items-center px-3 transition-colors group"
-                >
-                  <span>
-                    <span className="font-semibold">
-                      {selectedExam.exam_name.length > 20
-                        ? `${selectedExam.exam_name
-                            .slice(0, 20)
-                            .replace(selectedExam.exam_date, "")}...`
-                        : selectedExam.exam_name.replace(
-                            selectedExam.exam_date,
-                            "",
-                          )}
-                    </span>
-                    <span className="font-normal">
-                      {selectedExam.exam_date}
-                    </span>
+                <Button variant="outline" size="sm" className="group">
+                  <span className="font-semibold">
+                    {selectedExam.exam_name.length > 20
+                      ? `${selectedExam.exam_name
+                          .slice(0, 20)
+                          .replace(selectedExam.exam_date, "")}...`
+                      : selectedExam.exam_name.replace(
+                          selectedExam.exam_date,
+                          "",
+                        )}
                   </span>
+                  <span className="font-normal">{selectedExam.exam_date}</span>
                   <CaretRightIcon
                     weight="bold"
                     className={`w-4 h-4 text-muted-foreground group-hover:rotate-90 ${
@@ -304,7 +297,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                 disabled={!selectedExam?.pdf_url && !solutionPdfUrl}
               >
                 {language === "sv" ? "Ladda ned" : "Download"}
-                <CaretDownIcon weight="bold" className="w-4 h-4" />
+                <CaretDownIcon weight="bold" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent
@@ -316,7 +309,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                 disabled={!selectedExam?.pdf_url}
                 className="cursor-pointer gap-2"
               >
-                <DownloadSimpleIcon weight="bold" className="w-4 h-4" />
+                <DownloadSimpleIcon weight="bold" />
                 <span>{t("downloadExam")}</span>
               </DropdownMenuItem>
               <DropdownMenuItem
@@ -324,7 +317,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                 disabled={!solutionPdfUrl}
                 className="cursor-pointer gap-2"
               >
-                <DownloadSimpleIcon weight="bold" className="w-4 h-4" />
+                <DownloadSimpleIcon weight="bold" />
                 <span>{t("downloadFacit")}</span>
               </DropdownMenuItem>
             </DropdownMenuContent>

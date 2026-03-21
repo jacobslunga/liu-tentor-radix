@@ -109,7 +109,7 @@ const ScrollToBottomButton = memo(
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
           transition={{ ease: "easeInOut", duration: 0.2 }}
-          className="absolute -top-14 left-1/2 -translate-x-1/2 z-20"
+          className="absolute -top-12 left-1/2 -translate-x-1/2 z-20"
         >
           <Button className="rounded-full" variant="outline" size="icon" onClick={onClick}>
             <ArrowDownIcon weight="bold" size={20} />
@@ -158,7 +158,7 @@ const ModelSelector = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
-          className="flex items-center gap-1.5 h-6 px-2 rounded-lg border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
+          className="flex cursor-pointer items-center gap-1.5 h-6 px-2 rounded-lg border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
           aria-label={isSv ? "Välj modell" : "Select model"}
         >
           <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
@@ -472,7 +472,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             layout
             animate={{ borderRadius: isMultiline ? 22 : 24 }}
             transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
-            className="overflow-hidden border border-border bg-background shadow-md dark:bg-secondary"
+            className="overflow-hidden border border-border shadow-[0_0.25rem_1.25rem_hsl(var(--always-black)/3.5%) dark:bg-secondary"
           >
             <InputGroup
               className={cn(

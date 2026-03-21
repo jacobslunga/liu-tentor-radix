@@ -4,19 +4,15 @@ import { GripVertical } from "lucide-react";
 interface ResizeHandleProps {
   onStartResize: () => void;
   isResizing?: boolean;
-  side: "left" | "right";
 }
 
 export const ResizeHandle: FC<ResizeHandleProps> = ({
   onStartResize,
   isResizing = false,
-  side,
 }) => {
   return (
     <div
-      className={`absolute top-0 bottom-0 w-5 z-60 cursor-col-resize flex items-center justify-center group touch-none select-none outline-none
-        ${side === "right" ? "left-0 -translate-x-1/2" : "right-0 translate-x-1/2"}
-      `}
+      className="absolute top-0 bottom-0 w-5 z-60 cursor-col-resize flex items-center justify-center group touch-none select-none outline-none left-0 -translate-x-1/2"
       onMouseDown={(e) => {
         e.preventDefault();
         onStartResize();

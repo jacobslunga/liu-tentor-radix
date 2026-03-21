@@ -13,18 +13,18 @@ const buttonVariants = cva(
         destructive:
           "bg-destructive text-white hover:bg-destructive/90 hover:shadow-md hover:shadow-destructive/25 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
         outline:
-          "border bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent-foreground/20 dark:bg-background dark:border-input dark:hover:bg-accent",
+          "border border-border bg-background hover:bg-accent hover:text-accent-foreground hover:border-accent-foreground/20 dark:bg-[#2a2a2a] dark:border-[#3a3a3a] dark:text-foreground dark:hover:bg-[#333333] dark:hover:border-[#484848]",
         secondary:
-          "border border-border/70 bg-secondary text-secondary-foreground hover:bg-secondary/85 hover:border-border",
+          "border border-border/70 bg-secondary text-secondary-foreground hover:bg-secondary/85 hover:border-border dark:border-[#3a3a3a] dark:bg-[#252525] dark:hover:bg-[#2e2e2e] dark:hover:border-[#484848]",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 text-muted-foreground",
         link: "text-secondary-foreground underline-offset-4 hover:underline",
       },
       size: {
-        default: "h-9 px-4 py-2 has-[>svg]:px-3",
-        sm: "h-8 text-xs rounded-lg gap-1.5 px-3 has-[>svg]:px-2.5",
+        default: "h-9 px-0 py-2 has-[>svg]:px-3",
+        sm: "h-8 text-xs font-base rounded-lg gap-1.5 px-3 has-[>svg]:px-2.5",
         lg: "h-10 rounded-lg px-6 has-[>svg]:px-4",
-        icon: "size-9 rounded-lg",
+        icon: "size-8 rounded-lg",
       },
     },
     defaultVariants: {

@@ -1,14 +1,7 @@
 import { FC, memo } from "react";
-import {
-  TooltipTrigger,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import {
   CaretRightIcon,
-  CaretLeftIcon,
   CheckCircleIcon,
   ChatCircleDotsIcon,
   XCircleIcon,
@@ -28,7 +21,6 @@ interface ChatHeaderProps {
   language: string;
   hasSolution: boolean;
   onClose: () => void;
-  side: "left" | "right";
   chatHistory: ChatHistoryItem[];
   activeChatId: string | null;
   onSelectChat: (chatId: string) => void;
@@ -54,7 +46,6 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
     language,
     hasSolution,
     onClose,
-    side,
     chatHistory,
     activeChatId,
     onSelectChat,
@@ -64,44 +55,22 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
       <div className="shrink-0 flex items-center justify-between p-3 z-40">
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={onClose}>
-            {side === "right" ? (
-              <CaretRightIcon weight="bold" className="h-5 w-5" />
-            ) : (
-              <CaretLeftIcon weight="bold" className="h-5 w-5" />
-            )}
+            <CaretRightIcon weight="bold" className="h-5 w-5" />
           </Button>
-
-          <TooltipProvider delayDuration={200}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div
-                  className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-default transition-colors ${
-                    hasSolution
-                      ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-                      : "bg-muted/50 text-muted-foreground"
-                  }`}
-                >
-                  {hasSolution ? (
-                    <CheckCircleIcon weight="fill" className="h-3.5 w-3.5" />
-                  ) : (
-                    <XCircleIcon weight="bold" className="h-3.5 w-3.5" />
-                  )}
-                  <span>{language === "sv" ? "Lösning" : "Solution"}</span>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" align="start">
-                <p>
-                  {hasSolution
-                    ? language === "sv"
-                      ? "Lösning tillgänglig"
-                      : "Solution available"
-                    : language === "sv"
-                      ? "Ingen lösning uppladdad"
-                      : "No solution uploaded"}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          <div
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium cursor-default transition-colors ${
+              hasSolution
+                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+                : "bg-muted/50 text-muted-foreground"
+            }`}
+          >
+            {hasSolution ? (
+              <CheckCircleIcon weight="fill" className="h-3.5 w-3.5" />
+            ) : (
+              <XCircleIcon weight="bold" className="h-3.5 w-3.5" />
+            )}
+            <span>{language === "sv" ? "Lösning" : "Solution"}</span>
+          </div>
         </div>
 
         <div className="flex items-center gap-1">

@@ -17,22 +17,21 @@ interface ChatWindowProps {
   examDetail: ExamDetailPayload;
   isOpen: boolean;
   onClose: () => void;
-  variant?: "overlay" | "push";
+  variant?: "overlay";
 }
 
 const STORAGE_KEY = "chat_input_draft";
 const MODEL_STORAGE_KEY = "chat_model_id_preference";
-const SIDE_STORAGE_KEY = "chat_window_side_preference";
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: 0, ease: "easeOut" },
+    transition: { duration: 0.12, ease: "easeOut" },
   },
   exit: {
     opacity: 0,
-    transition: { duration: 0.1 },
+    transition: { duration: 0.04, ease: "easeIn" },
   },
 };
 
@@ -48,7 +47,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const chatWindowRef = useRef<HTMLDivElement>(null);
   const chatInputRef = useRef<ChatInputHandle>(null);
 
-  // Use the new scroll manager
   const {
     messagesEndRef,
     messagesContainerRef,
@@ -57,8 +55,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
     isUserScrollingRef,
   } = useScrollManager({ isOpen });
 
-  const [side, setSide] = useState<"left" | "right">("right");
-  const [isSideLoaded, setIsSideLoaded] = useState(false);
   const [shouldRenderMessages, setShouldRenderMessages] = useState(false);
 
   const {
@@ -86,15 +82,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
   );
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [quotedContext, setQuotedContext] = useState("");
-
-  useEffect(() => {
-    const savedSide = localStorage.getItem(SIDE_STORAGE_KEY) as
-      | "left"
-      | "right"
-      | null;
-    if (savedSide) setSide(savedSide);
-    setIsSideLoaded(true);
-  }, []);
 
   useEffect(() => {
     const savedInput = localStorage.getItem(STORAGE_KEY);
@@ -216,33 +203,20 @@ const ChatWindow: FC<ChatWindowProps> = ({
       : {
           type: "spring" as const,
           bounce: 0,
-          duration: 0.2,
-          delayChildren: 0.1,
+          duration: 0.22,
+          delayChildren: 0.08,
         };
 
-    const exitSettings = { type: "spring" as const, bounce: 0, duration: 0.2 };
+    const exitSettings = { type: "spring" as const, bounce: 0, duration: 0.14 };
 
-    if (isOverlay) {
-      const xHidden = side === "right" ? "100%" : "-100%";
-      return {
-        hidden: { x: xHidden },
-        visible: { x: "0%", transition: enterSettings },
-        exit: { x: xHidden, transition: exitSettings },
-      };
-    } else {
-      return {
-        hidden: { width: 0, opacity: 0 },
-        visible: { width: `${width}%`, opacity: 1, transition: enterSettings },
-        exit: { width: 0, opacity: 0, transition: exitSettings },
-      };
-    }
-  }, [isOverlay, width, isResizing, side]);
+    return {
+      hidden: { width: 0 },
+      visible: { width: `${width}%`, transition: enterSettings },
+      exit: { width: 0, transition: exitSettings },
+    };
+  }, [isOverlay, width, isResizing]);
 
-  const positionClasses = isOverlay
-    ? side === "right"
-      ? "fixed right-0 top-0 h-full shadow-xl"
-      : "fixed left-0 top-0 h-full shadow-xl"
-    : `relative h-full ${side === "left" ? "order-first border-r border-l-0" : "border-l"}`;
+  const positionClasses = "fixed right-0 top-0 h-full shadow-xl";
 
   const handleAnimationComplete = (definition: string) => {
     if (definition === "visible") {
@@ -250,14 +224,11 @@ const ChatWindow: FC<ChatWindowProps> = ({
     }
   };
 
-  if (!isSideLoaded) return null;
-
   return (
     <AnimatePresence mode="wait">
       {isOpen && (
         <motion.div
           ref={chatWindowRef}
-          key={`chat-window-${side}`}
           variants={parentVariants}
           initial="hidden"
           animate="visible"
@@ -270,11 +241,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
             contain: isResizing ? "layout style" : "none",
           }}
         >
-          <ResizeHandle
-            onStartResize={startResizing}
-            isResizing={isResizing}
-            side={side}
-          />
+          <ResizeHandle onStartResize={startResizing} isResizing={isResizing} />
 
           <div
             className={`flex-1 flex flex-col overflow-hidden bg-background h-full w-full ${!isOverlay ? "" : "border-l"}`}
@@ -290,7 +257,6 @@ const ChatWindow: FC<ChatWindowProps> = ({
                   language={language}
                   hasSolution={hasSolutions}
                   onClose={handleClose}
-                  side={side}
                   chatHistory={chatHistory}
                   activeChatId={activeChatId}
                   onSelectChat={handleSelectPastChat}
@@ -299,7 +265,11 @@ const ChatWindow: FC<ChatWindowProps> = ({
               </div>
             </motion.div>
 
-            {messages.length === 0 && <EmptyState language={language} />}
+            {messages.length === 0 && (
+              <motion.div variants={contentVariants} className="w-full h-full">
+                <EmptyState language={language} />
+              </motion.div>
+            )}
 
             <div className="flex-1 relative min-h-0 flex flex-col">
               <motion.div

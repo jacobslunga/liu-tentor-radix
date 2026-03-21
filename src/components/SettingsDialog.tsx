@@ -21,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useFont } from "@/context/FontContext";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -115,6 +116,29 @@ const SettingsDialog: FC = () => {
     rotation: { en: "Rotation", sv: "Rotation" },
   };
 
+  const { font, setFont } = useFont();
+
+  const fontOptions = [
+    {
+      id: "default",
+      label: "Default",
+      preview: "Aa",
+      style: { fontFamily: '"Basier", sans-serif' },
+    },
+    {
+      id: "system",
+      label: "System",
+      preview: "Aa",
+      style: { fontFamily: "system-ui, sans-serif" },
+    },
+    {
+      id: "serif",
+      label: "Serif",
+      preview: "Aa",
+      style: { fontFamily: '"Lora", Georgia, serif' },
+    },
+  ];
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -170,6 +194,32 @@ const SettingsDialog: FC = () => {
               >
                 {icon}
                 <span className="text-sm font-medium">{label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="space-y-3">
+          <h3 className="font-medium">
+            {language === "sv" ? "Typsnitt" : "Font"}
+          </h3>
+          <div className="flex gap-2">
+            {fontOptions.map(({ id, label, preview, style }) => (
+              <div
+                key={id}
+                onClick={() => setFont(id as any)}
+                className={cn(
+                  "flex-1 cursor-pointer rounded-md border border-border transition-all select-none",
+                  "flex flex-col items-center justify-center gap-1.5 py-4 hover:bg-primary/5 hover:border-primary",
+                  font === id
+                    ? "bg-primary/10 border-primary hover:bg-primary/10"
+                    : "bg-card",
+                )}
+              >
+                <span className="text-xl font-medium" style={style}>
+                  {preview}
+                </span>
+                <span className="text-xs font-medium">{label}</span>
               </div>
             ))}
           </div>
