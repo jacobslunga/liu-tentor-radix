@@ -46,39 +46,52 @@ import { QuotedContext } from "./QuotedContext";
 import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "@primer/octicons-react";
 
-export type ModelProvider = "google";
-
-export interface ModelBadge {
-  sv: string;
-  en: string;
-}
+export type ModelProvider = "google" | "anthropic";
 
 export interface Model {
   id: string;
   name: string;
   provider: ModelProvider;
-  icon?: React.ReactNode;
+  group: string;
 }
 
-const getModels = (): Model[] => {
-  return [
-    {
-      id: "gemini-3.1-pro-preview",
-      name: "Gemini 3.1 Pro",
-      provider: "google",
-    },
-    {
-      id: "gemini-3.1-flash-lite-preview",
-      name: "Gemini 3.1 Flash Lite",
-      provider: "google",
-    },
-    {
-      id: "gemini-2.5-pro",
-      name: "Gemini 2.5 Pro",
-      provider: "google",
-    },
-  ];
+const GROUP_META: Record<string, { logo: string; label: string }> = {
+  Gemini: { logo: "/llm-logos/gemini.svg", label: "Gemini" },
+  Claude: { logo: "/llm-logos/claude.svg", label: "Claude" },
 };
+
+const MODELS: Model[] = [
+  {
+    id: "claude-haiku",
+    name: "Claude Haiku",
+    provider: "anthropic",
+    group: "Claude",
+  },
+  {
+    id: "claude-sonnet",
+    name: "Claude Sonnet",
+    provider: "anthropic",
+    group: "Claude",
+  },
+  {
+    id: "gemini-3.1-pro-preview",
+    name: "Gemini 3.1 Pro",
+    provider: "google",
+    group: "Gemini",
+  },
+  {
+    id: "gemini-3.1-flash-lite-preview",
+    name: "Gemini 3.1 Flash Lite",
+    provider: "google",
+    group: "Gemini",
+  },
+  {
+    id: "gemini-2.5-pro",
+    name: "Gemini 2.5 Pro",
+    provider: "google",
+    group: "Gemini",
+  },
+];
 
 export interface ChatInputProps {
   language: string;
@@ -138,26 +151,26 @@ const ModelSelector = ({
   const selectedItemRef = useRef<HTMLDivElement>(null);
 
   const isSv = language === "sv";
-  const models = useMemo(() => getModels(), []);
   const selectedModel =
-    models.find((m) => m.id === selectedModelId) || models[0];
+    MODELS.find((m) => m.id === selectedModelId) ?? MODELS[0];
 
   useEffect(() => {
     if (open && selectedItemRef.current) {
-      setTimeout(() => {
-        selectedItemRef.current?.scrollIntoView({ block: "center" });
-      }, 100);
+      setTimeout(
+        () => selectedItemRef.current?.scrollIntoView({ block: "center" }),
+        100,
+      );
     }
   }, [open]);
 
   const groupedModels = useMemo(() => {
     const groups: Record<string, Model[]> = {};
-    models.forEach((m) => {
-      if (!groups[m.provider]) groups[m.provider] = [];
-      groups[m.provider].push(m);
-    });
+    for (const model of MODELS) {
+      if (!groups[model.group]) groups[model.group] = [];
+      groups[model.group].push(model);
+    }
     return groups;
-  }, [models]);
+  }, []);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -178,16 +191,29 @@ const ModelSelector = ({
             <CommandEmpty>
               {isSv ? "Ingen modell hittades." : "No model found."}
             </CommandEmpty>
-            {Object.entries(groupedModels).map(([provider, providerModels]) => (
+            {Object.entries(groupedModels).map(([group, models]) => (
               <CommandGroup
-                key={provider}
-                heading={provider.charAt(0).toUpperCase() + provider.slice(1)}
+                key={group}
+                heading={
+                  <div className="flex items-center gap-1.5 py-0.5">
+                    {GROUP_META[group] && (
+                      <img
+                        src={GROUP_META[group].logo}
+                        alt={GROUP_META[group].label}
+                        className="w-3.5 h-3.5 object-contain"
+                      />
+                    )}
+                    <span className="text-[11px] font-semibold tracking-wide text-foreground/70">
+                      {GROUP_META[group]?.label ?? group}
+                    </span>
+                  </div>
+                }
               >
-                {providerModels.map((model) => (
+                {models.map((model) => (
                   <CommandItem
                     key={model.id}
                     ref={selectedModelId === model.id ? selectedItemRef : null}
-                    value={`${model.name} ${model.provider}`}
+                    value={`${model.name} ${model.group}`}
                     onSelect={() => {
                       onSelect(model.id);
                       setOpen(false);
@@ -195,11 +221,9 @@ const ModelSelector = ({
                     className="flex items-start cursor-pointer aria-selected:bg-accent"
                   >
                     <div className="flex flex-col flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-normal text-foreground">
-                          {model.name}
-                        </span>
-                      </div>
+                      <span className="text-xs font-normal text-foreground">
+                        {model.name}
+                      </span>
                     </div>
                     {selectedModelId === model.id && (
                       <CheckIcon className="h-4 w-4 text-primary shrink-0 mt-1" />
@@ -278,18 +302,8 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
 
     const speechRecognitionCtor: SpeechRecognitionConstructor | null =
       typeof window !== "undefined"
-        ? ((
-            window as Window & {
-              SpeechRecognition?: SpeechRecognitionConstructor;
-              webkitSpeechRecognition?: SpeechRecognitionConstructor;
-            }
-          ).SpeechRecognition ??
-          (
-            window as Window & {
-              SpeechRecognition?: SpeechRecognitionConstructor;
-              webkitSpeechRecognition?: SpeechRecognitionConstructor;
-            }
-          ).webkitSpeechRecognition ??
+        ? ((window as any).SpeechRecognition ??
+          (window as any).webkitSpeechRecognition ??
           null)
         : null;
 
@@ -297,24 +311,17 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
 
     const updateComposerShape = useCallback(() => {
       const textarea = inputRef.current;
-
-      if (!textarea) {
-        return;
-      }
-
+      if (!textarea) return;
       const computedStyle = window.getComputedStyle(textarea);
       const lineHeight = Number.parseFloat(computedStyle.lineHeight) || 24;
       const paddingTop = Number.parseFloat(computedStyle.paddingTop) || 0;
       const paddingBottom = Number.parseFloat(computedStyle.paddingBottom) || 0;
       const singleLineHeight = lineHeight + paddingTop + paddingBottom;
-
       setIsMultiline(textarea.scrollHeight > singleLineHeight + 2);
     }, []);
 
     useImperativeHandle(ref, () => ({
-      focus: () => {
-        inputRef.current?.focus();
-      },
+      focus: () => inputRef.current?.focus(),
     }));
 
     useEffect(() => {
@@ -323,7 +330,6 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         const val = inputRef.current.value;
         inputRef.current.setSelectionRange(val.length, val.length);
       }
-
       updateComposerShape();
     }, [updateComposerShape]);
 
@@ -333,26 +339,14 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
 
     useEffect(() => {
       const textarea = inputRef.current;
-
-      if (!textarea || typeof ResizeObserver === "undefined") {
-        return;
-      }
-
-      const resizeObserver = new ResizeObserver(() => {
-        updateComposerShape();
-      });
-
-      resizeObserver.observe(textarea);
-
-      return () => {
-        resizeObserver.disconnect();
-      };
+      if (!textarea || typeof ResizeObserver === "undefined") return;
+      const observer = new ResizeObserver(() => updateComposerShape());
+      observer.observe(textarea);
+      return () => observer.disconnect();
     }, [updateComposerShape]);
 
     useEffect(() => {
-      if (quotedContext && inputRef.current) {
-        inputRef.current.focus();
-      }
+      if (quotedContext && inputRef.current) inputRef.current.focus();
     }, [quotedContext]);
 
     useEffect(() => {
@@ -377,14 +371,10 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     };
 
     const startSpeechToText = useCallback(() => {
-      if (!speechRecognitionCtor || isListening) {
-        return;
-      }
-
+      if (!speechRecognitionCtor || isListening) return;
       try {
         setRecordingError(null);
         baseInputBeforeSpeechRef.current = input.trim();
-
         const recognition = new speechRecognitionCtor();
         recognition.lang = language === "sv" ? "sv-SE" : "en-US";
         recognition.continuous = true;
@@ -393,23 +383,16 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
         recognition.onresult = (event) => {
           let finalTranscript = "";
           let interimTranscript = "";
-
           for (let i = 0; i < event.results.length; i += 1) {
             const segment = event.results[i][0]?.transcript ?? "";
-
-            if (event.results[i].isFinal) {
-              finalTranscript += `${segment} `;
-            } else {
-              interimTranscript += segment;
-            }
+            if (event.results[i].isFinal) finalTranscript += `${segment} `;
+            else interimTranscript += segment;
           }
-
           const speechText = `${finalTranscript}${interimTranscript}`.trim();
           const withBase = [baseInputBeforeSpeechRef.current, speechText]
             .filter(Boolean)
             .join(" ")
             .slice(0, MAX_INPUT_LENGTH);
-
           onInputChange(withBase);
         };
 
@@ -425,10 +408,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           );
         };
 
-        recognition.onend = () => {
-          setIsListening(false);
-        };
-
+        recognition.onend = () => setIsListening(false);
         recognition.start();
         recognitionRef.current = recognition;
         setIsListening(true);
@@ -448,11 +428,8 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
     }, []);
 
     const toggleSpeechToText = useCallback(() => {
-      if (isListening) {
-        stopSpeechToText();
-      } else {
-        startSpeechToText();
-      }
+      if (isListening) stopSpeechToText();
+      else startSpeechToText();
     }, [isListening, startSpeechToText, stopSpeechToText]);
 
     return (
@@ -477,7 +454,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             layout
             animate={{ borderRadius: isMultiline ? 22 : 24 }}
             transition={{ duration: 0.16, ease: [0.2, 0.8, 0.2, 1] }}
-            className="overflow-hidden border border-border shadow-[0_0.25rem_1.25rem_hsl(var(--always-black)/3.5%) dark:bg-secondary"
+            className="overflow-hidden border border-border shadow-[0_0.25rem_1.25rem_hsl(var(--always-black)/3.5%)] dark:bg-secondary"
           >
             <InputGroup
               className={cn(
@@ -530,9 +507,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               weight={!giveDirectAnswer ? "fill" : "regular"}
                               className="h-4 w-4"
                             />
-                            <span className="hidden sm:inline">
-                              {language === "sv" ? "Hints" : "Hints"}
-                            </span>
+                            <span className="hidden sm:inline">Hints</span>
                           </button>
                         </TooltipTrigger>
                         <TooltipContent
