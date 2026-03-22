@@ -53,6 +53,7 @@ export interface Model {
   name: string;
   provider: ModelProvider;
   group: string;
+  comingSoon?: boolean;
 }
 
 const GROUP_META: Record<string, { logo: string; label: string }> = {
@@ -72,6 +73,7 @@ const MODELS: Model[] = [
     name: "Claude Sonnet",
     provider: "anthropic",
     group: "Claude",
+    comingSoon: true,
   },
   {
     id: "gemini-3.1-pro-preview",
@@ -214,20 +216,29 @@ const ModelSelector = ({
                     key={model.id}
                     ref={selectedModelId === model.id ? selectedItemRef : null}
                     value={`${model.name} ${model.group}`}
+                    disabled={model.comingSoon}
                     onSelect={() => {
+                      if (model.comingSoon) return;
                       onSelect(model.id);
                       setOpen(false);
                     }}
-                    className="flex items-start cursor-pointer aria-selected:bg-accent"
+                    className={cn(
+                      "flex items-start cursor-pointer aria-selected:bg-accent",
+                      model.comingSoon && "opacity-50 cursor-not-allowed",
+                    )}
                   >
                     <div className="flex flex-col flex-1 min-w-0">
                       <span className="text-xs font-normal text-foreground">
                         {model.name}
                       </span>
                     </div>
-                    {selectedModelId === model.id && (
+                    {model.comingSoon ? (
+                      <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground shrink-0">
+                        {isSv ? "Kommer snart" : "Coming soon"}
+                      </span>
+                    ) : selectedModelId === model.id ? (
                       <CheckIcon className="h-4 w-4 text-primary shrink-0 mt-1" />
-                    )}
+                    ) : null}
                   </CommandItem>
                 ))}
               </CommandGroup>
