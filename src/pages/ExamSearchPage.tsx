@@ -135,7 +135,15 @@ const ExamSearchPage: FC = () => {
                   <span>Tentor</span>
                 </div>
 
-                <h1 className="text-2xl sm:text-3xl font-semibold text-foreground max-w-3xl leading-tight">
+                <h1
+                  className={`font-semibold text-foreground max-w-3xl leading-tight ${
+                    courseName.length < 30
+                      ? "text-3xl sm:text-4xl"
+                      : courseName.length < 50
+                        ? "text-2xl sm:text-3xl"
+                        : "text-xl sm:text-2xl"
+                  }`}
+                >
                   {courseName.split(" och ").map((part, i, arr) => (
                     <span key={i}>
                       {part}

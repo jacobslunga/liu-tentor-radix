@@ -45,7 +45,7 @@ export default function HomePage() {
             viewTransition
             className="fixed top-0 left-1/2 -translate-x-1/2 z-10"
           >
-            <button className="flex active:scale-95 items-center gap-1.5 px-3 py-1 rounded-b-lg bg-[#D97857] text-xs font-medium text-white transition-all cursor-pointer backdrop-blur-xl">
+            <button className="flex active:scale-95 items-center gap-1.5 px-3 py-1 rounded-b-lg bg-[#D97857] text-xs font-medium text-white transition-all duration-300 cursor-pointer backdrop-blur-xl hover:shadow-[0_0_20px_4px_rgba(217,120,87,0.5)]">
               <img
                 src="/llm-logos/claude-white.svg"
                 alt="Claude Logo"

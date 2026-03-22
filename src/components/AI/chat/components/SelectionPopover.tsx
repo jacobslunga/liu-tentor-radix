@@ -30,14 +30,13 @@ export const SelectionPopover: FC<SelectionPopoverProps> = memo(
             className="fixed z-9999 pointer-events-auto"
             style={{
               left: position.x,
-              top: Math.max(0, position.y),
+              top: Math.max(0, position.y - 20),
               transform: "translate(-50%, -100%)",
             }}
           >
             <Button
               size="sm"
-              variant="secondary"
-              className="shadow-xl bg-background hover:bg-background hover:opacity-80 border-border flex items-center gap-1.5 text-xs font-normal whitespace-nowrap"
+              variant="outline"
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

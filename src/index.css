@@ -23,8 +23,8 @@
 }
 
 @font-face {
-  font-family: "Anthropic Sans";
-  src: url("/fonts/Anthropic-Sans.woff2") format("woff2");
+  font-family: "ABCFavorit";
+  src: url("/fonts/DiatypeVariable.woff2") format("woff2");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -38,7 +38,7 @@
 }
 
 [data-font="default"] body {
-  font-family: "Anthropic Sans", system-ui, sans-serif;
+  font-family: "ABCFavorit", system-ui, sans-serif;
 }
 
 [data-font="system"] body {
@@ -170,8 +170,7 @@
 
   body {
     font-family:
-      "Anthropic Sans",
-      "Basier",
+      "ABCFavorit",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
