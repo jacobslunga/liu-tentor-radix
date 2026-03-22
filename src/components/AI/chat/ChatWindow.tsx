@@ -21,7 +21,7 @@ interface ChatWindowProps {
 }
 
 const STORAGE_KEY = "chat_input_draft";
-const MODEL_STORAGE_KEY = "chat_model_id_preference";
+const MODEL_STORAGE_KEY = "chat_model_id_preference_v2";
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
@@ -77,9 +77,8 @@ const ChatWindow: FC<ChatWindowProps> = ({
 
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
-  const [selectedModelId, setSelectedModelId] = useState<string>(
-    "gemini-3.1-pro-preview",
-  );
+  const [selectedModelId, setSelectedModelId] =
+    useState<string>("claude-haiku");
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [quotedContext, setQuotedContext] = useState("");
 

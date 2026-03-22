@@ -1,9 +1,9 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
-import { STREAM_UPDATE_INTERVAL } from '../constants';
-import { CHAT_API_URL } from '@/constants/urls';
-import { Message } from '../types';
+import { useState, useRef, useCallback, useEffect } from "react";
+import { STREAM_UPDATE_INTERVAL } from "../constants";
+import { CHAT_API_URL } from "@/constants/urls";
+import { Message } from "../types";
 
-const CHAT_STORAGE_KEY = 'chat_history_by_exam_v1';
+const CHAT_STORAGE_KEY = "chat_history_by_exam_v1";
 const MAX_HISTORY_ITEMS = 20;
 
 interface UseChatMessagesProps {
@@ -58,9 +58,9 @@ const normalizeMessages = (messages: unknown): Message[] => {
     .map((message) => {
       if (
         !message ||
-        typeof message !== 'object' ||
-        !('role' in message) ||
-        !('content' in message)
+        typeof message !== "object" ||
+        !("role" in message) ||
+        !("content" in message)
       ) {
         return null;
       }
@@ -70,13 +70,13 @@ const normalizeMessages = (messages: unknown): Message[] => {
       const context = (message as { context?: unknown }).context;
 
       if (
-        (role !== 'user' && role !== 'assistant') ||
-        typeof content !== 'string'
+        (role !== "user" && role !== "assistant") ||
+        typeof content !== "string"
       ) {
         return null;
       }
 
-      if (typeof context === 'string') {
+      if (typeof context === "string") {
         return { role, content, context };
       }
 
@@ -86,19 +86,19 @@ const normalizeMessages = (messages: unknown): Message[] => {
 };
 
 const getSessionTitle = (messages: Message[], fallback?: string): string => {
-  const firstUserMessage = messages.find((message) => message.role === 'user');
-  const titleSource = firstUserMessage?.content || fallback || '';
-  const compactTitle = titleSource.replace(/\s+/g, ' ').trim();
+  const firstUserMessage = messages.find((message) => message.role === "user");
+  const titleSource = firstUserMessage?.content || fallback || "";
+  const compactTitle = titleSource.replace(/\s+/g, " ").trim();
 
   if (!compactTitle) {
-    return 'New chat';
+    return "New chat";
   }
 
   return compactTitle.slice(0, 60);
 };
 
 const getHistoryMapFromStorage = (): StoredChatMap => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return {};
   }
 
@@ -110,7 +110,7 @@ const getHistoryMapFromStorage = (): StoredChatMap => {
 
     const parsed = JSON.parse(raw);
 
-    if (!parsed || typeof parsed !== 'object') {
+    if (!parsed || typeof parsed !== "object") {
       return {};
     }
 
@@ -124,7 +124,7 @@ const getHistoryMapFromStorage = (): StoredChatMap => {
 
         result[examKey] = sessions
           .map((session) => {
-            if (!session || typeof session !== 'object') {
+            if (!session || typeof session !== "object") {
               return null;
             }
 
@@ -135,9 +135,9 @@ const getHistoryMapFromStorage = (): StoredChatMap => {
             const storedMessages = (session as { messages?: unknown }).messages;
 
             if (
-              typeof sessionId !== 'string' ||
-              typeof createdAt !== 'string' ||
-              typeof updatedAt !== 'string'
+              typeof sessionId !== "string" ||
+              typeof createdAt !== "string" ||
+              typeof updatedAt !== "string"
             ) {
               return null;
             }
@@ -152,7 +152,7 @@ const getHistoryMapFromStorage = (): StoredChatMap => {
               createdAt,
               updatedAt,
               title:
-                typeof title === 'string' && title.trim()
+                typeof title === "string" && title.trim()
                   ? title
                   : getSessionTitle(normalizedMessages),
               messages: normalizedMessages,
@@ -174,7 +174,7 @@ const getHistoryMapFromStorage = (): StoredChatMap => {
 };
 
 const saveHistoryMapToStorage = (historyMap: StoredChatMap) => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return;
   }
 
@@ -281,17 +281,17 @@ export const useChatMessages = ({
 
     setMessages((prev) => {
       const last = prev[prev.length - 1];
-      if (last?.role === 'assistant') {
+      if (last?.role === "assistant") {
         if (!last.content.trim()) {
           const userMsg = prev[prev.length - 2];
-          if (userMsg?.role === 'user') {
+          if (userMsg?.role === "user") {
             cancelledUserMessage = userMsg.content;
           }
           if (prev.length === 2) {
             const updated = [...prev];
             updated[updated.length - 1] = {
-              role: 'assistant',
-              content: '> *Avbruten av användaren*',
+              role: "assistant",
+              content: "> *Avbruten av användaren*",
             };
             updatedMessages = updated;
             return updated;
@@ -301,8 +301,8 @@ export const useChatMessages = ({
         } else {
           const updated = [...prev];
           updated[updated.length - 1] = {
-            role: 'assistant',
-            content: last.content.trim() + '\n\n> *Avbruten av användaren*',
+            role: "assistant",
+            content: last.content.trim() + "\n\n> *Avbruten av användaren*",
           };
           updatedMessages = updated;
           return updated;
@@ -375,7 +375,7 @@ export const useChatMessages = ({
       }
 
       const userMessage: Message = {
-        role: 'user',
+        role: "user",
         content,
         ...(context ? { context } : {}),
       };
@@ -383,7 +383,7 @@ export const useChatMessages = ({
       const optimistic: Message[] = [
         ...messagesRef.current,
         userMessage,
-        { role: 'assistant', content: '' } as Message,
+        { role: "assistant", content: "" } as Message,
       ];
 
       setMessages(optimistic);
@@ -407,11 +407,11 @@ export const useChatMessages = ({
           });
 
         const response = await fetch(`${CHAT_API_URL}/${examId}`, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
-            'x-anonymous-user-id':
-              localStorage.getItem('liutentor_anonymous_id') || 'unknown',
+            "Content-Type": "application/json",
+            "x-anonymous-user-id":
+              localStorage.getItem("liutentor_anonymous_id") || "unknown",
           },
           body: JSON.stringify({
             messages: recentMessages,
@@ -429,8 +429,8 @@ export const useChatMessages = ({
         const reader = response.body?.getReader();
         if (!reader) throw new Error();
 
-        const decoder = new TextDecoder('utf-8');
-        let text = '';
+        const decoder = new TextDecoder("utf-8");
+        let text = "";
         let lastUpdate = 0;
 
         while (true) {
@@ -444,7 +444,7 @@ export const useChatMessages = ({
             lastUpdate = now;
             const updated = [...messagesRef.current];
             updated[updated.length - 1] = {
-              role: 'assistant',
+              role: "assistant",
               content: text,
             };
             setMessages(updated);
@@ -454,21 +454,21 @@ export const useChatMessages = ({
 
         const final = [...messagesRef.current];
         final[final.length - 1] = {
-          role: 'assistant',
-          content: text.trim() || 'Jag kunde inte generera ett svar.',
+          role: "assistant",
+          content: text.trim() || "Jag kunde inte generera ett svar.",
         };
 
         setMessages(final);
         messagesRef.current = final;
         persistSession(targetSessionId, final, content);
       } catch (error) {
-        if (error instanceof Error && error.name === 'AbortError') {
+        if (error instanceof Error && error.name === "AbortError") {
           return;
         }
         const updated = [...messagesRef.current];
         updated[updated.length - 1] = {
-          role: 'assistant',
-          content: 'Något gick fel. Försök igen senare.',
+          role: "assistant",
+          content: "Något gick fel. Försök igen senare.",
         };
         setMessages(updated);
         messagesRef.current = updated;
