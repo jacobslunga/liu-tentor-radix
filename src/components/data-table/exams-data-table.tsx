@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Table,
@@ -20,16 +21,25 @@ import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   data: Exam[];
+  activeFilters: Set<string>;
   onSortChange: () => void;
 }
 
-export function DataTable({ data, onSortChange }: Props) {
+export function DataTable({ data, activeFilters, onSortChange }: Props) {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const columns = getColumns(t);
 
+  const filteredData = useMemo(
+    () =>
+      activeFilters.size === 0
+        ? data
+        : data.filter((e) => activeFilters.has(e.exam_name.split(" ")[0])),
+    [data, activeFilters],
+  );
+
   const table = useReactTable({
-    data,
+    data: filteredData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

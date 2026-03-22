@@ -84,6 +84,13 @@ const ExamSearchPage: FC = () => {
     [courseCode],
   );
 
+  const [activeFilters, setActiveFilters] = useState<Set<string>>(new Set());
+
+  const prefixes = useMemo(() => {
+    const all = (courseData?.exams ?? []).map((e) => e.exam_name.split(" ")[0]);
+    return [...new Set(all)];
+  }, [courseData?.exams]);
+
   const pageTitle = courseData
     ? `${courseCode} - ${courseData.courseName} | Tentor`
     : `${courseCode} | Tentor`;
@@ -143,8 +150,33 @@ const ExamSearchPage: FC = () => {
                 </h1>
               </div>
 
+              {prefixes.length > 1 && (
+                <div className="flex flex-wrap gap-2">
+                  {prefixes.map((p) => (
+                    <button
+                      key={p}
+                      onClick={() =>
+                        setActiveFilters((prev) => {
+                          const next = new Set(prev);
+                          next.has(p) ? next.delete(p) : next.add(p);
+                          return next;
+                        })
+                      }
+                      className={`text-xs cursor-pointer px-3 py-1 rounded-md border transition-colors font-mono ${
+                        activeFilters.has(p)
+                          ? "bg-foreground text-background border-foreground"
+                          : "border-border decoration-dashed border-dashed text-muted-foreground hover:border-border hover:text-foreground"
+                      }`}
+                    >
+                      {p}
+                    </button>
+                  ))}
+                </div>
+              )}
+
               <DataTable
                 data={sortedExams}
+                activeFilters={activeFilters}
                 onSortChange={() =>
                   setSortOrder((prev) => (prev === "desc" ? "asc" : "desc"))
                 }
