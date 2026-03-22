@@ -1,50 +1,51 @@
-import FAQPage from '@/pages/FaqPage';
-import FeedbackPage from '@/pages/FeedbackPage';
-import HomePage from '@/pages/HomePage';
-import InfoPageLayout from '@/layouts/InfoPageLayout';
-import MainLayout from '@/layouts/MainLayout';
-import NotFoundPage from '@/pages/NotFoundPage';
-import OmOss from '@/pages/AboutUs';
-import PrivacyPolicyPage from '@/pages/PrivacyPolicyPage';
-import { RouteObject } from 'react-router-dom';
-import SearchLayout from '@/layouts/SearchLayout';
-import StatsSearchPage from '@/pages/StatsSearchPage';
-import TentaPage from '@/pages/ExamPage';
-import ExamSearchPage from '@/pages/ExamSearchPage';
-import UploadExamPage from '@/pages/UploadExamPage';
-import UpdatesPage from '@/pages/UpdatesPage';
-import LockInModePage from '@/pages/LockInModePage';
-import QuizPage from '@/pages/QuizPage';
+import FAQPage from "@/pages/FaqPage";
+import FeedbackPage from "@/pages/FeedbackPage";
+import HomePage from "@/pages/HomePage";
+import InfoPageLayout from "@/layouts/InfoPageLayout";
+import MainLayout from "@/layouts/MainLayout";
+import NotFoundPage from "@/pages/NotFoundPage";
+import OmOss from "@/pages/AboutUs";
+import PrivacyPolicyPage from "@/pages/PrivacyPolicyPage";
+import { RouteObject } from "react-router-dom";
+import SearchLayout from "@/layouts/SearchLayout";
+import StatsSearchPage from "@/pages/StatsSearchPage";
+import TentaPage from "@/pages/ExamPage";
+import ExamSearchPage from "@/pages/ExamSearchPage";
+import UploadExamPage from "@/pages/UploadExamPage";
+import UpdatesPage from "@/pages/UpdatesPage";
+import LockInModePage from "@/pages/LockInModePage";
+import QuizPage from "@/pages/QuizPage";
+import StudyWithClaudePage from "@/pages/StudyWithClaudePage";
 
 const routes: RouteObject[] = [
   {
-    path: '/',
+    path: "/",
     element: <MainLayout />,
     children: [
       { index: true, element: <HomePage /> },
-      { path: '*', element: <NotFoundPage /> },
+      { path: "*", element: <NotFoundPage /> },
 
-      { path: 'lock-in-mode/:examId', element: <LockInModePage /> },
-      { path: 'quiz/:courseCode', element: <QuizPage /> },
-
+      { path: "lock-in-mode/:examId", element: <LockInModePage /> },
+      { path: "quiz/:courseCode", element: <QuizPage /> },
+      { path: "study-with-claude", element: <StudyWithClaudePage /> },
       {
-        path: 'search',
+        path: "search",
         element: <SearchLayout />,
         children: [
-          { path: ':courseCode', element: <ExamSearchPage /> },
-          { path: ':courseCode/stats', element: <StatsSearchPage /> },
-          { path: ':courseCode/:examId', element: <TentaPage /> },
+          { path: ":courseCode", element: <ExamSearchPage /> },
+          { path: ":courseCode/stats", element: <StatsSearchPage /> },
+          { path: ":courseCode/:examId", element: <TentaPage /> },
         ],
       },
       {
         element: <InfoPageLayout />,
         children: [
-          { path: 'updates', element: <UpdatesPage /> },
-          { path: 'feedback', element: <FeedbackPage /> },
-          { path: 'privacy-policy', element: <PrivacyPolicyPage /> },
-          { path: 'upload-exams', element: <UploadExamPage /> },
-          { path: 'faq', element: <FAQPage /> },
-          { path: 'om-oss', element: <OmOss /> },
+          { path: "updates", element: <UpdatesPage /> },
+          { path: "feedback", element: <FeedbackPage /> },
+          { path: "privacy-policy", element: <PrivacyPolicyPage /> },
+          { path: "upload-exams", element: <UploadExamPage /> },
+          { path: "faq", element: <FAQPage /> },
+          { path: "om-oss", element: <OmOss /> },
         ],
       },
     ],

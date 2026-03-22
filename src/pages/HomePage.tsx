@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { Button } from "@/components/ui/button";
 import InlineRecentActivity from "@/components/InlineRecentActivity";
 import { Link } from "react-router-dom";
@@ -14,7 +13,6 @@ export default function HomePage() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [focusInput, setFocusInput] = useState(false);
-
   useMetadata({
     title: `${t("homeTitle")}`,
     description: t("homeDescription"),
@@ -28,15 +26,12 @@ export default function HomePage() {
     twitterDescription: t("homeDescription"),
     robots: "index, follow",
   });
-
   useEffect(() => {
     setIsLoading(false);
   }, []);
-
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
-
   return (
     <div className="relative flex flex-col items-center justify-start w-full min-h-screen p-4 pt-[20vh] bg-background overflow-x-hidden">
       {isLoading ? (
@@ -45,6 +40,22 @@ export default function HomePage() {
         </div>
       ) : (
         <>
+          <Link
+            to="/study-with-claude"
+            viewTransition
+            className="fixed top-0 left-1/2 -translate-x-1/2 z-10"
+          >
+            <button className="flex active:scale-95 items-center gap-1.5 px-3 py-1 rounded-b-lg bg-[#D97857] text-xs font-medium text-white transition-all cursor-pointer backdrop-blur-xl">
+              <img
+                src="/llm-logos/claude-white.svg"
+                alt="Claude Logo"
+                className="w-5 h-5"
+              />
+              {t("homeTitle")?.toLowerCase().includes("tentor")
+                ? "Vi introducerar Claude"
+                : "We're introducing Claude"}
+            </button>
+          </Link>
           <div className="flex flex-col items-center space-y-2 mb-10">
             <div className="flex flex-row items-center justify-center space-x-2">
               <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-24 lg:h-24" />
@@ -53,23 +64,24 @@ export default function HomePage() {
               </h1>
             </div>
           </div>
-
           <div className="w-full max-w-[600px] flex flex-col items-center space-y-6 mb-20">
-            <div
-              className={`w-full border border-foreground/20 ${
-                focusInput
-                  ? "border-primary ring-1 ring-primary"
-                  : "hover:border-foreground/40"
-              } bg-background flex flex-row items-center justify-center rounded-full transition-all duration-200 text-sm text-foreground/80 outline-none`}
-            >
-              <MainInput
-                focusInput={focusInput}
-                setFocusInput={setFocusInput}
-              />
+            {/* Input wrapper with Claude button above */}
+            <div className="relative w-full">
+              <div
+                className={`w-full border border-foreground/20 ${
+                  focusInput
+                    ? "border-primary ring-1 ring-primary"
+                    : "hover:border-foreground/40"
+                } bg-background flex flex-row items-center justify-center rounded-full transition-all duration-200 text-sm text-foreground/80 outline-none`}
+              >
+                <MainInput
+                  focusInput={focusInput}
+                  setFocusInput={setFocusInput}
+                />
+              </div>
             </div>
 
             <InlineRecentActivity />
-
             <div className="flex flex-col items-center justify-center w-full space-y-6">
               <div className="flex flex-col md:flex-row items-center justify-center w-full">
                 <Link to="/upload-exams" viewTransition>
