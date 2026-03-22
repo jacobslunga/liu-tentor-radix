@@ -1,30 +1,30 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect } from "react";
 
-import { Button } from '@/components/ui/button';
-import { MailboxIcon } from '@phosphor-icons/react';
-import { Separator } from '@/components/ui/separator';
-import { useMetadata } from '@/hooks/useMetadata';
-import { useTranslation } from '@/hooks/useTranslation';
+import { Button } from "@/components/ui/button";
+import { MailboxIcon } from "@phosphor-icons/react";
+import { Separator } from "@/components/ui/separator";
+import { useMetadata } from "@/hooks/useMetadata";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const PrivacyPolicy: FC = () => {
   const { t } = useTranslation();
 
   useMetadata({
-    title: `LiU Tentor | ${t('privacyPolicyTitle')}`,
-    description: t('privacyPolicyIntro'),
+    title: `LiU Tentor | ${t("privacyPolicyTitle")}`,
+    description: t("privacyPolicyIntro"),
     keywords:
-      'integritetspolicy, privacy policy, GDPR, personuppgifter, data, Linköpings Universitet, LiU',
-    ogTitle: `LiU Tentor | ${t('privacyPolicyTitle')}`,
-    ogDescription: t('privacyPolicyIntro'),
-    ogType: 'website',
-    twitterCard: 'summary',
-    twitterTitle: `LiU Tentor | ${t('privacyPolicyTitle')}`,
-    twitterDescription: t('privacyPolicyIntro'),
-    robots: 'index, follow',
+      "integritetspolicy, privacy policy, GDPR, personuppgifter, data, Linköpings Universitet, LiU",
+    ogTitle: `LiU Tentor | ${t("privacyPolicyTitle")}`,
+    ogDescription: t("privacyPolicyIntro"),
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${t("privacyPolicyTitle")}`,
+    twitterDescription: t("privacyPolicyIntro"),
+    robots: "index, follow",
   });
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
   const Section: FC<{ title: string; content: string; items?: string[] }> = ({
@@ -32,13 +32,13 @@ const PrivacyPolicy: FC = () => {
     content,
     items,
   }) => (
-    <div className='mb-6'>
-      <h2 className='text-lg font-medium text-foreground mb-2 flex items-center gap-2'>
+    <div className="mb-6">
+      <h2 className="text-lg font-medium text-foreground mb-2 flex items-center gap-2">
         {title}
       </h2>
-      <p className='text-sm text-foreground/80 leading-relaxed'>{content}</p>
+      <p className="text-sm text-foreground/80 leading-relaxed">{content}</p>
       {items && (
-        <ul className='mt-3 list-disc pl-5 space-y-1 text-sm text-foreground/70'>
+        <ul className="mt-3 list-disc pl-5 space-y-1 text-sm text-foreground/70">
           {items.map((item, i) => (
             <li key={i}>{item}</li>
           ))}
@@ -48,84 +48,84 @@ const PrivacyPolicy: FC = () => {
   );
 
   return (
-    <div className='w-full max-w-3xl'>
-      <h1 className='text-3xl font-medium  text-foreground mb-1'>
-        {t('privacyPolicyTitle')}
+    <div className="w-full max-w-3xl">
+      <h1 className="text-3xl font-medium  text-foreground mb-1">
+        {t("privacyPolicyTitle")}
       </h1>
-      <p className='text-xs text-muted-foreground mb-6'>
-        {t('privacyPolicyLastUpdated')} 2025/12/28
+      <p className="text-xs text-muted-foreground mb-6">
+        {t("privacyPolicyLastUpdated")} 2025/12/28
       </p>
       {/* Intro */}
-      <p className='text-sm text-foreground/80 leading-relaxed mb-6'>
-        {t('privacyPolicyIntro')}
+      <p className="text-sm text-foreground/80 leading-relaxed mb-6">
+        {t("privacyPolicyIntro")}
       </p>
       <Separator />
       {/* Sections */}
-      <div className='space-y-6 mt-8'>
+      <div className="space-y-6 mt-8">
         <Section
-          title={t('privacyPolicySection1Title')}
-          content={t('privacyPolicySection1Content')}
+          title={t("privacyPolicySection1Title")}
+          content={t("privacyPolicySection1Content")}
           items={[
-            t('privacyPolicySection1Item1'),
-            t('privacyPolicySection1Item2'),
-            t('privacyPolicySection1Item3'),
-            t('privacyPolicySection1Item4'),
+            t("privacyPolicySection1Item1"),
+            t("privacyPolicySection1Item2"),
+            t("privacyPolicySection1Item3"),
+            t("privacyPolicySection1Item4"),
           ]}
         />
 
         <Section
-          title={t('privacyPolicySection2Title')}
-          content={t('privacyPolicySection2Content')}
+          title={t("privacyPolicySection2Title")}
+          content={t("privacyPolicySection2Content")}
         />
 
         <Section
-          title={t('privacyPolicySection3Title')}
-          content={t('privacyPolicySection3Content')}
+          title={t("privacyPolicySection3Title")}
+          content={t("privacyPolicySection3Content")}
         />
 
         <Section
-          title={t('privacyPolicySection4Title')}
-          content={t('privacyPolicySection4Content')}
+          title={t("privacyPolicySection4Title")}
+          content={t("privacyPolicySection4Content")}
         />
 
         <Section
-          title={t('privacyPolicySection5Title')}
-          content={t('privacyPolicySection5Content')}
+          title={t("privacyPolicySection5Title")}
+          content={t("privacyPolicySection5Content")}
           items={[
-            t('privacyPolicySection5Item1'),
-            t('privacyPolicySection5Item2'),
-            t('privacyPolicySection5Item3'),
+            t("privacyPolicySection5Item1"),
+            t("privacyPolicySection5Item2"),
+            t("privacyPolicySection5Item3"),
           ]}
         />
 
         <Section
-          title={t('privacyPolicySection6Title')}
-          content={t('privacyPolicySection6Content')}
+          title={t("privacyPolicySection6Title")}
+          content={t("privacyPolicySection6Content")}
         />
 
         <Section
-          title={t('privacyPolicySection7Title')}
-          content={t('privacyPolicySection7Content')}
+          title={t("privacyPolicySection7Title")}
+          content={t("privacyPolicySection7Content")}
           items={[
-            t('privacyPolicySection7Item1'),
-            t('privacyPolicySection7Item2'),
-            t('privacyPolicySection7Item3'),
+            t("privacyPolicySection7Item1"),
+            t("privacyPolicySection7Item2"),
+            t("privacyPolicySection7Item3"),
           ]}
         />
 
         <Section
-          title={t('privacyPolicyAIBestPracticesTitle')}
-          content={t('privacyPolicyAIBestPracticesContent')}
+          title={t("privacyPolicyAIBestPracticesTitle")}
+          content={t("privacyPolicyAIBestPracticesContent")}
           items={[
-            t('privacyPolicyAIBestPracticesItem1'),
-            t('privacyPolicyAIBestPracticesItem2'),
-            t('privacyPolicyAIBestPracticesItem3'),
+            t("privacyPolicyAIBestPracticesItem1"),
+            t("privacyPolicyAIBestPracticesItem2"),
+            t("privacyPolicyAIBestPracticesItem3"),
           ]}
         />
 
         <Section
-          title={t('privacyPolicySection8Title')}
-          content={t('privacyPolicySection8Content')}
+          title={t("privacyPolicySection8Title")}
+          content={t("privacyPolicySection8Content")}
         />
 
         <Separator />
@@ -133,40 +133,40 @@ const PrivacyPolicy: FC = () => {
         {/* GDPR Section */}
         <Section
           title={
-            t('privacyPolicyGDPRTitle') ||
-            'Hantering av personuppgifter och GDPR'
+            t("privacyPolicyGDPRTitle") ||
+            "Hantering av personuppgifter och GDPR"
           }
           content={
-            t('privacyPolicyGDPRContent') ||
-            'Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss.'
+            t("privacyPolicyGDPRContent") ||
+            "Vi visar offentligt tillgängliga tentor som publicerats av universitetet, inklusive namn på examinatorer som en del av dokumentets originalinnehåll. Vi respekterar rätten till integritet och följer GDPR-regleringen. Om du är en examinator och vill begära borttagning av ditt namn från en tenta, vänligen kontakta oss."
           }
           items={[
-            t('privacyPolicyGDPRItem1') ||
-              'Vi publicerar endast tentor som är offentligt tillgängliga.',
-            t('privacyPolicyGDPRItem2') ||
-              'Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.',
-            t('privacyPolicyGDPRItem3') ||
-              'Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.',
+            t("privacyPolicyGDPRItem1") ||
+              "Vi publicerar endast tentor som är offentligt tillgängliga.",
+            t("privacyPolicyGDPRItem2") ||
+              "Examinatorers namn ingår endast om de finns med i den ursprungliga tentan.",
+            t("privacyPolicyGDPRItem3") ||
+              "Om du vill begära borttagning av en tenta eller ett namn, vänligen kontakta oss via e-post.",
           ]}
         />
-      </div>{' '}
+      </div>{" "}
       {/* Contact Section */}
-      <div className='mt-8 pt-6 border-t space-y-2'>
-        <div className='flex items-center gap-2'>
-          <MailboxIcon weight='duotone' className='h-5 w-5 text-primary' />
-          <h3 className='text-sm font-medium'>
-            {t('contactUs') || 'Contact Us'}
+      <div className="mt-8 pt-6 border-t space-y-2">
+        <div className="flex items-center gap-2">
+          <MailboxIcon weight="duotone" className="h-5 w-5 text-primary" />
+          <h3 className="text-sm font-medium">
+            {t("contactUs") || "Contact Us"}
           </h3>
         </div>
-        <p className='text-sm text-muted-foreground'>
-          {t('privacyPolicyContactText') ||
-            'If you have any questions about our privacy policy, please contact us.'}
+        <p className="text-sm text-muted-foreground">
+          {t("privacyPolicyContactText") ||
+            "If you have any questions about our privacy policy, please contact us."}
         </p>
         <Button
-          size='sm'
-          onClick={() => (window.location.href = 'mailto:liutentor@gmail.com')}
+          size="sm"
+          onClick={() => (window.location.href = "mailto:liutentor@gmail.com")}
         >
-          {t('contactEmail') || 'Contact Email'}
+          {t("contactEmail") || "Contact Email"}
         </Button>
       </div>
     </div>

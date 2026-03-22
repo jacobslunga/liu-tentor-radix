@@ -111,7 +111,12 @@ const ScrollToBottomButton = memo(
           transition={{ ease: "easeInOut", duration: 0.2 }}
           className="absolute -top-12 left-1/2 -translate-x-1/2 z-20"
         >
-          <Button className="rounded-full" variant="outline" size="icon" onClick={onClick}>
+          <Button
+            className="rounded-full"
+            variant="outline"
+            size="icon"
+            onClick={onClick}
+          >
             <ArrowDownIcon weight="bold" size={20} />
           </Button>
         </motion.div>
@@ -594,7 +599,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                             variant="outline"
                             size="icon-sm"
                             onClick={onCancel}
-                            className="rounded-lg h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground"
+                            className="h-8 w-8 shrink-0 bg-secondary hover:bg-secondary/80 text-foreground"
                           >
                             <SquareIcon weight="fill" className="h-3.5 w-3.5" />
                           </InputGroupButton>
@@ -618,7 +623,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               setIsListening(false);
                               onSend();
                             }}
-                            className="rounded-lg shrink-0 font-medium transition-all"
+                            className="shrink-0 font-medium transition-all"
                           >
                             <ArrowUpIcon weight="bold" />
                             <span className="sr-only">{sendButtonLabel}</span>

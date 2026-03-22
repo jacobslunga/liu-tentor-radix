@@ -135,7 +135,7 @@ const SettingsDialog: FC = () => {
       id: "serif",
       label: "Serif",
       preview: "Aa",
-      style: { fontFamily: '"Lora", Georgia, serif' },
+      style: { fontFamily: '"Anthropic Serif", Georgia, serif' },
     },
   ];
 

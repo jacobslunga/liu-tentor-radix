@@ -89,20 +89,20 @@ export const ExamUploader = ({
   const [kurskod, setKurskod] = useState(prefilledCourseCode || "");
   const [loading, setLoading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<"success" | "error" | null>(
-    null
+    null,
   );
   const [errorMessage, setErrorMessage] = useState("");
 
   const [typed, setTyped] = useState("");
   const [exIndex, setExIndex] = useState(() =>
-    Math.floor(Math.random() * kurskodArray.length)
+    Math.floor(Math.random() * kurskodArray.length),
   );
   const [charIndex, setCharIndex] = useState(0);
   const [deleting, setDeleting] = useState(false);
 
   const shuffledExamples = useMemo(
     () => [...kurskodArray].sort(() => Math.random() - 0.5),
-    []
+    [],
   );
 
   useEffect(() => {
@@ -155,7 +155,7 @@ export const ExamUploader = ({
         const examDate = parseDateFromFilename(file.name);
         if (!examDate)
           throw new Error(
-            `Could not find a date in the filename: ${file.name}`
+            `Could not find a date in the filename: ${file.name}`,
           );
 
         const fileType = isSolution(file.name) ? "SOLUTION" : "EXAM";
@@ -190,14 +190,16 @@ export const ExamUploader = ({
         successCount++;
       } catch (error) {
         console.error("Upload failed:", error);
-        setErrorMessage(error instanceof Error ? error.message : "Unknown error");
+        setErrorMessage(
+          error instanceof Error ? error.message : "Unknown error",
+        );
         break;
       }
     }
 
     setLoading(false);
     setUploadStatus(
-      successCount > 0 && successCount === files.length ? "success" : "error"
+      successCount > 0 && successCount === files.length ? "success" : "error",
     );
 
     if (successCount > 0) {
