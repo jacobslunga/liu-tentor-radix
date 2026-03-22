@@ -25,7 +25,7 @@ export const getColumns = (
         return (
           <div className="flex items-center group-hover:underline transition-colors">
             <span className="font-medium text-foreground">{prefix}</span>
-            <span className="text-foreground/80 font-mono ml-2">{rest}</span>
+            <span className="text-foreground/80 ml-2">{rest}</span>
           </div>
         );
       }
