@@ -181,7 +181,7 @@ const ModelSelector = ({
           className="flex cursor-pointer items-center gap-1.5 h-6 px-2 rounded-lg border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
           aria-label={isSv ? "Välj modell" : "Select model"}
         >
-          <span className="text-xs font-normal text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
+          <span className="text-xs font-medium text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
             {selectedModel.name}
           </span>
           <ChevronDownIcon className="w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
@@ -228,7 +228,7 @@ const ModelSelector = ({
                     )}
                   >
                     <div className="flex flex-col flex-1 min-w-0">
-                      <span className="text-xs font-normal text-foreground">
+                      <span className="text-xs font-medium text-foreground">
                         {model.name}
                       </span>
                     </div>
@@ -508,7 +508,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               inputRef.current?.focus();
                             }}
                             className={cn(
-                              "flex items-center gap-1.5 px-2 h-6 text-xs font-normal transition-all rounded-lg cursor-pointer border select-none",
+                              "flex items-center gap-1.5 px-2 h-6 text-xs font-medium transition-all rounded-lg cursor-pointer border select-none",
                               !giveDirectAnswer
                                 ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
                                 : "bg-transparent border-dashed text-muted-foreground hover:bg-accent hover:text-foreground",
