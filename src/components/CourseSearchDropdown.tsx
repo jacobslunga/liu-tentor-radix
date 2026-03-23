@@ -23,8 +23,24 @@ interface CourseSearchDropdownProps {
   size?: "sm" | "md" | "lg";
 }
 
-const COOKIE_VERSION = "1.2";
+const COOKIE_VERSION = "1.3";
 const COOKIE_NAME = "recentActivities_v3";
+const MAX_RECENT_ACTIVITIES = 10;
+const RECENT_SEARCHES_VISIBLE = 4;
+
+const toUniqueRecentCourseCodes = (activities: RecentActivity[]): string[] => {
+  const seen = new Set<string>();
+
+  return activities
+    .sort((a, b) => b.timestamp - a.timestamp)
+    .map((item) => item.courseCode.toUpperCase())
+    .filter((code) => {
+      if (seen.has(code)) return false;
+      seen.add(code);
+      return true;
+    })
+    .slice(0, RECENT_SEARCHES_VISIBLE);
+};
 
 const fetchCourseCodes = async (): Promise<string[]> => {
   const res = await fetch("/courseCodes.json");
@@ -62,24 +78,20 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
   const loadRecentSearches = useCallback(() => {
     const storedVersion = Cookies.get("cookieVersion");
-    const searches = Cookies.get("popularSearches");
+    const searches = Cookies.get(COOKIE_NAME);
 
     if (!searches || storedVersion !== COOKIE_VERSION) {
-      Cookies.remove("popularSearches");
+      Cookies.remove(COOKIE_NAME);
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
       return;
     }
 
     try {
-      const parsedSearches = JSON.parse(decodeURIComponent(searches));
-      const uniqueCourses = Array.from(
-        new Set(
-          parsedSearches.map((item: { courseCode: string }) =>
-            item.courseCode.toUpperCase(),
-          ),
-        ),
-      ).slice(0, 4);
-      setRecentSearches(uniqueCourses as string[]);
+      const parsedSearches = JSON.parse(
+        decodeURIComponent(searches),
+      ) as RecentActivity[];
+
+      setRecentSearches(toUniqueRecentCourseCodes(parsedSearches));
     } catch (error) {
       console.error("Error processing popular searches:", error);
     }
@@ -99,24 +111,30 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       console.error("Failed to parse recent activities cookie", error);
     }
 
-    const existingIndex = searchesArray.findIndex(
-      (item) => item.courseCode === course,
-    );
+    const normalized = searchesArray
+      .filter((item) => item?.courseCode)
+      .map((item) => ({
+        ...item,
+        courseCode: item.courseCode.toUpperCase(),
+      }))
+      .sort((a, b) => b.timestamp - a.timestamp);
 
-    if (existingIndex !== -1) {
-      searchesArray[existingIndex].timestamp = Date.now();
-    } else {
-      searchesArray.push({
+    const withoutCurrent = normalized.filter(
+      (item) => item.courseCode !== course,
+    );
+    const nextSearches = [
+      {
         courseCode: course,
         courseName: course,
         path: `/search/${course}`,
         timestamp: Date.now(),
-      });
-    }
+      },
+      ...withoutCurrent,
+    ].slice(0, MAX_RECENT_ACTIVITIES);
 
-    searchesArray.sort((a, b) => b.timestamp - a.timestamp);
+    setRecentSearches(toUniqueRecentCourseCodes(nextSearches));
 
-    Cookies.set(COOKIE_NAME, JSON.stringify(searchesArray), {
+    Cookies.set(COOKIE_NAME, encodeURIComponent(JSON.stringify(nextSearches)), {
       expires: 365,
       domain: window.location.hostname.includes("liutentor.se")
         ? ".liutentor.se"

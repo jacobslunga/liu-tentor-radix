@@ -136,7 +136,7 @@ const ExamSearchPage: FC = () => {
                 </div>
 
                 <h1
-                  className={`font-semibold text-foreground max-w-3xl leading-tight ${
+                  className={`font-semibold text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
                     courseName.length < 30
                       ? "text-3xl sm:text-4xl"
                       : courseName.length < 50
@@ -144,17 +144,7 @@ const ExamSearchPage: FC = () => {
                         : "text-xl sm:text-2xl"
                   }`}
                 >
-                  {courseName.split(" och ").map((part, i, arr) => (
-                    <span key={i}>
-                      {part}
-                      {i < arr.length - 1 && (
-                        <>
-                          <span> och</span>
-                          <br />
-                        </>
-                      )}
-                    </span>
-                  ))}
+                  {courseName}
                 </h1>
               </div>
 
