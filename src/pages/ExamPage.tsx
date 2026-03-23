@@ -134,13 +134,13 @@ const ExamPage: FC = () => {
               </div>
             </div>
           </div>
-
-          <ChatWindow
-            examDetail={examDetail}
-            isOpen={showChatWindow}
-            onClose={handleCloseChat}
-          />
         </div>
+
+        <ChatWindow
+          examDetail={examDetail}
+          isOpen={showChatWindow}
+          onClose={handleCloseChat}
+        />
       </ChatProvider>
 
       <MobilePdfView examDetail={examDetail} />

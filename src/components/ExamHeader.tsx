@@ -273,6 +273,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
           onClick={onToggleChat || (() => setIsChatOpen(true))}
           variant="outline"
           size="sm"
+          className="hidden md:flex"
         >
           {isLoading ? (
             <>
