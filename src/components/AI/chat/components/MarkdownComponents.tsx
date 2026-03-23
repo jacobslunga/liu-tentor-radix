@@ -84,15 +84,15 @@ export const markdownComponents: Partial<Components> = {
   ),
 
   h1: ({ className, node, ...props }: any) => (
-    <h1 {...props} className={cn("animate-stream-block", className)} />
+    <h1 {...props} className={cn("animate-stream-block text-3xl", className)} />
   ),
 
   h2: ({ className, node, ...props }: any) => (
-    <h2 {...props} className={cn("animate-stream-block", className)} />
+    <h2 {...props} className={cn("animate-stream-block text-2xl", className)} />
   ),
 
   h3: ({ className, node, ...props }: any) => (
-    <h3 {...props} className={cn("animate-stream-block", className)} />
+    <h3 {...props} className={cn("animate-stream-block text-xl", className)} />
   ),
 
   hr: ({ className, node, ...props }: any) => (
