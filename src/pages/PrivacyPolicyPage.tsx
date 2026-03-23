@@ -53,7 +53,7 @@ const PrivacyPolicy: FC = () => {
         {t("privacyPolicyTitle")}
       </h1>
       <p className="text-xs text-muted-foreground mb-6">
-        {t("privacyPolicyLastUpdated")} 2025/12/28
+        {t("privacyPolicyLastUpdated")} 2025/03/23
       </p>
       {/* Intro */}
       <p className="text-sm text-foreground/80 leading-relaxed mb-6">
