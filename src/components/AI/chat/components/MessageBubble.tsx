@@ -102,7 +102,10 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
     const throttledContent = useThrottle(message.content, isLoading ? 150 : 0);
 
     return (
-      <div
+      <motion.div
+        initial={{ opacity: 0, filter: "blur(5px)", y: 10 }}
+        animate={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+        transition={{ duration: 0.1, ease: "easeOut" }}
         className={`max-w-2xl mx-auto w-full ${isUser ? "flex justify-end" : ""}`}
       >
         <div
@@ -139,7 +142,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
     );
   },
   (prevProps, nextProps) =>

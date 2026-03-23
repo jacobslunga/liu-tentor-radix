@@ -60,6 +60,23 @@
 }
 
 @layer utilities {
+  @keyframes streamReveal {
+    0% {
+      opacity: 0;
+      filter: blur(2px);
+      transform: translateY(2px);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0);
+    }
+  }
+
+  .animate-stream-block {
+    animation: streamReveal 0.2s ease-out forwards;
+  }
+
   .pdf-viewer-root {
     contain: layout paint size;
     overscroll-behavior: contain;
