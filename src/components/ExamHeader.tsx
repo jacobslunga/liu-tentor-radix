@@ -154,7 +154,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
   return (
     <motion.div
-      className="flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-transparent"
+      className="flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-linear-to-b from-background to-transparent"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -189,12 +189,13 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                       ? `${selectedExam.exam_name
                           .slice(0, 20)
                           .replace(selectedExam.exam_date, "")}...`
-                      : selectedExam.exam_name.replace(
-                          selectedExam.exam_date,
-                          "",
-                        )}
+                      : selectedExam.exam_name
+                          .replace(selectedExam.exam_date, "")
+                          .trim()}{" "}
+                    <span className="font-normal">
+                      {selectedExam.exam_date}
+                    </span>
                   </span>
-                  <span className="font-normal">{selectedExam.exam_date}</span>
                   <CaretRightIcon
                     weight="bold"
                     className={`w-4 h-4 text-muted-foreground group-hover:rotate-90 ${

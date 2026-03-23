@@ -47,7 +47,7 @@ export const markdownComponents: Partial<Components> = {
     <p
       {...props}
       className={cn(
-        "animate-stream-block my-2 text-[1rem] leading-[1.65] text-pretty wrap-break-word",
+        "animate-stream-block my-2 text-pretty wrap-break-word",
         className,
       )}
     />
@@ -57,7 +57,7 @@ export const markdownComponents: Partial<Components> = {
     <ul
       {...props}
       className={cn(
-        "animate-stream-block my-2 ml-6 list-disc text-[1.08rem] leading-[1.65] text-pretty wrap-break-word",
+        "animate-stream-block my-2 ml-6 list-disc text-pretty wrap-break-word",
         className,
       )}
     />
@@ -67,7 +67,7 @@ export const markdownComponents: Partial<Components> = {
     <ol
       {...props}
       className={cn(
-        "animate-stream-block my-2 ml-6 list-decimal text-[1.08rem] leading-[1.65] text-pretty wrap-break-word",
+        "animate-stream-block my-2 ml-6 list-decimal text-pretty wrap-break-word",
         className,
       )}
     />
@@ -77,40 +77,22 @@ export const markdownComponents: Partial<Components> = {
     <li
       {...props}
       className={cn(
-        "animate-stream-block my-1 text-[1.08rem] leading-[1.65] text-pretty wrap-break-word",
+        "animate-stream-block text-pretty wrap-break-word",
         className,
       )}
     />
   ),
 
   h1: ({ className, node, ...props }: any) => (
-    <h1
-      {...props}
-      className={cn(
-        "animate-stream-block mt-4 mb-2 text-2xl font-semibold leading-[1.3]",
-        className,
-      )}
-    />
+    <h1 {...props} className={cn("animate-stream-block", className)} />
   ),
 
   h2: ({ className, node, ...props }: any) => (
-    <h2
-      {...props}
-      className={cn(
-        "animate-stream-block mt-3 mb-2 text-xl font-semibold leading-[1.35]",
-        className,
-      )}
-    />
+    <h2 {...props} className={cn("animate-stream-block", className)} />
   ),
 
   h3: ({ className, node, ...props }: any) => (
-    <h3
-      {...props}
-      className={cn(
-        "animate-stream-block mt-2 mb-1 text-lg font-medium leading-[1.4]",
-        className,
-      )}
-    />
+    <h3 {...props} className={cn("animate-stream-block", className)} />
   ),
 
   hr: ({ className, node, ...props }: any) => (
@@ -164,7 +146,7 @@ export const markdownComponents: Partial<Components> = {
     <th
       {...props}
       className={cn(
-        "px-3 py-2 text-left align-middle font-semibold whitespace-nowrap",
+        "px-3 py-2 text-left align-middle whitespace-nowrap",
         className,
       )}
     />
