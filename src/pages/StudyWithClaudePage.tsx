@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useTranslation } from "@/hooks/useTranslation";
 import ReactMarkdown from "react-markdown";
+import { ArrowLeftIcon } from "@phosphor-icons/react";
 
 const contentSv = `
 # Plugga med Claude
@@ -104,7 +105,8 @@ export default function StudyWithClaudePage() {
               size="sm"
               className="text-muted-foreground hover:text-foreground -ml-2"
             >
-              ← {isSv ? "Tillbaka" : "Back"}
+              <ArrowLeftIcon weight="bold" />
+              {isSv ? "Tillbaka" : "Back"}
             </Button>
           </Link>
         </div>
