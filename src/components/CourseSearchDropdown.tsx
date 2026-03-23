@@ -9,13 +9,11 @@ import { Input } from "@/components/ui/input";
 import { useLanguage } from "@/context/LanguageContext";
 import useSWR from "swr";
 import { useTranslation } from "@/hooks/useTranslation";
-
-interface RecentActivity {
-  courseCode: string;
-  courseName: string;
-  path: string;
-  timestamp: number;
-}
+import {
+  readRecentActivities,
+  writeRecentActivities,
+  type RecentActivity,
+} from "@/lib/recentActivities";
 
 interface CourseSearchDropdownProps {
   placeholder?: string;
@@ -25,7 +23,7 @@ interface CourseSearchDropdownProps {
 
 const COOKIE_VERSION = "1.3";
 const COOKIE_NAME = "recentActivities_v3";
-const MAX_RECENT_ACTIVITIES = 10;
+const MAX_RECENT_ACTIVITIES = 4;
 const RECENT_SEARCHES_VISIBLE = 4;
 
 const toUniqueRecentCourseCodes = (activities: RecentActivity[]): string[] => {
@@ -78,18 +76,21 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
   const loadRecentSearches = useCallback(() => {
     const storedVersion = Cookies.get("cookieVersion");
-    const searches = Cookies.get(COOKIE_NAME);
 
-    if (!searches || storedVersion !== COOKIE_VERSION) {
+    if (storedVersion !== COOKIE_VERSION) {
       Cookies.remove(COOKIE_NAME);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(COOKIE_NAME);
+      }
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
       return;
     }
 
     try {
-      const parsedSearches = JSON.parse(
-        decodeURIComponent(searches),
-      ) as RecentActivity[];
+      const parsedSearches = readRecentActivities(
+        COOKIE_NAME,
+        MAX_RECENT_ACTIVITIES,
+      );
 
       setRecentSearches(toUniqueRecentCourseCodes(parsedSearches));
     } catch (error) {
@@ -102,22 +103,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
   }, [loadRecentSearches]);
 
   const updateSearchCount = (course: string) => {
-    let searchesArray: RecentActivity[] = [];
-    try {
-      searchesArray = Cookies.get(COOKIE_NAME)
-        ? JSON.parse(decodeURIComponent(Cookies.get(COOKIE_NAME)!))
-        : [];
-    } catch (error) {
-      console.error("Failed to parse recent activities cookie", error);
-    }
-
-    const normalized = searchesArray
-      .filter((item) => item?.courseCode)
-      .map((item) => ({
-        ...item,
-        courseCode: item.courseCode.toUpperCase(),
-      }))
-      .sort((a, b) => b.timestamp - a.timestamp);
+    const normalized = readRecentActivities(COOKIE_NAME, MAX_RECENT_ACTIVITIES);
 
     const withoutCurrent = normalized.filter(
       (item) => item.courseCode !== course,
@@ -134,13 +120,16 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
     setRecentSearches(toUniqueRecentCourseCodes(nextSearches));
 
-    Cookies.set(COOKIE_NAME, encodeURIComponent(JSON.stringify(nextSearches)), {
-      expires: 365,
-      domain: window.location.hostname.includes("liutentor.se")
-        ? ".liutentor.se"
-        : undefined,
-      sameSite: window.location.hostname === "localhost" ? "Strict" : "Lax",
-      secure: window.location.protocol === "https:",
+    writeRecentActivities(nextSearches, {
+      cookieKey: COOKIE_NAME,
+      maxEntries: MAX_RECENT_ACTIVITIES,
+      cookieOptions: {
+        domain: window.location.hostname.includes("liutentor.se")
+          ? ".liutentor.se"
+          : undefined,
+        sameSite: window.location.hostname === "localhost" ? "Strict" : "Lax",
+        secure: window.location.protocol === "https:",
+      },
     });
   };
 

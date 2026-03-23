@@ -4,60 +4,40 @@ import { ArrowUpRightIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import Cookies from "js-cookie";
 import { Link } from "react-router-dom";
+import {
+  readRecentActivities,
+  type RecentActivity,
+} from "@/lib/recentActivities";
 
-interface RecentActivity {
-  courseCode: string;
-  courseName: string;
-  path: string;
-  timestamp: number;
-}
-
-const MAX_RECENT_ACTIVITIES = 10;
+const MAX_RECENT_ACTIVITIES = 4;
+const INLINE_VISIBLE_ACTIVITIES = 3;
 
 const InlineRecentActivity = () => {
   const [recentActivities, setRecentActivities] = useState<RecentActivity[]>(
     [],
   );
-  const [maxVisible, setMaxVisible] = useState(3);
 
   const COOKIE_NAME = "recentActivities_v3";
   const COOKIE_VERSION = "1.3";
 
   useEffect(() => {
-    const updateVisible = () => {
-      const width = window.innerWidth;
-      if (width >= 1024) setMaxVisible(6);
-      else if (width >= 768) setMaxVisible(5);
-      else setMaxVisible(4);
-    };
-
-    updateVisible();
-    window.addEventListener("resize", updateVisible);
-    return () => window.removeEventListener("resize", updateVisible);
-  }, []);
-
-  useEffect(() => {
     const storedVersion = Cookies.get("cookieVersion");
     if (storedVersion !== COOKIE_VERSION) {
       Cookies.remove(COOKIE_NAME);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(COOKIE_NAME);
+      }
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
     }
 
-    const cookie = Cookies.get(COOKIE_NAME);
-    if (cookie) {
-      try {
-        const parsed = JSON.parse(
-          decodeURIComponent(cookie),
-        ) as RecentActivity[];
-        const sorted = parsed.sort((a, b) => b.timestamp - a.timestamp);
-        setRecentActivities(sorted.slice(0, MAX_RECENT_ACTIVITIES));
-      } catch (e) {
-        console.error("Failed to parse recent activity:", e);
-      }
-    }
+    const parsed = readRecentActivities(COOKIE_NAME, MAX_RECENT_ACTIVITIES);
+    setRecentActivities(parsed.slice(0, MAX_RECENT_ACTIVITIES));
   }, []);
 
-  const visibleActivities = recentActivities.slice(0, maxVisible);
+  const visibleActivities = recentActivities.slice(
+    0,
+    INLINE_VISIBLE_ACTIVITIES,
+  );
 
   if (visibleActivities.length === 0) return null;
 

@@ -14,6 +14,10 @@ import useSWR from "swr";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { kurskodArray } from "@/data/kurskoder";
+import {
+  readRecentActivities,
+  writeRecentActivities,
+} from "@/lib/recentActivities";
 
 import { Button } from "./ui/button";
 import {
@@ -37,7 +41,7 @@ const fetchCourseCodes = async (): Promise<string[]> => {
 
 const COOKIE_VERSION = "1.3";
 const COOKIE_NAME = "recentActivities_v3";
-const MAX_RECENT_ACTIVITIES = 10;
+const MAX_RECENT_ACTIVITIES = 4;
 
 const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
   const { language } = useLanguage();
@@ -92,47 +96,22 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
     overscan: 5,
   });
 
-  // Save selected course to recent activity cookie
   const saveRecentActivity = (courseCode: string) => {
-    // Remove old cookie if version changed
     const storedVersion = Cookies.get("cookieVersion");
     if (storedVersion !== COOKIE_VERSION) {
       Cookies.remove(COOKIE_NAME);
+      if (typeof window !== "undefined") {
+        window.localStorage.removeItem(COOKIE_NAME);
+      }
       Cookies.set("cookieVersion", COOKIE_VERSION, { expires: 365 });
     }
-    interface RecentActivity {
-      courseCode: string;
-      courseName: string;
-      path: string;
-      timestamp: number;
-    }
-    let activities: RecentActivity[] = [];
-    const cookie = Cookies.get(COOKIE_NAME);
-    if (cookie) {
-      try {
-        activities = JSON.parse(decodeURIComponent(cookie));
-      } catch {
-        activities = [];
-      }
-    }
+    const existing = readRecentActivities(COOKIE_NAME, MAX_RECENT_ACTIVITIES);
 
-    const normalized = activities
-      .filter((item) => item?.courseCode)
-      .map((item) => ({
-        ...item,
-        courseCode: item.courseCode.toUpperCase(),
-      }))
-      .sort((a, b) => b.timestamp - a.timestamp);
-
-    // Remove any previous entry for this course
-    const withoutCurrent = normalized.filter(
-      (a) => a.courseCode !== courseCode,
-    );
-    // Add new activity to the front
-    const nextActivities: RecentActivity[] = [
+    const withoutCurrent = existing.filter((a) => a.courseCode !== courseCode);
+    const nextActivities = [
       {
         courseCode,
-        courseName: courseCode, // No name available here
+        courseName: courseCode,
         path:
           searchMethod === "stats"
             ? `/search/${courseCode}/stats`
@@ -142,13 +121,10 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
       ...withoutCurrent,
     ].slice(0, MAX_RECENT_ACTIVITIES);
 
-    Cookies.set(
-      COOKIE_NAME,
-      encodeURIComponent(JSON.stringify(nextActivities)),
-      {
-        expires: 365,
-      },
-    );
+    writeRecentActivities(nextActivities, {
+      cookieKey: COOKIE_NAME,
+      maxEntries: MAX_RECENT_ACTIVITIES,
+    });
   };
 
   const handleSelectCourse = (course: string) => {
