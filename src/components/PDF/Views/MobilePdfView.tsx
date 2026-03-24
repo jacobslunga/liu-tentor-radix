@@ -35,7 +35,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
       className="flex lg:hidden flex-col h-screen w-full bg-background relative"
       ref={containerRef}
     >
-      <div className="sticky top-0 z-40 flex items-center gap-3 px-3 h-12 border-b border-border bg-background/90 backdrop-blur-md">
+      <div className="absolute inset-x-0 top-0 z-40 flex items-center gap-3 px-3 h-12 bg-linear-to-b from-background to-transparent">
         <button
           onClick={() =>
             navigate(`/search/${courseCode}`, { viewTransition: true })
@@ -66,7 +66,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
         )}
       </div>
 
-      <div className="flex-1 w-full h-full overflow-hidden">
+      <div className="w-full h-full overflow-hidden pt-12">
         <ExamPdf pdfUrl={examDetail.exam.pdf_url} />
       </div>
 
@@ -83,7 +83,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
             exit={{ opacity: 0, y: 24, scale: 0.99 }}
             transition={{ duration: 0.22, ease: "easeOut" }}
           >
-            <div className="flex items-center gap-3 px-3 h-12 border-b border-border bg-background/90 backdrop-blur-md">
+            <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-3 px-3 h-12 bg-linear-to-b from-background to-transparent">
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-foreground truncate leading-tight">
                   {t("facit")}
@@ -101,7 +101,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
                 <X className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex-1 min-h-0 overflow-hidden bg-background">
+            <div className="h-full w-full overflow-hidden bg-background pt-12">
               {examDetail.solution && (
                 <SolutionPdf pdfUrl={examDetail.solution.pdf_url} />
               )}
