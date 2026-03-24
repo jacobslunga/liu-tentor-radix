@@ -44,6 +44,14 @@ const SELECTION_COLOR: Record<string, string> = {
   dark: "oklch(0.8332 0.088 144.73 / 0.35)",
 };
 
+const ConditionalWrapper: FC<{
+  condition: boolean;
+  wrapper: (children: React.ReactNode) => React.ReactNode;
+  children: React.ReactNode;
+}> = ({ condition, wrapper, children }) => {
+  return <>{condition ? wrapper(children) : children}</>;
+};
+
 const KeyboardCopyHandler: FC<{
   documentId: string;
   children: React.ReactNode;
@@ -93,18 +101,15 @@ const PdfRenderer: FC<PdfRendererProps> = ({
     typeof window !== "undefined" ? window.innerWidth : 1200,
   );
 
-  useEffect(() => {
-    const handleResize = () => setWindowWidth(window.innerWidth);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
   const [isMobile, setIsMobile] = useState(
     typeof window !== "undefined" ? window.innerWidth < 1024 : false,
   );
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setIsMobile(window.innerWidth < 1024);
+    };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
@@ -124,17 +129,21 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       createPluginRegistration(ViewportPluginPackage),
       createPluginRegistration(ScrollPluginPackage),
       createPluginRegistration(RenderPluginPackage),
-      createPluginRegistration(InteractionManagerPluginPackage),
       createPluginRegistration(RotatePluginPackage),
-      createPluginRegistration(SelectionPluginPackage, {
-        toleranceFactor: 2.0,
-        minSelectionDragDistance: 5,
-      }),
       createPluginRegistration(ZoomPluginPackage, {
         defaultZoomLevel: determineZoomMode(),
       }),
+      ...(!isMobile
+        ? [
+            createPluginRegistration(InteractionManagerPluginPackage),
+            createPluginRegistration(SelectionPluginPackage, {
+              toleranceFactor: 2.0,
+              minSelectionDragDistance: 5,
+            }),
+          ]
+        : []),
     ];
-  }, [pdfUrl, layoutMode, windowWidth]);
+  }, [pdfUrl, layoutMode, windowWidth, isMobile]);
 
   if (!pdfUrl) return null;
 
@@ -158,7 +167,14 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       <EmbedPDF engine={engine} plugins={plugins}>
         {({ activeDocumentId }) =>
           activeDocumentId && (
-            <KeyboardCopyHandler documentId={activeDocumentId}>
+            <ConditionalWrapper
+              condition={!isMobile}
+              wrapper={(children) => (
+                <KeyboardCopyHandler documentId={activeDocumentId}>
+                  {children}
+                </KeyboardCopyHandler>
+              )}
+            >
               <DocumentContent documentId={activeDocumentId}>
                 {({ isLoaded }) =>
                   isLoaded ? (
@@ -173,51 +189,59 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                       >
                         <Scroller
                           documentId={activeDocumentId}
-                          renderPage={({ width, height, pageIndex }) => (
-                            <div
-                              style={{ width, height }}
-                              className="relative mx-auto my-4 pdf-page-shell"
-                            >
-                              <PagePointerProvider
+                          renderPage={({ width, height, pageIndex }) => {
+                            const renderSurface = (
+                              <Rotate
                                 documentId={activeDocumentId}
                                 pageIndex={pageIndex}
+                                className="relative h-full w-full"
                               >
-                                <Rotate
-                                  documentId={activeDocumentId}
-                                  pageIndex={pageIndex}
-                                  className="relative h-full w-full"
+                                <div
+                                  className="absolute inset-0 z-0 pdf-render-surface"
+                                  style={
+                                    themeConfig
+                                      ? { filter: themeConfig.filter }
+                                      : undefined
+                                  }
                                 >
-                                  <div
-                                    className="absolute inset-0 z-0 pdf-render-surface"
-                                    style={
-                                      themeConfig
-                                        ? {
-                                            filter: themeConfig.filter,
-                                          }
-                                        : undefined
-                                    }
-                                  >
-                                    <RenderLayer
+                                  <RenderLayer
+                                    documentId={activeDocumentId}
+                                    pageIndex={pageIndex}
+                                  />
+                                </div>
+
+                                {!isMobile && (
+                                  <div className="absolute inset-0 z-10 pdf-selection-surface">
+                                    <SelectionLayer
                                       documentId={activeDocumentId}
                                       pageIndex={pageIndex}
+                                      textStyle={{
+                                        background: selectionColor,
+                                      }}
                                     />
                                   </div>
+                                )}
+                              </Rotate>
+                            );
 
-                                  {!isMobile && (
-                                    <div className="absolute inset-0 z-10 pdf-selection-surface">
-                                      <SelectionLayer
-                                        documentId={activeDocumentId}
-                                        pageIndex={pageIndex}
-                                        textStyle={{
-                                          background: selectionColor,
-                                        }}
-                                      />
-                                    </div>
-                                  )}
-                                </Rotate>
-                              </PagePointerProvider>
-                            </div>
-                          )}
+                            return (
+                              <div
+                                style={{ width, height }}
+                                className="relative mx-auto my-4 pdf-page-shell"
+                              >
+                                {isMobile ? (
+                                  renderSurface
+                                ) : (
+                                  <PagePointerProvider
+                                    documentId={activeDocumentId}
+                                    pageIndex={pageIndex}
+                                  >
+                                    {renderSurface}
+                                  </PagePointerProvider>
+                                )}
+                              </div>
+                            );
+                          }}
                         />
                       </ZoomGestureWrapper>
                     </Viewport>
@@ -231,7 +255,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                   )
                 }
               </DocumentContent>
-            </KeyboardCopyHandler>
+            </ConditionalWrapper>
           )
         }
       </EmbedPDF>
