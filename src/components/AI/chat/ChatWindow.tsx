@@ -10,7 +10,7 @@ import { EmptyState } from "./components/EmptyState";
 import { MessageList } from "./components/MessageList";
 import { ChatInput, ChatInputHandle } from "./components/ChatInput";
 import { ResizeHandle } from "./components/ResizeHandle";
-import { Loader2 } from "lucide-react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import { useChatState } from "@/hooks/useChatState";
 
 interface ChatWindowProps {
@@ -289,7 +289,10 @@ const ChatWindow: FC<ChatWindowProps> = ({
                     </>
                   ) : (
                     <div className="h-full w-full flex items-center justify-center">
-                      <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+                      <SpinnerIcon
+                        className="w-8 h-8 animate-spin text-muted-foreground"
+                        weight="bold"
+                      />
                     </div>
                   )}
                 </div>

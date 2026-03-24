@@ -30,7 +30,7 @@ import {
   ZoomPluginPackage,
 } from "@embedpdf/plugin-zoom/react";
 
-import { Loader2 } from "lucide-react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import { useTheme } from "@/context/ThemeContext";
 
 const THEME_CONFIG: Record<string, { filter: string } | undefined> = {
@@ -99,6 +99,16 @@ const PdfRenderer: FC<PdfRendererProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false,
+  );
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const plugins = useMemo(() => {
     if (!pdfUrl) return [];
 
@@ -131,7 +141,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
   if (isLoading || !engine) {
     return (
       <div className="flex h-full w-full items-center justify-center bg-background">
-        <Loader2 className="h-5 w-5 animate-spin" />
+        <SpinnerIcon className="h-5 w-5 animate-spin" weight="bold" />
       </div>
     );
   }
@@ -193,13 +203,17 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                                     />
                                   </div>
 
-                                  <div className="absolute inset-0 z-10 pdf-selection-surface">
-                                    <SelectionLayer
-                                      documentId={activeDocumentId}
-                                      pageIndex={pageIndex}
-                                      textStyle={{ background: selectionColor }}
-                                    />
-                                  </div>
+                                  {!isMobile && (
+                                    <div className="absolute inset-0 z-10 pdf-selection-surface">
+                                      <SelectionLayer
+                                        documentId={activeDocumentId}
+                                        pageIndex={pageIndex}
+                                        textStyle={{
+                                          background: selectionColor,
+                                        }}
+                                      />
+                                    </div>
+                                  )}
                                 </Rotate>
                               </PagePointerProvider>
                             </div>
@@ -209,7 +223,10 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                     </Viewport>
                   ) : (
                     <div className="flex h-full w-full items-center justify-center bg-background">
-                      <Loader2 className="h-5 w-5 animate-spin" />
+                      <SpinnerIcon
+                        className="h-5 w-5 animate-spin"
+                        weight="bold"
+                      />
                     </div>
                   )
                 }

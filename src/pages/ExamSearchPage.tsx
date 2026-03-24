@@ -1,10 +1,7 @@
 import { FC, useMemo, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import {
-  Loader2,
-  Upload as UploadIcon,
-  BarChart as ChartIcon,
-} from "lucide-react";
+import { SpinnerIcon } from "@phosphor-icons/react";
+import { ChartPieSliceIcon, UploadIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/data-table/exams-data-table";
@@ -21,7 +18,10 @@ const LoadingSpinner = () => {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
-      <Loader2 className="h-8 w-8 animate-spin text-muted-foreground mb-2" />
+      <SpinnerIcon
+        className="h-8 w-8 animate-spin text-muted-foreground mb-2"
+        weight="bold"
+      />
       <p className="text-sm text-muted-foreground">{t("loadingExams")}</p>
     </div>
   );
@@ -186,14 +186,17 @@ const ExamSearchPage: FC = () => {
                     <div className="flex items-center gap-2 shrink-0">
                       <Link to="/upload-exams" viewTransition>
                         <Button variant="default">
-                          <UploadIcon className="h-4 w-4" />
+                          <UploadIcon className="h-4 w-4" weight="bold" />
                           {t("uploadMore")}
                         </Button>
                       </Link>
 
                       <Link to={`/search/${courseCode}/stats`} viewTransition>
                         <Button variant="outline">
-                          <ChartIcon className="h-4 w-4" />
+                          <ChartPieSliceIcon
+                            className="h-4 w-4"
+                            weight="bold"
+                          />
                           {language === "sv" ? "Statistik" : "Statistics"}
                         </Button>
                       </Link>

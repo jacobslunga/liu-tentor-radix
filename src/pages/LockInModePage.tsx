@@ -1,7 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { Maximize, Minimize, Pause, Play, Timer, Loader2 } from "lucide-react";
+import { Maximize, Minimize, Pause, Play, Timer } from "lucide-react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -167,7 +168,10 @@ const LockInModePage: React.FC = () => {
   if (detailLoading || !session) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-2">
-        <Loader2 className="w-10 h-10 animate-spin text-primary" />
+        <SpinnerIcon
+          className="w-10 h-10 animate-spin text-primary"
+          weight="bold"
+        />
         <p className="text-muted-foreground">
           {language === "sv"
             ? "Initierar Lock In-läge..."

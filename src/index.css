@@ -15,8 +15,8 @@
 }
 
 @font-face {
-  font-family: "Carbone";
-  src: url("/fonts/CarboneVariable.woff2") format("woff2");
+  font-family: "LiUTentorSans";
+  src: url("/fonts/LiUTentorVF.woff2") format("woff2");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -30,7 +30,7 @@
 }
 
 @theme {
-  --font-sans: "Carbone", sans-serif;
+  --font-sans: "LiUTentorSans", sans-serif;
   --font-logo: "Canela", serif;
   --font-mono: "Anthropic Mono", monospace;
 }
@@ -163,7 +163,7 @@
 
   body {
     font-family:
-      "Carbone",
+      "LiUTentorSans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

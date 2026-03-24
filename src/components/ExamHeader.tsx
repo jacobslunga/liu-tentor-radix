@@ -26,7 +26,7 @@ import { motion } from "framer-motion";
 import { LockInMenu } from "./lock-in-mode/LockInMenu";
 import { LockInModeManager } from "@/lib/lockInMode";
 import { useChatState } from "@/hooks/useChatState";
-import { Loader2 } from "lucide-react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import { downloadFile } from "@/lib/utils";
 
 interface Props {
@@ -154,7 +154,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
 
   return (
     <motion.div
-      className="flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-linear-to-b from-background to-transparent"
+      className="hidden lg:flex z-50 fixed w-full flex-row items-center top-0 left-0 right-0 justify-between px-5 h-14 bg-linear-to-b from-background to-transparent"
       onMouseEnter={() => {
         setIsHovering(true);
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -278,7 +278,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
         >
           {isLoading ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <SpinnerIcon className="w-4 h-4 animate-spin" weight="bold" />
               <span>{language === "sv" ? "Tänker..." : "Thinking..."}</span>
             </>
           ) : (

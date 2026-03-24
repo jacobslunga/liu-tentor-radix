@@ -6,7 +6,7 @@ import ExamHeader from "@/components/ExamHeader";
 import ExamOnlyView from "@/components/PDF/Views/ExamOnlyView";
 import ExamWithFacitView from "@/components/PDF/Views/ExamWithFacitView";
 import LayoutSwitcher from "@/components/PDF/LayoutSwitcher";
-import { Loader2 } from "lucide-react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import MobilePdfView from "@/components/PDF/Views/MobilePdfView";
 import { formatExamDate } from "@/util/formatExamDate";
 import { useCourseExams, useExamDetail } from "@/api";
@@ -153,7 +153,7 @@ export default ExamPage;
 const LoadingState = () => {
   return (
     <div className="w-screen h-screen flex flex-col items-center justify-center gap-2">
-      <Loader2 className="w-10 h-10 animate-spin" />
+      <SpinnerIcon className="w-10 h-10 animate-spin" weight="bold" />
       <p className="font-normal text-foreground/70">Laddar tenta...</p>
     </div>
   );

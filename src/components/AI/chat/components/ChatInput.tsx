@@ -227,7 +227,7 @@ const ModelSelector = ({
                     )}
                   >
                     <div className="flex flex-col flex-1 min-w-0">
-                      <span className="text-xs font-medium text-foreground">
+                      <span className="text-xs font-normal text-foreground">
                         {model.name}
                       </span>
                     </div>
