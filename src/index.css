@@ -16,9 +16,25 @@
 
 @font-face {
   font-family: "LiUTentorSans";
-  src: url("/fonts/LiUTentorVF.woff2") format("woff2");
+  src: url("/fonts/Roobert-Regular.woff2") format("woff2");
   font-style: normal;
-  font-weight: 100 900;
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "LiUTentorSans";
+  src: url("/fonts/Roobert-Medium.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "LiUTentorSans";
+  src: url("/fonts/Roobert-SemiBold.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 600;
   font-display: swap;
 }
 
