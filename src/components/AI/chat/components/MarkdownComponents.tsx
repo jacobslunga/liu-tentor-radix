@@ -84,7 +84,10 @@ export const markdownComponents: Partial<Components> = {
   ),
 
   h1: ({ className, node, ...props }: any) => (
-    <h1 {...props} className={cn("animate-stream-block text-3xl", className)} />
+    <h1
+      {...props}
+      className={cn("animate-stream-block font-semibold text-3xl", className)}
+    />
   ),
 
   h2: ({ className, node, ...props }: any) => (

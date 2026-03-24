@@ -79,7 +79,6 @@ export const CodeBlock: FC<CodeBlockProps> = memo(
               fontSize: "0.85rem",
               lineHeight: "1.6",
               borderRadius: 0,
-              fontFamily: " 'Anthropic Mono', monospace",
             }}
             showLineNumbers={false}
             wrapLines={false}

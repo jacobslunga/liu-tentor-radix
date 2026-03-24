@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Rethink Sans:ital,wght@0,200..800;1,200..800&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -7,38 +9,6 @@
 @plugin "@toolwind/corner-shape";
 
 @font-face {
-  font-family: "Anthropic Mono";
-  src: url("/fonts/Anthropic-Mono.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 100 900;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "LiUTentorSans";
-  src: url("/fonts/Roobert-Regular.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 400;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "LiUTentorSans";
-  src: url("/fonts/Roobert-Medium.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "LiUTentorSans";
-  src: url("/fonts/Roobert-SemiBold.woff2") format("woff2");
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-}
-
-@font-face {
   font-family: "Canela";
   src: url("/fonts/CanelaText-Medium.otf") format("opentype");
   font-weight: 500;
@@ -46,9 +16,9 @@
 }
 
 @theme {
-  --font-sans: "LiUTentorSans", sans-serif;
+  --font-sans: "Rethink Sans", sans-serif;
   --font-logo: "Canela", serif;
-  --font-mono: "Anthropic Mono", monospace;
+  --font-mono: monospace;
 }
 
 @layer utilities {
@@ -179,7 +149,7 @@
 
   body {
     font-family:
-      "LiUTentorSans",
+      "Rethink Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
