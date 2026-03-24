@@ -184,8 +184,8 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                     >
                       <ZoomGestureWrapper
                         documentId={activeDocumentId}
-                        enablePinch={true}
-                        enableWheel={true}
+                        enablePinch={!isMobile}
+                        enableWheel={!isMobile}
                       >
                         <Scroller
                           documentId={activeDocumentId}

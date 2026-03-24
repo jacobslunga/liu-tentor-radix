@@ -1,4 +1,4 @@
-import { FC, useState, useMemo } from "react";
+import { FC, useState, useMemo, useRef, useEffect } from "react";
 import { X } from "lucide-react";
 import { ArrowLeftIcon, BookOpenIcon } from "@phosphor-icons/react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -16,9 +16,14 @@ interface Props {
 const MobilePdfView: FC<Props> = ({ examDetail }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const containerRef = useRef<HTMLDivElement>(null);
   const { courseCode = "" } = useParams<{ courseCode: string }>();
   const [showSolution, setShowSolution] = useState(false);
   const hasSolution = examDetail.solution !== null;
+
+  useEffect(() => {
+    containerRef.current?.scrollTo({ top: 0 });
+  }, []);
 
   const examDate = useMemo(
     () => formatExamDate(examDetail.exam.exam_date),
@@ -26,7 +31,10 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
   );
 
   return (
-    <div className="flex lg:hidden flex-col h-screen w-full bg-background relative">
+    <div
+      className="flex lg:hidden flex-col h-screen w-full bg-background relative"
+      ref={containerRef}
+    >
       <div className="sticky top-0 z-40 flex items-center gap-3 px-3 h-12 border-b border-border bg-background/90 backdrop-blur-md">
         <button
           onClick={() =>
