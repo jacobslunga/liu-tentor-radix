@@ -21,7 +21,7 @@ interface ChatWindowProps {
 }
 
 const STORAGE_KEY = "chat_input_draft";
-const MODEL_STORAGE_KEY = "chat_model_id_preference_v2";
+const MODEL_STORAGE_KEY = "chat_model_id_preference_v3";
 
 const contentVariants: Variants = {
   hidden: { opacity: 0 },
@@ -78,7 +78,7 @@ const ChatWindow: FC<ChatWindowProps> = ({
   const [input, setInput] = useState("");
   const [giveDirectAnswer, setGiveDirectAnswer] = useState(true);
   const [selectedModelId, setSelectedModelId] =
-    useState<string>("claude-haiku");
+    useState<string>("claude-sonnet");
   const [isDraftLoaded, setIsDraftLoaded] = useState(false);
   const [quotedContext, setQuotedContext] = useState("");
 
