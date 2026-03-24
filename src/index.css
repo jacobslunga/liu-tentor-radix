@@ -16,7 +16,6 @@
 }
 
 @theme {
-  --font-sans: "Rethink Sans", sans-serif;
   --font-logo: "Canela", serif;
   --font-mono: monospace;
 }
@@ -149,7 +148,6 @@
 
   body {
     font-family:
-      "Rethink Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
