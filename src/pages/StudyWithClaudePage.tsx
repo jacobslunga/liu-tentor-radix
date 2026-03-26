@@ -111,7 +111,7 @@ export default function StudyWithClaudePage() {
           </Link>
         </div>
 
-        <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:tracking-tight prose-h1:text-2xl prose-h1:font-semibold prose-h2:text-lg prose-h2:font-medium prose-p:text-[15px] prose-p:leading-relaxed prose-li:text-[15px] prose-a:text-primary prose-hr:my-6">
+        <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:tracking-tight prose-h1:text-2xl prose-h1:font-medium prose-h2:text-lg prose-h2:font-light prose-p:text-[15px] prose-p:leading-relaxed prose-li:text-[15px] prose-a:text-primary prose-hr:my-6">
           <ReactMarkdown>{isSv ? contentSv : contentEn}</ReactMarkdown>
         </article>
       </main>

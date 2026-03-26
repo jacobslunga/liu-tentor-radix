@@ -8,7 +8,10 @@ export const markdownComponents: Partial<Components> = {
     <a
       {...props}
       rel="noopener noreferrer"
-      className={cn("underline underline-offset-4", className)}
+      className={cn(
+        "text-primary underline underline-offset-2 hover:opacity-75 transition-opacity",
+        className,
+      )}
     />
   ),
 
@@ -19,7 +22,7 @@ export const markdownComponents: Partial<Components> = {
       children?: ReactNode;
     }>;
     return (
-      <div className="animate-stream-block">
+      <div className="animate-stream-block my-3">
         <CodeBlock className={child?.props?.className}>
           {child?.props?.children}
         </CodeBlock>
@@ -31,7 +34,7 @@ export const markdownComponents: Partial<Components> = {
     const isInline = !className?.includes("language-");
     if (isInline) {
       return (
-        <code className="bg-muted/50 text-foreground px-1.5 py-0.5 rounded text-[1.03rem]">
+        <code className="bg-muted text-foreground/90 px-1 py-px rounded-sm text-[0.875em] font-mono">
           {children}
         </code>
       );
@@ -47,7 +50,7 @@ export const markdownComponents: Partial<Components> = {
     <p
       {...props}
       className={cn(
-        "animate-stream-block my-2 text-pretty wrap-break-word",
+        "animate-stream-block my-2 font-light text-base leading-relaxed text-pretty wrap-break-word",
         className,
       )}
     />
@@ -57,7 +60,7 @@ export const markdownComponents: Partial<Components> = {
     <ul
       {...props}
       className={cn(
-        "animate-stream-block my-2 ml-6 list-disc text-pretty wrap-break-word",
+        "animate-stream-block my-2 ml-5 list-disc text-base leading-relaxed text-pretty wrap-break-word space-y-0.5",
         className,
       )}
     />
@@ -67,7 +70,7 @@ export const markdownComponents: Partial<Components> = {
     <ol
       {...props}
       className={cn(
-        "animate-stream-block my-2 ml-6 list-decimal text-pretty wrap-break-word",
+        "animate-stream-block my-2 ml-5 list-decimal text-base leading-relaxed text-pretty wrap-break-word space-y-0.5",
         className,
       )}
     />
@@ -77,7 +80,7 @@ export const markdownComponents: Partial<Components> = {
     <li
       {...props}
       className={cn(
-        "animate-stream-block text-pretty wrap-break-word",
+        "animate-stream-block text-base text-pretty wrap-break-word",
         className,
       )}
     />
@@ -86,32 +89,57 @@ export const markdownComponents: Partial<Components> = {
   h1: ({ className, node, ...props }: any) => (
     <h1
       {...props}
-      className={cn("animate-stream-block font-semibold text-3xl", className)}
+      className={cn(
+        "animate-stream-block font-medium text-xl leading-snug mt-6 mb-2",
+        className,
+      )}
     />
   ),
 
   h2: ({ className, node, ...props }: any) => (
-    <h2 {...props} className={cn("animate-stream-block text-2xl", className)} />
+    <h2
+      {...props}
+      className={cn(
+        "animate-stream-block font-medium text-lg leading-snug mt-5 mb-1.5",
+        className,
+      )}
+    />
   ),
 
   h3: ({ className, node, ...props }: any) => (
-    <h3 {...props} className={cn("animate-stream-block text-xl", className)} />
+    <h3
+      {...props}
+      className={cn(
+        "animate-stream-block font-semibold text-[1.0625rem] leading-snug mt-4 mb-1",
+        className,
+      )}
+    />
   ),
 
   hr: ({ className, node, ...props }: any) => (
-    <hr {...props} className={cn("border-foreground!", className)} />
+    <hr {...props} className={cn("my-5 border-foreground/40!", className)} />
   ),
 
   br: ({ className, node, ...props }: any) => (
-    <br {...props} className={cn("border-foreground!", className)} />
+    <br {...props} className={cn(className)} />
+  ),
+
+  blockquote: ({ className, node, ...props }: any) => (
+    <blockquote
+      {...props}
+      className={cn(
+        "animate-stream-block border-l-2 border-border pl-3 my-3 text-muted-foreground text-[0.9375rem] italic",
+        className,
+      )}
+    />
   ),
 
   table: ({ className, node, ...props }: any) => (
-    <div className="animate-stream-block mt-5 mb-3 w-full overflow-x-auto overflow-y-hidden rounded-lg border border-border bg-card">
+    <div className="animate-stream-block mt-4 mb-3 w-full overflow-x-auto overflow-y-hidden rounded-lg border border-border bg-card">
       <table
         {...props}
         className={cn(
-          "min-w-full mt-0 border-collapse text-left text-sm text-pretty",
+          "min-w-full mt-0 border-collapse text-left text-[0.875rem] text-pretty",
           className,
         )}
       />
@@ -121,7 +149,10 @@ export const markdownComponents: Partial<Components> = {
   thead: ({ className, node, ...props }: any) => (
     <thead
       {...props}
-      className={cn("bg-muted/30 text-muted-foreground", className)}
+      className={cn(
+        "bg-muted/30 text-muted-foreground text-xs font-semibold uppercase tracking-wide",
+        className,
+      )}
     />
   ),
 

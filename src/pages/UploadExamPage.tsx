@@ -26,10 +26,10 @@ const UploadExamPage = () => {
 
   return (
     <div className="w-full max-w-2xl mx-auto py-8">
-      <h1 className="text-3xl font-medium  text-foreground mb-2">
+      <h1 className="text-3xl font-light  text-foreground mb-2">
         {t("uploadTitle")}
       </h1>
-      <p className="text-sm text-muted-foreground mb-6">
+      <p className="text-sm font-light text-muted-foreground mb-6">
         {t("uploadDescription")}
       </p>
 

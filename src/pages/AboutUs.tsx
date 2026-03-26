@@ -1,50 +1,50 @@
-import { FC, useEffect } from 'react';
+import { FC, useEffect } from "react";
 
-import { useLanguage } from '@/context/LanguageContext';
-import { useMetadata } from '@/hooks/useMetadata';
+import { useLanguage } from "@/context/LanguageContext";
+import { useMetadata } from "@/hooks/useMetadata";
 
 const OmOss: FC = () => {
   const { language } = useLanguage();
 
   useMetadata({
-    title: `LiU Tentor | ${language === 'sv' ? 'Om oss' : 'About Us'}`,
+    title: `LiU Tentor | ${language === "sv" ? "Om oss" : "About Us"}`,
     description:
-      language === 'sv'
-        ? 'Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet.'
-        : 'Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.',
+      language === "sv"
+        ? "Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet."
+        : "Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.",
     keywords:
-      'om oss, about us, team, Linköpings Universitet, LiU, studenter, mission',
-    ogTitle: `LiU Tentor | ${language === 'sv' ? 'Om oss' : 'About Us'}`,
+      "om oss, about us, team, Linköpings Universitet, LiU, studenter, mission",
+    ogTitle: `LiU Tentor | ${language === "sv" ? "Om oss" : "About Us"}`,
     ogDescription:
-      language === 'sv'
-        ? 'Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet.'
-        : 'Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.',
-    ogType: 'website',
-    twitterCard: 'summary',
-    twitterTitle: `LiU Tentor | ${language === 'sv' ? 'Om oss' : 'About Us'}`,
+      language === "sv"
+        ? "Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet."
+        : "Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.",
+    ogType: "website",
+    twitterCard: "summary",
+    twitterTitle: `LiU Tentor | ${language === "sv" ? "Om oss" : "About Us"}`,
     twitterDescription:
-      language === 'sv'
-        ? 'Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet.'
-        : 'Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.',
-    robots: 'index, follow',
+      language === "sv"
+        ? "Lär känna teamet bakom LiU Tentor och vår mission att göra tentorstudering enklare för alla studenter vid Linköpings universitet."
+        : "Meet the team behind LiU Tentor and our mission to make exam preparation easier for all students at Linköping University.",
+    robots: "index, follow",
   });
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }, []);
 
   return (
-    <div className='w-full max-w-3xl'>
-      <h1 className='text-3xl font-medium text-foreground mb-2'>
-        {language === 'sv' ? 'Om oss' : 'About Us'}
+    <div className="w-full max-w-3xl">
+      <h1 className="text-3xl font-light text-foreground mb-2">
+        {language === "sv" ? "Om oss" : "About Us"}
       </h1>
-      <p className='text-sm text-muted-foreground mb-6'>
-        {language === 'sv'
-          ? 'Studentdrivet projekt för enklare tentplugg'
-          : 'Student-driven project for easier exam studying'}
+      <p className="text-sm font-light text-muted-foreground mb-6">
+        {language === "sv"
+          ? "Studentdrivet projekt för enklare tentplugg"
+          : "Student-driven project for easier exam studying"}
       </p>
-      <div className='text-sm text-foreground/80 leading-relaxed space-y-4'>
-        {language === 'sv' ? (
+      <div className="text-sm text-foreground/80 font-light leading-relaxed space-y-4">
+        {language === "sv" ? (
           <>
             <p>
               LiU Tentor är ett ideellt initiativ som startades av några

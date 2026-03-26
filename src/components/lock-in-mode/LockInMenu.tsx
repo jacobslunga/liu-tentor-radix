@@ -84,7 +84,7 @@ export const LockInMenu: React.FC<LockInMenuProps> = ({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
+          <DropdownMenuLabel className="text-xs font-light text-muted-foreground">
             {t.selectTime}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />

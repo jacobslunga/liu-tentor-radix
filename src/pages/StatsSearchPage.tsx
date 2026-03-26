@@ -145,7 +145,7 @@ export default function StatsSearchPage() {
   if (isError || !courseCode)
     return (
       <div className="flex flex-col items-center justify-center w-full min-h-[60vh] gap-4 px-4">
-        <div className="text-lg text-center font-medium">
+        <div className="text-lg text-center font-light">
           {language === "sv"
             ? "Kunde inte hämta statistik"
             : "Failed to load stats"}
@@ -165,7 +165,7 @@ export default function StatsSearchPage() {
           <div className="flex flex-col gap-5 w-full min-w-0">
             <div className="flex flex-col gap-1">
               <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-                <span className="font-medium text-foreground/80">
+                <span className="font-light text-foreground/80">
                   {courseCode}
                 </span>
                 <span>/</span>
@@ -173,7 +173,7 @@ export default function StatsSearchPage() {
               </div>
 
               <h1
-                className={`font-semibold text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
+                className={`font-medium text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
                   courseName.length < 30
                     ? "text-3xl sm:text-4xl"
                     : courseName.length < 50
@@ -189,7 +189,7 @@ export default function StatsSearchPage() {
               <div className="p-5 border-b border-border/60 bg-muted/20">
                 <div className="flex items-center gap-2 mb-1">
                   <TrendUpIcon className="w-4 h-4 text-primary" weight="bold" />
-                  <h2 className="text-sm font-medium">
+                  <h2 className="text-sm font-light">
                     {language === "sv"
                       ? "Godkända över tid"
                       : "Pass Rate Over Time"}
@@ -268,7 +268,7 @@ export default function StatsSearchPage() {
                     className="w-4 h-4 text-primary"
                     weight="bold"
                   />
-                  <h2 className="text-sm font-medium">
+                  <h2 className="text-sm font-light">
                     {language === "sv"
                       ? "Betygsfördelning"
                       : "Grade Distribution"}
@@ -334,7 +334,7 @@ export default function StatsSearchPage() {
                           className="block w-2.5 h-2.5 rounded-full ring-2 ring-transparent"
                           style={{ background: d.color }}
                         />
-                        <span className="text-sm font-medium">
+                        <span className="text-sm font-light">
                           {language === "sv"
                             ? `Betyg ${d.label}`
                             : `Grade ${d.label}`}

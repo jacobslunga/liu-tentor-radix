@@ -44,7 +44,7 @@ const ShimmeringThinking = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="text-sm font-medium"
+          className="text-sm font-light"
         >
           <motion.span
             className="inline-block bg-linear-to-r from-muted-foreground/40 via-foreground to-muted-foreground/40 bg-size-[200%_auto] bg-clip-text text-transparent"
@@ -111,7 +111,7 @@ export const MessageBubble: FC<MessageBubbleProps> = memo(
         <div
           className={`${
             isUser
-              ? "bg-muted text-[1px]! text-foreground px-4 py-2.5 rounded-2xl max-w-[85%] w-fit"
+              ? "bg-muted text-[1px]! font-light text-foreground px-4 py-2.5 rounded-2xl max-w-[85%] w-fit"
               : "w-full px-1 py-2"
           }`}
           data-message-content

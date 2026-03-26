@@ -44,7 +44,7 @@ export default function InfoHeader() {
           viewTransition
         >
           <LogoIcon className="w-7 h-7" />
-          <span className="font-medium text-lg font-logo tracking-tighter">
+          <span className="font-light text-lg font-logo tracking-tighter">
             LiU Tentor
           </span>
         </Link>
@@ -56,9 +56,9 @@ export default function InfoHeader() {
               to={link.to}
               viewTransition
               className={cn(
-                "px-3 py-1.5 text-sm rounded-md transition-colors",
+                "px-3 py-1.5 font-light text-sm rounded-md transition-colors",
                 isCurrentPath(link.to)
-                  ? "bg-secondary text-foreground font-medium"
+                  ? "bg-secondary text-foreground font-light"
                   : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
               )}
             >
@@ -78,7 +78,7 @@ export default function InfoHeader() {
             <SheetHeader>
               <SheetTitle className="flex items-center gap-2">
                 <LogoIcon className="w-7 h-7" />
-                <span className="font-medium text-lg font-logo text-foreground/80 tracking-tighter">
+                <span className="font-light text-lg font-logo text-foreground/80 tracking-tighter">
                   LiU Tentor
                 </span>
               </SheetTitle>
@@ -93,7 +93,7 @@ export default function InfoHeader() {
                   className={cn(
                     "block px-3 py-2 text-sm rounded-md transition-colors",
                     isCurrentPath(link.to)
-                      ? "bg-secondary text-foreground font-medium"
+                      ? "bg-secondary text-foreground font-light"
                       : "text-muted-foreground hover:text-foreground hover:bg-secondary/50",
                   )}
                 >

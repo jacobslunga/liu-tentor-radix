@@ -58,7 +58,7 @@ export function DataTable({ data, activeFilters, onSortChange }: Props) {
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className={`px-3 py-2.5 h-9 text-[11px] font-medium text-muted-foreground/70 whitespace-nowrap ${
+                    className={`px-3 py-2.5 h-9 text-[11px] font-light text-muted-foreground/70 whitespace-nowrap ${
                       header.id === "exam_date"
                         ? "cursor-pointer hover:text-foreground transition-colors"
                         : ""

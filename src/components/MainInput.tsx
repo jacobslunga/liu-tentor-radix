@@ -251,7 +251,7 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
           onFocus={() => setFocusInput(true)}
           onBlur={() => setFocusInput(false)}
           autoFocus
-          className="min-w-0 w-full font-normal p-4 border-none bg-transparent text-md text-foreground/80 outline-none"
+          className="min-w-0 w-full font-light p-4 border-none bg-transparent text-md text-foreground/80 outline-none"
           placeholder={
             language === "sv" ? `Sök efter ${typed}` : `Search for ${typed}`
           }
@@ -278,7 +278,7 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
             </div>
           )}
 
-          <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium">
+          <div className="px-3 pt-3 pb-1 text-muted-foreground font-light">
             {t("allCourses")}
           </div>
           <div
@@ -318,7 +318,7 @@ const MainInput: React.FC<MainInputProps> = ({ focusInput, setFocusInput }) => {
                       handleSelectCourse(suggestion);
                     }}
                   >
-                    <span className="flex-1 font-normal">{suggestion}</span>
+                    <span className="flex-1 font-light">{suggestion}</span>
                   </div>
                 );
               })}

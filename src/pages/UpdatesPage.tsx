@@ -101,7 +101,7 @@ export default function UpdatesPage() {
   return (
     <div className="w-full max-w-3xl">
       {/* Header */}
-      <h1 className="text-3xl font-medium  text-foreground mb-2">
+      <h1 className="text-3xl font-light  text-foreground mb-2">
         {language === "sv" ? "Uppdateringar" : "Updates"}
       </h1>
       <p className="text-sm text-muted-foreground mb-8">
@@ -124,7 +124,7 @@ export default function UpdatesPage() {
                 },
               )}
             </time>
-            <h2 className="text-xl font-medium text-foreground mt-1 mb-2">
+            <h2 className="text-xl font-light text-foreground mt-1 mb-2">
               {language === "sv" ? update.title.sv : update.title.en}
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -144,7 +144,7 @@ export default function UpdatesPage() {
             : "Do you have suggestions for new features? "}
           <Link
             to="/feedback"
-            className="text-primary hover:underline font-medium"
+            className="text-primary hover:underline font-light"
           >
             {language === "sv" ? "Skicka feedback" : "Send feedback"}
           </Link>

@@ -15,6 +15,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "LiU Tentor Sans";
+  src: url("/fonts/Sohne.woff2") format("woff2");
+  font-weight: 100 500;
+  font-display: swap;
+  font-style: normal;
+}
+
 @theme {
   --font-logo: "Canela", serif;
   --font-mono: monospace;
@@ -148,7 +156,7 @@
 
   body {
     font-family:
-      "Inter",
+      "LiU Tentor Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
@@ -353,5 +361,6 @@
   }
   body {
     @apply bg-background text-foreground;
+    @apply font-light;
   }
 }

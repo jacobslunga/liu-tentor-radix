@@ -45,7 +45,7 @@ export default function HomePage() {
             viewTransition
             className="fixed top-0 left-1/2 -translate-x-1/2 z-10"
           >
-            <button className="flex active:scale-95 items-center gap-1.5 px-3 py-1 rounded-b-2xl bg-[#D97857] text-xs font-medium text-white transition-all duration-300 cursor-pointer backdrop-blur-xl hover:shadow-[0_0_20px_4px_rgba(217,120,87,0.5)]">
+            <button className="flex active:scale-95 items-center gap-1.5 px-3 py-1 rounded-b-2xl bg-[#D97857] text-xs font-light text-white transition-all duration-300 cursor-pointer backdrop-blur-xl hover:shadow-[0_0_20px_4px_rgba(217,120,87,0.5)]">
               <img
                 src="/llm-logos/claude-white.svg"
                 alt="Claude Logo"
@@ -59,7 +59,7 @@ export default function HomePage() {
           <div className="flex flex-col items-center space-y-2 mb-10">
             <div className="flex flex-row items-center justify-center space-x-2">
               <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-24 lg:h-24" />
-              <h1 className="text-4xl lg:text-5xl font-medium font-logo tracking-tighter">
+              <h1 className="text-4xl lg:text-5xl font-light font-logo tracking-tighter">
                 {t("homeTitle")}
               </h1>
             </div>

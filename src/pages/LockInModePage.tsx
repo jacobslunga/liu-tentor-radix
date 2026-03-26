@@ -184,7 +184,7 @@ const LockInModePage: React.FC = () => {
   if (detailError || !examDetail) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4">
-        <p className="text-destructive font-medium">Failed to load exam.</p>
+        <p className="text-destructive font-light">Failed to load exam.</p>
         <Button
           onClick={() => navigate("/", { viewTransition: true })}
           variant="outline"
@@ -203,7 +203,7 @@ const LockInModePage: React.FC = () => {
             <Timer
               className={`w-5 h-5 ${timeRemaining < 300000 ? "text-red-500 animate-pulse" : "text-primary"}`}
             />
-            <span className="font-mono text-xl font-bold tracking-widest tabular-nums">
+            <span className="font-mono text-xl font-medium tracking-widest tabular-nums">
               {formatTime(timeRemaining)}
             </span>
           </div>
@@ -263,7 +263,7 @@ const LockInModePage: React.FC = () => {
             <div className="p-4 rounded-lg bg-yellow-500/10 mb-2">
               <Pause className="w-16 h-16 text-yellow-500 fill-current" />
             </div>
-            <h2 className="text-4xl font-medium ">{t.paused}</h2>
+            <h2 className="text-4xl font-light ">{t.paused}</h2>
             <div className="flex flex-col items-center gap-2">
               <p className="text-muted-foreground text-lg">
                 {examDetail.exam.course_code}

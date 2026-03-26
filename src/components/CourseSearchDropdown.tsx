@@ -260,11 +260,11 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
           onKeyDown={handleKeyDown}
           onFocus={handleFocus}
           onBlur={handleBlur}
-          className={`w-full ${sizeClasses[size]} pl-10 pr-10 rounded-full`}
+          className={`w-full ${sizeClasses[size]} font-light pl-10 pr-10 rounded-full`}
         />
         {!courseCode && (
           <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none hidden sm:flex items-center gap-1">
-            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+            <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-light text-muted-foreground opacity-100">
               <span className="text-xs">/</span>
             </kbd>
           </div>
@@ -297,7 +297,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
             )}
             {recentSearches.length > 0 && !courseCode.trim() && (
               <>
-                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs">
+                <div className="px-3 pt-3 pb-1 text-muted-foreground font-light text-xs">
                   {t("recentSearches")}
                 </div>
                 {recentSearches.map((suggestion, index) => (
@@ -325,7 +325,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                 {recentSearches.length > 0 && !courseCode.trim() && (
                   <div className="border-t mx-2 my-1" />
                 )}
-                <div className="px-3 pt-3 pb-1 text-muted-foreground font-medium text-xs">
+                <div className="px-3 pt-3 pb-1 text-muted-foreground font-light text-xs">
                   {t("allCourses")}
                 </div>
                 {suggestions.slice(0, 10).map((suggestion, index) => (
@@ -340,7 +340,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <span className="flex-1 font-normal">{suggestion}</span>
+                    <span className="flex-1 font-light">{suggestion}</span>
                     <ArrowBendUpRightIcon
                       weight="bold"
                       className="w-4 h-4 opacity-50"

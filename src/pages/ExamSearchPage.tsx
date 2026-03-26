@@ -34,9 +34,9 @@ const NotFoundState: React.FC<{
   const { language } = useLanguage();
   return (
     <div className="w-full max-w-2xl mx-auto mt-12 text-center">
-      <h1 className="text-2xl font-medium mb-4">
+      <h1 className="text-2xl font-light mb-4">
         {language === "sv" ? "Inga tentor hittades för" : "No exams found for"}{" "}
-        <span className="font-medium text-primary">"{courseCode}"</span>
+        <span className="font-light text-primary">"{courseCode}"</span>
       </h1>
       {suggestions.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 text-sm text-muted-foreground mb-10">
@@ -128,7 +128,7 @@ const ExamSearchPage: FC = () => {
             >
               <div className="flex flex-col gap-1">
                 <div className="flex items-center gap-2 text-sm text-muted-foreground/70">
-                  <span className="font-medium text-foreground/80">
+                  <span className="font-light text-foreground/80">
                     {courseCode}
                   </span>
                   <span>/</span>
@@ -136,7 +136,7 @@ const ExamSearchPage: FC = () => {
                 </div>
 
                 <h1
-                  className={`font-semibold text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
+                  className={`font-medium text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
                     courseName.length < 30
                       ? "text-3xl sm:text-4xl"
                       : courseName.length < 50
@@ -210,7 +210,7 @@ const ExamSearchPage: FC = () => {
                           <CardsThreeIcon weight="bold" className="h-4 w-4" />
                           Quiz
                         </Button>
-                        <div className="bg-red-500 text-white text-[9px] font-medium px-1.5 py-0.5 rounded-full absolute -top-2 -right-2">
+                        <div className="bg-red-500 text-white text-[9px] font-light px-1.5 py-0.5 rounded-full absolute -top-2 -right-2">
                           <span>Nyhet</span>
                         </div>
                       </Link>

@@ -1,7 +1,7 @@
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from "framer-motion";
 
-import { CursorClickIcon } from '@phosphor-icons/react';
-import { useTranslation } from '@/hooks/useTranslation';
+import { CursorClickIcon } from "@phosphor-icons/react";
+import { useTranslation } from "@/hooks/useTranslation";
 
 interface Props {
   isBlurred: boolean;
@@ -19,10 +19,10 @@ const SolutionOverlay = ({ isBlurred, className }: Props) => {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.1 }}
-          className={`absolute inset-0 z-30 flex flex-col items-center justify-center bg-background/30 backdrop-blur-sm ${className ?? ''}`}
+          className={`absolute inset-0 z-30 flex flex-col items-center justify-center bg-background/30 backdrop-blur-sm ${className ?? ""}`}
         >
-          <p className='font-medium text-center'>{t('mouseOverDescription')}</p>
-          <CursorClickIcon weight='regular' className='w-7 h-7 mt-2' />
+          <p className="font-light text-center">{t("mouseOverDescription")}</p>
+          <CursorClickIcon weight="regular" className="w-7 h-7 mt-2" />
         </motion.div>
       )}
     </AnimatePresence>

@@ -33,7 +33,7 @@ const PrivacyPolicy: FC = () => {
     items,
   }) => (
     <div className="mb-6">
-      <h2 className="text-lg font-medium text-foreground mb-2 flex items-center gap-2">
+      <h2 className="text-lg font-light text-foreground mb-2 flex items-center gap-2">
         {title}
       </h2>
       <p className="text-sm text-foreground/80 leading-relaxed">{content}</p>
@@ -49,7 +49,7 @@ const PrivacyPolicy: FC = () => {
 
   return (
     <div className="w-full max-w-3xl">
-      <h1 className="text-3xl font-medium  text-foreground mb-1">
+      <h1 className="text-3xl font-light  text-foreground mb-1">
         {t("privacyPolicyTitle")}
       </h1>
       <p className="text-xs text-muted-foreground mb-6">
@@ -154,7 +154,7 @@ const PrivacyPolicy: FC = () => {
       <div className="mt-8 pt-6 border-t space-y-2">
         <div className="flex items-center gap-2">
           <MailboxIcon weight="duotone" className="h-5 w-5 text-primary" />
-          <h3 className="text-sm font-medium">
+          <h3 className="text-sm font-light">
             {t("contactUs") || "Contact Us"}
           </h3>
         </div>
