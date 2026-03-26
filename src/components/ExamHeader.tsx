@@ -1,7 +1,6 @@
 import {
   ArrowLeftIcon,
   CaretRightIcon,
-  ChatDotsIcon,
   CheckIcon,
   DownloadSimpleIcon,
   CaretDownIcon,
@@ -25,17 +24,16 @@ import { useTranslation } from "@/hooks/useTranslation";
 import { motion } from "framer-motion";
 import { LockInMenu } from "./lock-in-mode/LockInMenu";
 import { LockInModeManager } from "@/lib/lockInMode";
-import { useChatState } from "@/hooks/useChatState";
-import { SpinnerIcon } from "@phosphor-icons/react";
+// import { useChatState } from "@/hooks/useChatState";
 import { downloadFile } from "@/lib/utils";
 
 interface Props {
   exams: Exam[];
-  setIsChatOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsChatOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   onToggleChat?: () => void;
 }
 
-const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
+const ExamHeader: FC<Props> = ({ exams }) => {
   const { language } = useLanguage();
   const { t } = useTranslation();
   const { courseCode = "", examId = "" } = useParams<{
@@ -143,14 +141,14 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
     await downloadFile(solutionPdfUrl, fileName);
   };
 
-  let isLoading = false;
-  try {
-    const chatState = useChatState();
-    isLoading = chatState.isLoading;
-  } catch (e) {
-    console.error("Failed to get chat state:", e);
-    isLoading = false;
-  }
+  // let isLoading = false;
+  // try {
+  //   const chatState = useChatState();
+  //   isLoading = chatState.isLoading;
+  // } catch (e) {
+  //   console.error("Failed to get chat state:", e);
+  //   isLoading = false;
+  // }
 
   return (
     <motion.div
@@ -268,7 +266,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
       </div>
 
       <div className="flex items-center gap-2">
-        <Button
+        {/* <Button
           onClick={onToggleChat || (() => setIsChatOpen(true))}
           variant="outline"
           size="sm"
@@ -285,7 +283,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
               {language === "sv" ? "Fråga Chatten" : "Ask Chat"}
             </>
           )}
-        </Button>
+        </Button> */}
 
         <LockInMenu disabled={!selectedExam} onStartExam={handleStartLockIn} />
 
