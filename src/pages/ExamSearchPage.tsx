@@ -12,7 +12,6 @@ import { useCourseExams } from "@/api";
 import { useLanguage } from "@/context/LanguageContext";
 import { useTranslation } from "@/hooks/useTranslation";
 import { useMetadata } from "@/hooks/useMetadata";
-import { CardsThreeIcon } from "@phosphor-icons/react";
 
 const LoadingSpinner = () => {
   const { t } = useTranslation();
@@ -201,7 +200,7 @@ const ExamSearchPage: FC = () => {
                         </Button>
                       </Link>
 
-                      <Link
+                      {/* <Link
                         to={`/quiz/${courseCode}`}
                         viewTransition
                         className="relative"
@@ -213,7 +212,7 @@ const ExamSearchPage: FC = () => {
                         <div className="bg-red-500 text-white text-[9px] font-light px-1.5 py-0.5 rounded-full absolute -top-2 -right-2">
                           <span>Nyhet</span>
                         </div>
-                      </Link>
+                      </Link> */}
                     </div>
                   </div>
                 </div>

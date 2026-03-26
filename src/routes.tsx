@@ -14,7 +14,7 @@ import ExamSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 import UpdatesPage from "@/pages/UpdatesPage";
 import LockInModePage from "@/pages/LockInModePage";
-import QuizPage from "@/pages/QuizPage";
+// import QuizPage from "@/pages/QuizPage";
 
 const routes: RouteObject[] = [
   {
@@ -25,7 +25,7 @@ const routes: RouteObject[] = [
       { path: "*", element: <NotFoundPage /> },
 
       { path: "lock-in-mode/:examId", element: <LockInModePage /> },
-      { path: "quiz/:courseCode", element: <QuizPage /> },
+      // { path: "quiz/:courseCode", element: <QuizPage /> },
       {
         path: "search",
         element: <SearchLayout />,
