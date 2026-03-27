@@ -58,7 +58,7 @@ const ShimmeringText = ({ text }: { text: string }) => (
       className="flex items-center justify-center"
     >
       <motion.span
-        className="inline-block bg-linear-to-r from-muted-foreground/40 via-foreground to-muted-foreground/40 bg-size-[200%_auto] bg-clip-text text-transparent text-sm font-normal"
+        className="inline-block bg-linear-to-r from-muted-foreground/40 via-foreground to-muted-foreground/40 bg-size-[200%_auto] bg-clip-text text-transparent text-sm font-medium"
         animate={{
           backgroundPosition: ["200% center", "-200% center"],
         }}
@@ -375,10 +375,10 @@ const QuizPage: FC = () => {
         </Button>
 
         <div>
-          <p className="text-[10px] font-normal uppercase tracking-[0.2em] text-muted-foreground/70">
+          <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/70">
             {language === "sv" ? "Quizläge" : "Quiz mode"}
           </p>
-          <p className="mt-1 text-2xl font-normal tracking-tight">
+          <p className="mt-1 text-2xl font-medium tracking-tight">
             {courseCode}
           </p>
         </div>
@@ -388,7 +388,7 @@ const QuizPage: FC = () => {
 
       <div className="flex flex-1 flex-col gap-4 p-5">
         <div className="space-y-2.5">
-          <label className="text-[10px] font-normal uppercase tracking-[0.2em] text-muted-foreground/70">
+          <label className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground/70">
             {language === "sv" ? "Historik" : "History"}
           </label>
 
@@ -453,8 +453,8 @@ const QuizPage: FC = () => {
       <div className="mt-auto border-t border-border/40 p-5">
         <p className="text-[11px] leading-relaxed text-muted-foreground/50">
           {language === "sv"
-            ? "Beta — AI-genererade frågor kan innehålla fel."
-            : "Beta — AI-generated questions may contain errors."}
+            ? "Beta - AI-genererade frågor kan innehålla fel."
+            : "Beta - AI-generated questions may contain errors."}
         </p>
       </div>
     </aside>
@@ -466,7 +466,7 @@ const QuizPage: FC = () => {
     mainContent = (
       <div className="flex min-h-[60vh] flex-col items-center justify-center py-12 animate-in fade-in duration-500">
         <div className="w-full max-w-lg text-center">
-          <h1 className="text-3xl font-normal tracking-tight">
+          <h1 className="text-3xl font-medium tracking-tight">
             {language === "sv" ? "Skapa ett quiz" : "Create a quiz"}
           </h1>
 
@@ -523,7 +523,7 @@ const QuizPage: FC = () => {
     mainContent = (
       <div className="flex min-h-[60vh] flex-col items-center justify-center py-12 animate-in fade-in duration-500">
         <div className="text-center">
-          <p className="text-lg font-normal">
+          <p className="text-lg font-medium">
             {language === "sv"
               ? "Inga sparade quiz för kursen ännu"
               : "No saved quizzes for this course yet"}
@@ -548,17 +548,17 @@ const QuizPage: FC = () => {
         <div className="mb-8 rounded-3xl border bg-card p-6 shadow-sm sm:p-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <p className="mb-1 text-sm font-normal uppercase tracking-wider text-muted-foreground">
+              <p className="mb-1 text-sm font-medium uppercase tracking-wider text-muted-foreground">
                 {language === "sv" ? "Resultat" : "Result"}
               </p>
-              <h1 className="text-4xl font-normal">
+              <h1 className="text-4xl font-medium">
                 {score}{" "}
-                <span className="text-2xl font-normal text-muted-foreground">
+                <span className="text-2xl font-medium text-muted-foreground">
                   / {questionCount}
                 </span>
               </h1>
             </div>
-            <Badge className="px-4 py-1.5 text-lg font-normal shadow-sm">
+            <Badge className="px-4 py-1.5 text-lg font-medium shadow-sm">
               {pct}%
             </Badge>
           </div>
@@ -616,10 +616,10 @@ const QuizPage: FC = () => {
                         className={cn(
                           "rounded-2xl border px-4 py-3 text-base",
                           isAnswer &&
-                            "border-emerald-500/50 bg-emerald-500/10 font-normal",
+                            "border-emerald-500/50 bg-emerald-500/10 font-medium",
                           isSelected &&
                             !isAnswer &&
-                            "border-rose-500/50 bg-rose-500/10 font-normal",
+                            "border-rose-500/50 bg-rose-500/10 font-medium",
                           !isAnswer && !isSelected && "bg-muted/30",
                         )}
                       >
@@ -639,7 +639,7 @@ const QuizPage: FC = () => {
       <div className="animate-in fade-in duration-500">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">
-            <h1 className="text-2xl font-normal tracking-tight sm:text-3xl">
+            <h1 className="text-2xl font-medium tracking-tight sm:text-3xl">
               {language === "sv" ? "Testa vad du kan" : "Test what you know"}
             </h1>
           </div>
@@ -658,11 +658,11 @@ const QuizPage: FC = () => {
 
         <div className="pb-10 sm:pb-12">
           <div className="mb-5 flex items-center justify-between">
-            <Badge variant="outline" className="px-3 py-1 font-normal">
+            <Badge variant="outline" className="px-3 py-1 font-medium">
               {language === "sv" ? "Fråga" : "Question"} {currentIndex + 1} /{" "}
               {questionCount}
             </Badge>
-            <span className="text-sm font-normal text-muted-foreground">
+            <span className="text-sm font-medium text-muted-foreground">
               {answeredCount}/{questionCount}{" "}
               {language === "sv" ? "besvarade" : "answered"}
             </span>
@@ -693,7 +693,7 @@ const QuizPage: FC = () => {
                   >
                     <span
                       className={cn(
-                        "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-normal transition-colors sm:h-8 sm:w-8",
+                        "inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border text-sm font-medium transition-colors sm:h-8 sm:w-8",
                         selected
                           ? "border-primary bg-primary text-primary-foreground"
                           : "border-muted-foreground/30 bg-background group-hover:border-primary/40",

@@ -1,6 +1,6 @@
 import { FC, useMemo, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
-import { SpinnerIcon } from "@phosphor-icons/react";
+import { CardsThreeIcon, SpinnerIcon } from "@phosphor-icons/react";
 import { ChartPieSliceIcon, UploadIcon } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -200,7 +200,7 @@ const ExamSearchPage: FC = () => {
                         </Button>
                       </Link>
 
-                      {/* <Link
+                      <Link
                         to={`/quiz/${courseCode}`}
                         viewTransition
                         className="relative"
@@ -209,10 +209,7 @@ const ExamSearchPage: FC = () => {
                           <CardsThreeIcon weight="bold" className="h-4 w-4" />
                           Quiz
                         </Button>
-                        <div className="bg-red-500 text-white text-[9px] font-normal px-1.5 py-0.5 rounded-full absolute -top-2 -right-2">
-                          <span>Nyhet</span>
-                        </div>
-                      </Link> */}
+                      </Link>
                     </div>
                   </div>
                 </div>
