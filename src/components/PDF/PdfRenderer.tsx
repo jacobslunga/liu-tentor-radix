@@ -16,8 +16,10 @@ import {
   RenderLayer,
   RenderPluginPackage,
 } from "@embedpdf/plugin-render/react";
-import { InteractionManagerPluginPackage } from "@embedpdf/plugin-interaction-manager/react";
-import { PagePointerProvider } from "@embedpdf/plugin-interaction-manager/react";
+import {
+  InteractionManagerPluginPackage,
+  PagePointerProvider,
+} from "@embedpdf/plugin-interaction-manager/react";
 import { Rotate, RotatePluginPackage } from "@embedpdf/plugin-rotate/react";
 import {
   SelectionLayer,
@@ -42,14 +44,6 @@ const THEME_CONFIG: Record<string, { filter: string } | undefined> = {
 const SELECTION_COLOR: Record<string, string> = {
   light: "oklch(0.6193 0.1154 172.06 / 0.28)",
   dark: "oklch(0.8332 0.088 144.73 / 0.35)",
-};
-
-const ConditionalWrapper: FC<{
-  condition: boolean;
-  wrapper: (children: React.ReactNode) => React.ReactNode;
-  children: React.ReactNode;
-}> = ({ condition, wrapper, children }) => {
-  return <>{condition ? wrapper(children) : children}</>;
 };
 
 const KeyboardCopyHandler: FC<{
@@ -133,17 +127,13 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       createPluginRegistration(ZoomPluginPackage, {
         defaultZoomLevel: determineZoomMode(),
       }),
-      ...(!isMobile
-        ? [
-            createPluginRegistration(InteractionManagerPluginPackage),
-            createPluginRegistration(SelectionPluginPackage, {
-              toleranceFactor: 2.0,
-              minSelectionDragDistance: 5,
-            }),
-          ]
-        : []),
+      createPluginRegistration(InteractionManagerPluginPackage),
+      createPluginRegistration(SelectionPluginPackage, {
+        toleranceFactor: 2.0,
+        minSelectionDragDistance: 5,
+      }),
     ];
-  }, [pdfUrl, layoutMode, windowWidth, isMobile]);
+  }, [pdfUrl, layoutMode, windowWidth]);
 
   if (!pdfUrl) return null;
 
@@ -167,14 +157,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
       <EmbedPDF engine={engine} plugins={plugins}>
         {({ activeDocumentId }) =>
           activeDocumentId && (
-            <ConditionalWrapper
-              condition={!isMobile}
-              wrapper={(children) => (
-                <KeyboardCopyHandler documentId={activeDocumentId}>
-                  {children}
-                </KeyboardCopyHandler>
-              )}
-            >
+            <KeyboardCopyHandler documentId={activeDocumentId}>
               <DocumentContent documentId={activeDocumentId}>
                 {({ isLoaded }) =>
                   isLoaded ? (
@@ -184,7 +167,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                     >
                       <ZoomGestureWrapper
                         documentId={activeDocumentId}
-                        enablePinch={!isMobile}
+                        enablePinch={isMobile}
                         enableWheel={!isMobile}
                       >
                         <Scroller
@@ -255,7 +238,7 @@ const PdfRenderer: FC<PdfRendererProps> = ({
                   )
                 }
               </DocumentContent>
-            </ConditionalWrapper>
+            </KeyboardCopyHandler>
           )
         }
       </EmbedPDF>

@@ -14,12 +14,14 @@ import ExamSearchPage from "@/pages/ExamSearchPage";
 import UploadExamPage from "@/pages/UploadExamPage";
 import UpdatesPage from "@/pages/UpdatesPage";
 import LockInModePage from "@/pages/LockInModePage";
+import ErrorPage from "./pages/ErrorPage";
 // import QuizPage from "@/pages/QuizPage";
 
 const routes: RouteObject[] = [
   {
     path: "/",
     element: <MainLayout />,
+    errorElement: <ErrorPage />,
     children: [
       { index: true, element: <HomePage /> },
       { path: "*", element: <NotFoundPage /> },
