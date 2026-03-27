@@ -62,18 +62,18 @@ const GROUP_META: Record<string, { logo: string; label: string }> = {
 };
 
 const MODELS: Model[] = [
-  {
-    id: "claude-sonnet",
-    name: "Claude Sonnet",
-    provider: "anthropic",
-    group: "Claude",
-  },
-  {
-    id: "claude-haiku",
-    name: "Claude Haiku",
-    provider: "anthropic",
-    group: "Claude",
-  },
+  // {
+  //   id: "claude-sonnet",
+  //   name: "Claude Sonnet",
+  //   provider: "anthropic",
+  //   group: "Claude",
+  // },
+  // {
+  //   id: "claude-haiku",
+  //   name: "Claude Haiku",
+  //   provider: "anthropic",
+  //   group: "Claude",
+  // },
   {
     id: "gemini-3.1-pro-preview",
     name: "Gemini 3.1 Pro",

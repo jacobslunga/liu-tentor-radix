@@ -1,4 +1,4 @@
-import { FC, useEffect } from "react";
+import { FC, useEffect, useRef, useCallback } from "react";
 
 import { Button } from "@/components/ui/button";
 import ExamHeader from "@/components/ExamHeader";
@@ -12,13 +12,14 @@ import { useCourseExams, useExamDetail } from "@/api";
 import useLayoutMode from "@/stores/LayoutModeStore";
 import { useMetadata } from "@/hooks/useMetadata";
 import { useParams } from "react-router-dom";
-// import { useHotkeys } from "react-hotkeys-hook";
-// import { useChatWindow } from "@/context/ChatWindowContext";
+import { useHotkeys } from "react-hotkeys-hook";
+import { useChatWindow } from "@/context/ChatWindowContext";
 import { ChatProvider } from "@/context/ChatContext";
+import ChatWindow from "@/components/AI/chat/ChatWindow";
 
 const ExamPage: FC = () => {
   const { layoutMode } = useLayoutMode();
-  // const { showChatWindow, setShowChatWindow } = useChatWindow();
+  const { showChatWindow, setShowChatWindow } = useChatWindow();
 
   const { courseCode = "", examId = "" } = useParams<{
     courseCode: string;
@@ -27,39 +28,39 @@ const ExamPage: FC = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // setShowChatWindow(false);
+    setShowChatWindow(false);
   }, [examId]);
 
-  // const isAnimatingRef = useRef(false);
-  // const ANIMATION_DURATION = 420;
+  const isAnimatingRef = useRef(false);
+  const ANIMATION_DURATION = 420;
 
-  // const handleCloseChat = useCallback(() => {
-  //   if (isAnimatingRef.current) return;
-  //   isAnimatingRef.current = true;
-  //   setShowChatWindow(false);
-  //   setTimeout(() => {
-  //     isAnimatingRef.current = false;
-  //   }, ANIMATION_DURATION);
-  // }, [setShowChatWindow]);
+  const handleCloseChat = useCallback(() => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+    setShowChatWindow(false);
+    setTimeout(() => {
+      isAnimatingRef.current = false;
+    }, ANIMATION_DURATION);
+  }, [setShowChatWindow]);
 
-  // const handleToggleChat = useCallback(() => {
-  //   if (isAnimatingRef.current) return;
-  //   isAnimatingRef.current = true;
-  //   setShowChatWindow((prev) => !prev);
-  //   setTimeout(() => {
-  //     isAnimatingRef.current = false;
-  //   }, ANIMATION_DURATION);
-  // }, [setShowChatWindow]);
+  const handleToggleChat = useCallback(() => {
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+    setShowChatWindow((prev) => !prev);
+    setTimeout(() => {
+      isAnimatingRef.current = false;
+    }, ANIMATION_DURATION);
+  }, [setShowChatWindow]);
 
-  // useHotkeys(
-  //   "c",
-  //   (e) => {
-  //     e.preventDefault();
-  //     handleToggleChat();
-  //   },
-  //   { preventDefault: true },
-  //   [handleToggleChat],
-  // );
+  useHotkeys(
+    "c",
+    (e) => {
+      e.preventDefault();
+      handleToggleChat();
+    },
+    { preventDefault: true },
+    [handleToggleChat],
+  );
 
   const {
     courseData,
@@ -116,8 +117,8 @@ const ExamPage: FC = () => {
       <ChatProvider examDetail={examDetail}>
         <ExamHeader
           exams={courseData.exams}
-          // setIsChatOpen={setShowChatWindow}
-          // onToggleChat={handleToggleChat}
+          setIsChatOpen={setShowChatWindow}
+          onToggleChat={handleToggleChat}
         />
 
         <div className="w-full mt-0 h-screen relative bg-background hidden lg:flex flex-row overflow-hidden">
@@ -135,11 +136,11 @@ const ExamPage: FC = () => {
           </div>
         </div>
 
-        {/* <ChatWindow
+        <ChatWindow
           examDetail={examDetail}
           isOpen={showChatWindow}
           onClose={handleCloseChat}
-        /> */}
+        />
       </ChatProvider>
 
       <MobilePdfView examDetail={examDetail} />
