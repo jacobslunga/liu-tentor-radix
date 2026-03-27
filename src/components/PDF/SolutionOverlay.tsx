@@ -21,7 +21,7 @@ const SolutionOverlay = ({ isBlurred, className }: Props) => {
           transition={{ duration: 0.1 }}
           className={`absolute inset-0 z-30 flex flex-col items-center justify-center bg-background/30 backdrop-blur-sm ${className ?? ""}`}
         >
-          <p className="font-medium text-center">{t("mouseOverDescription")}</p>
+          <p className="font-normal text-center">{t("mouseOverDescription")}</p>
           <CursorClickIcon weight="regular" className="w-7 h-7 mt-2" />
         </motion.div>
       )}
