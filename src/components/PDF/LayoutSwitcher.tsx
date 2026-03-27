@@ -89,7 +89,7 @@ export default function LayoutSwitcher() {
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setLayoutMode(mode.value)}
-                    className={`flex border items-center gap-1.5 px-3 py-1.5 text-xs font-light transition-colors ${
+                    className={`flex border items-center gap-1.5 px-3 py-1.5 text-xs font-normal transition-colors ${
                       mode.value === "exam-with-facit"
                         ? "rounded-l-lg"
                         : "rounded-r-lg"

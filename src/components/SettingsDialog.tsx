@@ -130,7 +130,7 @@ const SettingsDialog: FC = () => {
 
         {/* Theme Selector */}
         <div className="space-y-3">
-          <h3 className="font-light">{t("theme")}</h3>
+          <h3 className="font-normal">{t("theme")}</h3>
           <div className="flex gap-2">
             {themeOptions.map(({ id, label, icon }) => (
               <div
@@ -145,14 +145,14 @@ const SettingsDialog: FC = () => {
                 )}
               >
                 {icon}
-                <span className="text-sm font-light">{label}</span>
+                <span className="text-sm font-normal">{label}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="space-y-3">
-          <h3 className="font-light">
+          <h3 className="font-normal">
             {language === "sv" ? "Textstorlek" : "Text Size"}
           </h3>{" "}
           <div className="flex gap-2">
@@ -169,7 +169,7 @@ const SettingsDialog: FC = () => {
                 )}
               >
                 {icon}
-                <span className="text-sm font-light">{label}</span>
+                <span className="text-sm font-normal">{label}</span>
               </div>
             ))}
           </div>
@@ -177,7 +177,7 @@ const SettingsDialog: FC = () => {
 
         {/* Language Selector */}
         <div className="space-y-4">
-          <h3 className="font-light">{t("settingsLanguage")}</h3>
+          <h3 className="font-normal">{t("settingsLanguage")}</h3>
           <Select onValueChange={changeLanguage} value={language}>
             <SelectTrigger className="w-full">
               <SelectValue>{languages[language]}</SelectValue>
@@ -194,7 +194,7 @@ const SettingsDialog: FC = () => {
 
         {/* Keyboard Shortcuts */}
         <div className="space-y-4">
-          <h3 className="font-light">{t("settingsKeyboardShortcuts")}</h3>
+          <h3 className="font-normal">{t("settingsKeyboardShortcuts")}</h3>
           <div className="space-y-4">
             {Object.keys(categoryTranslations).map((category) => {
               const categoryShortcuts = shortcuts.filter(
@@ -204,7 +204,7 @@ const SettingsDialog: FC = () => {
 
               return (
                 <div key={category} className="space-y-2">
-                  <h4 className="text-sm font-light text-muted-foreground first-letter:uppercase">
+                  <h4 className="text-sm font-normal text-muted-foreground first-letter:uppercase">
                     {
                       categoryTranslations[
                         category as keyof typeof categoryTranslations
@@ -218,7 +218,7 @@ const SettingsDialog: FC = () => {
                           <tr key={shortcut.action} className="text-sm">
                             <td className="px-4 py-3">{t(shortcut.action)}</td>
                             <td className="px-4 py-3 text-right">
-                              <kbd className="pointer-events-none inline-flex h-7 select-none items-center gap-1 rounded border bg-muted px-2 font-mono text-sm font-light">
+                              <kbd className="pointer-events-none inline-flex h-7 select-none items-center gap-1 rounded border bg-muted px-2 font-mono text-sm font-normal">
                                 {shortcut.key}
                               </kbd>
                             </td>

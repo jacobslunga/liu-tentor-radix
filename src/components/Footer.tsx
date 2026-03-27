@@ -38,11 +38,11 @@ const Footer: FC = () => {
           <div className="md:col-span-1 space-y-4">
             <div className="flex items-center gap-2">
               <LogoIcon className="w-8 h-8 text-primary" />
-              <span className="text-xl font-logo font-light tracking-tighter">
+              <span className="text-xl font-logo font-normal tracking-tighter">
                 {t("homeTitle")}
               </span>
             </div>
-            <p className="text-sm font-light text-muted-foreground">
+            <p className="text-sm font-normal text-muted-foreground">
               {language === "sv"
                 ? "Din resurs för tentamensarkiv vid Linköpings Universitet."
                 : "Your resource for the Linköping University exam archive."}
@@ -53,7 +53,7 @@ const Footer: FC = () => {
           <div className="md:col-span-3 grid grid-cols-2 sm:grid-cols-3 gap-8">
             {groupedLinks.map((section) => (
               <div key={section.title}>
-                <h4 className="text-sm font-normal text-foreground/80 mb-3">
+                <h4 className="text-sm font-medium text-foreground/80 mb-3">
                   {section.title}
                 </h4>
                 <ul className="space-y-2">
@@ -61,7 +61,7 @@ const Footer: FC = () => {
                     <li key={link.href}>
                       <Link
                         to={link.href}
-                        className="text-sm font-light text-muted-foreground hover:text-foreground transition-colors"
+                        className="text-sm font-normal text-muted-foreground hover:text-foreground transition-colors"
                       >
                         {link.name}
                       </Link>
@@ -75,14 +75,14 @@ const Footer: FC = () => {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-border/50 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs font-light text-muted-foreground">
+          <p className="text-xs font-normal text-muted-foreground">
             &copy; {new Date().getFullYear()} {t("homeTitle")}.{" "}
             {t("allRightsReserved")}
           </p>
           <div className="flex items-center gap-4">
             <a
               href="mailto:liutentor@gmail.com"
-              className="text-xs font-light text-muted-foreground hover:text-primary transition-colors"
+              className="text-xs font-normal text-muted-foreground hover:text-primary transition-colors"
             >
               liutentor@gmail.com
             </a>

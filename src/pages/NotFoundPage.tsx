@@ -40,12 +40,12 @@ const NotFoundPage: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen text-center p-6">
-      <h1 className="text-6xl font-light mb-4">404</h1>
+      <h1 className="text-6xl font-normal mb-4">404</h1>
       <p className="text-lg mb-8 text-foreground">{t("lostMessage")}</p>
       <Link to="/" className="mb-32">
         <Button
           size="lg"
-          className="bg-primary text-white font-light shadow-md hover:bg-primary/90 transition-all"
+          className="bg-primary text-white font-normal shadow-md hover:bg-primary/90 transition-all"
         >
           {t("goHome")}
         </Button>

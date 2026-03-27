@@ -180,7 +180,7 @@ const ModelSelector = ({
           className="flex cursor-pointer items-center gap-1.5 h-6 px-2 rounded-lg border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
           aria-label={isSv ? "Välj modell" : "Select model"}
         >
-          <span className="text-xs font-light text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
+          <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
             {selectedModel.name}
           </span>
           <ChevronDownIcon className="w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
@@ -204,7 +204,7 @@ const ModelSelector = ({
                         className="w-3.5 h-3.5 object-contain"
                       />
                     )}
-                    <span className="text-[11px] font-medium tracking-wide text-foreground/70">
+                    <span className="text-[11px] tracking-wide text-foreground/70">
                       {GROUP_META[group]?.label ?? group}
                     </span>
                   </div>
@@ -227,12 +227,12 @@ const ModelSelector = ({
                     )}
                   >
                     <div className="flex flex-col flex-1 min-w-0">
-                      <span className="text-xs font-light text-foreground">
+                      <span className="text-xs text-foreground">
                         {model.name}
                       </span>
                     </div>
                     {model.comingSoon ? (
-                      <span className="text-[10px] font-light px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground shrink-0">
+                      <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-muted text-muted-foreground shrink-0">
                         {isSv ? "Kommer snart" : "Coming soon"}
                       </span>
                     ) : selectedModelId === model.id ? (
@@ -483,7 +483,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                 }}
                 onKeyDown={handleKeyDown}
                 rows={1}
-                className="min-h-11 max-h-[200px] font-light overflow-y-auto px-2 py-2 leading-7 text-pretty wrap-break-word resize-none"
+                className="min-h-11 max-h-[200px] overflow-y-auto px-2 py-2 leading-7 text-pretty wrap-break-word resize-none"
               />
 
               <InputGroupAddon align="block-end" className="mt-1 w-full pb-1">
@@ -507,7 +507,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               inputRef.current?.focus();
                             }}
                             className={cn(
-                              "flex items-center gap-1.5 px-2 h-6 text-xs font-light transition-all rounded-lg cursor-pointer border select-none",
+                              "flex items-center gap-1.5 px-2 h-6 text-xs transition-all rounded-lg cursor-pointer border select-none",
                               !giveDirectAnswer
                                 ? "bg-primary/10 text-primary border-primary/20 hover:bg-primary/20"
                                 : "bg-transparent border-dashed text-muted-foreground hover:bg-accent hover:text-foreground",
@@ -525,7 +525,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                           align="start"
                           className="flex flex-col gap-0.5"
                         >
-                          <p className="font-light">
+                          <p>
                             {!giveDirectAnswer
                               ? language === "sv"
                                 ? "Hints är på"
@@ -608,7 +608,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               setIsListening(false);
                               onSend();
                             }}
-                            className="shrink-0 font-light transition-all"
+                            className="shrink-0 font-normal transition-all"
                           >
                             <ArrowUpIcon weight="bold" />
                             <span className="sr-only">{sendButtonLabel}</span>
@@ -622,12 +622,12 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
             </InputGroup>
           </motion.div>
 
-          <div className="mt-3 px-2 text-center font-light text-[11px] leading-relaxed text-muted-foreground">
+          <div className="mt-3 px-2 text-center text-[11px] leading-relaxed text-muted-foreground">
             {poweredByText}
           </div>
 
           {!isMicSupported && (
-            <div className="text-xs text-amber-600 font-light mt-2 text-center">
+            <div className="text-xs text-amber-600 mt-2 text-center">
               {language === "sv"
                 ? "Din webbläsare stöder inte tal-till-text i denna vy."
                 : "Your browser does not support speech to text in this view."}
@@ -635,7 +635,7 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           )}
 
           {isListening && (
-            <div className="text-xs text-primary font-light mt-2 text-center animate-pulse">
+            <div className="text-xs text-primary mt-2 text-center animate-pulse">
               {language === "sv"
                 ? "Lyssnar... tryck igen för att stoppa."
                 : "Listening... tap again to stop."}
@@ -643,13 +643,13 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
           )}
 
           {recordingError && (
-            <div className="text-xs text-red-500 font-light mt-2 text-center">
+            <div className="text-xs text-red-500  mt-2 text-center">
               {recordingError}
             </div>
           )}
 
           {isInputTooLong && (
-            <div className="text-xs text-red-500 mt-2 font-light text-center animate-pulse">
+            <div className="text-xs text-red-500 mt-2 text-center animate-pulse">
               {language === "sv"
                 ? `Maximal längd är ${MAX_INPUT_LENGTH} tecken.`
                 : `Maximum length is ${MAX_INPUT_LENGTH} characters.`}

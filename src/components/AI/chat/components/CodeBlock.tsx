@@ -46,7 +46,7 @@ export const CodeBlock: FC<CodeBlockProps> = memo(
       <div className="relative group my-4 w-full">
         {/* Header with language and copy button */}
         <div className="flex items-center justify-between bg-muted/30 border border-border rounded-t-lg px-4 py-2">
-          <span className="text-xs font-light text-muted-foreground">
+          <span className="text-xs font-normal text-muted-foreground">
             {language || "text"}
           </span>
           <Button

@@ -93,8 +93,8 @@ const FeedbackPage: FC = () => {
     children,
   }) => (
     <div className="flex items-center justify-between mb-2">
-      <span className="text-sm font-light">{children}</span>
-      <span className="text-sm font-light text-muted-foreground">
+      <span className="text-sm font-normal">{children}</span>
+      <span className="text-sm font-normal text-muted-foreground">
         {isRequired ? (
           <span className="text-destructive">*</span>
         ) : (
@@ -106,10 +106,10 @@ const FeedbackPage: FC = () => {
 
   return (
     <div className="w-full max-w-2xl">
-      <h1 className="text-3xl font-light  text-foreground mb-2">
+      <h1 className="text-3xl font-medium text-foreground mb-2">
         {t("feedbackTitle")}
       </h1>
-      <p className="text-sm font-light text-muted-foreground mb-6">
+      <p className="text-sm font-normal text-muted-foreground mb-6">
         {t("feedbackDescription")}
       </p>
 
@@ -129,7 +129,7 @@ const FeedbackPage: FC = () => {
                 />
               </div>
               <div>
-                <h2 className="text-xl font-light mb-1">
+                <h2 className="text-xl font-normal mb-1">
                   {t("feedbackSuccessTitle") || "Thank you!"}
                 </h2>
                 <p className="text-sm text-muted-foreground">
@@ -151,7 +151,7 @@ const FeedbackPage: FC = () => {
                 />
               </div>
               <div>
-                <h2 className="text-xl font-light mb-1">
+                <h2 className="text-xl font-normal mb-1">
                   {t("feedbackErrorTitle") || "Something went wrong"}
                 </h2>
                 <p className="text-sm text-muted-foreground">
@@ -202,7 +202,7 @@ const FeedbackPage: FC = () => {
                     />
                   </FormControl>
                   <FormMessage />
-                  <p className="text-xs font-light text-muted-foreground mt-1">
+                  <p className="text-xs font-normal text-muted-foreground mt-1">
                     Format: liuid123@student.liu.se
                   </p>
                 </FormItem>

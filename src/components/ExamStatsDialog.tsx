@@ -85,7 +85,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
         <DialogHeader>
           <DialogTitle className="text-lg text-foreground">
             Tentastatistik
-            <span className="block text-sm font-light text-muted-foreground">
+            <span className="block text-sm font-normal text-muted-foreground">
               Betygsfördelning {date}
             </span>
           </DialogTitle>
@@ -95,10 +95,10 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
           <div className="space-y-4">
             <div className="flex justify-between text-sm text-foreground">
               <div>
-                <span className="font-light">{total}</span> studenter
+                <span className="font-normal">{total}</span> studenter
               </div>
               <div>
-                <span className="font-light text-green-600 dark:text-green-400">
+                <span className="font-normal text-green-600 dark:text-green-400">
                   {passRate.toFixed(1)}%
                 </span>{" "}
                 godkänt
@@ -153,7 +153,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-light text-foreground">
+              <h3 className="text-sm font-normal text-foreground">
                 Betygsfördelning
               </h3>
               <div className="space-y-1">
@@ -170,7 +170,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
                       <span>Betyg {grade}</span>
                     </div>
                     <div>
-                      <span className="font-light">{count}</span> (
+                      <span className="font-normal">{count}</span> (
                       {((count / total) * 100).toFixed(1)}%)
                     </div>
                   </div>
@@ -180,7 +180,7 @@ export const ExamStatsDialog: React.FC<ExamStatsDialogProps> = ({
           </div>
         ) : (
           <div className="text-center py-6">
-            <h3 className="text-sm font-light text-foreground mb-1">
+            <h3 className="text-sm font-normal text-foreground mb-1">
               Ingen data tillgänglig
             </h3>
             <p className="text-sm text-muted-foreground">

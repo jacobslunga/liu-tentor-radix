@@ -218,7 +218,7 @@ export const ExamUploader = ({
   return (
     <div className={`space-y-6 ${className}`}>
       <div className="space-y-2">
-        <label className="text-sm font-light text-muted-foreground">
+        <label className="text-sm font-normal text-muted-foreground">
           {t("courseCodePlaceholder")}
         </label>
         <input
@@ -230,7 +230,7 @@ export const ExamUploader = ({
             !prefilledCourseCode && setKurskod(e.target.value.toUpperCase())
           }
           disabled={loading || !!prefilledCourseCode}
-          className={`w-full bg-transparent font-light outline-none border-0 border-b-2 border-foreground/20 text-center text-4xl focus:ring-0 focus:border-primary transition-colors p-2 placeholder:text-muted-foreground/40 ${
+          className={`w-full bg-transparent font-normal outline-none border-0 border-b-2 border-foreground/20 text-center text-4xl focus:ring-0 focus:border-primary transition-colors p-2 placeholder:text-muted-foreground/40 ${
             prefilledCourseCode ? "opacity-70 cursor-not-allowed" : ""
           }`}
         />
@@ -247,7 +247,7 @@ export const ExamUploader = ({
         <input {...getInputProps()} disabled={loading} />
         <div className="flex flex-col items-center justify-center gap-2 text-muted-foreground">
           <UploadSimpleIcon weight="bold" className="h-8 w-8" />
-          <p className="font-light">{t("dragAndDrop")}</p>
+          <p className="font-normal">{t("dragAndDrop")}</p>
         </div>
       </div>
 

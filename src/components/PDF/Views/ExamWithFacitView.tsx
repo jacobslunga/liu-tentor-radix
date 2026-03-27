@@ -73,7 +73,7 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
                   </div>
 
                   {/* Text */}
-                  <p className="font-light text-foreground/80">
+                  <p className="font-normal text-foreground/80">
                     {t("noFacitAvailable")}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground/70 max-w-[220px]">

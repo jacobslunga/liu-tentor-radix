@@ -58,7 +58,7 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
             <CaretRightIcon weight="bold" className="h-5 w-5" />
           </Button>
           <div
-            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-light cursor-default transition-colors ${
+            className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-normal cursor-default transition-colors ${
               hasSolution
                 ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
                 : "bg-muted/50 text-muted-foreground"

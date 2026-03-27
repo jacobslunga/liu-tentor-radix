@@ -17,18 +17,6 @@ interface Update {
 
 const updates: Update[] = [
   {
-    version: "2.2.0",
-    date: "2026-03-22",
-    title: {
-      sv: "Claude-integration",
-      en: "Claude Integration",
-    },
-    description: {
-      sv: "Claude från Anthropic är nu tillgänglig som AI-modell i chatten. Bättre matematik, steg-för-steg-förklaringar och stöd för svenska.",
-      en: "Claude by Anthropic is now available as an AI model in chat. Better math, step-by-step explanations, and Swedish language support.",
-    },
-  },
-  {
     version: "2.1.0",
     date: "2025-10-26",
     title: {
@@ -101,7 +89,7 @@ export default function UpdatesPage() {
   return (
     <div className="w-full max-w-3xl">
       {/* Header */}
-      <h1 className="text-3xl font-light  text-foreground mb-2">
+      <h1 className="text-3xl font-medium text-foreground mb-2">
         {language === "sv" ? "Uppdateringar" : "Updates"}
       </h1>
       <p className="text-sm text-muted-foreground mb-8">
@@ -124,7 +112,7 @@ export default function UpdatesPage() {
                 },
               )}
             </time>
-            <h2 className="text-xl font-light text-foreground mt-1 mb-2">
+            <h2 className="text-xl font-normal text-foreground mt-1 mb-2">
               {language === "sv" ? update.title.sv : update.title.en}
             </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
@@ -144,7 +132,7 @@ export default function UpdatesPage() {
             : "Do you have suggestions for new features? "}
           <Link
             to="/feedback"
-            className="text-primary hover:underline font-light"
+            className="text-primary hover:underline font-normal"
           >
             {language === "sv" ? "Skicka feedback" : "Send feedback"}
           </Link>

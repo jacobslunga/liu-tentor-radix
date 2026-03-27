@@ -17,8 +17,8 @@
 
 @font-face {
   font-family: "LiU Tentor Sans";
-  src: url("/fonts/Sohne.woff2") format("woff2");
-  font-weight: 100 500;
+  src: url("/fonts/CameraPlainVariable.woff2") format("woff2");
+  font-weight: 100 900;
   font-display: swap;
   font-style: normal;
 }
@@ -361,6 +361,5 @@
   }
   body {
     @apply bg-background text-foreground;
-    @apply font-light;
   }
 }

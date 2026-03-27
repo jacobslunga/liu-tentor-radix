@@ -73,7 +73,7 @@ const GradientIndicator: React.FC<GradientIndicatorProps> = ({
         {facitPdfUrl ? (
           <div className="flex items-center gap-2">
             <ArrowLeftToLine className="w-5 h-5 text-primary" />
-            <span className="text-xs font-light text-primary hidden md:block">
+            <span className="text-xs font-normal text-primary hidden md:block">
               {label}
             </span>
           </div>

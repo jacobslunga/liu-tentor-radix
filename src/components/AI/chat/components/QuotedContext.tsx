@@ -24,7 +24,7 @@ export const QuotedContext: FC<QuotedContextProps> = memo(
           <div className="flex items-start gap-2">
             <div className="w-1 h-full min-h-5 bg-primary rounded-full shrink-0" />
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-muted-foreground mb-1 font-light">
+              <p className="text-xs text-muted-foreground mb-1 font-normal">
                 {language === "sv" ? "Frågar om:" : "Asking about:"}
               </p>
               <p className="text-sm text-foreground leading-relaxed line-clamp-3">

@@ -43,7 +43,7 @@ export default function HomePage() {
           <div className="flex flex-col items-center space-y-2 mb-10">
             <div className="flex flex-row items-center justify-center space-x-2">
               <LogoIcon className="w-12 h-12 md:w-14 md:h-14 lg:w-24 lg:h-24" />
-              <h1 className="text-4xl lg:text-5xl font-light font-logo tracking-tighter">
+              <h1 className="text-4xl lg:text-5xl font-normal font-logo tracking-tighter">
                 {t("homeTitle")}
               </h1>
             </div>

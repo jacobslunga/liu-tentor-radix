@@ -72,7 +72,9 @@ const SponsorBanner: FC<Props> = ({
                 )}
               </>
             ) : (
-              <span className="text-xs font-light text-foreground">{name}</span>
+              <span className="text-xs font-normal text-foreground">
+                {name}
+              </span>
             )}
           </div>
 
@@ -83,12 +85,12 @@ const SponsorBanner: FC<Props> = ({
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <h3 className="text-sm font-light leading-tight text-foreground group-hover:text-primary transition-colors">
+          <h3 className="text-sm font-normal leading-tight text-foreground group-hover:text-primary transition-colors">
             {title}
           </h3>
 
           {subtitle && (
-            <p className="text-xs font-light text-foreground/90 leading-snug">
+            <p className="text-xs font-normal text-foreground/90 leading-snug">
               {subtitle}
             </p>
           )}

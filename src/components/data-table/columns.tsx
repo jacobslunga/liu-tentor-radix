@@ -31,7 +31,7 @@ export const getColumns = (
       }
 
       return (
-        <div className="flex items-center group-hover:underline font-mono font-light transition-colors">
+        <div className="flex items-center group-hover:underline font-mono font-normal transition-colors">
           {name}
         </div>
       );
@@ -56,7 +56,7 @@ export const getColumns = (
     cell: ({ row }) => (
       <div className="flex justify-center">
         <span
-          className={`text-sm font-light ${
+          className={`text-sm font-normal ${
             row.original.has_solution
               ? "text-green-600 dark:text-green-400"
               : "text-red-500"
@@ -86,9 +86,9 @@ export const getColumns = (
 
       let color = "text-orange-500 dark:text-orange-400";
       if (passedCount >= 70)
-        color = "text-green-600 dark:text-green-400 font-light";
+        color = "text-green-600 dark:text-green-400 font-normal";
       else if (passedCount < 30)
-        color = "text-red-600 dark:text-red-400 font-light";
+        color = "text-red-600 dark:text-red-400 font-normal";
 
       const stats = row.original.statistics;
       return (

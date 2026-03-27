@@ -35,15 +35,15 @@ const OmOss: FC = () => {
 
   return (
     <div className="w-full max-w-3xl">
-      <h1 className="text-3xl font-light text-foreground mb-2">
+      <h1 className="text-3xl font-medium text-foreground mb-2">
         {language === "sv" ? "Om oss" : "About Us"}
       </h1>
-      <p className="text-sm font-light text-muted-foreground mb-6">
+      <p className="text-sm font-normal text-muted-foreground mb-6">
         {language === "sv"
           ? "Studentdrivet projekt för enklare tentplugg"
           : "Student-driven project for easier exam studying"}
       </p>
-      <div className="text-sm text-foreground/80 font-light leading-relaxed space-y-4">
+      <div className="text-sm text-foreground/80 font-normal leading-relaxed space-y-4">
         {language === "sv" ? (
           <>
             <p>

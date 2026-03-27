@@ -9,7 +9,7 @@ export const EmptyState: FC<EmptyStateProps> = ({ language }) => {
 
   return (
     <div className="flex flex-col items-center justify-center h-full px-4 text-center duration-500 pb-20">
-      <h2 className="text-2xl font-light mb-2">
+      <h2 className="text-2xl font-medium mb-2">
         {isSv ? "Vad kan jag hjälpa till med?" : "How can I help you today?"}
       </h2>
 
