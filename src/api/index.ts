@@ -23,7 +23,7 @@ import useSWR from "swr";
 export type ApiResponse<T> = {
   success: boolean;
   message: string;
-  payload: T | null;
+  data: T | null;
 };
 
 /**
@@ -42,9 +42,9 @@ export type ExamStatistics = {
   "3"?: number;
   "4"?: number;
   "5"?: number;
-  U?: number;
-  G?: number;
-  VG?: number;
+  "U"?: number;
+  "G"?: number;
+  "VG"?: number;
 };
 
 /**
@@ -103,7 +103,7 @@ export type ExamDetailPayload = {
 
 const BASE_URL =
   import.meta.env.VITE_API_BASE_URL ||
-  "https://liutentor-api-production.up.railway.app/api";
+  "https://liutentor-go-api-production.up.railway.app";
 
 const client: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -129,11 +129,11 @@ async function fetcher<T>(url: string): Promise<T> {
   const response = await client.get<ApiResponse<T>>(url);
   const data = response.data;
 
-  if (!data.success || data.payload === null) {
+  if (!data.success || data.data === null) {
     throw new Error(data.message || "Request failed");
   }
 
-  return data.payload;
+  return data.data;
 }
 
 // ============================================================================
