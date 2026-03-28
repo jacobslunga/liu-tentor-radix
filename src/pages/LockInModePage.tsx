@@ -203,7 +203,7 @@ const LockInModePage: React.FC = () => {
             <Timer
               className={`w-5 h-5 ${timeRemaining < 300000 ? "text-red-500 animate-pulse" : "text-primary"}`}
             />
-            <span className="font-mono text-xl font-normal tracking-widest tabular-nums">
+            <span className="font-mono text-xl font-semibold tracking-widest tabular-nums">
               {formatTime(timeRemaining)}
             </span>
           </div>

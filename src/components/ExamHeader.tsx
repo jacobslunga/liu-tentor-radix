@@ -184,7 +184,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
             <DropdownMenu onOpenChange={setIsDropdownOpen}>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" className="group">
-                  <span className="font-medium">
+                  <span className="font-semibold">
                     {selectedExam.exam_name.length > 20
                       ? `${selectedExam.exam_name
                           .slice(0, 20)
@@ -229,7 +229,7 @@ const ExamHeader: FC<Props> = ({ exams, setIsChatOpen, onToggleChat }) => {
                         }`}
                       >
                         <div className="flex-1 min-w-0 pr-3">
-                          <div className="font-medium truncate">
+                          <div className="font-semibold truncate">
                             {e.exam_name.replace(e.exam_date, "")}{" "}
                             <span className="font-normal">{e.exam_date}</span>
                           </div>
