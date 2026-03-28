@@ -135,7 +135,7 @@ const ExamSearchPage: FC = () => {
                 </div>
 
                 <h1
-                  className={`font-medium text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
+                  className={`font-semibold text-foreground max-w-3xl leading-tight text-balance wrap-break-word ${
                     courseName.length < 30
                       ? "text-3xl sm:text-4xl"
                       : courseName.length < 50

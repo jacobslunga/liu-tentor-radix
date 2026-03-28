@@ -180,7 +180,7 @@ const ModelSelector = ({
           className="flex cursor-pointer items-center gap-1.5 h-6 px-2 rounded-lg border border-transparent hover:bg-accent/50 hover:border-border/50 transition-all outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 group"
           aria-label={isSv ? "Välj modell" : "Select model"}
         >
-          <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
+          <span className="text-xs font-semibold text-muted-foreground group-hover:text-foreground transition-colors truncate max-w-[100px]">
             {selectedModel.name}
           </span>
           <ChevronDownIcon className="w-3 h-3 text-muted-foreground/50 group-hover:text-foreground/70 transition-colors" />
@@ -204,7 +204,7 @@ const ModelSelector = ({
                         className="w-3.5 h-3.5 object-contain"
                       />
                     )}
-                    <span className="text-[11px] tracking-wide text-foreground/70">
+                    <span className="text-[11px] font-medium tracking-wide text-foreground/70">
                       {GROUP_META[group]?.label ?? group}
                     </span>
                   </div>
@@ -227,7 +227,7 @@ const ModelSelector = ({
                     )}
                   >
                     <div className="flex flex-col flex-1 min-w-0">
-                      <span className="text-xs text-foreground">
+                      <span className="text-xs font-medium text-foreground">
                         {model.name}
                       </span>
                     </div>
@@ -517,13 +517,15 @@ export const ChatInput = forwardRef<ChatInputHandle, ChatInputProps>(
                               weight={!giveDirectAnswer ? "fill" : "regular"}
                               className="h-4 w-4"
                             />
-                            <span className="hidden sm:inline">Hints</span>
+                            <span className="hidden font-medium sm:inline">
+                              Hints
+                            </span>
                           </button>
                         </TooltipTrigger>
                         <TooltipContent
                           side="top"
                           align="start"
-                          className="flex flex-col gap-0.5"
+                          className="flex font-medium flex-col gap-0.5"
                         >
                           <p>
                             {!giveDirectAnswer

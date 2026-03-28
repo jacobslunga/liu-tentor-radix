@@ -15,38 +15,6 @@
   font-display: swap;
 }
 
-@font-face {
-  font-family: "LiU Tentor Sans";
-  src: url("/fonts/ABCMonumentGrotesk-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "LiU Tentor Sans";
-  src: url("/fonts/ABCMonumentGrotesk-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "LiU Tentor Sans";
-  src: url("/fonts/ABCMonumentGrotesk-Medium.otf") format("opentype");
-  font-weight: 500;
-  font-display: swap;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: "LiU Tentor Sans";
-  src: url("/fonts/ABCMonumentGrotesk-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-display: swap;
-  font-style: normal;
-}
-
 @theme {
   --font-logo: "Canela", serif;
   --font-mono: monospace;
@@ -180,7 +148,6 @@
 
   body {
     font-family:
-      "LiU Tentor Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,

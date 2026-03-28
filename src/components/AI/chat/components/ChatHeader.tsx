@@ -69,7 +69,9 @@ export const ChatHeader: FC<ChatHeaderProps> = memo(
             ) : (
               <XCircleIcon weight="bold" className="h-3.5 w-3.5" />
             )}
-            <span>{language === "sv" ? "Lösning" : "Solution"}</span>
+            <span className="font-medium">
+              {language === "sv" ? "Lösning" : "Solution"}
+            </span>
           </div>
         </div>
 
