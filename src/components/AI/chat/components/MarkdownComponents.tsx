@@ -80,7 +80,7 @@ export const markdownComponents: Partial<Components> = {
     <li
       {...props}
       className={cn(
-        "animate-stream-block text-base text-pretty wrap-break-word",
+        "animate-stream-block text-base text-pretty wrap-break-word [&::marker]:text-foreground [&::marker]:font-bold",
         className,
       )}
     />
