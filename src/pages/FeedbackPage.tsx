@@ -106,7 +106,7 @@ const FeedbackPage: FC = () => {
 
   return (
     <div className="w-full max-w-2xl">
-      <h1 className="text-3xl font-medium text-foreground mb-2">
+      <h1 className="text-3xl font-semibold text-foreground mb-2">
         {t("feedbackTitle")}
       </h1>
       <p className="text-sm font-normal text-muted-foreground mb-6">

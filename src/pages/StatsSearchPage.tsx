@@ -189,7 +189,7 @@ export default function StatsSearchPage() {
               <div className="p-5 border-b border-border/60 bg-muted/20">
                 <div className="flex items-center gap-2 mb-1">
                   <TrendUpIcon className="w-4 h-4 text-primary" weight="bold" />
-                  <h2 className="text-sm font-normal">
+                  <h2 className="text-sm font-medium">
                     {language === "sv"
                       ? "Godkända över tid"
                       : "Pass Rate Over Time"}
@@ -268,7 +268,7 @@ export default function StatsSearchPage() {
                     className="w-4 h-4 text-primary"
                     weight="bold"
                   />
-                  <h2 className="text-sm font-normal">
+                  <h2 className="text-sm font-medium">
                     {language === "sv"
                       ? "Betygsfördelning"
                       : "Grade Distribution"}

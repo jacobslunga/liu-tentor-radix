@@ -15,6 +15,19 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: "LiU Tentor Sans";
+  src: url("/fonts/UncutSans-Variable.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-feature-settings:
+    "ss01",
+    "ss02",
+    "ss03",
+    "ss05",
+    "ss06" on;
+}
+
 @theme {
   --font-logo: "Canela", serif;
   --font-mono: monospace;
@@ -54,6 +67,33 @@
     position: absolute;
     inset: 0;
     z-index: 0;
+  }
+
+  .katex,
+  .katex * {
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    text-wrap: nowrap;
+    hyphens: none !important;
+  }
+
+  .katex {
+    line-height: 1.2 !important;
+  }
+
+  .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 0.25rem 0;
+  }
+
+  .katex-display > .katex {
+    white-space: nowrap;
+  }
+
+  .prose .katex,
+  .prose .katex * {
+    font-feature-settings: normal !important;
   }
 
   .pdf-selection-surface {
@@ -148,6 +188,7 @@
 
   body {
     font-family:
+      "LiU Tentor Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
