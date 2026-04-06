@@ -58,10 +58,8 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
         ) : (
           <div className="flex h-full items-center justify-center p-6">
             <div className="group relative w-full max-w-sm">
-              {/* Dashed border container */}
               <div className="rounded-2xl border-2 border-dashed border-border/60 px-8 py-10 transition-colors group-hover:border-primary/30">
                 <div className="flex flex-col items-center text-center">
-                  {/* Animated icon area */}
                   <div className="relative mb-5">
                     <div className="absolute inset-0 -m-2 rounded-full bg-primary/5 blur-xl transition-opacity group-hover:opacity-100 opacity-0" />
                     <div className="relative flex size-12 items-center justify-center rounded-2xl bg-muted/60 transition-colors group-hover:bg-primary/10">
@@ -72,15 +70,13 @@ const ExamWithFacitView: FC<Props> = ({ examDetail }) => {
                     </div>
                   </div>
 
-                  {/* Text */}
-                  <p className="font-normal text-foreground/80">
+                  <p className="font-medium text-foreground/80">
                     {t("noFacitAvailable")}
                   </p>
                   <p className="mt-1 text-xs leading-relaxed text-muted-foreground/70 max-w-[220px]">
                     {t("noFacitAvailableDescription")}
                   </p>
 
-                  {/* Action */}
                   <Button size="sm" variant="outline" asChild className="mt-5">
                     <Link to="/upload-exams" viewTransition>
                       <UploadSimpleIcon weight="bold" className="size-3.5" />

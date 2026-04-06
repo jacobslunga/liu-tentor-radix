@@ -33,9 +33,9 @@ const NotFoundState: React.FC<{
   const { language } = useLanguage();
   return (
     <div className="w-full max-w-2xl mx-auto mt-12 text-center">
-      <h1 className="text-2xl font-normal mb-4">
+      <h1 className="text-2xl font-semibold mb-4">
         {language === "sv" ? "Inga tentor hittades för" : "No exams found for"}{" "}
-        <span className="font-normal text-primary">"{courseCode}"</span>
+        <span className="font-bold text-primary">"{courseCode}"</span>
       </h1>
       {suggestions.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 text-sm text-muted-foreground mb-10">
@@ -43,7 +43,7 @@ const NotFoundState: React.FC<{
           {suggestions.map((code) => (
             <Link key={code} to={`/search/${code}`}>
               <Badge
-                variant="secondary"
+                variant="outline"
                 className="hover:opacity-70 cursor-pointer"
               >
                 {code}

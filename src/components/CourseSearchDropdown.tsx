@@ -1,5 +1,4 @@
-import { ClockFillIcon } from "@primer/octicons-react";
-import { XIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
+import { XIcon, MagnifyingGlassIcon, ClockIcon } from "@phosphor-icons/react";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -135,6 +134,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
 
   useEffect(() => {
     if (courseCode.trim()) {
+      console.log("here");
       setSuggestions(
         courseCodes.filter((code) =>
           code.toUpperCase().includes(courseCode.toUpperCase()),
@@ -142,8 +142,6 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       );
       setShowSuggestions(true);
       setSelectedIndex(-1);
-    } else {
-      setShowSuggestions(false);
     }
   }, [courseCode, courseCodes]);
 
@@ -284,7 +282,6 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
       </div>
 
       {showSuggestions &&
-        (isFocused || courseCode.trim()) &&
         (recentSearches.length > 0 || suggestions.length > 0) && (
           <div
             ref={suggestionsRef}
@@ -310,7 +307,10 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                     }`}
                     onMouseDown={() => handleSelectCourse(suggestion)}
                   >
-                    <ClockFillIcon className="w-4 h-4 mr-2 opacity-70" />
+                    <ClockIcon
+                      className="w-4 h-4 mr-2 opacity-70"
+                      weight="bold"
+                    />
                     <span className="flex-1">{suggestion}</span>
                     <ArrowBendUpRightIcon
                       weight="bold"
@@ -320,7 +320,7 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                 ))}
               </>
             )}
-            {suggestions.length > 0 && courseCode.trim() && (
+            {suggestions.length > 0 && courseCode.trim() ? (
               <>
                 {recentSearches.length > 0 && !courseCode.trim() && (
                   <div className="border-t mx-2 my-1" />
@@ -347,6 +347,18 @@ const CourseSearchDropdown: React.FC<CourseSearchDropdownProps> = ({
                     />
                   </div>
                 ))}
+              </>
+            ) : (
+              <>
+                {courseCode && (
+                  <div className="p-2">
+                    <p>
+                      {language === "sv"
+                        ? "Inga resultat hittades"
+                        : "No results were found"}
+                    </p>
+                  </div>
+                )}
               </>
             )}
           </div>

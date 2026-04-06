@@ -289,10 +289,10 @@ export const ExamUploader = ({
         </div>
       )}
 
-      <div className="p-4 bg-muted/50 border rounded-lg flex items-start gap-3 text-left">
+      <div className="p-4 bg-muted/50 border rounded-lg flex items-start gap-1 text-left">
         <InfoIcon
           weight="bold"
-          className="h-4 w-4 text-muted-foreground shrink-0 mt-1"
+          className="h-4 w-4 text-muted-foreground shrink-0"
         />
         <p className="text-xs text-muted-foreground">
           {language === "sv"
