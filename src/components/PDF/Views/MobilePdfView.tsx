@@ -46,7 +46,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
           <ArrowLeftIcon weight="bold" className="w-4 h-4" />
         </button>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-normal text-foreground truncate leading-tight">
+          <p className="text-sm font-bold text-foreground truncate leading-tight">
             {courseCode}
           </p>
           <p className="text-xs text-muted-foreground truncate leading-tight">
@@ -85,7 +85,7 @@ const MobilePdfView: FC<Props> = ({ examDetail }) => {
           >
             <div className="absolute inset-x-0 top-0 z-10 flex items-center gap-3 px-3 h-12 bg-linear-to-b from-background to-transparent">
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-normal text-foreground truncate leading-tight">
+                <p className="text-sm font-semibold text-foreground truncate leading-tight">
                   {t("facit")}
                 </p>
                 <p className="text-xs text-muted-foreground truncate leading-tight">
