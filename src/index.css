@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Rethink Sans:ital,wght@0,200..800;1,200..800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Miranda+Sans:ital,wght@0,400..700;1,400..700&display=swap");
 
 @import "tailwindcss";
 @import "tw-animate-css";
@@ -188,7 +188,7 @@
 
   body {
     font-family:
-      "LiU Tentor Sans",
+      "Miranda Sans",
       system-ui,
       -apple-system,
       BlinkMacSystemFont,
